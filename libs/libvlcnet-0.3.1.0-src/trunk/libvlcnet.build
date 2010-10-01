@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build">
+  <include buildfile="build-properties.build.xml" />
+  <include buildfile="build-common.build.xml" />
+
+  <target name="build" depends="prepare" >
+    <nant buildfile="media-player/media-player.build" target="build" inheritall="true" />
+    <nant buildfile="media-player-vlc/media-player-vlc.build" target="build" inheritall="true" />
+    <nant buildfile="media-player-vlc-windows/media-player-vlc-windows.build" target="build" inheritall="true" />
+    <nant buildfile="media-player-vlc-winforms/media-player-vlc-winforms.build" target="build" inheritall="true" />
+    <nant buildfile="samples/simple-player/simple-player.build" target="build" inheritall="true" />
+    
+    <copy todir="${project.output.dir}" flatten="true">
+      <fileset basedir="${project.3rd-parties.dir}" >
+        <include name="**/*.dll"/>
+      </fileset>
+    </copy>
+
+    <if test="${not project.is-debug}">
+      <delete dir="${project.output.package.dir}"  if="${directory::exists( project.output.package.dir )}"/>
+      <mkdir dir="${project.output.package.dir}"/>
+
+      <zip zipfile="${project.output.package.dir}/libvlc.net-${framework::get-target-framework()}-(${project.version}).zip" >
+        <fileset basedir="${project.output.dir}" defaultexcludes="false" >
+          <include name="**\dz.*.dll"></include>
+          <include name="**\dz.*.xml"></include>
+          <include name="**\common.logging.dll"/>
+          <include name="**\common.logging.xml"/>
+          <include name="**\ICSharpCode.SharpZipLib.dll"/>
+          <include name="**\ICSharpCode.SharpZipLib.xml"/>
+          <exclude name="**\SimplePlayer\**"/>
+        </fileset>
+		<fileset basedir="${path::combine(project.base.dir, '../')}" defaultexcludes="false" >
+          <include name="license.txt"/>
+        </fileset>
+      </zip>
+    </if>
+  </target>
+
+  <target name="clean">
+    <property name="clean-base-dir" value=".\" overwrite="true" />
+    <call target="clean_target" />
+  </target>
+
+  <target name="zip" depends="clean zip_target">
+  </target>
+  
+</project>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build" >
+
+  <target name="clean_target" description="Target to clean directories">
+    <delete>
+      <fileset basedir="${clean-base-dir}" defaultexcludes="true" >
+
+        <exclude name="**/3rd-party/**" />
+
+        <exclude name="**/*.gif" />
+        <exclude name="**/*.png" />
+        <exclude name="**/*.html" />
+        <exclude name="**/*.suo" />
+        <exclude name="**/*.snk" />
+        <exclude name="**/.svn/**"/>
+        <exclude name="**/*.build" />
+        <exclude name="**/*.cs" />
+
+        <include name="**/bin/**" />
+        <include name="**/obj/**" />
+
+        <include name="**/.Resharper*/**" />
+        <include name="**/_Resharper*/**" />
+        <include name="**/Debug/**" />
+        <include name="**/Release/**" />
+        <include name="**/dotnetfx/**" />
+        <include name="**/Setup.exe" />
+        <include name="**/Setup.msi" />
+
+        <include name="**/output/**" />
+
+        <include name="**/*.ncb" />
+
+        <include name="**/*.dll" />
+        <include name="**/*.pdb" />
+        <include name="**/*.aps" />
+        <include name="**/*.user" />
+        <include name="**/*.resharper" />
+
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="generate_asminfo" description="Generates assembly info file based on shared properties.">
+    <if test="${not property::exists('assembly-name')}">
+      <fail message="'assembly-name' property not found."/>
+    </if>
+    <if test="${not property::exists('assembly-description')}">
+      <fail message="'assembly-description' property not found."/>
+    </if>
+    <if test="${not property::exists('assembly-company')}">
+      <fail message="'assembly-company' property not found."/>
+    </if>
+    <if test="${not property::exists('assembly-configuration')}">
+      <fail message="'assembly-configuration' property not found."/>
+    </if>
+    <if test="${not property::exists('assembly-version')}">
+      <fail message="'assembly-version' property not found."/>
+    </if>
+    <asminfo output="./Properties/AssemblyInfo.cs" language="CSharp" >
+      <imports>
+        <import namespace="System.Reflection" />
+        <import namespace="System.Runtime.CompilerServices" />
+        <import namespace="System.Runtime.InteropServices" />
+      </imports>
+      <attributes>
+        <attribute type="AssemblyTitleAttribute" value="${assembly-name}"  />
+        <attribute type="AssemblyDescriptionAttribute" value="${assembly-description}"  />
+        <attribute type="AssemblyCompanyAttribute" value="${assembly-company}"  />
+        <attribute type="AssemblyConfigurationAttribute" value="${assembly-configuration}"  />
+        <attribute type="AssemblyVersionAttribute" value="${assembly-version}"  />
+      </attributes>
+    </asminfo>
+  </target>
+
+  <target name="zip-prepare">
+    <if test="${not property::exists('svn')}">
+      <echo message=""/>
+      <echo message="By default 'svn' directories will not be included."/>
+      <echo message=""/>
+      <property name="included-svn-dirs" value="false"></property>
+    </if>
+    <if test="${property::exists('svn')}">
+      <property name="included-svn-dirs" value="${svn}"></property>
+    </if>
+    <if test="${included-svn-dirs}">
+      <echo message=""/>
+      <echo message="'svn' directories will be included."/>
+      <echo message=""/>
+    </if>
+    <if test="${not included-svn-dirs}">
+      <echo message=""/>
+      <echo message="'svn' directories will not be included."/>
+      <echo message=""/>
+    </if>
+  </target>
+
+  <target name="zip_target" depends="zip-prepare">
+
+    <delete file="${project.sources.zipfile-name}"  if="${file::exists(project.sources.zipfile-name)}"/>
+
+    <property name="zip_target.directory" value="${path::get-directory-name(project.sources.zipfile-name)}"/>
+    <mkdir dir="${zip_target.directory}"/>
+    
+    <zip zipfile="${project.sources.zipfile-name}" verbose="true">
+      <fileset basedir="${project.sources.root.dir}" defaultexcludes="false" >
+        <include name="**\**"/>
+        <exclude name="**\.svn\**" if="${not included-svn-dirs}"/>
+        <exclude name="**\trunk\output\**" />
+      </fileset>
+    </zip>
+  </target>
+
+</project>

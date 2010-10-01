@@ -1,0 +1,10 @@
+<<< HISTORY >>>
+
+21.04.2009
+
+- FIXED BUG : vlc cannot play files from directories which have russian characters in path.
+  (libvlc supports only UTF-8 strings in the input information).
+
+17.04.2009
+
+- Version 0.3 comitted.

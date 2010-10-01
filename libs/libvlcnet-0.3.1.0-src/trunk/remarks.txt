@@ -1,0 +1,31 @@
+Remarks about VlcDeployment.
+
+If you use CheckVlcLibraryExistence(bool checkHashes, bool tryLoad) with tryLoad = true, it may
+cause the incorrect vlc behaviour when it will be reinitialized with other options (for example,
+plugins can be unavailable after such check).
+
+Recommended to use with FALSE parameter.
+
+
+TODO :
+
+Implement:
+- Input-output MRLs generation and test it for network streaming and device capturing, transcoding
+
+Refactor:
+- Logging thread in VlcMediaLibraryFactory
+- Disposing in PanelledDoubleWindow
+	
+Improve compatibility with VlcDeployment
+
+Build for Mono 2.0 including SimplePlayer.
+
+SimplePlayer :
+- information about every movie
+- more functionality in playlist
+- playlist modes (repeat, random)
+
+
+FUTURE:
+
+- Support for DirectX without VLC

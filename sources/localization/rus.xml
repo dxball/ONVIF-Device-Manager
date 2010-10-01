@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localized-strings iso3="rus" name="русский">
+  <sExceptionWSDiscoveryTitle>Ошибка в WSDiscovery</sExceptionWSDiscoveryTitle>
+  <sErrorDevInfoNull>Ошибка при чтении конфигурации устройства. Пожалуйста обновите список устройств.</sErrorDevInfoNull>
+  <sErrorDeviceName>путо</sErrorDeviceName>
+  <sErrorDeviceIPAddress>0.0.0.0</sErrorDeviceIPAddress>
+  <sErrorDeviceFirmware>пусто</sErrorDeviceFirmware>
+  <sErrorSaveNetworkSettings>Ошибка при записи сетевых настроек. Пожалуйста обновите список устройств.</sErrorSaveNetworkSettings>
+  <sErrorVlc>Ошибка медиа потока</sErrorVlc>
+  <sErrorVlcMediaUriIsEmpty>Пустая ссылка на видео поток</sErrorVlcMediaUriIsEmpty>
+  <sErrorVlcMediaUriIsBad>Неверная ссылка на видео поток</sErrorVlcMediaUriIsBad>
+  <sSaveSettingsFormTitle>Сохранение изменений...</sSaveSettingsFormTitle>
+  <sSaveSettingsFormText>Пожалуйста подождите пока изменения применятся</sSaveSettingsFormText>
+  <sCommonAppOn>Включено</sCommonAppOn>
+  <sCommonAppOff>Выключено</sCommonAppOff>
+  <sCommonAppYes>Да</sCommonAppYes>
+  <sCommonAppNo>Нет</sCommonAppNo>
+  <sEncoderH264>H.264</sEncoderH264>
+  <sEncoderMJPEG>MJPEG</sEncoderMJPEG>
+  <sVideoResolution720x576>720x576</sVideoResolution720x576>
+  <sVideoPriorityStreaming>Streaming</sVideoPriorityStreaming>
+  <sVideoPriorityAnalytics>Analytics</sVideoPriorityAnalytics>
+  <sLoadingData>Загрузка данных ...</sLoadingData>
+  <sApplicationName>Network Video Console</sApplicationName>
+  <sDeviceControlTitle>Конфигурация устройства</sDeviceControlTitle>
+  <sDeviceControlLanguageEng>English</sDeviceControlLanguageEng>
+  <sDeviceControlLanguageRus>Русский</sDeviceControlLanguageRus>
+  <sDevicesListControlTitle>Сеть</sDevicesListControlTitle>
+  <sDevicesListControlRefresh>Обновить</sDevicesListControlRefresh>
+  <sDevicesListControlColumnName>Имя</sDevicesListControlColumnName>
+  <sDevicesListControlColumnIPadress>Сетевой адрес</sDevicesListControlColumnIPadress>
+  <sDevicesListControlColumnType>Прошивка</sDevicesListControlColumnType>
+  <constLinkButtonIdentificationAndStatus>Идентификация и статус</constLinkButtonIdentificationAndStatus>
+  <constLinkButtonNetworkSettings>Настройки сети</constLinkButtonNetworkSettings>
+  <constLinkButtonDigitalIO>Цифровые входы-выходы</constLinkButtonDigitalIO>
+  <constLinkButtonMaintenance>Обслуживание</constLinkButtonMaintenance>
+  <constLinkButtonLiveVideo>Живое видео</constLinkButtonLiveVideo>
+  <constLinkButtonEvents>События</constLinkButtonEvents>
+  <constLinkButtonDepthCalibration>Колибровка глубины</constLinkButtonDepthCalibration>
+  <constLinkButtonVideoStreaming>Видео поток</constLinkButtonVideoStreaming>
+  <constLinkButtonDisplayAnnotation>Выводимая анотация</constLinkButtonDisplayAnnotation>
+  <constLinkButtonTamperingDetectors>Фальсификация детекторов</constLinkButtonTamperingDetectors>
+  <constLinkButtonObjectTracker>Трекер объектов</constLinkButtonObjectTracker>
+  <constLinkButtonRuleEngine>Настройка правил</constLinkButtonRuleEngine>
+  <constLinkButtonAntishaker>Стабилизатор</constLinkButtonAntishaker>
+  <constLinkButtonRotation>Поворот</constLinkButtonRotation>
+  <sButtonSave>Сохранить</sButtonSave>
+  <sButtonCancel>Отмена</sButtonCancel>
+  <sButtonClose>Закрыть</sButtonClose>
+  <sNotifierTextTitle>Нет подключенных устройств</sNotifierTextTitle>
+  <sNotifierText>Пожалуйста проверте, что устройство подключено правильно, или свяжитесь со службой поддержки</sNotifierText>
+  <sNotifierTextContacts />
+  <sPropertyDeviceInfoStatusTitle>Идентификация и статус устройства</sPropertyDeviceInfoStatusTitle>
+  <sPropertyDeviceInfoStatusLableName>Имя</sPropertyDeviceInfoStatusLableName>
+  <sPropertyDeviceInfoStatusLableDeviceID>ID устройства</sPropertyDeviceInfoStatusLableDeviceID>
+  <sPropertyDeviceInfoStatusLableFirmware>Версия программы</sPropertyDeviceInfoStatusLableFirmware>
+  <sPropertyDeviceInfoStatusLableHardware>Версия прошивки</sPropertyDeviceInfoStatusLableHardware>
+  <sPropertyDeviceInfoStatusLableVersion>Версия</sPropertyDeviceInfoStatusLableVersion>
+  <sPropertyDeviceInfoStatusLableIPAddr>Сетевой адрес</sPropertyDeviceInfoStatusLableIPAddr>
+  <sPropertyDeviceInfoStatusLableMACAddr>MAC адрес</sPropertyDeviceInfoStatusLableMACAddr>
+  <sSaveSettingsNeedReboot>"Устройство должно перезагрузиться. Пожалуйста обновите список устройств.</sSaveSettingsNeedReboot>
+  <sPropertyNetworkSettingsTitle>Настройки сети</sPropertyNetworkSettingsTitle>
+  <sPropertyNetworkSettingsDHCP>DHCP</sPropertyNetworkSettingsDHCP>
+  <sPropertyNetworkSettingsIPaddr>IP адрес устройства </sPropertyNetworkSettingsIPaddr>
+  <sPropertyNetworkSettingsSubnetMask>Маска подсети</sPropertyNetworkSettingsSubnetMask>
+  <sPropertyNetworkSettingsGateAddr>Адрес шлюза</sPropertyNetworkSettingsGateAddr>
+  <sPropertyNetworkSettingsDNSaddr>DNS адрес</sPropertyNetworkSettingsDNSaddr>
+  <sPropertyNetworkSettingsMACaddr>MAC адрес</sPropertyNetworkSettingsMACaddr>
+  <sPropertyDigitalIOTitle>Цифровые входы-выходы</sPropertyDigitalIOTitle>
+  <sPropertyDigitalIOInputName>Имя</sPropertyDigitalIOInputName>
+  <sPropertyDigitalIOInputNormalStatus>Normal status</sPropertyDigitalIOInputNormalStatus>
+  <sPropertyDigitalIOInputCurrentStatus>Current status</sPropertyDigitalIOInputCurrentStatus>
+  <sPropertyDigitalIOOutputName>Name</sPropertyDigitalIOOutputName>
+  <sPropertyDigitalIOOutputIdleStatus>Idle status</sPropertyDigitalIOOutputIdleStatus>
+  <sPropertyDigitalIOOutputCurrentStatus>Current status</sPropertyDigitalIOOutputCurrentStatus>
+  <sPropertyDigitalIOInputs>Digital inputs</sPropertyDigitalIOInputs>
+  <sPropertyDigitalIOOutputs>Digital outputs (relays)</sPropertyDigitalIOOutputs>
+  <sPropertyDigitalIOEventAction>Event action</sPropertyDigitalIOEventAction>
+  <sPropertyDigitalIOEventSendONVIFmessage>Send ONVIF message</sPropertyDigitalIOEventSendONVIFmessage>
+  <sPropertyDigitalIOTriggerRelay>Trigger relay</sPropertyDigitalIOTriggerRelay>
+  <sPropertyDigitalIORecordChannel>Record channel</sPropertyDigitalIORecordChannel>
+  <sPropertyDigitalIOSwitchAnalogue>Switch analogue video on</sPropertyDigitalIOSwitchAnalogue>
+  <sPropertyDigitalIOButtonTriggerRelay>Trigger relay</sPropertyDigitalIOButtonTriggerRelay>
+  <sPropertyMaintenanceTitle>Maintenance</sPropertyMaintenanceTitle>
+  <sPropertyMaintenanceConfiguration>Configuration</sPropertyMaintenanceConfiguration>
+  <sPropertyMaintenanceBTNBackup>Backup</sPropertyMaintenanceBTNBackup>
+  <sPropertyMaintenanceBTNRestore>Restore</sPropertyMaintenanceBTNRestore>
+  <sPropertyMaintenanceFactoryReset>Factory reset</sPropertyMaintenanceFactoryReset>
+  <sPropertyMaintenanceBTNSoftReset>Soft reset</sPropertyMaintenanceBTNSoftReset>
+  <sPropertyMaintenanceBTNHardReset>Hard reset</sPropertyMaintenanceBTNHardReset>
+  <sPropertyMaintenanceDiagnostics>Diagnostics and support</sPropertyMaintenanceDiagnostics>
+  <sPropertyMaintenanceBTNDownloadDump>Download Dump</sPropertyMaintenanceBTNDownloadDump>
+  <sPropertyMaintenanceBTNSupportLink>support@gtrg.ru</sPropertyMaintenanceBTNSupportLink>
+  <sPropertyMaintenanceFirmwareVer>Current firmware version</sPropertyMaintenanceFirmwareVer>
+  <sPropertyMaintenanceUpgrateFirmware>Upgrade firmware</sPropertyMaintenanceUpgrateFirmware>
+  <sPropertyMaintenanceBTNUpgrate>Upgrate</sPropertyMaintenanceBTNUpgrate>
+  <sPropertyLiveVideoTitle>Живое видео</sPropertyLiveVideoTitle>
+  <sPropertyEventsTitle>Events</sPropertyEventsTitle>
+  <sPropertyEventsColumnID>Rule ID</sPropertyEventsColumnID>
+  <sPropertyEventsColumnDate>Date/Time</sPropertyEventsColumnDate>
+  <sPropertyEventsColumnType>Type</sPropertyEventsColumnType>
+  <sPropertyEventsColumnDetails>Details</sPropertyEventsColumnDetails>
+  <sPropertyVideoStreamingTitle>Потоковое видео</sPropertyVideoStreamingTitle>
+  <sPropertyVideoStreamingResolution>Разрешение, pixels</sPropertyVideoStreamingResolution>
+  <sPropertyVideoStreamingFrameRate>Частота кадров, fps</sPropertyVideoStreamingFrameRate>
+  <sPropertyVideoStreamingEncoder>Энкодер</sPropertyVideoStreamingEncoder>
+  <sPropertyVideoStreamingBitrate>Bitrate устройства, kbps</sPropertyVideoStreamingBitrate>
+  <sPropertyVideoStreamingPrioriy>Приоритет</sPropertyVideoStreamingPrioriy>
+</localized-strings>
