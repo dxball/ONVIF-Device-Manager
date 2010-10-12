@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,22 +14,179 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Windows.Forms;
+
+using nvc.utils;
+using System.Threading;
+using System.Concurrency;
+using System.Reflection;
 
 namespace nvc {
+
+	
+	public static class BindingExtentions {
+		private class AnonymousBinding<TControlProperty, TSourceProperty> : Binding {
+			Func<TSourceProperty, TControlProperty> m_formater = null;
+			public AnonymousBinding(string propertyName, object dataSource, string dataMember, Func<TSourceProperty, TControlProperty> formater)
+				: base(propertyName, dataSource, dataMember, true) {
+				this.m_formater = formater;
+			}
+			protected override void OnFormat(ConvertEventArgs cevent) {
+				if(m_formater==null){
+					base.OnFormat(cevent);
+					return;
+				}
+				DebugHelper.Assert(cevent.Value.GetType() == typeof(TControlProperty));
+				var value = (TSourceProperty)cevent.Value;
+
+				cevent.Value = m_formater(value);
+			}
+
+		}
+
+		public static TControl CreateBinding<TControl, TControlProperty, TSource, TSourceProperty>(this TControl control, Expression<Func<TControl, TControlProperty>> propExpr, TSource dataSource, Expression<Func<TSource, TSourceProperty>> dataExpr)
+			where TControl : IBindableComponent
+			where TSource : INotifyPropertyChanged
+			//where TControlProperty : TSourceProperty 
+		{
+			var data_member = dataExpr.Body as MemberExpression;
+			DebugHelper.Assert(data_member != null);
+
+			var prop_member = propExpr.Body as MemberExpression;
+			DebugHelper.Assert(prop_member != null);
+			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name, false, DataSourceUpdateMode.OnPropertyChanged);
+			//binding.DataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
+			control.DataBindings.Add(binding);
+			return control;
+		}
+
+		public static TControl CreateBinding<TControl, TControlProperty, TSource, TSourceProperty>(this TControl control, Expression<Func<TControl, TControlProperty>> propExpr, TSource dataSource, Expression<Func<TSource, TSourceProperty>> dataExpr, DataSourceUpdateMode updateModel)
+			where TControl : IBindableComponent
+			where TSource : INotifyPropertyChanged
+			//where TControlProperty : TSourceProperty 
+		{
+			var data_member = dataExpr.Body as MemberExpression;
+			DebugHelper.Assert(data_member != null);
+
+			var prop_member = propExpr.Body as MemberExpression;
+			DebugHelper.Assert(prop_member != null);
+
+			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name);
+			binding.DataSourceUpdateMode = updateModel;
+			control.DataBindings.Add(binding);
+			return control;
+		}
+
+		public static TControl CreateBinding<TControl, TControlProperty, TSource, TSourceProperty>(this TControl control, Expression<Func<TControl, TControlProperty>> propExpr, TSource dataSource, Expression<Func<TSource, TSourceProperty>> dataExpr, Func<TSourceProperty, TControlProperty> formater)
+			where TControl : IBindableComponent
+			where TSource : INotifyPropertyChanged
+			//where TControlProperty : TSourceProperty 
+		{
+			var data_member = dataExpr.Body as MemberExpression;
+			DebugHelper.Assert(data_member != null);
+
+			var prop_member = propExpr.Body as MemberExpression;
+			DebugHelper.Assert(prop_member != null);
+
+			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name);
+			binding.DataSourceUpdateMode = DataSourceUpdateMode.Never;
+			if (formater != null) {
+				binding.Format += (sender, cevent) => {
+					DebugHelper.Assert(cevent.Value.GetType() == typeof(TSourceProperty));
+					var value = (TSourceProperty)cevent.Value;
+					cevent.Value = formater(value);
+					cevent.Value = formater(value);
+				};
+			}
+			control.DataBindings.Add(binding);
+			return control;
+		}
+
+		public static TControl CreateBinding<TControl, TControlProperty, TSource, TSourceProperty>(this TControl control, Expression<Func<TControl, TControlProperty>> propExpr, TSource dataSource, Expression<Func<TSource, TSourceProperty>> dataExpr, Func<TSourceProperty, TControlProperty> formater, Func<TControlProperty, TSourceProperty> parser)
+			where TControl : IBindableComponent
+			where TSource : INotifyPropertyChanged
+			//where TControlProperty : TSourceProperty 
+		{
+			var data_member = dataExpr.Body as MemberExpression;
+			DebugHelper.Assert(data_member != null);
+
+			var prop_member = propExpr.Body as MemberExpression;
+			DebugHelper.Assert(prop_member != null);
+
+			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name);
+			if (formater != null) {
+				binding.Format += (sender, cevent) => {
+
+					DebugHelper.Assert(cevent.Value.GetType() == typeof(TSourceProperty));
+					var value = (TSourceProperty)cevent.Value;
+					cevent.Value = formater(value);
+				};
+			}
+			if (parser != null) {
+				binding.Parse += (sender, cevent) => {
+
+					DebugHelper.Assert(cevent.Value.GetType() == typeof(TControlProperty));
+					var value = (TControlProperty)cevent.Value;
+					cevent.Value = parser(value);
+				};
+			}
+			control.DataBindings.Add(binding);
+			return control;
+		}
+		
+		
+		
+	}
+
 	public class NotifyPropertyChangedBase : INotifyPropertyChanged {
+		private SynchronizationContext m_syncCtx;
+
+		public NotifyPropertyChangedBase() {
+			m_syncCtx = SynchronizationContext.Current;
+		}
 		public event PropertyChangedEventHandler PropertyChanged;
-		protected void RaisePropertyChanged(string propertyName) {
+		public void NotifyPropertyChanged(String propertyName) {
 			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				if (m_syncCtx != null && m_syncCtx!= SynchronizationContext.Current) {
+					m_syncCtx.Post(state => PropertyChanged(this, new PropertyChangedEventArgs(propertyName)), null);
+				} else {
+					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				}
 			}
 		}
+	}
+
+	public class NotifyPropertyChangedBase<T> : INotifyPropertyChanged {
+		public NotifyPropertyChangedBase() {
+			DebugHelper.Assert(SynchronizationContext.Current != null);
+			if(SynchronizationContext.Current != null){
+				m_scheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
+			}else{
+				m_scheduler = Scheduler.Immediate;
+			}
+		}
+		private IScheduler m_scheduler;
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void NotifyPropertyChanged(String propertyName) {
+			m_scheduler.Schedule(() => {
+				if (PropertyChanged != null) {
+					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				}
+			});
+		}
+		protected void NotifyPropertyChanged<TProperty>(Expression<Func<T, TProperty>> expression) {
+			var me = expression.Body as MemberExpression;
+			DebugHelper.Assert(me != null);
+			NotifyPropertyChanged(me.Member.Name);
+		}		
 	}
 }

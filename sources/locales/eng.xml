@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localized-strings lang-iso3="eng">
+
+	<module name="SaveSettingsFormStrings" namespace="nvc.controls">
+		<string name="Title" value="Saving changes..." />
+		<string name="Text" value="Please wait until changes will be applied" />
+		<string name="NeedToReboot" value="Device need to be rebooted. Please refresh devices list." />
+	</module>
+
+	<module name="Constants" namespace="nvc">
+
+		<region name="Exceptions">
+			<string name="sExceptionWSDiscoveryTitle" value="WSDiscovery error" />
+			<string name="sErrorDevInfoNull" value="Error was during device configuration reading. Please refresh devices list" />
+			<string name="sErrorDeviceName" value="none" />
+			<!--<string name="sErrorDeviceIPAddress" value="0.0.0.0" />-->
+			<string name="sErrorDeviceFirmware" value="none" />
+			<string name="sErrorSaveNetworkSettings" value="Error was during saving network settings. Please refresh device." />
+			<string name="sErrorVlc" value="Media stream error" />
+			<string name="sErrorVlcMediaUriIsEmpty" value="Stream uri is emtpy" />
+			<string name="sErrorVlcMediaUriIsBad" value="Stream uri is unknown" />
+		</region>
+
+		<region name="Common application sets">
+			<string name="sCommonAppOn" value="On" />
+			<string name="sCommonAppOff" value="Off" />
+			<string name="sCommonAppYes" value="Yes" />
+			<string name="sCommonAppNo" value="No" />
+			<!--<string name="sEncoderH264" value="H.264" />
+		<string name="sEncoderMJPEG" value="MJPEG" />-->
+			<!--<string name="sVideoResolution720x576" value="720x576" />-->
+			<string name="sVideoPriorityStreaming" value="Streaming" />
+			<string name="sVideoPriorityAnalytics" value="Analytics" />
+			<string name="sLoadingData" value="Loading data ..." />
+			<string name="sApplicationName" value="Network Video Console" />
+		</region>
+
+		<region name="DeviceControl">
+			<string name="sDeviceControlTitle" value="Device configuration" />
+			<string name="sDeviceControlLanguageEng" value="English" />
+			<string name="sDeviceControlLanguageRus" value="Русский" />
+		</region>
+
+		<region name="DevicesListControl">
+			<string name="sDevicesListControlTitle" value="Network" />
+			<string name="sDevicesListControlRefresh" value="Refresh" />
+			<string name="sDevicesListControlColumnName" value="Name" />
+			<string name="sDevicesListControlColumnIPadress" value="IP Adress" />
+			<string name="sDevicesListControlColumnType" value="Firmware" />
+		</region>
+
+		<region name="LinkButtons names">
+			<string name="constLinkButtonIdentificationAndStatus" value="Identification and status" />
+			<string name="constLinkButtonNetworkSettings" value="Network settings" />
+			<string name="constLinkButtonDigitalIO" value="Digital IO" />
+			<string name="constLinkButtonMaintenance" value="Maintenance" />
+			<string name="constLinkButtonLiveVideo" value="Live video" />
+			<string name="constLinkButtonEvents" value="Events" />
+			<string name="constLinkButtonDepthCalibration" value="Depth calibration" />
+			<string name="constLinkButtonVideoStreaming" value="Video streaming" />
+			<string name="constLinkButtonDisplayAnnotation" value="Display  annotation" />
+			<string name="constLinkButtonTamperingDetectors" value="Tampering detectors" />
+			<string name="constLinkButtonObjectTracker" value="Object tracker" />
+			<string name="constLinkButtonRuleEngine" value="Rule engine" />
+			<string name="constLinkButtonAntishaker" value="Antishaker" />
+			<string name="constLinkButtonRotation" value="Rotation" />
+		</region>
+
+		<region name="Buttons">
+			<string name="sButtonSave" value="Save" />
+			<string name="sButtonCancel" value="Cancel" />
+			<string name="sButtonClose" value="Close" />
+		</region>
+
+		<region name="Empty selection notifier">
+			<string name="sNotifierTextTitle" value="No connected devices." />
+			<string name="sNotifierText" value="Please check the device is properly connected, or contact support." />
+			<string name="sNotifierTextContacts" value="" />
+			<!--<string name="sNotifierImg" value="Resources\Images\BigLogo.png" />-->
+		</region>
+
+		<region name="Property Device identification and status">
+			<string name="sPropertyDeviceInfoStatusTitle" value="Device identification and status" />
+			<string name="sPropertyDeviceInfoStatusLableName" value="Name" />
+			<string name="sPropertyDeviceInfoStatusLableDeviceID" value="Device ID" />
+			<string name="sPropertyDeviceInfoStatusLableFirmware" value="Firmware" />
+			<string name="sPropertyDeviceInfoStatusLableHardware" value="Hardware" />
+			<string name="sPropertyDeviceInfoStatusLableVersion" value="Version" />
+			<string name="sPropertyDeviceInfoStatusLableIPAddr" value="IP address" />
+			<string name="sPropertyDeviceInfoStatusLableMACAddr" value="MAC address" />
+		</region>
+
+		<region name="Property Network settings">
+			<string name="sPropertyNetworkSettingsTitle" value="Network settings" />
+			<string name="sPropertyNetworkSettingsDHCP" value="DHCP" />
+			<string name="sPropertyNetworkSettingsIPaddr" value="Device IP address " />
+			<string name="sPropertyNetworkSettingsSubnetMask" value="Subnet mask" />
+			<string name="sPropertyNetworkSettingsGateAddr" value="Gateway address" />
+			<string name="sPropertyNetworkSettingsDNSaddr" value="DNS address" />
+			<string name="sPropertyNetworkSettingsMACaddr" value="MAC address" />
+		</region>
+
+		<region name="PropertyDigitalIO">
+			<string name="sPropertyDigitalIOTitle" value="Digital IO" />
+			<string name="sPropertyDigitalIOInputName" value="Name" />
+			<string name="sPropertyDigitalIOInputNormalStatus" value="Normal status" />
+			<string name="sPropertyDigitalIOInputCurrentStatus" value="Current status" />
+			<string name="sPropertyDigitalIOOutputName" value="Name" />
+			<string name="sPropertyDigitalIOOutputIdleStatus" value="Idle status" />
+			<string name="sPropertyDigitalIOOutputCurrentStatus" value="Current status" />
+			<string name="sPropertyDigitalIOInputs" value="Digital inputs" />
+			<string name="sPropertyDigitalIOOutputs" value="Digital outputs (relays)" />
+			<string name="sPropertyDigitalIOEventAction" value="Event action" />
+			<string name="sPropertyDigitalIOEventSendONVIFmessage" value="Send ONVIF message" />
+			<string name="sPropertyDigitalIOTriggerRelay" value="Trigger relay" />
+			<string name="sPropertyDigitalIORecordChannel" value="Record channel" />
+			<string name="sPropertyDigitalIOSwitchAnalogue" value="Switch analogue video on" />
+			<string name="sPropertyDigitalIOButtonTriggerRelay" value="Trigger relay" />
+		</region>
+
+		<region name="Property Maintenance">
+			<string name="sPropertyMaintenanceTitle" value="Maintenance" />
+			<string name="sPropertyMaintenanceConfiguration" value="Configuration" />
+			<string name="sPropertyMaintenanceBTNBackup" value="Backup" />
+			<string name="sPropertyMaintenanceBTNRestore" value="Restore" />
+			<string name="sPropertyMaintenanceFactoryReset" value="Factory reset" />
+			<string name="sPropertyMaintenanceBTNSoftReset" value="Soft reset" />
+			<string name="sPropertyMaintenanceBTNHardReset" value="Hard reset" />
+			<string name="sPropertyMaintenanceDiagnostics" value="Diagnostics and support" />
+			<string name="sPropertyMaintenanceBTNDownloadDump" value="Download Dump" />
+			<!--<string name="sPropertyMaintenanceBTNSupportLink" value="support@gtrg.ru" />-->
+			<string name="sPropertyMaintenanceFirmwareVer" value="Current firmware version" />
+			<string name="sPropertyMaintenanceUpgrateFirmware" value="Upgrade firmware" />
+			<string name="sPropertyMaintenanceBTNUpgrate" value="Upgrate" />
+		</region>
+
+		<region name="Property Live Video">
+			<string name="sPropertyLiveVideoTitle" value="Live video" />
+		</region>
+
+		<region name="Property Events">
+			<string name="sPropertyEventsTitle" value="Events" />
+			<string name="sPropertyEventsColumnID" value="Rule ID" />
+			<string name="sPropertyEventsColumnDate" value="Date/Time" />
+			<string name="sPropertyEventsColumnType" value="Type" />
+			<string name="sPropertyEventsColumnDetails" value="Details" />
+		</region>
+
+		<region name="Property Video Streaming">
+			<string name="sPropertyVideoStreamingTitle" value="Video streaming" />
+			<string name="sPropertyVideoStreamingResolution" value="Resolution, pixels" />
+			<string name="sPropertyVideoStreamingFrameRate" value="Frame rate, fps" />
+			<string name="sPropertyVideoStreamingEncoder" value="Encoder" />
+			<string name="sPropertyVideoStreamingBitrate" value="Target bitrate, kbps" />
+			<string name="sPropertyVideoStreamingPrioriy" value="Priority" />
+		</region>
+
+	</module>
+</localized-strings>

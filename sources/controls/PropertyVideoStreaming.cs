@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -31,59 +32,93 @@ namespace nvc.controls
 {
     public partial class PropertyVideoStreaming : BasePropertyControl
     {
-		DeviceChannel _devModel;
+		VideoStreamingModel _devModel;
 		VideoPlayerControl _vidPlayer;
-        public PropertyVideoStreaming(DeviceChannel devModel)
-        {
-			_devModel = devModel;
-            InitializeComponent();
+		
+		public Action Save { get; set; }
+		public Action Cancel { get; set; }
 
+		public PropertyVideoStreaming(VideoStreamingModel devModel)
+        {
+            InitializeComponent();
+			_devModel = devModel;
 			this.Disposed += (sender, args) => {
 				this.ReleaseAll();
 			};
 
-			this.Disposed += (sender, args) => {
-				//this.ReleaseAll();
-			};
-
+			BindData(devModel);
             IniControls();
-			LoadData();
+			InitUrl();
 
-			_vidPlayer = new VideoPlayerControl(_devModel.MediaStreamUri);
-			panel1.Controls.Add(_vidPlayer);
+			SubscribeToEvents();
         }
+		public void StopStreaming() {
+			if (_vidPlayer != null) {
+				_vidPlayer.Stop();
+			}
+		}
+		public void PlayStreaming() {
+			if (_vidPlayer != null) {
+				_vidPlayer.Play(_devModel.mediaUri);
+			}
+		}
+		public void InitUrl() {
+			_vidPlayer = new VideoPlayerControl(_devModel.mediaUri) { Dock = DockStyle.Fill};
+			panel1.Controls.Add(_vidPlayer);
+		}
+
+		void SubscribeToEvents() {
+			_saveCancelControl.ButtonClickedSave += new EventHandler(_saveCancelControl_ButtonClickedSave);
+			_saveCancelControl.ButtonClickedCancel += new EventHandler(_saveCancelControl_ButtonClickedCancel);
+		}
+
 		public void ReleaseAll() {
 			_vidPlayer.ReleaseAll();
 		}
 
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyVideoStreamingTitle"));
-			_lblBitrate.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyVideoStreamingBitrate"));
-			_lblEncoder.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyVideoStreamingEncoder"));
-			_lblFrameRate.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyVideoStreamingFrameRate"));
-			_lblPriority.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyVideoStreamingPrioriy"));
-			_lblResolution.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyVideoStreamingResolution"));
+		void BindData(VideoStreamingModel devModel) {
+			_numtbBitrate.Maximum = 100000;// devModel.maxBitrate;
+			_numtbBitrate.Minimum = 0; // devModel.minBitrate;
+			_numtbFPS.Maximum = 100000;// devModel.maxFrameRate;
+			_numtbFPS.Minimum = 0;// devModel.minFrameRate;
+
+			_numtbBitrate.CreateBinding(x => x.Value, devModel, x => x.bitrate);
+			_numtbFPS.CreateBinding(x => x.Value, devModel, x => x.frameRate);
+
+			if(devModel.supportedEncoders!= null)
+				_cmbEncoder.Items.AddRange(devModel.supportedEncoders.ToArray());
+			_cmbEncoder.CreateBinding(x => x.SelectedItem, devModel, x => x.currentEncoder);
+			_cmbEncoder.SelectedValueChanged += (sender, args) => {
+				var value = _cmbEncoder.SelectedItem as VideoEncoder;
+				if(value != null){
+					devModel.currentEncoder = value;
+				}
+			};
+			if (devModel.supportedResolutions != null)
+				_cmbResolution.Items.AddRange(devModel.supportedResolutions.ToArray());
+			_cmbResolution.CreateBinding(x => x.SelectedItem, devModel, x => x.currentResolution);
+			_cmbResolution.SelectedValueChanged += (sender, args) => {
+				var value = _cmbResolution.SelectedItem as VideoResolution;
+				if (value != null) {
+					devModel.currentResolution = value;
+				}
+			};
+
+			_cmbPriority.Enabled = false;
+
+			_saveCancelControl._btnCancel.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
+			_saveCancelControl._btnSave.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
+		}
+		void Localization(){
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingTitle);
+			_lblBitrate.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingBitrate);
+			_lblEncoder.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingEncoder);
+			_lblFrameRate.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingFrameRate);
+			_lblPriority.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingPrioriy);
+			_lblResolution.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingResolution);
 		}
         protected void IniControls(){
-			Localisation();
-
-			_saveCancelControl.EnableSave(false);
-			_saveCancelControl.EnableCancel(false);
-
-            _numtbFPS.Minimum = Defaults.iPropertyVideoStreamingFrameRateMin;
-            _numtbFPS.Maximum = Defaults.iPropertyVideoStreamingFrameRateMax;
-            
-            _numtbBitrate.Minimum = Defaults.iPropertyVideoStreamingBitrateMin;
-            _numtbBitrate.Maximum = Defaults.iPropertyVideoStreamingBitrateMax;
-
-
-			foreach (var value in _devModel.ResolutionsList) {
-				_cmbResolution.Items.Add(new ResolutionView(value));
-			}
-
-			foreach (var value in _devModel.EncodersList) {
-				_cmbEncoder.Items.Add(new EncoderView(value));
-			}
+			Localization();
 
 			_cmbPriority.Items.Add(Constants.Instance.sVideoPriorityStreaming);
 			_cmbPriority.Items.Add(Constants.Instance.sVideoPriorityAnalytics);
@@ -94,27 +129,18 @@ namespace nvc.controls
 			_title.BackColor = ColorDefinition.colTitleBackground;
         }
 
-		void LoadData() {
-
-			//var resolution = _devModel.GetModelChannel().resolution.width + "x" + _devModel.GetModelChannel().resolution.height;
-			EncoderView[] encodersArr = new EncoderView[_cmbEncoder.Items.Count];
-			_cmbEncoder.Items.CopyTo(encodersArr, 0);
-			_cmbEncoder.SelectedItem = encodersArr.Where(x => x.GetVideoEncoder().name == _devModel.GetModelChannel().encoder.name)
-				.Single();
-			
-			_cmbPriority.SelectedItem = Constants.Instance.sVideoPriorityStreaming;
-
-			var val = _devModel.GetResolutionByString(_devModel.GetModelChannel().resolution.ToString());
-			_cmbResolution.SelectedItem = new ResolutionView(val);
-
-			_numtbBitrate.Value = _devModel.GetModelChannel().bitrate;
-
-			_numtbFPS.Value = _devModel.GetModelChannel().frameRate;
+		void _saveCancelControl_ButtonClickedCancel(object sender, EventArgs e) {
+			Cancel();
 		}
+
+		void _saveCancelControl_ButtonClickedSave(object sender, EventArgs e) {
+			Save();
+		}
+
     }
 	public class EncoderView {
-		public EncoderView(VideoEncoder enc) {
-			_encoder = enc;
+		public EncoderView(nvc.models.VideoEncoder.Encoding enc) {
+			_encoder = new VideoEncoder(enc);
 		}
 		nvc.models.VideoEncoder _encoder;
 		public nvc.models.VideoEncoder GetVideoEncoder() {
@@ -124,7 +150,7 @@ namespace nvc.controls
 			_encoder = value;
 		}
 		public override string ToString() {
-			return _encoder.name;
+			return _encoder.encoding.ToString();
 		}
 	}
 	public class ResolutionView {
@@ -135,14 +161,14 @@ namespace nvc.controls
 				return false;
 		}
 		public override int GetHashCode() {
-			return Resolution.Resolution.width + Resolution.Resolution.height;
+			return Resolution.width + Resolution.height;
 		}
-		public ResolutionView(AvailableResolution resol) {
+		public ResolutionView(VideoResolution resol) {
 			Resolution = resol;
 		}
-		public AvailableResolution Resolution{get;set;}
+		public VideoResolution Resolution { get; set; }
 		public override string ToString() {
-			return Resolution.ResolutionString;
+			return Resolution.ToString();
 		}
 	}
 }

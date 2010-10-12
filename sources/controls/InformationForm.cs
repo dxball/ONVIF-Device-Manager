@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -26,26 +27,35 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace nvc.controls {
-	public partial class SavingSettingsForm : Form {
-		public SavingSettingsForm() {
+	public partial class InformationForm : Form {
+		public InformationForm(string errorMessage) {
 			InitializeComponent();
-			Localisation();
+			Text = errorMessage;
+			//savingSettingsControl1.SetErrorMessage(errorMessage);
+			savingSettingsControl1.OnClose += new EventHandler(savingSettingsControl1_OnClose);
+		}
+		public InformationForm() {
+			InitializeComponent();
+			Localization();
 
 			savingSettingsControl1.OnClose += new EventHandler(savingSettingsControl1_OnClose);
 		}
-
+		Action KillEveryBody;
 		void savingSettingsControl1_OnClose(object sender, EventArgs e) {
+			if (KillEveryBody != null)
+				KillEveryBody();
 			this.Close();
 		}
 
-		void Localisation(){
-			this.DataBindings.Add(new Binding("Text", Constants.Instance, "sSaveSettingsFormTitle"));
+		void Localization(){
+			this.CreateBinding(x=>x.Text, SaveSettingsFormStrings.Instance, x=>x.Title);
 		}
 
 		public void SetErrorMessage(string errText) {
 			savingSettingsControl1.SetErrorMessage(errText);
 		}
-		public void ShowCloseButton() {
+		public void ShowCloseButton(Action killall) {
+			KillEveryBody = killall;
 			savingSettingsControl1.ShowCloseButton();
 		}
 

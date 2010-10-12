@@ -1,52 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl" >
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl" >
 	<xsl:output method="text"/>
-	<xsl:template match="/class">
-		<xsl:variable name="class-name" select="@name"/>
-		<xsl:variable name="namespace" select="@namespace"/>
-using System;
-using System.Text;
-using System.Xml;
-using System.Runtime.Serialization;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using System.Xml.XPath;
-using System.Reflection;
-using System.Xml.Linq;
-using System.ComponentModel;
 
-namespace <xsl:value-of select="$namespace" />{
-	public partial class <xsl:value-of select="$class-name" /> : INotifyPropertyChanged{
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged(String propertyName) {
-		if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		<!--<xsl:value-of select="$class-name" />() {
-		}
-		private static <xsl:value-of select="$class-name" /> _instance;
-		public static <xsl:value-of select="$class-name" /> Instance {
-			get {
-				if (_instance == null)
-					_instance = new <xsl:value-of select="$class-name" />();
-				return _instance;
-			}
+
+	<xsl:template match="/localized-strings">
+		<xsl:call-template name="gen-header"/>
+		<xsl:apply-templates select="module" mode="gen-class">
+			<xsl:with-param name="base-path" select="'/localized-strings/module'"/>
+		</xsl:apply-templates>
+		<xsl:call-template name="gen-footer"/>
+	</xsl:template>
+	
+	<xsl:template match="module" mode="gen-class">
+		<xsl:param name="base-path"/>
+		<xsl:variable name="class-name" select="@name"/>
+		<xsl:variable name="base-class" select="concat('LocalizedStringsBase', '&lt;', $class-name, '&gt;')"/>
+		<xsl:variable name="namespace" select="@namespace"/>
+		<xsl:variable name="ident-pred">[@name='<xsl:value-of select="$class-name"/>' and @namespace='<xsl:value-of select="$namespace"/>']</xsl:variable>
+			
+namespace <xsl:value-of select="$namespace" /> {
+	public partial class <xsl:value-of select="$class-name" />: <xsl:value-of select="$base-class"/>{
+		<!--public virtual void SetLocale(Func&lt;string, string&gt; xeval) {
+			<xsl:apply-templates select="descendant::string" mode="gen-prop-set-locale">
+				<xsl:with-param name="base-path" select="concat($base-path, $ident-pred, '/descendant::string')"/>
+				<xsl:with-param name="namespace" select="$namespace"/>
+				<xsl:with-param name="class-name" select="$class-name"/>
+			</xsl:apply-templates>
 		}-->
-		<xsl:apply-templates select="descendant::string" mode="field-element"/>
+		<xsl:apply-templates select="descendant::string" mode="gen-class-prop">
+			<xsl:with-param name="base-path" select="concat($base-path, $ident-pred, '/descendant::string')"/>
+			<xsl:with-param name="namespace" select="$namespace"/>
+			<xsl:with-param name="class-name" select="$class-name"/>
+		</xsl:apply-templates>
 	}
 
-}    
-
+}
 	</xsl:template>
 
-	<xsl:template match="string" mode="field-element">
+	
+	<!--<xsl:template match="string" mode="gen-prop-set-locale">
+		<xsl:param name="base-path"/>
+		<xsl:param name="namespace"/>
+		<xsl:param name="class-name"/>
+		<xsl:variable name="property-name" select="@name"/>
+		<xsl:variable name="ident-pred">[@name='<xsl:value-of select="$property-name"/>']</xsl:variable>
+			<xsl:value-of select="$property-name"/> = xeval(@"<xsl:value-of select="$base-path"/><xsl:value-of select="$ident-pred"/>/@value");
+	</xsl:template>-->
+	
+	
+	<xsl:template match="string" mode="gen-class-prop">
+		<xsl:param name="base-path"/>
+		<xsl:param name="namespace"/>
+		<xsl:param name="class-name"/>
 		<xsl:variable name="field-name" select="concat('m_',@name)"/>
 		<xsl:variable name="const-name" select="concat('s_',@name)"/>
 		<xsl:variable name="property-name" select="@name"/>
-		<xsl:variable name="default-value" select="@value"/>
+		<xsl:variable name="default-value" select="translate(@value,'&quot;','&amp;quot;')"/>
+		<xsl:variable name="ident-pred">[@name='<xsl:value-of select="$property-name"/>']</xsl:variable>
+
+
 		private const string <xsl:value-of select="$const-name"/> = @"<xsl:value-of select="$default-value"/>";
 		private string <xsl:value-of select="$field-name"/>=null;
+		[XPath(@"<xsl:value-of select="$base-path"/><xsl:value-of select="$ident-pred"/>/@value")]
 		public string <xsl:value-of select="$property-name"/> {
 			get { 
 				if( <xsl:value-of select="$field-name"/> == null){
@@ -63,5 +78,23 @@ namespace <xsl:value-of select="$namespace" />{
 		}
 	</xsl:template>
 
+	<xsl:template name="gen-header">
+//------------------------------------------------------------------------------
+// &lt;auto-generated&gt;
+//     This code was generated by a tool.
+//     Runtime Version:4.0.30319.1
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// &lt;/auto-generated&gt;
+//------------------------------------------------------------------------------
+
+using System;
+using System.ComponentModel;
+using nvc.localization;
+	</xsl:template>
+
+	<xsl:template name="gen-footer"/>
+		
 	<xsl:template match="@* | node()"/>
 </xsl:stylesheet>

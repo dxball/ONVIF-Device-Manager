@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,9 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,25 +29,59 @@ using nvc.onvif;
 using dev = onvif.services.device;
 
 namespace nvc.models {
-
-	public static class DeviceInfoExtensions {
-
-		public static IObservable<DeviceInfo> GetDeviceInfo(this Session session) {
-
-			var dev_con = session.device;
-
-			var asyncOp = dev_con.GetDeviceInformation()
-				.Select(x => {
-					return new DeviceInfo() {
-						Manufacturer = x.Manufacturer,
-						Model = x.Model,
-						FirmwareVersion = x.FirmwareVersion,
-						SerialNumber = x.SerialNumber,
-						HardwareId = x.HardwareId
-					};
-				});
-
-			return asyncOp;
+	public class NetworkStatus {//:NotifyPropertyChangedBase<NetworkStatus> {
+		private PhysicalAddress m_mac;
+		private IPAddress m_ip;
+		private int m_subnetPrefix;
+		private IPAddress m_dns;
+		//private IPAddress m_defaultGateway;
+		
+		public PhysicalAddress mac {
+			get {
+				return m_mac;
+			}
+			set {
+				if (m_mac != value) {
+					m_mac = value;
+					//this.NotifyPropertyChanged(x => x.mac);
+				}
+			}
 		}
-	};
+
+		public IPAddress ip {
+			get {
+				return m_ip;
+			}
+			set {
+				if (m_ip != value) {
+					m_ip = value;
+					//this.NotifyPropertyChanged(x => x.ip);
+				}
+			}
+		}
+
+		public IPAddress dns {
+			get {
+				return m_dns;
+			}
+			set {
+				if (m_dns != value) {
+					m_dns = value;
+					//this.NotifyPropertyChanged(x => x.dns);
+				}
+			}
+		}
+
+		public int subnetPrefix {
+			get {
+				return m_subnetPrefix;
+			}
+			set {
+				if (m_subnetPrefix != value) {
+					m_subnetPrefix = value;
+					//this.NotifyPropertyChanged(x => x.subnetPrefix);
+				}
+			}
+		}
+	}	
 }

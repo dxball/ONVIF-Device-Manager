@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,9 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,69 +46,14 @@ namespace nvc.entities {
 			set {
 				_mediaStreamUri = value;
 				IsVideoURLInitialised = true;
-				CheckVideoStreamingInitialised();
 				RiseVideoURLInitialisedEvent();
 			}
 		}
 		
-		//Video Streaming initialisation
-		public event EventHandler VideoStreamingInitialised;
-		void RiseVideoStreamingInitialisedEvent() {
-			if (VideoStreamingInitialised != null)
-				VideoStreamingInitialised(this, new EventArgs());
-		}
-		public bool IsVideoStreamingInitialised = false;
-		bool ResolutionsListInitialised = false;
-		bool EncodersListInitialised = false;
-		void CheckVideoStreamingInitialised() {
-			if(ResolutionsListInitialised && EncodersListInitialised)
-				IsVideoStreamingInitialised = true;
-			if (IsVideoURLInitialised && ResolutionsListInitialised && EncodersListInitialised)
-			{
-				RiseVideoStreamingInitialisedEvent();
-			}
-		}
-		List<AvailableResolution> _availableResolutionsList;
-		public List<AvailableResolution> ResolutionsList {
-			get {
-				if (_availableResolutionsList == null)
-					_availableResolutionsList = new List<AvailableResolution>();
-				return _availableResolutionsList;
-			}
-			set {
-				_availableResolutionsList = value;
-				ResolutionsListInitialised = true;
-				CheckVideoStreamingInitialised();
-			}
-		}
-		List<nvc.models.VideoEncoder> _availableEncodersList;
-		public List<nvc.models.VideoEncoder> EncodersList {
-			get {
-				if (_availableEncodersList == null)
-					_availableEncodersList = new List<nvc.models.VideoEncoder>();
-				return _availableEncodersList;
-			}
-			set {
-				_availableEncodersList = value;
-				EncodersListInitialised = true;
-				CheckVideoStreamingInitialised();
-			}
-		}
-		public AvailableResolution GetResolutionByString(string res) {
-			return _availableResolutionsList.Where(x => { return x.ResolutionString == res; }).FirstOrDefault();
-		}
+		//public VideoResolution GetResolutionByString(string res) {
+		//    return _channelModel.encoder.resolutions.Where(x => x.ToString() == res).FirstOrDefault();
+		//}
 
-		Channel _channelModelTemp;
-		Channel ChannelModelTemp {
-			get {
-				if (_channelModelTemp == null)
-					_channelModelTemp = ChannelModel;
-				return _channelModelTemp;
-			}
-			set {
-				_channelModelTemp = value;
-			}
-		}
 		Channel _channelModel;
 		public Channel ChannelModel {
 			get {
@@ -118,13 +65,10 @@ namespace nvc.entities {
 		}
 
 		public Channel GetModelChannel() {
-			return ChannelModelTemp;
+			return ChannelModel;
 		}
 		public void SetModelChannel(Channel channel) {
 			ChannelModel = channel;
-		}
-		public void ResetModelNetworkSettings() {
-			ChannelModelTemp = ChannelModel;
 		}
 
 		public string Id { get; set; }

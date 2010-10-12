@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -25,32 +26,34 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using nvc.entities;
+using nvc.models;
 
 
 namespace nvc.controls
 {
     public partial class PropertyLiveVideo : BasePropertyControl
     {
-        DeviceChannel _devMod;
 		VideoPlayerControl _vidPlayer;
-		public PropertyLiveVideo(DeviceChannel devMod)
+		public PropertyLiveVideo(LiveVideoModel devMod)
         {
             InitializeComponent();
-			//this.Disposed += (sender, args) => {
-			//    this.ReleaseAll();
-			//};
-            _devMod = devMod;
-            
-			_vidPlayer = new VideoPlayerControl(devMod.MediaStreamUri);
+			this.Disposed += (sender, args) => {
+				this.ReleaseAll();
+			};
+
+			_vidPlayer = new VideoPlayerControl(devMod.MediaUri) { Dock = DockStyle.Fill };
 			panel1.Controls.Add(_vidPlayer);
 
-			Localisation();
+			BackColor = ColorDefinition.colControlBackground;
+			_title.BackColor = ColorDefinition.colTitleBackground;
+
+			Localization();
         }
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyLiveVideoTitle"));
+		void Localization(){
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyLiveVideoTitle);
 		}
 		public void ReleaseAll() {
-			//_vidPlayer.ReleaseAll();	
+			_vidPlayer.ReleaseAll();	
 		}
     }
 }

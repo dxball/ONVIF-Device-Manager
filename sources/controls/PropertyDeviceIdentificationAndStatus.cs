@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -32,37 +33,47 @@ namespace nvc.controls
 {
     public partial class PropertyDeviceIdentificationAndStatus : BasePropertyControl
     {
-        public PropertyDeviceIdentificationAndStatus(DeviceModel devMod)
+        public PropertyDeviceIdentificationAndStatus(DeviceIdentificationModel devMod)
         {
 			this.SuspendLayout();
             InitializeComponent();
 
 			this.SetDoubleBufferedRecursive(true);
-			
-			//panel1.SetDoubleBuffered(true);
-			_devMod = devMod;
 
-            InitControls();
-            FillData();
+			BindData(devMod);
 			this.ResumeLayout();
+			InitControls();
         }
 
-		DeviceModel _devMod;
+		public Action Save { get; set; }
+		public Action Cancel { get; set; }
 
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusTitle"));
-			_lblDeviceId.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusLableDeviceID"));
-			_lblFirmware.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusLableFirmware"));
-			_lblHardware.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusLableHardware"));
-			_lblIP.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusLableIPAddr"));
-			_lblMac.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusLableMACAddr"));
-			_lblName.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusLableName"));
+		void BindData(DeviceIdentificationModel devModel) {
+			_tbName.CreateBinding(x=>x.Text, devModel, x=>x.Name);
+			_tbFirmware.CreateBinding(x => x.Text, devModel, x => x.FirmwareVer);
+			_tbDeviceId.CreateBinding(x => x.Text, devModel, x => x.DeviceID);
+			_tbHardware.CreateBinding(x => x.Text, devModel, x => x.HardwareVer);
+			_tbIP.CreateBinding(x => x.Text, devModel, x => x.NetworkIPAddress);
+			_tbMac.CreateBinding(x => x.Text, devModel, x => x.MACAddress);
+
+			_saveCancelControl._btnCancel.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
+			_saveCancelControl._btnSave.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
+		}
+		void Localization(){
+			_title.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusTitle);
+			_lblDeviceId.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusLableDeviceID);
+			_lblFirmware.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusLableFirmware);
+			_lblHardware.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusLableHardware);
+			_lblIP.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusLableIPAddr);
+			_lblMac.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusLableMACAddr);
+			_lblName.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyDeviceInfoStatusLableName);
 		}
 
 		void InitControls() {
-			Localisation();
-			_saveCancelControl.EnableSave(false);
+			Localization();
 
+			_saveCancelControl.ButtonClickedSave += new EventHandler(_saveCancelControl_ButtonClickedSave);
+			_saveCancelControl.ButtonClickedCancel += new EventHandler(_saveCancelControl_ButtonClickedCancel);
 			//set colors
 			BackColor = ColorDefinition.colControlBackground;
 			_title.BackColor = ColorDefinition.colTitleBackground;
@@ -78,15 +89,13 @@ namespace nvc.controls
 			_tbIP.BackColor = ColorDefinition.colControlBackground;
 			_tbMac.BackColor = ColorDefinition.colControlBackground;
 		}
+		
+		void _saveCancelControl_ButtonClickedCancel(object sender, EventArgs e) {
+			Cancel();
+		}
 
-        void FillData()
-        {
-			_tbDeviceId.Text = _devMod.GetDeviceId();
-			_tbFirmware.Text = _devMod.GetDeviceFirmware();
-			_tbHardware.Text = _devMod.GetDeviceHardware();
-			_tbIP.SetIPAddress(_devMod.GetModelNetworkStatus().ip);
-			_tbMac.Text = _devMod.GetModelNetworkStatus().mac.ToString();
-			_tbName.Text = _devMod.GetDeviceName();
-        }
+		void _saveCancelControl_ButtonClickedSave(object sender, EventArgs e) {
+			Save();
+		}
     }
 }

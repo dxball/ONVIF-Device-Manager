@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -27,10 +28,11 @@ using System.Windows.Forms;
 using System.Threading;
 using nvc.entities;
 using nvc.controllers;
+using nvc.models;
 
 namespace nvc.controls
 {
-    public delegate void DeviceListItemSelectedDelegate(string ID);
+	public delegate void DeviceListItemSelectedDelegate(DeviceDescriptionModel devModel);
     public partial class DevicesListControl : UserControl
     {
         public event DeviceListItemSelectedDelegate _onDeviceItemSelected;
@@ -45,16 +47,16 @@ namespace nvc.controls
             InitializeComponent();
             InitDevicesListView();
             InitEvents();
-			Localisation();
+			Localization();
         }
 
-		public void Localisation() {
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sDevicesListControlTitle"));
-			_btnRefresh.DataBindings.Add(new Binding("Text", Constants.Instance, "sDevicesListControlRefresh"));
+		public void Localization() {
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlTitle);
+			_btnRefresh.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlRefresh);
 
-			_columnHeaderName.DataBindings.Add(new Binding("Text", Constants.Instance, "sDevicesListControlColumnName"));
-			_columnHeaderIP.DataBindings.Add(new Binding("Text", Constants.Instance, "sDevicesListControlColumnIPadress"));
-			_columnHeaderType.DataBindings.Add(new Binding("Text", Constants.Instance, "sDevicesListControlColumnType"));
+			_columnHeaderName.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlColumnName);
+			_columnHeaderIP.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlColumnIPadress);
+			_columnHeaderType.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlColumnType);
 		}
         #region Iitialisation
         protected void InitDevicesListView()
@@ -85,7 +87,6 @@ namespace nvc.controls
         #region events handlers
         private void _btnRefresh_Click(object sender, EventArgs e)
         {
-            ClearItems();
             if (RefreshDeviceList != null)
                 RefreshDeviceList(sender, e);
         }
@@ -95,45 +96,44 @@ namespace nvc.controls
 				if (!CheckSameSelection()) {
 					currentSelection = e.Item;
 					if (_onDeviceItemSelected != null)
-						_onDeviceItemSelected(e.Item.SubItems[1].Text);
+						_onDeviceItemSelected((DeviceDescriptionModel)e.Item.Tag);
 				}
 			}
         }
         #endregion events handlers
 
         #region Items list
-		public void SelectItem(DeviceModelInfo devInfo) {
-			ListViewItem item;
-			if (_lviewDevices.Items.Find(devInfo.DeviceId, false).Any()) {
-				item = _lviewDevices.Items.Find(devInfo.DeviceId, false).FirstOrDefault();
-				item.Selected = true;
-			}
+		public void RefreshItems() {
+			_lviewDevices.Items.Clear();
 		}
-		public void RemoveItem(DeviceModelInfo devInfo) {
-			ListViewItem item;
-			if (_lviewDevices.Items.Find(devInfo.DeviceId, false).Any()) {
-				item = _lviewDevices.Items.Find(devInfo.DeviceId, false).FirstOrDefault();
+
+		public void RemoveItem(DeviceDescriptionModel devModel) {
+			ListViewItem[] lvitemsarr = new ListViewItem[_lviewDevices.Items.Count];
+			_lviewDevices.Items.CopyTo(lvitemsarr, 0);
+			ListViewItem item = lvitemsarr.Where(x => x.Tag == devModel).FirstOrDefault();
+			if(item != null){
 				_lviewDevices.Items.Remove(item);
 			}
 		}
-        public void AddItem(DeviceModelInfo devInfo, bool isCheck){
-			ListViewItem lvItem = new ListViewItem();
-			lvItem.Tag = devInfo;
-			lvItem.Name = devInfo.DeviceId;
-			lvItem.Text = devInfo.Name;
+        public void AddItem(DeviceDescriptionModel devModel){
+			ListViewItemBindable lvItem = new ListViewItemBindable();
 
-			var lvSubItemIP = new System.Windows.Forms.ListViewItem.ListViewSubItem();
-			lvSubItemIP.Text = devInfo.IpAddress;
 
-			var lvSubItemType = new System.Windows.Forms.ListViewItem.ListViewSubItem();
-			lvSubItemType.Text = devInfo.Firmware;
+			lvItem.Tag = devModel;
+			lvItem.CreateBinding(x => x.Text, devModel, x => x.Name);
+
+			var lvSubItemIP = new ListViewSubItemBindeble();
+			lvSubItemIP.CreateBinding(x=>x.Text, devModel,  x=>x.Address);
+
+			var lvSubItemType = new ListViewSubItemBindeble();
+			lvSubItemType.CreateBinding(x=>x.Text, devModel,  x=>x.Firmware);
 
 			lvItem.SubItems.Add(lvSubItemIP);
 			lvItem.SubItems.Add(lvSubItemType);
 
 			_lviewDevices.Items.Add(lvItem);
-			if(isCheck)
-				CheckDefaultSelection();
+
+			CheckDefaultSelection();
         }
 		ListViewItem currentSelection;
 		bool CheckSameSelection() {
@@ -153,25 +153,6 @@ namespace nvc.controls
 			}
 			return true;
 		}
-        private void ClearItems()
-        {
-            _lviewDevices.Items.Clear();
-        }
         #endregion Items list
-
-		Action<Uri> _addAction;
-		public void SubscribeToManualAdding(Action<Uri> addAction) {
-			_addAction = addAction;
-		}
-
-		private void _btnAddNew_Click(object sender, EventArgs e) {
-			var button = ((Button)sender);
-			var addForm = new AddDeviceForm();
-
-			if (addForm.ShowDialog(this) == DialogResult.OK) {
-				_addAction(addForm.DeviceURI);
-			};
-
-		}
     }
 }

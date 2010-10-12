@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,12 @@ namespace nvc.onvif {
 			var request = new GetVideoSourcesRequest();
 			var asyncOp = Observable.FromAsyncPattern<GetVideoSourcesRequest, GetVideoSourcesResponse>(m_proxy.BeginGetVideoSources, m_proxy.EndGetVideoSources);
 			return asyncOp(request).Select(x=>x.VideoSources);
+		}
+
+		public IObservable<Profile> GetProfile(string profileToken) {
+			var request = new GetProfileRequest(profileToken);
+			var asyncOp = Observable.FromAsyncPattern<GetProfileRequest, GetProfileResponse>(m_proxy.BeginGetProfile, m_proxy.EndGetProfile);
+			return asyncOp(request).Select(x => x.Profile);
 		}
 
 		public IObservable<Profile[]> GetProfiles() {
@@ -73,6 +80,12 @@ namespace nvc.onvif {
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
+		public IObservable<VideoSourceConfiguration[]> GetVideoSourceConfigurations() {
+			var request = new GetVideoSourceConfigurationsRequest();
+			var asyncOp = Observable.FromAsyncPattern<GetVideoSourceConfigurationsRequest, GetVideoSourceConfigurationsResponse>(m_proxy.BeginGetVideoSourceConfigurations, m_proxy.EndGetVideoSourceConfigurations);
+			return asyncOp(request).Select(x => x.Configurations);
+		}
+
 		public IObservable<VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(string profileToken) {
 			var request = new GetCompatibleVideoSourceConfigurationsRequest(profileToken);
 			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoSourceConfigurationsRequest, GetCompatibleVideoSourceConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoSourceConfigurations, m_proxy.EndGetCompatibleVideoSourceConfigurations);
@@ -97,11 +110,27 @@ namespace nvc.onvif {
 			return asyncOp(request).Select(x => x.Configurations);
 		}
 
+		public IObservable<VideoEncoderConfiguration[]> GetVideoEncoderConfigurations() {
+			var request = new GetVideoEncoderConfigurationsRequest();
+			var asyncOp = Observable.FromAsyncPattern<GetVideoEncoderConfigurationsRequest, GetVideoEncoderConfigurationsResponse>(m_proxy.BeginGetVideoEncoderConfigurations, m_proxy.EndGetVideoEncoderConfigurations);
+			return asyncOp(request).Select(x => x.Configurations);
+		}
+
 		public IObservable<Unit> SetVideoEncoderConfiguration(VideoEncoderConfiguration configuration, bool forcePersistance) {
 			var request = new SetVideoEncoderConfigurationRequest(configuration, forcePersistance);
 			var asyncOp = Observable.FromAsyncPattern<SetVideoEncoderConfigurationRequest,SetVideoEncoderConfigurationResponse>(m_proxy.BeginSetVideoEncoderConfiguration, m_proxy.EndSetVideoEncoderConfiguration);
 			return asyncOp(request).Select(x => new Unit());				
 		}
+
+		public IObservable<VideoEncoderConfigurationOptions> GetVideoEncoderConfigurationOptions(string vecToken, string profileToken) {
+			var request = new GetVideoEncoderConfigurationOptionsRequest(vecToken, profileToken);
+			var asyncOp = Observable.FromAsyncPattern<GetVideoEncoderConfigurationOptionsRequest,GetVideoEncoderConfigurationOptionsResponse>(m_proxy.BeginGetVideoEncoderConfigurationOptions, m_proxy.EndGetVideoEncoderConfigurationOptions);
+			return asyncOp(request).Select(x => x.Options);				
+		}
+
+		public IObservable<VideoEncoderConfigurationOptions> GetVideoEncoderConfigurationOptions() {
+			return GetVideoEncoderConfigurationOptions(null, null);
+		}		
 
 		public IObservable<Unit> AddMetadataConfiguration(string profileToken, string configurationToken) {
 			var request = new AddMetadataConfigurationRequest(profileToken, configurationToken);

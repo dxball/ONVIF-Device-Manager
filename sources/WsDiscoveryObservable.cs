@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -116,10 +117,12 @@ namespace nvc {
 					if (e.Error != null) {
 						observer.OnError(e.Error);
 					} else {
-						if (e.Result != null) {
+						if (e.Result != null && e.Result.EndpointDiscoveryMetadata != null) {
 							observer.OnNext(e.Result.EndpointDiscoveryMetadata);
-						}
-						observer.OnCompleted();
+							observer.OnCompleted();
+						} else {
+							observer.OnError(new TimeoutException());
+						}						
 					}
 					dc.Close();
 				};

@@ -28,39 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._progressLoading = new System.Windows.Forms.ProgressBar();
+			this._progressLoading = new System.Windows.Forms.ProgressBar();
 			this._title = new nvc.controls.GroupBoxControl();
-            this.SuspendLayout();
-            // 
-            // _progressLoading
-            // 
-            this._progressLoading.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._progressLoading.Location = new System.Drawing.Point(3, 36);
-            this._progressLoading.Name = "_progressLoading";
-            this._progressLoading.Size = new System.Drawing.Size(346, 23);
-            this._progressLoading.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this._progressLoading.TabIndex = 0;
-            // 
-            // _title
-            // 
-            this._title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._title.BackColor = System.Drawing.SystemColors.ControlLight;
-            this._title.Location = new System.Drawing.Point(3, 3);
-            this._title.Name = "_title";
-            this._title.Size = new System.Drawing.Size(346, 23);
-            this._title.TabIndex = 1;
-            // 
-            // LoadingPropertyPage
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this._title);
-            this.Controls.Add(this._progressLoading);
-            this.Name = "LoadingPropertyPage";
-            this.Size = new System.Drawing.Size(352, 78);
-            this.ResumeLayout(false);
+			this.SuspendLayout();
+			// 
+			// _progressLoading
+			// 
+			this._progressLoading.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._progressLoading.Location = new System.Drawing.Point(3, 36);
+			this._progressLoading.Name = "_progressLoading";
+			this._progressLoading.Size = new System.Drawing.Size(344, 23);
+			this._progressLoading.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+			this._progressLoading.TabIndex = 0;
+			// 
+			// _title
+			// 
+			this._title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this._title.BackColor = System.Drawing.SystemColors.ControlLight;
+			this._title.Location = new System.Drawing.Point(3, 3);
+			this._title.Name = "_title";
+			this._title.Size = new System.Drawing.Size(344, 23);
+			this._title.TabIndex = 1;
+			// 
+			// LoadingPropertyPage
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this._title);
+			this.Controls.Add(this._progressLoading);
+			this.Name = "LoadingPropertyPage";
+			this.Size = new System.Drawing.Size(350, 78);
+			this.ResumeLayout(false);
 
         }
 

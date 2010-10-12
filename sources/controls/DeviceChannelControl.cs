@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -26,18 +27,19 @@ using System.Text;
 using System.Windows.Forms;
 using nvc.controllers;
 using nvc.entities;
+using nvc.models;
 
 namespace nvc.controls
 {
-    public delegate void channelEventHandlerDelegate(DeviceChannel devChannel, LinkButtonSetting settings);
+    public delegate void channelEventHandlerDelegate(ChannelDescription devChannel);//, LinkButtonSetting settings);
     public partial class DeviceChannelControl : BaseControl
     {
         public Panel SettingsFrame { get; set; }
 
-		DeviceChannel _devChannel;
+		ChannelDescription _devChannel;
         public event channelEventHandlerDelegate ChannelSelected;
 
-		public DeviceChannelControl(DeviceChannel devChannel)
+		public DeviceChannelControl(ChannelDescription devChannel)
         {
             InitializeComponent();
 
@@ -54,7 +56,7 @@ namespace nvc.controls
 
         public void InitControls()
         {
-            _title.Text = _devChannel.GetChannelName();
+			_title.Text = _devChannel.Name;
 
             //_imgBox.Image = _devModel.GetChannelsLastEvent(_chanelName).Thumbnail;
             //_imgBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -87,7 +89,7 @@ namespace nvc.controls
         {
             if (ChannelSelected != null)
             {
-                ChannelSelected(_devChannel, null);
+                ChannelSelected(_devChannel);// null);
             }
         }
 
@@ -153,7 +155,7 @@ namespace nvc.controls
         {
             if (ChannelSelected != null)
             {
-                ChannelSelected(_devChannel, e as LinkButtonSetting);
+				ChannelSelected(_devChannel);//, e as LinkButtonSetting);
             }
         }
     }

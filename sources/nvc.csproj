@@ -82,8 +82,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncState.cs" />
+    <Compile Include="rx.PendingScheduler.cs" />
     <Compile Include="controls.utils.ListItem.cs" />
+    <Compile Include="localization\localization.cs" />
     <Compile Include="localization\LanguageManager.cs" />
+    <Compile Include="models\ChannelDescription.cs" />
+    <Compile Include="models\DeviceCapabilityModel.cs" />
+    <Compile Include="models\DeviceDescriptionModel.cs" />
+    <Compile Include="models\DeviceIdentificationModel.cs" />
+    <Compile Include="models\DeviceNetworkSettingsModel.cs" />
+    <Compile Include="models\LiveVideoModel.cs" />
+    <Compile Include="models\ModelBase.cs" />
+    <Compile Include="models\VideoStreamingModel.cs" />
     <Compile Include="rx.ObserverState.cs" />
     <Compile Include="controllers\ControllersInterfaces.cs">
       <SubType>Component</SubType>
@@ -102,11 +112,11 @@
     <Compile Include="controls\SavingSettingsControl.Designer.cs">
       <DependentUpon>SavingSettingsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\SavingSettingsForm.cs">
+    <Compile Include="controls\InformationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="controls\SavingSettingsForm.Designer.cs">
-      <DependentUpon>SavingSettingsForm.cs</DependentUpon>
+    <Compile Include="controls\InformationForm.Designer.cs">
+      <DependentUpon>InformationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="controls\TitleBar.cs">
       <SubType>UserControl</SubType>
@@ -116,7 +126,7 @@
     </Compile>
     <Compile Include="entities\Decriptors.cs" />
     <Compile Include="entities\DeviceChannel.cs" />
-    <Compile Include="entities\DeviceModel.cs" />
+    <Compile Include="utils.NetMaskHelper.cs" />
     <Compile Include="utils.DebugHelper.cs" />
     <Compile Include="utils.LogUtils.cs" />
     <Compile Include="WorkItemQueue.cs" />
@@ -152,14 +162,14 @@
     <Compile Include="controls\IPAddrMaskedTextBox.Designer.cs">
       <DependentUpon>IPAddrMaskedTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="models\NetworkSettings.cs" />
-    <Compile Include="models\NetworkStatus.cs" />
-    <Compile Include="models\DeviceInfoExtensions.cs" />
-    <Compile Include="models\NetworkSettingsExtensions.cs" />
-    <Compile Include="models\NetworkStatusExtensions.cs" />
-    <Compile Include="models\DeviceInfo.cs" />
-    <Compile Include="models\VideoStreamingSettings.cs" />
-    <Compile Include="models\VideoStreamingSettingsExtensions.cs" />
+    <Compile Include="onvif.models\NetworkSettings.cs" />
+    <Compile Include="onvif.models\NetworkStatus.cs" />
+    <Compile Include="onvif.models\DeviceInfoExtensions.cs" />
+    <Compile Include="onvif.models\NetworkSettingsExtensions.cs" />
+    <Compile Include="onvif.models\NetworkStatusExtensions.cs" />
+    <Compile Include="onvif.models\DeviceInfo.cs" />
+    <Compile Include="onvif.models\VideoStreamingSettings.cs" />
+    <Compile Include="onvif.models\VideoStreamingSettingsExtensions.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="controls\BaseControl.cs">
       <SubType>UserControl</SubType>
@@ -363,8 +373,8 @@
     <EmbeddedResource Include="controls\SavingSettingsControl.resx">
       <DependentUpon>SavingSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\SavingSettingsForm.resx">
-      <DependentUpon>SavingSettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="controls\InformationForm.resx">
+      <DependentUpon>InformationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="controls\TitleBar.resx">
       <DependentUpon>TitleBar.cs</DependentUpon>
@@ -387,6 +397,15 @@
     </Compile>
     <None Include="app.config" />
     <Compile Include="onvif.Session.cs" />
+    <None Include="logs\app_messages.svclog">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="logs\app_tracelog.svclog">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="nvc.targets">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="properties\app.manifest" />
     <None Include="properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -399,21 +418,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="localization\strings.xml" />
+    <Xslt Include="localization\strings.xml">
+      <Transformation>localization\strings.generator.xslt</Transformation>
+      <Out>localization\strings.generated.cs</Out>
+    </Xslt>
     <None Include="localization\strings.generator.xslt">
       <DependentUpon>strings.xml</DependentUpon>
     </None>
-    <Compile Include="localization\strings.cs">
-      <DependentUpon>strings.xml</DependentUpon>
-    </Compile>
     <Compile Include="localization\strings.generated.cs">
       <DependentUpon>strings.xml</DependentUpon>
     </Compile>
-    <Content Include="localization\eng.xml">
+    <Content Include="locales\convert.xslt" />
+    <Content Include="locales\eng.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="localization\rus.xml">
+    <Content Include="locales\rus.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -461,33 +481,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libs\libvlcnet-0.3.1.0-src\trunk\media-player-vlc-winforms\media-player-vlc-winforms.csproj">
-      <Project>{9DDB7196-B081-4FC5-9857-6EBB998EF622}</Project>
-      <Name>media-player-vlc-winforms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\libs\libvlcnet-0.3.1.0-src\trunk\media-player-vlc\media-player-vlc.csproj">
-      <Project>{5AF6C9FE-6B19-4C1D-BADE-35BFF33825B8}</Project>
-      <Name>media-player-vlc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\libs\libvlcnet-0.3.1.0-src\trunk\media-player\media-player.csproj">
-      <Project>{AF48831A-8C67-499D-AAF8-A8441F3FBAAD}</Project>
-      <Name>media-player</Name>
+    <ProjectReference Include="..\liblenin\liblenin.csproj">
+      <Project>{3515CD65-B9F0-44D1-A8D1-96655C590D11}</Project>
+      <Name>liblenin</Name>
     </ProjectReference>
     <ProjectReference Include="onvif.services\onvif.services.csproj">
       <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
       <Name>onvif.services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="nvc.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /S /C /Y $(SolutionDir)libs\vlc-1.1.4-bin $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-  </Target>
-  -->
+  </Target>-->
 </Project>

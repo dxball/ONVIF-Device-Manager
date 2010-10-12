@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
 			this._panelMain = new System.Windows.Forms.Panel();
-			this._btnAddNew = new System.Windows.Forms.Button();
 			this._title = new nvc.controls.GroupBoxControl();
 			this._btnRefresh = new System.Windows.Forms.Button();
 			this._panelListView = new System.Windows.Forms.Panel();
@@ -40,7 +39,6 @@
 			// 
 			// _panelMain
 			// 
-			this._panelMain.Controls.Add(this._btnAddNew);
 			this._panelMain.Controls.Add(this._title);
 			this._panelMain.Controls.Add(this._btnRefresh);
 			this._panelMain.Controls.Add(this._panelListView);
@@ -49,18 +47,6 @@
 			this._panelMain.Name = "_panelMain";
 			this._panelMain.Size = new System.Drawing.Size(341, 310);
 			this._panelMain.TabIndex = 0;
-			// 
-			// _btnAddNew
-			// 
-			this._btnAddNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this._btnAddNew.Location = new System.Drawing.Point(260, 284);
-			this._btnAddNew.Name = "_btnAddNew";
-			this._btnAddNew.Size = new System.Drawing.Size(75, 23);
-			this._btnAddNew.TabIndex = 3;
-			this._btnAddNew.Text = "Add Device";
-			this._btnAddNew.UseVisualStyleBackColor = true;
-			this._btnAddNew.Visible = false;
-			this._btnAddNew.Click += new System.EventHandler(this._btnAddNew_Click);
 			// 
 			// _title
 			// 
@@ -129,7 +115,6 @@
         private System.Windows.Forms.Button _btnRefresh;
         private System.Windows.Forms.Panel _panelListView;
         private System.Windows.Forms.ListView _lviewDevices;
-        private GroupBoxControl _title;
-		private System.Windows.Forms.Button _btnAddNew;
+		private GroupBoxControl _title;
     }
 }

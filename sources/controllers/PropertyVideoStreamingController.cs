@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -23,73 +24,89 @@ using System.Text;
 using System.Windows.Forms;
 using nvc.controls;
 using nvc.entities;
+using nvc.models;
+using nvc.onvif;
+using System.Threading;
+using nvc.utils;
 
 namespace nvc.controllers {
 	public class PropertyVideoStreamingController : IPropertyController {
-		DeviceChannel _devModel = WorkflowController.Instance.GetCurrentDevice().GetCurrentChannel();
+		VideoStreamingModel _devModel;
+		ChannelDescription CurrentChannel { get; set; }
+		Session CurrentSession{get;set;}
 		Panel _propertyPanel;
 		BasePropertyControl _currentControl;
-		IDisposable _subscriptionVideoURI;
-		IDisposable _subscriptionAvailableEncoders;
-		IDisposable _subscriptionToAvailableResolutions;
+		InformationForm _savingSettingsForm;
+		IDisposable _subscription;
 
 		public PropertyVideoStreamingController() {
 
 		}
-		#region Init section
-
-		public BasePropertyControl CreateController(Panel propertyPanel) {
+		
+		void LoadControl() {
+			_devModel = new VideoStreamingModel(CurrentChannel);
+			_subscription = _devModel.Load(CurrentSession).Subscribe(arg => {
+				_devModel = arg;
+				_propertyPanel.SuspendLayout();
+				_propertyPanel.Controls.ForEach(x => ((Control)x).Dispose());
+				_propertyPanel.Controls.Clear();
+				_currentControl = new PropertyVideoStreaming(_devModel) { Dock = DockStyle.Fill, Save = ApplyChanges, Cancel = CancelChanges };
+				_propertyPanel.Controls.Add(_currentControl);
+				_propertyPanel.ResumeLayout();
+			}, err => {
+				DebugHelper.Error(err);
+				_savingSettingsForm = new InformationForm("ERROR");
+				_savingSettingsForm.SetErrorMessage(err.Message);
+				_savingSettingsForm.ShowCloseButton(null);
+				_savingSettingsForm.ShowDialog(_propertyPanel);
+			});
+		}
+		public BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription chan) {
 			_propertyPanel = propertyPanel;
+			CurrentSession = session;
+			CurrentChannel = chan;
 			
-			if (_devModel.IsVideoStreamingInitialised != true) {
-				if (!_devModel.IsVideoURLInitialised)
-					_subscriptionVideoURI = WorkflowController.Instance.SubscribeToVideoURI(_devModel);
-				if (_devModel.IsVideoStreamingInitialised != true)
-				{
-					_subscriptionAvailableEncoders = WorkflowController.Instance.SubscribeToAvailableEncoders(_devModel);
-					_subscriptionToAvailableResolutions = WorkflowController.Instance.SubscribeToAvailableResolutions(_devModel);
-				}
-				_devModel.VideoStreamingInitialised += new EventHandler(_devModel_VideoStreamingInitialised);
-				_currentControl = new LoadingPropertyPage();
-			} else {
-				_currentControl = CreateProperty();
-			}
-
+			_currentControl = new LoadingPropertyPage();
+	
 			_propertyPanel.Controls.Clear();
 			_currentControl.Dock = DockStyle.Fill;
 			_propertyPanel.Controls.Add(_currentControl);
-
+			
+			LoadControl();
 			return _currentControl;
 		}
 
-		public BasePropertyControl CreateProperty() {
-			var property = new PropertyVideoStreaming(_devModel);
-			property.Dock = DockStyle.Fill;
-			return property;
+		void CancelChanges() {
+			_devModel.RevertChanges();
 		}
-		#endregion
-		#region EventsHandlers
-		void _devModel_VideoStreamingInitialised(object sender, EventArgs e) {
-			var control = CreateProperty();
-			_propertyPanel.Controls.Clear();
-			control.Dock = DockStyle.Fill;
-			_propertyPanel.Controls.Add(control);
+		void ApplyChanges() {
+			_devModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
+				.Subscribe(devMod => {
+					_devModel = devMod;
+				}, err => {
+					DebugHelper.Error(err);
+					SaveVideoStreamingSettingsError(err.Message);
+				}, () => {
+					SaveVideoStreamingComplete();
+				});
+			_savingSettingsForm = new InformationForm();
+			_savingSettingsForm.ShowDialog(_propertyPanel);
 		}
-		#endregion
-		#region release resources
-		protected bool disposed = false;
-		public void ReleaseAll() {
-			disposed = true;
 
-			if (_subscriptionVideoURI != null)
-				_subscriptionVideoURI.Dispose();
-			if (_subscriptionAvailableEncoders != null)
-				_subscriptionAvailableEncoders.Dispose();
-			if (_subscriptionToAvailableResolutions != null)
-				_subscriptionToAvailableResolutions.Dispose();
-				
-			_devModel.VideoStreamingInitialised -= _devModel_VideoStreamingInitialised;
+		void SaveVideoStreamingSettingsError(string message) {
+			_savingSettingsForm.SetErrorMessage(message);
+			_savingSettingsForm.ShowCloseButton(KillEveryOne);
 		}
-		#endregion
+		public void KillEveryOne() {
+			WorkflowController.Instance.KillEveryBody();
+		}
+
+		void SaveVideoStreamingComplete() {
+			_savingSettingsForm.Close();
+		}
+		
+		public void ReleaseAll() {
+			if (_subscription != null) _subscription.Dispose();
+		}
 	}
 }

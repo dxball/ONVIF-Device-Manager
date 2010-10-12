@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -25,21 +26,25 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using nvc.entities;
+using nvc.models;
 
 namespace nvc.controls
 {
     public partial class ErrorMessageControl : UserControl
     {
-		DeviceModelInfo _devInfo;
-        public ErrorMessageControl(DeviceModelInfo devInfo)
+		DeviceDescriptionModel _devInfo;
+		public ErrorMessageControl(DeviceDescriptionModel devInfo)
         {
 			_devInfo = devInfo;
             InitializeComponent();
             InitializeControl_i();
         }
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sErrorDevInfoNull"));
-			_tbErrorMsg.Text = Environment.NewLine + "device address: " + _devInfo.IpAddress + Environment.NewLine + Environment.NewLine + _devInfo.ErrorMsg;
+		void Localization(){
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sErrorDevInfoNull);
+			if (_devInfo != null)
+				_tbErrorMsg.Text = Environment.NewLine + "device address: " + _devInfo.Address + Environment.NewLine + Environment.NewLine;
+			else
+				_tbErrorMsg.Text = Constants.Instance.sErrorDevInfoNull;
 		}
         public ErrorMessageControl()
         {
@@ -49,7 +54,7 @@ namespace nvc.controls
 
         private void InitializeControl_i()
         {
-			Localisation();
+			Localization();
             _title.BackColor = ColorDefinition.colTitleBackground;
             BackColor = ColorDefinition.colControlBackground;
             _tbErrorMsg.BackColor = ColorDefinition.colControlBackground;

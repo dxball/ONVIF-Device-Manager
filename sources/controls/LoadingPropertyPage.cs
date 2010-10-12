@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -32,12 +33,12 @@ namespace nvc.controls
         public LoadingPropertyPage()
         {
             InitializeComponent();
-			Localisation();
+			Localization();
             
             SetColors();
         }
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sLoadingData"));
+		void Localization(){
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sLoadingData);
 		}
         void SetColors()
         {

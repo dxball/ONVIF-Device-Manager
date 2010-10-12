@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -41,8 +42,8 @@ namespace nvc.controls
 		ColumnHeader _columnHeaderType = new ColumnHeader();
 		ColumnHeader _columnHeaderDetails = new ColumnHeader();
         //IEntities Entity = WorkflowController.Instance;
-		void Localisation() {
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyEventsTitle"));
+		void Localization() {
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyEventsTitle);
 			_lviewEvents.DataBindings.Add(new Binding("Columns[0].Text", Constants.Instance, "sPropertyEventsColumnID"));
 			_lviewEvents.DataBindings.Add(new Binding("Columns[1].Text", Constants.Instance, "sPropertyEventsColumnType"));
 			_lviewEvents.DataBindings.Add(new Binding("Columns[2].Text", Constants.Instance, "sPropertyEventsColumnDate"));
@@ -54,10 +55,10 @@ namespace nvc.controls
 			InitTable();
 			FillListView();
 
-			Localisation();
+			Localization();
 
             _imgBox.SizeMode = PictureBoxSizeMode.Zoom;
-            _imgBox.Image = WorkflowController.Instance.GetCurrentDevice().GetDeviceImage();
+            //_imgBox.Image;// = WorkflowController.Instance.GetCurrentDevice().GetDeviceImage();
         }
         protected void InitTable()
         {

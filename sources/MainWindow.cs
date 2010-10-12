@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace nvc {
 			InitializeComponent();
             InitControls();
 
-			Localisation();
+			Localization();
             
             BackColor = ColorDefinition.colControlBackground;
             _langPanel.BackColor = ColorDefinition.colControlBackground;
@@ -47,12 +48,12 @@ namespace nvc {
             _lblStatus3.BackColor = ColorDefinition.colControlBackground;
 		}
 
-		void Localisation(){
+		void Localization(){
 			Text = Constants.Instance.sApplicationName;
 		}
 
 		EmptyNotifierControl _emptyCtrl;
-        protected void InitControls()
+        public void InitControls()
         {
             //Fills some data if no devices founded
 			_emptyCtrl = new EmptyNotifierControl();

@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -23,44 +24,56 @@ using System.Text;
 using System.Windows.Forms;
 using nvc.controls;
 using nvc.entities;
+using nvc.models;
+using nvc.onvif;
+using System.Threading;
+using nvc.utils;
 
 namespace nvc.controllers {
 	public class PropertyIdentificationController : IRelesable, IPropertyController {
-		DeviceModel _devModel = WorkflowController.Instance.GetCurrentDevice();
+		DeviceIdentificationModel _devIdentificationModel;
+		Session _session;
 		Panel _propertyPanel;
-		BasePropertyControl _currentControl;
-		IDisposable _subscriptionNetworkStatus;
+		PropertyDeviceIdentificationAndStatus _propertyIdentification;
+		InformationForm _savingSettingsForm;
+		IDisposable _subscription;
 
 		public PropertyIdentificationController() {
 
 		}
 
-		#region IDisposable
-		public bool disposed = false;
 		public void ReleaseAll() {
-			disposed = true;
-
-			if (_subscriptionNetworkStatus != null)
-				_subscriptionNetworkStatus.Dispose();
-			_devModel.IdentificationInitialised -= _devModel_IdentificationInitialised;
+			if (_subscription != null) _subscription.Dispose();
 		}
-		#endregion IDisposable
 
-		public BasePropertyControl CreateController(Panel propertyPanel) {
+		void LoadControl() {
+			_subscription = _devIdentificationModel.Load(_session)
+				.Subscribe(arg => {
+					_devIdentificationModel = arg;
+					_propertyPanel.SuspendLayout();
+					_propertyPanel.Controls.ForEach(x=>((Control)x).Dispose());
+					_propertyPanel.Controls.Clear();
+					_propertyIdentification = new PropertyDeviceIdentificationAndStatus(_devIdentificationModel) { Dock = DockStyle.Fill, Save = ApplyChanges, Cancel = CancelChanges};
+					_propertyPanel.Controls.Add(_propertyIdentification);
+					_propertyPanel.ResumeLayout();
+				}, err => {
+					_savingSettingsForm = new InformationForm("ERROR");
+					_savingSettingsForm.SetErrorMessage(err.Message);
+					_savingSettingsForm.ShowCloseButton(null);
+					_savingSettingsForm.ShowDialog(_propertyIdentification);
+				});
+		}
+		public BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription chan) {
 			_propertyPanel = propertyPanel;
-			if (_devModel.IsPropertyIdentificationReady != true) {
-				_subscriptionNetworkStatus = WorkflowController.Instance.SubscribeToNetworkStatus();
-				_devModel.IdentificationInitialised += new EventHandler(_devModel_IdentificationInitialised);
-				_currentControl = new LoadingPropertyPage();
-			} else {
-				_currentControl = CreatePropertyIdentification();
-			}
+			_session = session;
+			_devIdentificationModel = new DeviceIdentificationModel();			
 
 			_propertyPanel.Controls.Clear();
-			_currentControl.Dock = DockStyle.Fill;
-			_propertyPanel.Controls.Add(_currentControl);
+			_propertyPanel.Controls.Add(new LoadingPropertyPage() { Dock = DockStyle.Fill});
 
-			return _currentControl;
+			LoadControl();
+
+			return null;
 		}
 
 		void _devModel_IdentificationInitialised(object sender, EventArgs e) {
@@ -70,9 +83,41 @@ namespace nvc.controllers {
 			_propertyPanel.Controls.Add(control);
 		}
 		public BasePropertyControl CreatePropertyIdentification() {
-			var propertyIdentification = new PropertyDeviceIdentificationAndStatus(_devModel);
-			propertyIdentification.Dock = DockStyle.Fill;
-			return propertyIdentification;
+			_propertyIdentification = new PropertyDeviceIdentificationAndStatus(new DeviceIdentificationModel());
+			_propertyIdentification.Dock = DockStyle.Fill;
+			return _propertyIdentification;
+		}
+
+		void CancelChanges() {
+			_devIdentificationModel.RevertChanges();
+		}
+		void ApplyChanges() {
+			_devIdentificationModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
+				.Subscribe(devMod => { 
+					_devIdentificationModel = devMod;
+				}, err => { 
+					SaveDeviceNameError(err.Message);
+				}, () => { 
+					SaveDeviceNameComplete();
+				});
+			_savingSettingsForm = new InformationForm();
+			_savingSettingsForm.ShowDialog(_propertyIdentification);
+		}
+
+		void propertyIdentification_SaveData(string name) {
+			_savingSettingsForm = new InformationForm();
+			_savingSettingsForm.ShowDialog(_propertyIdentification);
+		}
+
+		void SaveDeviceNameError(string error) {
+			_savingSettingsForm.SetErrorMessage(error);
+			_savingSettingsForm.ShowCloseButton(KillEveryOne);
+		}
+		public void KillEveryOne() {
+			WorkflowController.Instance.KillEveryBody();
+		}
+		void SaveDeviceNameComplete() {
+			_savingSettingsForm.Close();
 		}
 
 	}

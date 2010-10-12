@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,16 @@ using System.Text;
 using nvc.controls;
 using System.Windows.Forms;
 using nvc.entities;
+using nvc.models;
 
 namespace nvc.controllers {
 	public class ErrorFrameController : IRelesable {
 		public void ReleaseAll() { }
 
 		public ErrorFrameController() { }
-		DeviceModelInfo _devInfo;
+		DeviceDescriptionModel _devInfo;
 		ErrorMessageControl _errorControl;
-		public UserControl CreateErrorFrame(DeviceModelInfo devInfo) {
+		public UserControl CreateErrorFrame(DeviceDescriptionModel devInfo) {
 			_devInfo = devInfo;
 			_errorControl = new ErrorMessageControl(devInfo);
 

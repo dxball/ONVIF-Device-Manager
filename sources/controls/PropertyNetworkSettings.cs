@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -26,53 +27,72 @@ using System.Text;
 using System.Windows.Forms;
 using nvc.models;
 using nvc.entities;
+using System.Net;
+using nvc.controls.utils;
+using nvc.utils;
 
 namespace nvc.controls
 {
-	public delegate void SaveNetworkSettingsEvent(NetworkSettings netSett, NetworkStatus netStat);
     public partial class PropertyNetworkSettings : BasePropertyControl
     {
-        public PropertyNetworkSettings(DeviceModel devMod)
+		public PropertyNetworkSettings(DeviceNetworkSettingsModel devMod)
         {
 		    InitializeComponent();
 			this.SetDoubleBufferedRecursive(true);
-			//panel1.SetDoubleBuffered(true);
-
-			//this.SetAutoScrollMargin			
-			_netSet = devMod.GetModelNetworkSettings();
-			_netStat = devMod.GetModelNetworkStatus();
-			fResetNetworkSettings = devMod.ResetModelNetworkSettings;
-
-            InitControls();
-            FillData();
-			_saveCancelControl.EnableCancel(false);
-			_saveCancelControl.EnableSave(false);
+			
+			BindData(devMod);
+			InitControls();
         }
 
-		public event SaveNetworkSettingsEvent SaveData;
-		NetworkSettings _netSet;
-		NetworkStatus _netStat;
-		Action fResetNetworkSettings;
+		public Action Save { get; set; }
+		public Action Cancel { get; set; }
 
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDeviceInfoStatusTitle"));
-			_lblDHCP.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyNetworkSettingsDHCP"));
-			_lblDNSaddr.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyNetworkSettingsDNSaddr"));
-			_lblGateAddr.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyNetworkSettingsGateAddr"));
-			_lblIPaddress.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyNetworkSettingsIPaddr"));
-			_lblMACaddr.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyNetworkSettingsMACaddr"));
-			_lblSubnetMask.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyNetworkSettingsSubnetMask"));
+		void BindData(DeviceNetworkSettingsModel devModel) {
+			_tbMACaddr.CreateBinding(x => x.Text, devModel, x => x.mac);
+			
+			_tbmDNS.CreateBinding(x => x.IPAddress, devModel, x => x.staticDns, DataSourceUpdateMode.OnPropertyChanged);
+			_tbmDNS.CreateBinding(x => x.Enabled, devModel, x => x.dhcp, x=>!x);
+
+			_tbmGate.CreateBinding(x => x.IPAddress, devModel, x => x.staticGateway, DataSourceUpdateMode.OnPropertyChanged);
+			_tbmGate.CreateBinding(x => x.Enabled, devModel, x => x.dhcp, x => !x);
+
+			_tbmSubnet.CreateBinding(x => x.IPAddress, devModel, x => x.subnetMask, DataSourceUpdateMode.OnPropertyChanged);
+			_tbmSubnet.CreateBinding(x => x.Enabled, devModel, x => x.dhcp, x => !x);
+
+			_tbmIPaddr.CreateBinding(x => x.IPAddress, devModel, x => x.staticIp, DataSourceUpdateMode.OnPropertyChanged);
+			_tbmIPaddr.CreateBinding(x => x.Enabled, devModel, x => x.dhcp, x => !x);
+			
+			_cbDHCP.Items.Add(true);
+			_cbDHCP.Items.Add(false);
+			_cbDHCP.Format += (sender, cevent) => {
+				DebugHelper.Assert(typeof(bool)==cevent.Value.GetType());
+				var value = (bool)cevent.Value;
+				cevent.Value = value ? "On" : "Off";
+			};
+
+			_cbDHCP.CreateBinding(x => x.SelectedItem, devModel, x => x.dhcp, DataSourceUpdateMode.OnPropertyChanged);
+			_cbDHCP.SelectedValueChanged += (sender, args) => {
+				if (_cbDHCP.SelectedItem != null) {
+					devModel.dhcp = (bool)_cbDHCP.SelectedItem;
+				}
+			};
+			
+			_saveCancelControl._btnCancel.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
+			_saveCancelControl._btnSave.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
+		}
+		void Localization(){
+			_title.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyDeviceInfoStatusTitle);
+			_lblDHCP.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyNetworkSettingsDHCP);
+			_lblDNSaddr.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyNetworkSettingsDNSaddr);
+			_lblGateAddr.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyNetworkSettingsGateAddr);
+			_lblIPaddress.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyNetworkSettingsIPaddr);
+			_lblMACaddr.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyNetworkSettingsMACaddr);
+			_lblSubnetMask.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyNetworkSettingsSubnetMask);
 		}
 
         void InitControls()
         {
-			Localisation();
-            _saveCancelControl.ButtonClickedSave += new EventHandler(_saveCancelControl_ButtonClickedSave);
-            _saveCancelControl.ButtonClickedCancel += new EventHandler(_saveCancelControl_ButtonClickedCancel);
-
-			_cbDHCP.Items.Add(Constants.Instance.sCommonAppOn);
-			_cbDHCP.Items.Add(Constants.Instance.sCommonAppOff);
-			_cbDHCP.SelectedItem = Constants.Instance.sCommonAppOn;
+			Localization();
 
             //Color
             _title.BackColor = ColorDefinition.colTitleBackground;
@@ -82,100 +102,17 @@ namespace nvc.controls
                 _lblIPaddress.BackColor = _lblMACaddr.BackColor = _lblSubnetMask.BackColor = 
                 _tbMACaddr.BackColor = ColorDefinition.colControlBackground;
 
-			_saveCancelControl.EnableCancel(false);
-			_saveCancelControl.EnableSave(false);
+			_saveCancelControl.ButtonClickedCancel +=new EventHandler(_saveCancelControl_ButtonClickedCancel);
+			_saveCancelControl.ButtonClickedSave +=new EventHandler(_saveCancelControl_ButtonClickedSave);
         }
 
-        void _saveCancelControl_ButtonClickedCancel(object sender, EventArgs e)
-        {
-            //Cancel
-			fResetNetworkSettings();
-            FillData();
-			_saveCancelControl.EnableCancel(false);
-			_saveCancelControl.EnableSave(false);
-        }
-
-        void GetData()
-        {
-			_netSet.dhcp = ((string)_cbDHCP.SelectedItem) == Constants.Instance.sCommonAppOn ? true : false;
-			_netSet.staticDns = _tbmDNS.GetIPAddress();
-			_netSet.defaultGateway = _tbmGate.GetIPAddress();
-			_netSet.staticIp = _tbmIPaddr.GetIPAddress();
-			_netStat.mac = System.Net.NetworkInformation.PhysicalAddress.Parse(_tbMACaddr.Text);
-			_netSet.subnetPrefix = DeviceModel.MaskToPrefix(_tbmSubnet.Text);
-        }
-
-        void _saveCancelControl_ButtonClickedSave(object sender, EventArgs e)
-        {
-            //Save
-			if (SaveData != null) {
-				GetData();
-				SaveData(_netSet, _netStat);
-			}
-        }
-        void FillData()
-        {
-            if (_netSet.dhcp == true)
-                SetDHCPOn();
-            else
-                SetDHCPOff();
-			
-			_tbmDNS.SetIPAddress(_netSet.staticDns);
-			_tbmGate.SetIPAddress(_netSet.defaultGateway);
-			_tbmIPaddr.SetIPAddress(_netSet.staticIp);
-            _tbmSubnet.Text = DeviceModel.PrefixToMask(_netSet.subnetPrefix);
-			_tbMACaddr.Text = _netStat.mac.ToString();
-        }
-
-
-        void SetDHCPOn()
-        {
-			_cbDHCP.SelectedItem = Constants.Instance.sCommonAppOn;
-
-            _tbmDNS.Enabled = false;
-            _tbmGate.Enabled = false;
-            _tbmIPaddr.Enabled = false;
-            _tbmSubnet.Enabled = false;
-        }
-        void SetDHCPOff()
-        {
-			_cbDHCP.SelectedItem = Constants.Instance.sCommonAppOff;
-
-            _tbmDNS.Enabled = true;
-            _tbmGate.Enabled = true;
-            _tbmIPaddr.Enabled = true;
-            _tbmSubnet.Enabled = true;
-        }
-
-        private void _cbDHCP_SelectedIndexChanged(object sender, EventArgs e)
-        {
-			_saveCancelControl.EnableCancel(true);
-			_saveCancelControl.EnableSave(true);
-			if (_cbDHCP.SelectedItem == (Object)Constants.Instance.sCommonAppOn)
-                SetDHCPOn();
-            else
-                SetDHCPOff();
-        }
-
-		private void _tbmIPaddr_TextChanged(object sender, EventArgs e) {
-			_saveCancelControl.EnableCancel(true);
-			_saveCancelControl.EnableSave(true);
+		void _saveCancelControl_ButtonClickedCancel(object sender, EventArgs e) {
+			//Cancel
+			Cancel();
 		}
-
-		private void _tbmSubnet_TextChanged(object sender, EventArgs e) {
-			_saveCancelControl.EnableCancel(true);
-			_saveCancelControl.EnableSave(true);
+		void _saveCancelControl_ButtonClickedSave(object sender, EventArgs e) {
+			//Save
+			Save();
 		}
-
-		private void _tbmGate_TextChanged(object sender, EventArgs e) {
-			_saveCancelControl.EnableCancel(true);
-			_saveCancelControl.EnableSave(true);
-		}
-
-		private void _tbmDNS_TextChanged(object sender, EventArgs e) {
-			_saveCancelControl.EnableCancel(true);
-			_saveCancelControl.EnableSave(true);
-		}
-
     }
 }

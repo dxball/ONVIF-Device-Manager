@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,15 +14,20 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.XPath;
 using System.Reflection;
-using nvc.localization;
+using System.ComponentModel;
+using nvc.utils;
 
-namespace nvc {
+namespace nvc.localization {	
+
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field)]
 	public class XPathAttribute : Attribute {
 		public XPathAttribute(string xpath) {
@@ -30,54 +36,46 @@ namespace nvc {
 		public string xpath;
 	}
 
-	[XPath("/localized-strings")]
-	public partial class Constants {
-
-		private Constants() {
+	public class LocalizedStringsBase<T> : NotifyPropertyChangedBase where T : LocalizedStringsBase<T>, new() {
+		protected LocalizedStringsBase() {
 			Language.CurrentObservable.Subscribe(l => {
-				Load(l.CreateNavigator());
+				SetLocale(l.CreateEvaluator());
+			}, err => {
+				DebugHelper.Error(err);
 			});
 		}
-
-		private static Constants _instance;
-		public static Constants Instance {
+		
+		private static T _instance;
+		public static T Instance {
 			get {
 				if (_instance == null)
-					_instance = new Constants();
+					_instance = new T();
 				return _instance;
 			}
 		}
 
-		public void Load(XPathNavigator nav) {
-			
-			var sb = new StringBuilder();
-			
-			Func<string, string> xeval = xpath => {
-				if (nav == null) {
-					return null;
-				}
-				var t = nav.Select(xpath);
-				var result = new StringBuilder();
-				while (t.MoveNext()) {
-					result.Append(t.Current);
-				}
-				return result.ToString();
-			};
+		public virtual void SetLocale(Func<string, string> xeval) {
 
+			var _xeval = xeval.Catch(err => {
+			    DebugHelper.Error(err);
+			    return null;
+			});
 
 			GetType()
 				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
 				.ForEach(t => {
-					var x = xeval(String.Format(@"localized-strings/{0}", t.Name));
-					t.SetValue(this, x, null);
+					var attr = Attribute.GetCustomAttribute(t, typeof(XPathAttribute)) as XPathAttribute;
+					if (attr == null) {
+						t.SetValue(this, null, null);
+						return;
+					}
+					t.SetValue(this, _xeval(attr.xpath), null);
 				});
 		}
 
-		public void Load(string file) {
-			
-			var doc = new XPathDocument(file);			
-			Load(doc.CreateNavigator());
-				
+		public void SetLocale(string file) {
+			var doc = new XPathDocument(file);
+			SetLocale(doc.CreateEvaluator());
 		}
 	}
 }

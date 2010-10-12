@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,9 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,51 +30,14 @@ namespace nvc.models {
 		public uint bitrate;
 		public string encoder;
 	}
-	
-	public class VideoEncoder{
-		public VideoEncoder(VideoEncoder.Encoding encoding) {
-			this.encoding = encoding;
-		}
-		public struct Resolution {
-			public int width;
-			public int height;
-		};
 
-		public enum Encoding{
-			H264,
-			JPEG,
-			MPEG4
-		}
-		public Encoding encoding;
-
-		public int maxBitrate;
-		public int minBitrate;
-		public Resolution[] supportedResolutions;
-
-		public string name {
-			get {
-				return encoding.ToString();
-			}
-		}
-
-	}
 
 	public partial class Channel {
-		public struct Resolution {
-			public int width;
-			public int height;
-			public override string ToString() {
-				return new StringBuilder()
-					.Append(width)
-					.Append("x")
-					.Append(height)
-					.ToString();
-			}
-		};
+		
 		public string m_videoSourceToken;
 		
 		public string name;
-		public Resolution resolution;
+		public VideoResolution sourceResolution;
 		public int frameRate;
 		public int bitrate;
 		public VideoEncoder encoder;
@@ -80,8 +45,7 @@ namespace nvc.models {
 
 	public class ChannelSettings {
 		public VideoStreamingSettings videoStreaming;
-		public Uri streamUri;
-			
+		public Uri streamUri;			
 	}
 
 	public class DeviceSettings {

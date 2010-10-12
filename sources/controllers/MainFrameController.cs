@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -24,88 +25,136 @@ using nvc.controls;
 using System.Windows.Forms;
 using nvc.entities;
 using nvc.utils;
+using nvc.models;
+using nvc.onvif;
 
 namespace nvc.controllers {
 	public class MainFrameController : IRelesable {
-		//public class MyPanel : Panel {
-		//    public MyPanel() {
-		//        //DoubleBuffered = true;
-		//        this.SetDoubleBuffered(true);
-		//    }
-		//}
-
-		DeviceModel _devItem;
+		DeviceCapabilityModel _devCapabilityModel;
+		ChannelDescription _currentChannel;
+		ChannelDescription CurrentChannel {
+			get {
+				return _currentChannel;
+			}
+			set { _currentChannel = value; }
+		}
 		MainFrame _mainFrame;
 		Panel _settingsPanel;
 		UserControl _tempControl;
 		FlowLayoutPanel _devicePanel;
-		protected DeviceModel DevItem { get { return _devItem; } set { _devItem = value; } }
+		List<DeviceChannelControl> _lstDevCannelsCtrl;
+		List<LinkCheckButton> _buttonsList;
+		IDisposable _subscription;
 
 		DeviceControl _devCtrl = null;
-		List<DeviceChannelControl> _lstDevCannelsCtrl;
 
 		public MainFrameController() {
 			_lstDevCannelsCtrl = new List<DeviceChannelControl>();
+			_buttonsList = new List<LinkCheckButton>();
 		}
 
 		#region Init section
-		public UserControl CreateMainFrame(DeviceModel devItem) {
-			DevItem = devItem;
+		InformationForm _savingSettingsForm;
+		public void Init(DeviceCapabilityModel devModel, Session session) {
+			_subscription = devModel.Load(session).Subscribe(arg => {
+				_devCapabilityModel = arg;
+				_devicePanel.SuspendLayout();
+				_settingsPanel.SuspendLayout();
+
+				CreateDeviceControl();
+				CreateDeviceControlsLinkButtons(_devCtrl);
+
+				FillChannelsControl(_devicePanel, _settingsPanel);
+
+				_devicePanel.ResumeLayout();
+				_settingsPanel.ResumeLayout();
+			}, err => {
+				_savingSettingsForm = new InformationForm("ERROR");
+				_savingSettingsForm.SetErrorMessage(err.Message);
+				_savingSettingsForm.ShowCloseButton(WorkflowController.Instance.ReleaseMainFrameController);
+				_savingSettingsForm.ShowDialog(_mainFrame);
+			});
+		}
+		public void KillEveryOne() {
+			WorkflowController.Instance.KillEveryBody();
+		}
+		public UserControl CreateMainFrame(DeviceCapabilityModel devModel, Session session) {
+			//DevItem = devItem;
 			_mainFrame = new MainFrame();
 			_mainFrame.Dock = DockStyle.Fill;
-
+			
+			//Create panels and add device control
 			CreatePanels();
+
+			_tempControl = new LoadingPropertyPage();
+			_devicePanel.Controls.Add(_tempControl);
+
+
 			_mainFrame.AddDevicePanel(_devicePanel);
 			_mainFrame.AddPropertyPanel(_settingsPanel);
 
-			DevItem.ChannelsInitialised += new EventHandler(DevItem_ChannelsInitialised);
-			WorkflowController.Instance.SubscribeToChannelsDescription();
-			_tempControl = new LoadingPropertyPage();
-			_devicePanel.Controls.Add(_tempControl);
+			//Load channels description
+			Init(devModel, session);
 
 			return _mainFrame;
 		}
 
-		void DevItem_ChannelsInitialised(object sender, EventArgs e) {
-			_devicePanel.SuspendLayout();
-			_settingsPanel.SuspendLayout();
-			FillChannelsControl(_devicePanel, _settingsPanel);
-			_devicePanel.ResumeLayout();
-			_settingsPanel.ResumeLayout();
-		}
-
 		void CreateDeviceControlsLinkButtons(DeviceControl ctrl) {
-			var res = from ln in WorkflowController.Instance.DictLinkButtonsSet
-					  where ln.Value.ID < Defaults.constDeviceControlLinksIDBorder
-					  orderby ln.Value.ID
-					  select ln;
-			foreach (var val in res) {
-				LinkCheckButton lbtn = WorkflowController.Instance.CreateLinkCheckButton(val.Key, ctrl.SettingsFrame);
-				lbtn.linkClicked += new EventHandler(lbtn_Click);
-				ctrl.AddLinkButton(lbtn);
-			}
+			//DeviceIdentification button
+			LinkCheckButton link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonIdentificationAndStatus);
+			link.ModelSession = _devCapabilityModel.session;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropertyIdentificationController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseIdentificationController;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
+			
+			//NetworkSettings button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonNetworkSettings);
+			link.ModelSession = _devCapabilityModel.session;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropertyNetworkSettingsController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseNetworkSettingsController;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
+		}
+		void CreateChannelControlLinkButtons(DeviceChannelControl ctrl, ChannelDescription channel) {
+			//LiveVideo button
+			LinkCheckButton link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonLiveVideo);
+			link.ModelSession = _devCapabilityModel.session;
+			link.Channel = channel;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropLiveVideoController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseLiveVideoController;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
+
+			//VideoStreaming button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonVideoStreaming);
+			link.ModelSession = _devCapabilityModel.session;
+			link.Channel = channel;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropVideoStreamingController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseVideoStreamingController;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
 		}
 		protected DeviceControl CreateDeviceControl(Panel settingsFrame) {
-			var ctrl = new DeviceControl(DevItem);
+			var ctrl = new DeviceControl(_devCapabilityModel);
 			_devCtrl = ctrl;
 			ctrl.SettingsFrame = settingsFrame;
-
-			CreateDeviceControlsLinkButtons(ctrl);
 			return ctrl;
 		}
-		void CreateChannelControlLinkButtons(DeviceChannelControl ctrl) {
-			var res = from ln in WorkflowController.Instance.DictLinkButtonsSet
-					  where ln.Value.ID < Defaults.constDeviceChannelLinksIDBorder && ln.Value.ID > Defaults.constDeviceControlLinksIDBorder
-					  orderby ln.Value.ID
-					  select ln;
-			foreach (var val in res) {
-				if (DevItem.DeviceCapabilities.Contains(val.Value.ID)) {
-					LinkCheckButton lbtn = WorkflowController.Instance.CreateLinkCheckButton(val.Key, ctrl.SettingsFrame);
-					ctrl.AddLinkButton(lbtn);
-				}
-			}
+
+		void CreateDeviceControl() {
+			var ctrl = CreateDeviceControl(_settingsPanel);
+			_devicePanel.Controls.Add(ctrl);
 		}
-		protected DeviceChannelControl CreateChannelControl(Panel settingsFrame, DeviceChannel channel) {
+		protected DeviceChannelControl CreateChannelControl(Panel settingsFrame, ChannelDescription channel) {
 			var devchannelControl = new DeviceChannelControl(channel);
 			devchannelControl.SettingsFrame = settingsFrame;
 
@@ -113,7 +162,8 @@ namespace nvc.controllers {
 
 			_lstDevCannelsCtrl.Add(devchannelControl);
 
-			CreateChannelControlLinkButtons(devchannelControl);
+			CreateChannelControlLinkButtons(devchannelControl, channel);
+
 			return devchannelControl;
 		}
 
@@ -123,22 +173,16 @@ namespace nvc.controllers {
 				_tempControl.Dispose();
 				_tempControl = null;
 			}
-			foreach (var chan in WorkflowController.Instance.GetCurrentDevice().ChannelsList) {
-				var devChCtrl = CreateChannelControl(settingFrame, chan.Value);
-				channelscontainer.Controls.Add(devChCtrl);
+			foreach (var chan in _devCapabilityModel.Channels) {
+			    var devChCtrl = CreateChannelControl(settingFrame, chan);
+			    channelscontainer.Controls.Add(devChCtrl);
 			}
 		}
 		private void CreatePanels() {
 			CreatePropertyPanel();
 			_devicePanel = new FlowLayoutPanel();
 			_devicePanel.Dock = DockStyle.Fill;
-
-			_settingsPanel.SuspendLayout();
-
-			var ctrl = CreateDeviceControl(_settingsPanel);
-			_devicePanel.Controls.Add(ctrl);
-
-			_settingsPanel.ResumeLayout();
+			_devicePanel.FlowDirection = FlowDirection.TopDown;
 		}
 		private void CreatePropertyPanel() {
 			_settingsPanel = new Panel();
@@ -148,15 +192,8 @@ namespace nvc.controllers {
 		#endregion
 
 		#region EventsHandlers
-		void devchannelControl_ChannelSelected(DeviceChannel devChannel, LinkButtonSetting settings) {
-			DevItem.SetCurrentChannel(devChannel.GetChannelID());
-			if (settings != null) {
-				IPropertyController propCtrl = settings.func();
-				DisposeChilds(_settingsPanel);
-				
-				//WorkflowController.Instance.SubscribeToDefaultProfile();
-				_settingsPanel.Controls.Add(propCtrl.CreateController(_settingsPanel));
-			}
+		void devchannelControl_ChannelSelected(ChannelDescription devChannel){//, LinkButtonSetting settings) {
+			CurrentChannel = devChannel;
 		}
 		void DisposeChilds(Panel control) {
 			if (control != null)
@@ -164,39 +201,38 @@ namespace nvc.controllers {
 					value.Dispose();
 				}
 		}
-		void lbtn_Click(object sender, EventArgs e) {
-			LinkButtonSetting lbtnSet = e as LinkButtonSetting;
+		public void LbtnClick(LinkCheckButton sender) {
+			_buttonsList.ForEach(x => { x.SetUnclicked(); x.ReleasePropertyAction(); });
 
-			IPropertyController propCtrl = lbtnSet.func();
-
+			IPropertyController propCtrl = sender.CreatePropertyAction();
+			sender.SetClicked();
 			_settingsPanel.SuspendLayout();
 
+			//Refreshing panel (removing recent controls) and add new one
 			DisposeChilds(_settingsPanel);
-			_settingsPanel.Controls.Add(propCtrl.CreateController(_settingsPanel));
+			_settingsPanel.Controls.Clear();
+
+			_settingsPanel.Controls.Add(propCtrl.CreateController(_settingsPanel, sender.ModelSession, sender.Channel));
 			
 			_settingsPanel.ResumeLayout();
 		}
 		#endregion
 
-		#region release resources
 		public void ReleaseAll() {
-			DevItem.ChannelsInitialised -= DevItem_ChannelsInitialised;
-			_devCtrl.UnsubscribeLinkButton(UnsubscribeLinkButton);
-			foreach (var value in _lstDevCannelsCtrl) {
-				value.UnsubscribeLinkButton(UnsubscribeLinkButton);
-			}
+			if(_subscription != null) _subscription.Dispose();
+			_buttonsList.ForEach(x => { x.ReleasePropertyAction(); });
+			_buttonsList.Clear();
+
 			UnsubscribeDeviceChannel();
+
 			DisposeChilds(_settingsPanel);
+
 			_mainFrame.Dispose();
-		}
-		protected void UnsubscribeLinkButton(LinkCheckButton lbtn) {
-			lbtn.linkClicked -= lbtn_Click;
 		}
 		protected void UnsubscribeDeviceChannel() {
 			foreach (var value in _lstDevCannelsCtrl) {
 				value.ChannelSelected -= devchannelControl_ChannelSelected;
 			}
 		}
-		#endregion
 	}
 }

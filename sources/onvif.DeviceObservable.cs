@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,18 @@ namespace nvc.onvif {
 		public IObservable<GetDeviceInformationResponse> GetDeviceInformation() {
 			var request = new GetDeviceInformationRequest();
 			var asyncOp = Observable.FromAsyncPattern<GetDeviceInformationRequest, GetDeviceInformationResponse>(m_proxy.BeginGetDeviceInformation, m_proxy.EndGetDeviceInformation);
+			return asyncOp(request);
+		}
+
+		public IObservable<Scope[]> GetScopes() {
+			var request = new GetScopesRequest();
+			var asyncOp = Observable.FromAsyncPattern<GetScopesRequest, GetScopesResponse>(m_proxy.BeginGetScopes, m_proxy.EndGetScopes);
+			return asyncOp(request).Select(x=>x.Scopes);
+		}
+
+		public IObservable<SetScopesResponse> SetScopes(string[] scopes) {
+			var request = new SetScopesRequest(scopes);
+			var asyncOp = Observable.FromAsyncPattern<SetScopesRequest, SetScopesResponse>(m_proxy.BeginSetScopes, m_proxy.EndSetScopes);
 			return asyncOp(request);
 		}
 

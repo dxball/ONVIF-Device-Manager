@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -22,15 +23,62 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using nvc.controls;
+using System.ComponentModel;
+using nvc.onvif;
+using nvc.models;
 
 namespace nvc.controllers {
-	public interface IRelesable {
-		void ReleaseAll();
-	}
-	public interface IPropertyController {
-		BasePropertyControl CreateController(Panel propertyPanel);
-	}
 
+	public class ListViewSubItemBindeble : System.Windows.Forms.ListViewItem.ListViewSubItem, IBindableComponent{
+		BindingContext _bindingContext;
+		public void Dispose() { }
+		public ISite Site { get { return null; } set { } }
+		public event EventHandler Disposed;
+		public BindingContext BindingContext {
+			get {
+				if (_bindingContext == null)
+					_bindingContext = new BindingContext();
+				return _bindingContext;
+			}
+			set {
+				_bindingContext = value;
+			}
+		}
+		ControlBindingsCollection _dataBindings;
+		public ControlBindingsCollection DataBindings {
+			get {
+				if (_dataBindings == null) {
+					_dataBindings = new ControlBindingsCollection(this);
+				}
+				return _dataBindings;
+			}
+		}
+	}
+	public class ListViewItemBindable : ListViewItem, IBindableComponent {
+		BindingContext _bindingContext;
+		public void Dispose() { }
+		public ISite Site { get { return null; } set { } }
+		public event EventHandler Disposed;
+		public BindingContext BindingContext {
+			get {
+				if (_bindingContext == null)
+					_bindingContext = new BindingContext();
+				return _bindingContext;
+			}
+			set {
+				_bindingContext = value;
+			}
+		}
+		ControlBindingsCollection _dataBindings;
+		public ControlBindingsCollection DataBindings {
+			get {
+				if (_dataBindings == null) {
+					_dataBindings = new ControlBindingsCollection(this);
+				}
+				return _dataBindings;
+			}
+		}
+	}
 	public class ColumnHeaderBindable : ColumnHeader, IBindableComponent {
 		BindingContext _bindingContext;
 		public BindingContext BindingContext {
@@ -52,5 +100,12 @@ namespace nvc.controllers {
 				return _dataBindings;
 			}
 		}
+	}
+
+	public interface IRelesable {
+		void ReleaseAll();
+	}
+	public interface IPropertyController {
+		BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription channel);
 	}
 }

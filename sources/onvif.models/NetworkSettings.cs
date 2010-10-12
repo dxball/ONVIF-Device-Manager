@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,9 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +30,9 @@ using dev=onvif.services.device;
 
 
 namespace nvc.models {
-	
-	public class NetworkSettings : NotifyPropertyChangedBase {
-		
+
+	public class NetworkSettings{// : NotifyPropertyChangedBase<NetworkSettings> {
+
 		IPAddress m_staticDns;
 		IPAddress m_defaultGateway;
 		Boolean m_dhcp;
@@ -44,7 +46,7 @@ namespace nvc.models {
 			set {
 				if (m_staticIp != value) {
 					m_staticIp = value;
-					this.RaisePropertyChanged("staticIp");
+					//NotifyPropertyChanged(x => x.staticIp);
 				}
 			}
 		}
@@ -56,7 +58,7 @@ namespace nvc.models {
 			set {
 				if (m_staticDns != value) {
 					m_staticDns = value;
-					this.RaisePropertyChanged("staticDns");
+					//NotifyPropertyChanged(x => x.staticDns);
 				}
 			}
 		}
@@ -68,7 +70,7 @@ namespace nvc.models {
 			set {
 				if (m_defaultGateway != value) {
 					m_defaultGateway = value;
-					this.RaisePropertyChanged("defaultGateway");
+					//NotifyPropertyChanged(x => x.defaultGateway);
 				}
 			}
 		}
@@ -80,7 +82,7 @@ namespace nvc.models {
 			set {
 				if (m_dhcp != value) {
 					m_dhcp = value;
-					this.RaisePropertyChanged("dhcp");
+					//NotifyPropertyChanged(x => x.dhcp);
 				}
 			}
 		}
@@ -92,7 +94,7 @@ namespace nvc.models {
 			set {
 				if (m_subnetPrefix != value) {
 					m_subnetPrefix = value;
-					this.RaisePropertyChanged("subnetPrefix");
+					//NotifyPropertyChanged(x => x.subnetPrefix);
 				}
 			}
 		}

@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,9 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,22 +65,9 @@ namespace nvc.entities {
 		public string ID { get; set; }
 	}
 
-	public class DeviceModelInfo : EventArgs {
-		public DeviceDescription devDescr { get; set; }
-		public string Name { get; set; }
-		public string IpAddress { get; set; }
-		public string Firmware { get; set; }
-		public string DeviceId { get; set; }
-		public string Manufacturer { get; set; }
-		public string HardwareId { get; set; }
-
-		public bool IsValid { get; set; }
-		public string ErrorMsg { get; set; }
-	}
-
 	public class AvailableResolution {
-		nvc.models.Channel.Resolution _resolution;
-		public nvc.models.Channel.Resolution Resolution { 
+		nvc.models.VideoResolution _resolution;
+		public nvc.models.VideoResolution Resolution { 
 			get{
 				return _resolution;
 			}
@@ -108,10 +97,10 @@ namespace nvc.entities {
 			get { return _encoding; }
 			set { _encoding = value; }
 		}
-		List<nvc.models.Channel.Resolution> _resolutionsList {
+		List<nvc.models.VideoResolution> _resolutionsList {
 			get {
 				if (_resolutionsList == null)
-					_resolutionsList = new List<models.Channel.Resolution>();
+					_resolutionsList = new List<models.VideoResolution>();
 				return _resolutionsList;
 			}
 			set { _resolutionsList = value; }

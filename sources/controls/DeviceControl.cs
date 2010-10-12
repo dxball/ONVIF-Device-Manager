@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using nvc.entities;
+using nvc.models;
 
 namespace nvc.controls
 {
@@ -33,25 +35,25 @@ namespace nvc.controls
     public partial class DeviceControl : BaseControl
     {
         public Panel SettingsFrame{get;set;}
-        DeviceModel _deviceDescr;
+		DeviceCapabilityModel _deviceDescr;
 
-		public DeviceControl(DeviceModel devicedescr)
+		public DeviceControl(DeviceCapabilityModel devicedescr)
         {
             InitializeComponent();
             _deviceDescr = devicedescr;
             InitControls();
         }
-		void Localisation() {
-			_title.DataBindings.Add(new Binding("Text", nvc.Constants.Instance, "sDeviceControlTitle"));
+		void Localization() {
+			_title.CreateBinding(x=>x.Text, nvc.Constants.Instance, x=>x.sDeviceControlTitle);
 		}
         protected void InitControls()
         {
-			Localisation();
+			Localization();
             BackColor = ColorDefinition.colControlBackground;
             _title.BackColor = ColorDefinition.colControlBackground;
 
-            _imgBox.Image = _deviceDescr.GetDeviceImage();
-            _imgBox.SizeMode = PictureBoxSizeMode.Zoom;
+			//_imgBox.CreateBinding(x=>x.Image, _deviceDescr, x=>x.DeviceImage);
+            //_imgBox.SizeMode = PictureBoxSizeMode.Zoom;
 
             InitForSelectionEvents();
 

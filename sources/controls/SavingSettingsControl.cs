@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace nvc.controls {
 	public partial class SavingSettingsControl : UserControl {
 		public SavingSettingsControl() {
 			InitializeComponent();
-			Localisation();
+			Localization();
 			button1.Visible = false;
 			button1.Click += new EventHandler(button1_Click);
 		}
@@ -39,9 +40,9 @@ namespace nvc.controls {
 			if (OnClose != null)
 				OnClose(this, null);
 		}
-		void Localisation(){
-			_tbInfo.DataBindings.Add(new Binding("Text", Constants.Instance, "sSaveSettingsFormText"));
-			button1.DataBindings.Add(new Binding("Text", Constants.Instance, "sButtonClose"));
+		void Localization(){
+			_tbInfo.Text = SaveSettingsFormStrings.Instance.Text;//CreateBinding(x => x.Text, SaveSettingsFormStrings.Instance, x => x.Text);
+			button1.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sButtonClose);
 		}
 		public void SetErrorMessage(string errText) {
 			_tbInfo.Text = errText;

@@ -77,14 +77,14 @@ namespace nvc.controls
 			this._tbmDNS.DateOnly = false;
 			this._tbmDNS.DecimalOnly = false;
 			this._tbmDNS.DigitOnly = false;
+			this._tbmDNS.IPAddress = null;
 			this._tbmDNS.IPAddrOnly = true;
 			this._tbmDNS.Location = new System.Drawing.Point(166, 107);
 			this._tbmDNS.Name = "_tbmDNS";
 			this._tbmDNS.PhoneWithAreaCode = false;
 			this._tbmDNS.Size = new System.Drawing.Size(232, 20);
 			this._tbmDNS.SSNOnly = false;
-			this._tbmDNS.TabIndex = 29;
-			this._tbmDNS.TextChanged += new System.EventHandler(this._tbmDNS_TextChanged);
+			this._tbmDNS.TabIndex = 5;
 			// 
 			// _tbmGate
 			// 
@@ -93,14 +93,14 @@ namespace nvc.controls
 			this._tbmGate.DateOnly = false;
 			this._tbmGate.DecimalOnly = false;
 			this._tbmGate.DigitOnly = false;
+			this._tbmGate.IPAddress = null;
 			this._tbmGate.IPAddrOnly = true;
 			this._tbmGate.Location = new System.Drawing.Point(166, 81);
 			this._tbmGate.Name = "_tbmGate";
 			this._tbmGate.PhoneWithAreaCode = false;
 			this._tbmGate.Size = new System.Drawing.Size(232, 20);
 			this._tbmGate.SSNOnly = false;
-			this._tbmGate.TabIndex = 28;
-			this._tbmGate.TextChanged += new System.EventHandler(this._tbmGate_TextChanged);
+			this._tbmGate.TabIndex = 4;
 			// 
 			// _tbmSubnet
 			// 
@@ -109,14 +109,14 @@ namespace nvc.controls
 			this._tbmSubnet.DateOnly = false;
 			this._tbmSubnet.DecimalOnly = false;
 			this._tbmSubnet.DigitOnly = false;
+			this._tbmSubnet.IPAddress = null;
 			this._tbmSubnet.IPAddrOnly = true;
 			this._tbmSubnet.Location = new System.Drawing.Point(166, 54);
 			this._tbmSubnet.Name = "_tbmSubnet";
 			this._tbmSubnet.PhoneWithAreaCode = false;
 			this._tbmSubnet.Size = new System.Drawing.Size(232, 20);
 			this._tbmSubnet.SSNOnly = false;
-			this._tbmSubnet.TabIndex = 27;
-			this._tbmSubnet.TextChanged += new System.EventHandler(this._tbmSubnet_TextChanged);
+			this._tbmSubnet.TabIndex = 3;
 			// 
 			// _tbmIPaddr
 			// 
@@ -125,14 +125,14 @@ namespace nvc.controls
 			this._tbmIPaddr.DateOnly = false;
 			this._tbmIPaddr.DecimalOnly = false;
 			this._tbmIPaddr.DigitOnly = false;
+			this._tbmIPaddr.IPAddress = null;
 			this._tbmIPaddr.IPAddrOnly = true;
 			this._tbmIPaddr.Location = new System.Drawing.Point(166, 28);
 			this._tbmIPaddr.Name = "_tbmIPaddr";
 			this._tbmIPaddr.PhoneWithAreaCode = false;
 			this._tbmIPaddr.Size = new System.Drawing.Size(232, 20);
 			this._tbmIPaddr.SSNOnly = false;
-			this._tbmIPaddr.TabIndex = 26;
-			this._tbmIPaddr.TextChanged += new System.EventHandler(this._tbmIPaddr_TextChanged);
+			this._tbmIPaddr.TabIndex = 2;
 			// 
 			// _cbDHCP
 			// 
@@ -142,8 +142,7 @@ namespace nvc.controls
 			this._cbDHCP.Location = new System.Drawing.Point(166, 3);
 			this._cbDHCP.Name = "_cbDHCP";
 			this._cbDHCP.Size = new System.Drawing.Size(249, 21);
-			this._cbDHCP.TabIndex = 21;
-			this._cbDHCP.SelectedIndexChanged += new System.EventHandler(this._cbDHCP_SelectedIndexChanged);
+			this._cbDHCP.TabIndex = 1;
 			// 
 			// _lblMACaddr
 			// 
@@ -155,6 +154,7 @@ namespace nvc.controls
 			this._lblMACaddr.ReadOnly = true;
 			this._lblMACaddr.Size = new System.Drawing.Size(157, 20);
 			this._lblMACaddr.TabIndex = 20;
+			this._lblMACaddr.TabStop = false;
 			this._lblMACaddr.Text = "MAC";
 			// 
 			// _lblDNSaddr
@@ -167,6 +167,7 @@ namespace nvc.controls
 			this._lblDNSaddr.ReadOnly = true;
 			this._lblDNSaddr.Size = new System.Drawing.Size(157, 20);
 			this._lblDNSaddr.TabIndex = 19;
+			this._lblDNSaddr.TabStop = false;
 			this._lblDNSaddr.Text = "DNS";
 			// 
 			// _lblGateAddr
@@ -179,6 +180,7 @@ namespace nvc.controls
 			this._lblGateAddr.ReadOnly = true;
 			this._lblGateAddr.Size = new System.Drawing.Size(157, 20);
 			this._lblGateAddr.TabIndex = 18;
+			this._lblGateAddr.TabStop = false;
 			this._lblGateAddr.Text = "Gate";
 			// 
 			// _lblSubnetMask
@@ -191,6 +193,7 @@ namespace nvc.controls
 			this._lblSubnetMask.ReadOnly = true;
 			this._lblSubnetMask.Size = new System.Drawing.Size(157, 20);
 			this._lblSubnetMask.TabIndex = 17;
+			this._lblSubnetMask.TabStop = false;
 			this._lblSubnetMask.Text = "Subnet";
 			// 
 			// _lblIPaddress
@@ -203,6 +206,7 @@ namespace nvc.controls
 			this._lblIPaddress.ReadOnly = true;
 			this._lblIPaddress.Size = new System.Drawing.Size(157, 20);
 			this._lblIPaddress.TabIndex = 16;
+			this._lblIPaddress.TabStop = false;
 			this._lblIPaddress.Text = "IP";
 			// 
 			// _lblDHCP
@@ -215,6 +219,7 @@ namespace nvc.controls
 			this._lblDHCP.ReadOnly = true;
 			this._lblDHCP.Size = new System.Drawing.Size(157, 20);
 			this._lblDHCP.TabIndex = 15;
+			this._lblDHCP.TabStop = false;
 			this._lblDHCP.Text = "DHCP";
 			// 
 			// _saveCancelControl
@@ -235,6 +240,7 @@ namespace nvc.controls
 			this._tbMACaddr.ReadOnly = true;
 			this._tbMACaddr.Size = new System.Drawing.Size(249, 20);
 			this._tbMACaddr.TabIndex = 11;
+			this._tbMACaddr.TabStop = false;
 			// 
 			// _title
 			// 
@@ -245,6 +251,7 @@ namespace nvc.controls
 			this._title.Name = "_title";
 			this._title.Size = new System.Drawing.Size(418, 23);
 			this._title.TabIndex = 18;
+			this._title.TabStop = false;
 			// 
 			// PropertyNetworkSettings
 			// 

@@ -1,5 +1,5 @@
 ﻿namespace nvc.controls {
-	partial class SavingSettingsForm {
+	partial class InformationForm {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -31,18 +31,18 @@
 			this.savingSettingsControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.savingSettingsControl1.Location = new System.Drawing.Point(0, 0);
 			this.savingSettingsControl1.Name = "savingSettingsControl1";
-			this.savingSettingsControl1.Size = new System.Drawing.Size(461, 103);
+			this.savingSettingsControl1.Size = new System.Drawing.Size(683, 103);
 			this.savingSettingsControl1.TabIndex = 0;
 			// 
-			// SavingSettingsForm
+			// InformationForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(461, 103);
+			this.ClientSize = new System.Drawing.Size(683, 103);
 			this.ControlBox = false;
 			this.Controls.Add(this.savingSettingsControl1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Name = "SavingSettingsForm";
+			this.Name = "InformationForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "SavingSettingsForm";

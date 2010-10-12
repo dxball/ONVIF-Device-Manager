@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace nvc.controls.utils {
 			return new ListItem<T>(obj, display);
 		}
 	}
-	public class ListItem<T> where T : class {
+	public class ListItem<T>{
 		public ListItem(T obj, Func<T, string> display) {
 			m_object = obj;
 			m_display = display;

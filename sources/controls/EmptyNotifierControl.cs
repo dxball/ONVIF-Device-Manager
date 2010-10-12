@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -36,10 +37,10 @@ namespace nvc.controls
             InitControls();
         }
 
-		void Localisation(){
-			_tbContacts.DataBindings.Add(new Binding("Text", Constants.Instance, "sNotifierTextContacts"));
-			_tbNitifier.DataBindings.Add(new Binding("Text", Constants.Instance, "sNotifierText"));
-			_textBoxTitle.DataBindings.Add(new Binding("Text", Constants.Instance, "sNotifierTextTitle"));
+		void Localization(){
+			_tbContacts.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sNotifierTextContacts);
+			_tbNitifier.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sNotifierText);
+			_textBoxTitle.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sNotifierTextTitle);
 		}
         protected void InitControls()
         {
@@ -48,7 +49,7 @@ namespace nvc.controls
             _tbNitifier.BackColor = ColorDefinition.colControlBackground;
             _textBoxTitle.BackColor = ColorDefinition.colControlBackground;
 
-            Localisation();
+            Localization();
 
             string currentDir = Directory.GetCurrentDirectory();
 

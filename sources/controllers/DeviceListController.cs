@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -28,105 +29,62 @@ using nvc.entities;
 using nvc.controls;
 using nvc.onvif;
 using nvc.utils;
+using nvc.models;
 
 namespace nvc.controllers {
 	public class DeviceListController {
-		protected DevicesListControl _devLsrCtrl;
 		public DeviceListController() {
+			_deviceDescriptionModels = new List<DeviceDescriptionModel>();
+
 		}
 
-		#region ADD MANUALLY
-		//Action 
-		public void AddDeviceManually(Uri uri) {
-
-			DeviceDescription.Load(uri)
-				.ObserveOn(SynchronizationContext.Current)
-				.Select(devDescr => {
-					DeviceModelInfo devMod = new DeviceModelInfo();
-					devMod.IpAddress = devDescr.IPAddress;
-					if (devDescr.devInfo != null) {
-						devMod.DeviceId = devDescr.devInfo.SerialNumber;
-						devMod.Firmware = devDescr.devInfo.FirmwareVersion;
-						devMod.Name = devDescr.devInfo.Model;
-						devMod.Manufacturer = devDescr.devInfo.Manufacturer;
-						devMod.HardwareId = devDescr.devInfo.HardwareId;
-						devMod.IsValid = true;
-					} else {
-						devMod = WSDiscoveryDevInfoError(Constants.Instance.sErrorDevInfoNull, devMod);
-					}
-
-					devMod.devDescr = devDescr;
-
-					return devMod;
-				})
-					.Subscribe(devMod => {
-						WorkflowController.Instance.AddDeviceModelInfo(devMod);
-					}, err => {
-						WorkflowController.Instance.AddDeviceModelInfo(WSDiscoveryExceptionHandler(Constants.Instance.sExceptionWSDiscoveryTitle, err.Message, null));
-					});
+		List<DeviceDescriptionModel> _deviceDescriptionModels;	// List of device descriptions from WD discovery to fill in UI list view
+		List<DeviceDescriptionModel> DeviceDescriptionModels {
+			get {
+				if (_deviceDescriptionModels == null)
+					_deviceDescriptionModels = new List<DeviceDescriptionModel>();
+				return _deviceDescriptionModels;
+			}
 		}
-		#endregion
+		protected DevicesListControl _devLsrCtrl;				// UI control
+		IDisposable _discoverySubscription;						// Returned IDisposable for cancel operation
 
-		#region Init section
+		void AddDeviceDescription(DeviceDescriptionModel devModel) {
+			DeviceDescriptionModels.Add(devModel);
+			_devLsrCtrl.AddItem(devModel);
+		}
+		//Create UI control
 		public DevicesListControl CreateDeviceListControl() {
 			_devLsrCtrl = new DevicesListControl();
 			_devLsrCtrl.Dock = DockStyle.Fill;
 
 			SubscribeToEvents();
 			//[TODO] REMOVE!!!
-			_devLsrCtrl.SubscribeToManualAdding(AddDeviceManually);
+			//_devLsrCtrl.SubscribeToManualAdding(AddDeviceManually);
 
+			//Subscribe to WSDiscovery for devices
 			FillDeviceList();
+
 			return _devLsrCtrl;
 		}
-		void SubscribeToEvents() {
-
-			_devLsrCtrl._onDeviceItemSelected += new DeviceListItemSelectedDelegate(devListctrl__onDeviceItemSelected);
-			_devLsrCtrl.RefreshDeviceList += new EventHandler(devListctrl_RefreshDeviceList);
-			WorkflowController.Instance.ModelInfoAdded += new EventHandler(Instance_ModelInfoAdded);
-		}
-		#endregion
-
-		#region Data section
-		public void RemoveDevListControlItem(DeviceModelInfo devInfo) {
-			if (_devLsrCtrl != null) {
-				_devLsrCtrl.RemoveItem(devInfo);
-			}
-		}
-		public void AddDevListControlItem(DeviceModelInfo devInfo) {
-			if (_devLsrCtrl != null) {
-				_devLsrCtrl.AddItem(devInfo, false);
-			}
-		}
-		public void SelectDevListControlItem(DeviceModelInfo devInfo) {
-			if (_devLsrCtrl != null) {
-				_devLsrCtrl.SelectItem(devInfo);
-			}
-		}
-
 		protected void FillDeviceList() {
-			SubscribeToWSDiscovery();
+			UnsubscribeFromWSDiscovery();
+			_discoverySubscription = SubscribeToWSDiscovery();
 		}
-
-		IDisposable discoverySubscription;
-		protected void SubscribeToWSDiscovery() {
+		protected IDisposable SubscribeToWSDiscovery() {
 			var syncCtx = SynchronizationContext.Current;
-			var controller = WorkflowController.Instance;
 			var isActive = true;
 			var subscription = new MutableDisposable();
-			DebugHelper.Assert(controller.DeviceItemsInfoList.IsEmpty());
 
-			if (discoverySubscription != null) {
-				discoverySubscription.Dispose();
+			if (_discoverySubscription != null) {
+				_discoverySubscription.Dispose();
 			}
-			discoverySubscription = Disposable.Create(() => {
+			_discoverySubscription = Disposable.Create(() => {
 				isActive = false;
 				subscription.Dispose();
 			});
 
-
 			GlobalWorkItemQueue.Enqueue(() => {
-				DebugHelper.Assert(controller.DeviceItemsInfoList.IsEmpty());
 				if (!isActive) {
 					return;
 				}
@@ -134,99 +92,79 @@ namespace nvc.controllers {
 					Duration = TimeSpan.FromSeconds(10)
 				}.Find();
 
-				subscription.Disposable = discoveryClient.ObserveOn(syncCtx)
-					.Select(devDescr => {
-						DebugHelper.Assert(SynchronizationContext.Current == syncCtx);
-						DeviceModelInfo devMod = new DeviceModelInfo();
-						devMod.IpAddress = devDescr.IPAddress;
-						if (devDescr.devInfo != null) {
-							devMod.DeviceId = devDescr.devInfo.SerialNumber;
-							devMod.Firmware = devDescr.devInfo.FirmwareVersion;
-							devMod.Name = devDescr.devInfo.Model;
-							devMod.Manufacturer = devDescr.devInfo.Manufacturer;
-							devMod.HardwareId = devDescr.devInfo.HardwareId;
-							devMod.IsValid = true;
-						} else {
-							devMod = WSDiscoveryDevInfoError(Constants.Instance.sErrorDevInfoNull, devMod);
-						}
-
-						devMod.devDescr = devDescr;
-
-						return devMod;
-					})
-					.Subscribe(devMod => {
+				subscription.Disposable = discoveryClient
+					.ObserveOn(syncCtx)
+					.Subscribe(devDescr => {
 						DebugHelper.Assert(SynchronizationContext.Current == syncCtx);
 						DebugHelper.Assert(isActive);
-						controller.AddDeviceModelInfo(devMod);
 
+						DeviceDescriptionModel devModel = new DeviceDescriptionModel(devDescr);
+						devModel.Load(Session.Create(devDescr)).Subscribe(dModel => {
+
+						}, err => {
+							//DebugHelper.Error(err);
+						});
+
+						AddDeviceDescription(devModel);
 					}, err => {
 						DebugHelper.Assert(SynchronizationContext.Current == syncCtx);
 						DebugHelper.Assert(isActive);
-						controller.AddDeviceModelInfo(WSDiscoveryExceptionHandler(Constants.Instance.sExceptionWSDiscoveryTitle, err.Message, null));
+						DebugHelper.Error(err);
 					});
 			});
-
+			return subscription;
 		}
-		#endregion
 
-		#region ErrorHandler
-		protected DeviceModelInfo WSDiscoveryDevInfoError(string Description, DeviceModelInfo devinfo) {
-			return WSDiscoveryExceptionHandler(Constants.Instance.sExceptionWSDiscoveryTitle, Description, devinfo);
-		}
-		protected DeviceModelInfo WSDiscoveryExceptionHandler(string title, string description, DeviceModelInfo devinfo) {
-			//ErrorMessageForm errorForm = new ErrorMessageForm(title, description);
-
-			if (devinfo == null) {
-				devinfo = new DeviceModelInfo();
-				//devinfo.IpAddress = Constants.Instance.sErrorDeviceIPAddress;
-			}
-
-			devinfo.IsValid = false;
-			devinfo.Firmware = Constants.Instance.sErrorDeviceFirmware;
-			devinfo.Name = Constants.Instance.sErrorDeviceName;
-
-			devinfo.ErrorMsg = description;
-
-			return devinfo;
-		}
-		#endregion
-
-		#region EventsHandlers
-		void Instance_ModelInfoAdded(object sender, EventArgs e) {
-			_devLsrCtrl.AddItem((DeviceModelInfo)e, true);
-		}
-		void devListctrl_RefreshDeviceList(object sender, EventArgs e) {
-			_devLsrCtrl.Refresh();
-			WorkflowController.Instance.DeviceItemsInfoList.Clear();
-			FillDeviceList();
-		}
-		void devListctrl__onDeviceItemSelected(string id) {
-			ReleaseResources();
-
-			DeviceModelInfo devInfo = WorkflowController.Instance.GetDeviceInfoByID(id);
-
-			//Check if device valid
-			if (devInfo.IsValid) {
-				WorkflowController.Instance.CreateDeviceModel(devInfo);
-				WorkflowController.Instance.GetMainWindowController().RunMainFrame();
-				SetStatusText(devInfo);
-			} else {
-				var controller = WorkflowController.Instance.GetErrorFrameController();
-				var ctrl = controller.CreateErrorFrame(devInfo);
-				WorkflowController.Instance.GetMainWindowController().RunErrorFrame(ctrl);
+		void UnsubscribeFromWSDiscovery() {
+			if (_discoverySubscription != null) {
+				_discoverySubscription.Dispose();
 			}
 		}
-		void SetStatusText(DeviceModelInfo devInfo) {
-			string text1 = devInfo.Name + "/" + devInfo.IpAddress + "/" + devInfo.Firmware;
-			WorkflowController.Instance.GetMainWindowController().SetStatusBarText1(text1);
-		}
-		#endregion
 
-		#region release resources
+		//Subscribe to UI events
+		void SubscribeToEvents() {
+			_devLsrCtrl._onDeviceItemSelected += new DeviceListItemSelectedDelegate(devListctrl__onDeviceItemSelected);
+			_devLsrCtrl.RefreshDeviceList += new EventHandler(devListctrl_RefreshDeviceList);
+			//WorkflowController.Instance.ModelInfoAdded += new EventHandler(Instance_ModelInfoAdded);
+		}
+		//Subscribe from UI events
+		void UnsubscribeFromEvents() {
+			_devLsrCtrl._onDeviceItemSelected -= devListctrl__onDeviceItemSelected;
+			_devLsrCtrl.RefreshDeviceList -= devListctrl_RefreshDeviceList;
+		}
+
 		void ReleaseResources() {
 			WorkflowController.Instance.ReleaseControllers();
-			WorkflowController.Instance.ReleaseDeviceModel();
+			//WorkflowController.Instance.ReleaseDeviceModel();
 		}
-		#endregion
+
+		public void RemoveDevListControlItem(DeviceDescriptionModel devModel) {
+			if (_devLsrCtrl != null) {
+				_devLsrCtrl.RemoveItem(devModel);
+			}
+		}
+
+		void devListctrl__onDeviceItemSelected(DeviceDescriptionModel devModel) {
+			ReleaseResources();
+
+			//Check if device valid
+			WorkflowController.Instance.GetMainWindowController().RunMainFrame(devModel);
+			SetStatusText(devModel);
+		}
+
+		void SetStatusText(DeviceDescriptionModel devModel) {
+			string text1 = devModel.Name + "/" + devModel.Address + "/" + devModel.Firmware;
+			WorkflowController.Instance.GetMainWindowController().SetStatusBarText1(text1);
+		}
+
+		public void RefreshDevicesList() {
+			WorkflowController.Instance.ReleaseMainFrameController();
+			_devLsrCtrl.RefreshItems();
+			DeviceDescriptionModels.Clear();
+			FillDeviceList();
+		}
+		void devListctrl_RefreshDeviceList(object sender, EventArgs e) {
+			RefreshDevicesList();
+		}
 	}
 }

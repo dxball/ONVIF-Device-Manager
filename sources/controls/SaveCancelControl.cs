@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,14 @@ namespace nvc.controls
         public event EventHandler ButtonClickedSave;
         public event EventHandler ButtonClickedCancel;
 
-		void Localisation(){
-			_btnSave.DataBindings.Add(new Binding("Text", Constants.Instance, "sButtonSave"));
-			_btnCancel.DataBindings.Add(new Binding("Text", Constants.Instance, "sButtonCancel"));
+		void Localization(){
+			_btnSave.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sButtonSave);
+			_btnCancel.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sButtonCancel);
 		}
 
         protected void InitControls()
         {
-			Localisation();
+			Localization();
 
             BackColor = ColorDefinition.colControlBackground;
             _btnCancel.BackColor = ColorDefinition.colControlBackground;

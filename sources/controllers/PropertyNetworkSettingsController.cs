@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -24,113 +25,92 @@ using System.Windows.Forms;
 using nvc.controls;
 using nvc.models;
 using nvc.entities;
+using nvc.onvif;
+using System.Threading;
+using nvc.utils;
 
 namespace nvc.controllers {
 	public class PropertyNetworkSettingsController : IRelesable, IPropertyController {
-		DeviceModel _devModel = WorkflowController.Instance.GetCurrentDevice();
+		DeviceNetworkSettingsModel _devModel;
+		Session CurrentSession { get; set; }
 		Panel _propertyPanel;
-		PropertyNetworkSettings _propNetSett;
 		BasePropertyControl _currentControl;
-		IDisposable _subscriptionNetworkStatus;
-		IDisposable _subscriptionNetworkSettings;
+		InformationForm _savingSettingsForm;
+		IDisposable _subscription;
 
 		public PropertyNetworkSettingsController() {
 
 		}
 
-		#region IRelesable
-		public bool disposed = false;
-		void ReleaseUIEvents() { 
-			WorkflowController.Instance.SaveNetworkSettingsCompleate -= Instance_SaveNetworkSettingsCompleate;
-			WorkflowController.Instance.SaveNetworkSettingsError -= Instance_SaveNetworkSettingsError;
-			WorkflowController.Instance.SaveNetworkSettingsCompleateRebootNeedet -= Instance_SaveNetworkSettingsCompleateRebootNeedet;
-
-			_devModel.NetworkSettingsInitialised -= _devModel_NetworkSettingsInitialised;
-			if(_propNetSett != null)
-				_propNetSett.SaveData -= property_SaveData;
-		}
-		void ReleaseSubscriptions() {
-			if (_subscriptionNetworkStatus != null)
-				_subscriptionNetworkStatus.Dispose();
-			if (_subscriptionNetworkSettings != null)
-				_subscriptionNetworkSettings.Dispose();
-		}
 		public void ReleaseAll() {
-			disposed = true;
-			ReleaseSubscriptions();
-			ReleaseUIEvents();
+			if (_subscription != null) _subscription.Dispose();
 		}
-		#endregion IRelesable
 
-		public BasePropertyControl CreateController(Panel propertyPanel) {
+		void LoadControl() {
+			_devModel = new DeviceNetworkSettingsModel();
+			_subscription = _devModel.Load(CurrentSession).Subscribe(arg => {
+				_devModel = arg;
+				_propertyPanel.SuspendLayout();
+				_propertyPanel.Controls.ForEach(x => ((Control)x).Dispose());
+				_propertyPanel.Controls.Clear();
+				_currentControl = new PropertyNetworkSettings(_devModel) { Dock = DockStyle.Fill, Save = ApplyChanges, Cancel = CancelChanges };
+				_propertyPanel.Controls.Add(_currentControl);
+				_propertyPanel.ResumeLayout();
+			}, err => {
+				//DebugHelper.Error(err);
+				_savingSettingsForm = new InformationForm("ERROR");
+				_savingSettingsForm.SetErrorMessage(err.Message);
+				_savingSettingsForm.ShowCloseButton(null);
+				_savingSettingsForm.ShowDialog(_propertyPanel);
+			});
+		}
+		public BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription chan) {
 			_propertyPanel = propertyPanel;
-
-			//_propertyPanel.SuspendLayout();
-			
 			_propertyPanel.Controls.Clear();
-			
-			if (_devModel.IsPropertyNetworkSettingsReady != true) {
-				_subscriptionNetworkStatus = WorkflowController.Instance.SubscribeToNetworkStatus();
-				_subscriptionNetworkSettings = WorkflowController.Instance.SubscribeToNetworkSettings();
-				_devModel.NetworkSettingsInitialised += new EventHandler(_devModel_NetworkSettingsInitialised);
-				_currentControl = new LoadingPropertyPage();
-			} else {
-				_currentControl = CreateProperty();				
-			}
+			CurrentSession = session;
 
-			//_propertyPanel.ResumeLayout();
-
+			_currentControl = new LoadingPropertyPage();
 			_currentControl.Dock = DockStyle.Fill;
 			_propertyPanel.Controls.Add(_currentControl);
 
+			LoadControl();
 			return _currentControl;
 		}
-
-		void _devModel_NetworkSettingsInitialised(object sender, EventArgs e) {
-			var control = CreateProperty();
-			_propertyPanel.Controls.Clear();
-			_propertyPanel.Controls.Add(control);
-
+		void CancelChanges() {
+			_devModel.RevertChanges();
 		}
-		public BasePropertyControl CreateProperty() {
-			_propNetSett = new PropertyNetworkSettings(_devModel);
-			_propNetSett.Dock = DockStyle.Fill;
-			_propNetSett.SaveData += new SaveNetworkSettingsEvent(property_SaveData);
-			return _propNetSett;
-		}
-		SavingSettingsForm _savingSettingsForm;
-		void property_SaveData(NetworkSettings netSett, NetworkStatus netStat) {
-			WorkflowController.Instance.SaveNetworkSettingsCompleate += new EventHandler(Instance_SaveNetworkSettingsCompleate);
-			WorkflowController.Instance.SaveNetworkSettingsError += new EventHandler(Instance_SaveNetworkSettingsError);
-			WorkflowController.Instance.SaveNetworkSettingsCompleateRebootNeedet += new EventHandler(Instance_SaveNetworkSettingsCompleateRebootNeedet);
-			ReleaseSubscriptions();
-			WorkflowController.Instance.SubscribeToSaveNetworkSettings(netSett);
-			_savingSettingsForm = new SavingSettingsForm();
-			_savingSettingsForm.ShowDialog(_propNetSett);
+		void ApplyChanges() {
+			_devModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
+				.Subscribe(devMod => {
+					_devModel = devMod;
+				}, err => {
+					//DebugHelper.Error(err);
+					SaveNetworkSettingsError(err.Message);
+				}, () => {
+					SaveNetworkSettingsComplete();
+				});
+			_savingSettingsForm = new InformationForm();
+			_savingSettingsForm.ShowDialog(_propertyPanel);
 		}
 
-		void Instance_SaveNetworkSettingsCompleateRebootNeedet(object sender, EventArgs e) {
-			WorkflowController.Instance.SaveNetworkSettingsCompleateRebootNeedet -= Instance_SaveNetworkSettingsCompleateRebootNeedet;
-			_savingSettingsForm.SetErrorMessage(Constants.Instance.sSaveSettingsNeedReboot);
-			_savingSettingsForm.ShowCloseButton();
+		void SaveNetworkSettingsError(string message) {
+			_savingSettingsForm.SetErrorMessage(message);
+			_savingSettingsForm.ShowCloseButton(KillEveryOne);
+		}
+
+		public void KillEveryOne() {
 			WorkflowController.Instance.KillEveryBody();
 		}
 
-		void Instance_SaveNetworkSettingsError(object sender, EventArgs e) {
-			WorkflowController.Instance.SaveNetworkSettingsError -= Instance_SaveNetworkSettingsError;
-			_savingSettingsForm.SetErrorMessage(Constants.Instance.sErrorSaveNetworkSettings);
-			_savingSettingsForm.ShowCloseButton();
-			WorkflowController.Instance.KillEveryBody();
+		public void ReturnToBeginning() {
+			WorkflowController.Instance.ReleaseMainFrameController();
+			WorkflowController.Instance.RefreshDevicesList();
 		}
 
-		void Instance_SaveNetworkSettingsCompleate(object sender, EventArgs e) {
-			WorkflowController.Instance.SaveNetworkSettingsCompleate -= Instance_SaveNetworkSettingsCompleate;
-			_savingSettingsForm.Close();
-			
-			ReleaseUIEvents();
-			var control = CreateProperty();
-			_propertyPanel.Controls.Clear();
-			_propertyPanel.Controls.Add(control);
+		void SaveNetworkSettingsComplete() {
+			//_savingSettingsForm.Close();
+			_savingSettingsForm.SetErrorMessage(SaveSettingsFormStrings.Instance.NeedToReboot);
+			_savingSettingsForm.ShowCloseButton(ReturnToBeginning);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using nvc.controls;
+using nvc.models;
 
 namespace nvc.controllers {
 	public class MainWindowController {
 		MainWindow MainView { get { return _mainWindow; } }
 		MainWindow _mainWindow;
-		MainFrameController _controller;
+		//MainFrameController _controller;
 
 		#region Init section
 		public MainWindowController() {
@@ -39,15 +41,18 @@ namespace nvc.controllers {
 		public void RunErrorFrame(UserControl errorFrame) {
 			MainView.InitFrame(errorFrame);
 		}
-
+		public void Refrersh() {
+			if (_mainWindow != null)
+				_mainWindow.InitControls();
+		}
 		public void ClearMainFrame() {
 			MainView.InitFrame();
 		}
-		public void RunMainFrame() {
-			var devModel = WorkflowController.Instance.GetCurrentDevice();
-			_controller = WorkflowController.Instance.GetMainFrameController();
+		public void RunMainFrame(DeviceDescriptionModel devModel) {
+			var _controller = WorkflowController.Instance.GetMainFrameController();
 
-			MainView.InitFrame(_controller.CreateMainFrame(devModel));
+			DeviceCapabilityModel devCapability= new DeviceCapabilityModel();
+			MainView.InitFrame(_controller.CreateMainFrame(devCapability, devModel.session));
 		}
 		public MainWindow GetWindowRun() {
 			return _mainWindow;

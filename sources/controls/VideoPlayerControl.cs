@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,18 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using DZ.MediaPlayer;
-using DZ.MediaPlayer.Vlc;
-using DZ.MediaPlayer.Io;
-using DZ.MediaPlayer.Vlc.Deployment;
 using System.IO;
 using nvc.utils;
 using System.Threading;
+using liblenin;
 
 namespace nvc.controls
 {
+
     public partial class VideoPlayerControl : UserControl
     {
+        private VlcControlInner m_VlcControl = null;
+
         public VideoPlayerControl(string medInput)
         {
 			InitializeComponent();
@@ -51,30 +52,23 @@ namespace nvc.controls
             {
                 try
                 {
-                    _medInput = new MediaInput(MediaInputType.NetworkStream, medInput);
-                    InitVideoPlayer();
+                    m_VlcControl = new VlcControlInner();
+                    Controls.Add(m_VlcControl);
+                    m_VlcControl.Dock = DockStyle.Fill;
+                    m_VlcControl.Play(medInput);
                 }
                 catch (Exception ex)
                 {
+                    ReleaseAll();
                     InitError(ex.Message);
                 }
             }
         }
 
-		public void ReleaseAll() {
-            if (null != VlcSingleton.Instance)
-            {
-                VlcSingleton.Instance.Load -= _loadVlc;
-                Controls.Remove(VlcSingleton.Instance);
-                if (VlcSingleton.Instance.State == DZ.MediaPlayer.Vlc.WindowsForms.VlcPlayerControlState.PLAYING)
-                {
-                    VlcSingleton.Instance.Stop();
-                }
-            }
-		}
-
         private void InitError(string p)
         {
+            Controls.Clear();
+
             var error = new ErrorMessageControl();
 			error.Title = Constants.Instance.sErrorVlc;
             error.Message = p;
@@ -84,83 +78,98 @@ namespace nvc.controls
             Dock = DockStyle.Fill;
         }
 
-        protected MediaInput _medInput;
-        protected EventHandler _loadVlc;
-
-        protected void InitVideoPlayer()
-        {
-            try
-            {
-                _loadVlc = new EventHandler(_vlcPlayer_Load);
-                VlcSingleton.Instance.Load += _loadVlc;
-                VlcSingleton.Instance.Dock = DockStyle.Fill;
-                Controls.Add(VlcSingleton.Instance);
-                Dock = DockStyle.Fill;
-            }
-            catch (Exception e)
-            {
-                InitError(e.Message);
-            }
-        }
-
-        void _vlcPlayer_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                VlcSingleton.Instance.Play(_medInput);
-                VlcSingleton.Instance.Refresh();
-            }
-            catch (Exception ex)
-            {
-                if (null != VlcSingleton.Instance)
-                {
-                    Controls.Remove(VlcSingleton.Instance);
-                }
-                InitError(ex.Message);
-            }
-        }
-
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (VlcSingleton.Instance.IsDisposed)
-            {
-                throw new InvalidOperationException("Control is disposed");
-            }
-            if (null != VlcSingleton.Instance && !VlcSingleton.Instance.IsDisposed)
-            {
-                this.ReleaseAll();
-            }
-            //
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
             base.Dispose(disposing);
         }
-    }
 
-    public sealed class VlcSingleton
-    {
-        private static readonly DZ.MediaPlayer.Vlc.WindowsForms.VlcPlayerControl _instance
-            = new DZ.MediaPlayer.Vlc.WindowsForms.VlcPlayerControl();
-
-        private VlcSingleton() { }
-
-        public static DZ.MediaPlayer.Vlc.WindowsForms.VlcPlayerControl Instance
+        internal void Stop()
         {
-            get
+            try
             {
-                if (!_instance.IsInitialized)
+                if (null != m_VlcControl)
                 {
-                    _instance.Initialize();
+                    m_VlcControl.Stop();
                 }
-                return _instance;
+            }
+            finally
+            {
+                ReleaseAll();
+            }
+        }
+
+        internal void Play(string p)
+        {
+            try
+            {
+                if (null != m_VlcControl)
+                {
+                    m_VlcControl.Play(p);
+                }
+            }
+            finally
+            {
+                ReleaseAll();
+            }
+        }
+
+        internal void ReleaseAll()
+        {
+            if (null != m_VlcControl)
+            {
+                m_VlcControl.Dispose();
             }
         }
     }
 
+    class VlcControlInner : Panel
+    {
+        private Vlc mVlc = null;
+        private MediaPlayer mPlayer = null;
+        private bool mIsPlaying = false;
+
+        public VlcControlInner()
+        {
+            mVlc = new Vlc();
+        }
+
+        public void Stop()
+        {
+            if (mIsPlaying)
+            {
+                mPlayer.Stop();
+                mPlayer.Dispose();
+                mPlayer = null;
+                mIsPlaying = false;
+            }
+        }
+
+        public void Play(string url)
+        {
+            Stop();
+            mPlayer = mVlc.CreateMediaPlayer(url);
+            mPlayer.SetHwnd(this.Handle);
+            mPlayer.Play();
+            mIsPlaying = true;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Stop();
+            if (null != mVlc)
+            {
+                mVlc.Dispose();
+                mVlc = null;
+            }
+            base.Dispose(disposing);
+        }
+    }
 }

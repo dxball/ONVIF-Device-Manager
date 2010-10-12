@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -36,27 +37,27 @@ namespace nvc.controls
             InitControls();
         }
 
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOTitle"));
-			_grpDigitalInputs.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOInputs"));
-			_grpDigitalOutputs.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOOutputs"));
-			_lblInputCurrentStatus.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOInputCurrentStatus"));
-			_lblInputName.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOInputName"));
-			_lblInputNormalStatus.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOInputNormalStatus"));
-			_lblOutputCurrentStatus.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOOutputCurrentStatus"));
-			_lblOutputIdleStatus.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOOutputIdleStatus"));
-			_lblOutputName.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOOutputName"));
-			_btnTriggerRelay.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOButtonTriggerRelay"));
-			_checkRecordChannel.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIORecordChannel"));
-			_checkSendMessage.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOEventSendONVIFmessage"));
-			_checkSwitchVideo.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOSwitchAnalogue"));
-			_checkTriggerRelay.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyDigitalIOTriggerRelay"));
+		void Localization(){
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOTitle);
+			_grpDigitalInputs.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputs);
+			_grpDigitalOutputs.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputs);
+			_lblInputCurrentStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputCurrentStatus);
+			_lblInputName.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputName);
+			_lblInputNormalStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputNormalStatus);
+			_lblOutputCurrentStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputCurrentStatus);
+			_lblOutputIdleStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputIdleStatus);
+			_lblOutputName.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputName);
+			_btnTriggerRelay.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOButtonTriggerRelay);
+			_checkRecordChannel.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIORecordChannel);
+			_checkSendMessage.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOEventSendONVIFmessage);
+			_checkSwitchVideo.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOSwitchAnalogue);
+			_checkTriggerRelay.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOTriggerRelay);
 		}
 
 
         void InitControls()
         {
-			Localisation();
+			Localization();
             //Colors
             _title.BackColor = ColorDefinition.colTitleBackground;
             _grpDigitalInputs.BackColor = ColorDefinition.colControlBackground;

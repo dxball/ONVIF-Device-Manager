@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,89 +14,77 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ServiceModel.Discovery;
-using System.ServiceModel;
+//using System.Linq;
+//using System.Text;
+//using System.ServiceModel.Discovery;
+//using System.ServiceModel;
 
-using onvif.services.media;
-using onvif.services.device;
-using System.ServiceModel.Channels;
-using System.Threading;
-using nvc.utils;
-using nvc.models;
+//using onvif.services.media;
+//using onvif.services.device;
+//using System.ServiceModel.Channels;
+//using System.Threading;
+
+//using nvc.utils;
+//using nvc.models;
 
 namespace nvc.onvif {
-	public class DeviceDescription {
-
-		public static IObservable<DeviceDescription> Load(Uri deviceUri) {
-			return Observable.Start(() => {
-				var _epMetadata = new EndpointDiscoveryMetadata();
-				_epMetadata.ListenUris.Add(deviceUri);
-				var devDescr = new DeviceDescription(_epMetadata);
-				var proxy = DeviceDescription.CreateDeviceClient(deviceUri);
-				devDescr.devInfo = proxy.GetDeviceInformation().Select(x=>new DeviceInfo(){Model=x.Model, FirmwareVersion = x.FirmwareVersion, HardwareId = x.HardwareId, Manufacturer = x.Manufacturer, SerialNumber = x.SerialNumber}).First();
-				devDescr.capabilities = proxy.GetCapabilities().First();
-				devDescr.deviceUri = deviceUri;
-				return devDescr;
-			});
-		}
-
-		public DeviceDescription(EndpointDiscoveryMetadata epMetadata) {
-			this.epMetadata = epMetadata;
-		}
-
-		public EndpointDiscoveryMetadata epMetadata;
-		public DeviceInfo devInfo = null;
-		public Capabilities capabilities = null;
-		public Uri deviceUri = null;
-
-		public string IPAddress{
-			get{
-				return epMetadata.ListenUris[0].Host;
-			}
-		}
-
-		public string Id {
-			get {
-				return epMetadata.Address.Uri.OriginalString;
-			}
-		}
-
-		public Session CreateSession() {
-			var session = new Session(this);
-			return session;
-		}
-
-		private static ChannelFactory<Device> m_deviceFactory =
-			new ChannelFactory<Device>(new WSHttpBinding(SecurityMode.None) {
-				TextEncoding = Encoding.UTF8		
-			});
-		private static ChannelFactory<Media> m_mediaFactory = new ChannelFactory<Media>(new WSHttpBinding(SecurityMode.None));
-
-		public static DeviceObservable CreateDeviceClient(Uri uri) {
-			var endpointAddr = new EndpointAddress(uri);
-			var proxy = m_deviceFactory.CreateChannel(endpointAddr);
-			return new DeviceObservable(proxy);				
-		}
-
-		public static MediaObservable CreateMediaClient(Uri uri) {
-			var endpointAddr = new EndpointAddress(uri);
-			var proxy = m_mediaFactory.CreateChannel(endpointAddr);
-			return new MediaObservable(proxy);
-		}
-
-		public DeviceObservable CreateDeviceClient() {
-			return CreateDeviceClient(deviceUri);
-		}
-		
-		public MediaObservable CreateMediaClient() {
-			return CreateMediaClient(new Uri(capabilities.Media.XAddr));
-		}
+	public abstract class DeviceDescription {
+		public abstract string Name {get;}
+		public abstract string Id {get;}
+		public abstract string Location {get;}
+		public abstract IEnumerable<Uri> Uris {get;}
+		public abstract IEnumerable<string> Scopes {get;}
 	}
+
+
+		//public static IObservable<DeviceDescription> Load(Uri deviceUri) {
+		//    return Observable.Start(() => {
+		//        var _epMetadata = new EndpointDiscoveryMetadata();
+		//        _epMetadata.ListenUris.Add(deviceUri);
+		//        var devDescr = new DeviceDescription(_epMetadata);
+		//        devDescr.deviceUri = deviceUri;
+		//        var proxy = DeviceDescription.CreateDeviceClient(deviceUri);
+		//        var session = devDescr.CreateSession();
+		//        devDescr.devInfo = session.GetDeviceInfo().First();
+		//        devDescr.capabilities = proxy.GetCapabilities().First();
+		//        devDescr.deviceUri = deviceUri;
+		//        return devDescr;
+		//    });
+		//}
+
+		//public DeviceDescription(EndpointDiscoveryMetadata epMetadata) {
+		//    this.epMetadata = epMetadata;
+		//}
+
+		
+		//public DeviceInfo devInfo = null;
+		//public Capabilities capabilities = null;
+		//public Uri deviceUri = null;
+
+		//public string IPAddress{
+		//    get{
+		//        if (deviceUri != null) {
+		//            return deviceUri.Host;
+		//        }
+		//        return String.Join(", ", epMetadata.ListenUris.Select(x => x.Host));			
+		//    }
+		//}
+
+		//public string Id {
+		//    get {
+		//        return epMetadata.Address.Uri.OriginalString;
+		//    }
+		//}
+
+		//public Session CreateSession() {
+		//    var session = new Session(this);
+		//    return session;
+		//}
+
+		
 }

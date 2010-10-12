@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,83 @@ using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Threading;
+using System.Xml.XPath;
+using nvc.utils;
 
 namespace nvc {
+	
+	public static class XPathExtensions {
+		//private static Dictionary<string, XPathExpression> m_ExpressionCache = new Dictionary<string, XPathExpression>();
+		
+		public static Func<string, string> CreateEvaluator(this IXPathNavigable navigable) {
+			return navigable.CreateNavigator().GetEvaluator();
+		}
+		public static Func<XPathExpression, string> CreateExprEvaluator(this IXPathNavigable navigable) {
+			return navigable.CreateNavigator().GetExprEvaluator();
+		}
+
+		public static Func<string, string> GetEvaluator(this XPathNavigator navigator) {
+			var xeval = GetExprEvaluator(navigator);
+			return xpath => {
+				XPathExpression expr = null;
+				//lock (m_ExpressionCache) {
+				//    if (!m_ExpressionCache.TryGetValue(xpath, out expr)) {
+						expr = XPathExpression.Compile(xpath);
+				//        m_ExpressionCache[xpath] = expr;
+				//    }
+				//}
+				return xeval(expr);
+			};			
+		}
+
+		public static Func<XPathExpression, string> GetExprEvaluator(this XPathNavigator navigator) {
+			return xpath => {
+				if (navigator == null) {
+					return null;
+				}
+				var t = navigator.Select(xpath);
+				var sb = new StringBuilder();
+				while (t.MoveNext()) {
+					sb.Append(t.Current);
+				}
+				var result = sb.ToString();
+				if (String.IsNullOrWhiteSpace(result)) {
+					return null;
+				}
+				return result;
+			};
+		}
+	}
+	
 	public static class Extensions {
+
+		public static Func<TArg, TResult> Wrap<TArg, TResult>(this Func<TArg, TResult> fun, Func<Func<TArg, TResult>, Func<TArg, TResult>> wrapper) {
+			return wrapper(fun);
+		}
+
+		public static void Wrap<TArg>(this Action<TArg> act, Action<Action<TArg>> wrapper) {
+			wrapper(act);
+		}
+
+		public static Func<TArg, TResult> Catch<TArg, TResult>(this Func<TArg, TResult> fun, Func<TResult> handler) {
+			return arg => {
+				try{
+					return fun(arg);
+				}catch{
+					return handler();
+				}
+			};
+		}
+
+		public static Func<TArg, TResult> Catch<TArg, TResult>(this Func<TArg, TResult> fun, Func<Exception, TResult> handler) {
+			return arg => {
+				try {
+					return fun(arg);
+				} catch(Exception err) {
+					return handler(err);
+				}
+			};
+		}
 
 		public static T GetCustomAttribute<T>(this Type type) where T : Attribute {
 			return Attribute.GetCustomAttribute(type, typeof(T)) as T;
@@ -138,7 +213,7 @@ namespace nvc {
 		public static void ForEach<T>(this IEnumerable<T> src, Action<T, int> action) {
 			int index = 0;
 			foreach (var element in src) {
-				action(element, index);
+				action(element, index++);
 			}
 		}
 
@@ -152,6 +227,12 @@ namespace nvc {
 			foreach (var element in src) {
 				action(element, index);
 			}
+		}
+		public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T head) {
+			return Enumerable.Repeat(head, 1).Concat(source);
+		}
+		public static IEnumerable<T> Append<T>(this IEnumerable<T> source, T tail) {
+			return source.Concat(Enumerable.Repeat(tail, 1));
 		}
 	}
 

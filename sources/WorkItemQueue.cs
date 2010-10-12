@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ using System.Threading;
 using nvc.utils;
 
 namespace nvc {
-	class WorkItemQueue {
+	public class WorkItemQueue {
 		
 		private Queue<Action> m_queue = new Queue<Action>();
 		private object m_gate = new object();
@@ -62,7 +63,7 @@ namespace nvc {
 
 				});
 			}
-		}
+		}		
 	}
 
 	public class GlobalWorkItemQueue {

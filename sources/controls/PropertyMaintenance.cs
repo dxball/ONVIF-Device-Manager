@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -35,24 +36,24 @@ namespace nvc.controls
 
             InitControls();
         }
-		void Localisation(){
-			_title.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceTitle"));
-			_lblConfig.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceConfiguration"));
-			_lblDiagnostics.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceDiagnostics"));
-			_lblFactoryReset.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceFactoryReset"));
-			_lblFirmwareVer.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceFirmwareVer"));
-			_lblUpgrade.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceUpgrateFirmware"));
-			_linkSupport.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNSupportLink"));
-			_btnBackup.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNBackup"));
-			_btnHardReset.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNHardReset"));
-			_btnRestore.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNRestore"));
-			_btnSoftReset.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNSoftReset"));
-			_btnUpgrade.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNUpgrate"));
-			_btnDiagnostics.DataBindings.Add(new Binding("Text", Constants.Instance, "sPropertyMaintenanceBTNDownloadDump"));
+		void Localization(){
+			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceTitle);
+			_lblConfig.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceConfiguration);
+			_lblDiagnostics.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceDiagnostics);
+			_lblFactoryReset.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceFactoryReset);
+			_lblFirmwareVer.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceFirmwareVer);
+			_lblUpgrade.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceUpgrateFirmware);
+			//_linkSupport.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNSupportLink);
+			_btnBackup.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNBackup);
+			_btnHardReset.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNHardReset);
+			_btnRestore.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNRestore);
+			_btnSoftReset.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNSoftReset);
+			_btnUpgrade.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNUpgrate);
+			_btnDiagnostics.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNDownloadDump);
 		}
         protected void InitControls()
         {
-			Localisation();
+			Localization();
 
             //[TODO] Get data from device
             //_tbFirmwareVer.Text = "00000001";

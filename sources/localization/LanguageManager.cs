@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,9 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +24,10 @@ using System.Text;
 using System.Xml.XPath;
 using System.IO;
 using nvc.utils;
+using System.Globalization;
 
-namespace nvc.localization {	
-
+namespace nvc.localization {
+	
 	public class Language:IXPathNavigable{
 		private Language() {
 		}
@@ -44,7 +47,7 @@ namespace nvc.localization {
 			get {
 				//yield return Default;
 				var langs = Directory
-					.GetFiles(Program.MapPath("~/localization"), "*.xml")
+					.GetFiles(Program.MapPath("~/locales"), "*.xml")
 					.Select(x => new FileInfo(x))
 					.Select(x => new Language() {
 						DisplayName = Path.GetFileNameWithoutExtension(x.Name),
@@ -52,16 +55,19 @@ namespace nvc.localization {
 					});
 				foreach (var t in langs) {
 					try {
-						var nav = t.CreateNavigator();
-						var lang_name = nav.SelectSingleNode("/localized-strings/@name").Value;						
-						if (!String.IsNullOrWhiteSpace(lang_name)) {
-							t.DisplayName = lang_name;
+						var xeval = t.CreateEvaluator();
+						var lang_name = xeval("/localized-strings/@name");
+						var lang_iso3 = xeval("/localized-strings/@lang-iso3");
+						
+						if (lang_name == null && lang_iso3!=null) {
+							var ci = CultureInfo.GetCultures(CultureTypes.NeutralCultures)
+								.Where(c => c.ThreeLetterISOLanguageName.Equals(lang_iso3, StringComparison.OrdinalIgnoreCase))
+								.FirstOrDefault();
+							lang_name = ci != null ? ci.NativeName.ToLower() : null;
 						}
 
-						var lang_iso3 = nav.SelectSingleNode("/localized-strings/@iso3").Value;
-						if (!String.IsNullOrWhiteSpace(lang_iso3)) {
-							t.iso3 = lang_iso3;
-						}
+						t.iso3 = lang_iso3;
+						t.DisplayName = lang_name;
 					} catch(Exception err) {
 						//swallow error
 						DebugHelper.Error(err);

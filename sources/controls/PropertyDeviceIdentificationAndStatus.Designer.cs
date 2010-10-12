@@ -1,4 +1,5 @@
-﻿namespace nvc.controls
+﻿using nvc.controllers;
+namespace nvc.controls
 {
     partial class PropertyDeviceIdentificationAndStatus
     {
@@ -101,7 +102,6 @@
 			this._tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this._tbName.Location = new System.Drawing.Point(166, 3);
 			this._tbName.Name = "_tbName";
-			this._tbName.ReadOnly = true;
 			this._tbName.Size = new System.Drawing.Size(249, 20);
 			this._tbName.TabIndex = 1;
 			// 

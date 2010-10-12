@@ -1,4 +1,5 @@
-﻿//----------------------------------------------------------------------------------------------------------------
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
 // Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
 //
 // Commercial Usage
@@ -13,8 +14,8 @@
 // requirements will be met: http://www.gnu.org/copyleft/gpl.html.
 // 
 // If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
-//
 //----------------------------------------------------------------------------------------------------------------
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace nvc {
 
 	public class ColorDefinition {
 		public static readonly Color colLinkButtonsIitial = Color.FromArgb(0, 0, 255);
+		public static readonly Color colLinkButtonsClicked = Color.FromArgb(150, 0, 200);
 		public static readonly Color colLinkButtonsHovered = Color.FromArgb(150, 150, 255);
 		public static readonly Color colControlBackground = Color.FromArgb(240, 240, 240);
 		public static readonly Color colActiveControlBackground = Color.FromArgb(240, 250, 255);
