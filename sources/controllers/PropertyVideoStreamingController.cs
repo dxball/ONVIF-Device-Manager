@@ -54,7 +54,7 @@ namespace nvc.controllers {
 				_propertyPanel.Controls.Add(_currentControl);
 				_propertyPanel.ResumeLayout();
 			}, err => {
-				DebugHelper.Error(err);
+				//DebugHelper.Error(err);
 				_savingSettingsForm = new InformationForm("ERROR");
 				_savingSettingsForm.SetErrorMessage(err.Message);
 				_savingSettingsForm.ShowCloseButton(null);
