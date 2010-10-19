@@ -17,6 +17,7 @@
 			<string name="sErrorDeviceFirmware" value="none" />
 			<string name="sErrorSaveNetworkSettings" value="Error was during saving network settings. Please refresh device." />
 			<string name="sErrorVlc" value="Media stream error" />
+      <string name="sErrorVlcPlayer" value="Cann't play media stream" />
 			<string name="sErrorVlcMediaUriIsEmpty" value="Stream uri is emtpy" />
 			<string name="sErrorVlcMediaUriIsBad" value="Stream uri is unknown" />
 		</region>
@@ -124,13 +125,13 @@
 			<string name="sPropertyMaintenanceBTNBackup" value="Backup" />
 			<string name="sPropertyMaintenanceBTNRestore" value="Restore" />
 			<string name="sPropertyMaintenanceFactoryReset" value="Factory reset" />
-			<string name="sPropertyMaintenanceBTNSoftReset" value="Soft reset" />
-			<string name="sPropertyMaintenanceBTNHardReset" value="Hard reset" />
+			<string name="sPropertyMaintenanceBTNSoftReset" value="Reboot" />
+			<string name="sPropertyMaintenanceBTNHardReset" value="Reset to factory defaults" />
 			<string name="sPropertyMaintenanceDiagnostics" value="Diagnostics and support" />
-			<string name="sPropertyMaintenanceBTNDownloadDump" value="Download Dump" />
+			<string name="sPropertyMaintenanceBTNDownloadDump" value="Download logs" />
 			<!--<string name="sPropertyMaintenanceBTNSupportLink" value="support@gtrg.ru" />-->
-			<string name="sPropertyMaintenanceFirmwareVer" value="Current firmware version" />
-			<string name="sPropertyMaintenanceUpgrateFirmware" value="Upgrade firmware" />
+			<string name="sPropertyMaintenanceFirmwareVer" value="Current firmware" />
+			<string name="sPropertyMaintenanceUpgrateFirmware" value="Change firmware" />
 			<string name="sPropertyMaintenanceBTNUpgrate" value="Upgrate" />
 		</region>
 

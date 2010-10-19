@@ -12,6 +12,7 @@
 			<string name="sErrorDeviceFirmware" value="пусто" />
 			<string name="sErrorSaveNetworkSettings" value="Ошибка при записи сетевых настроек. Пожалуйста обновите список устройств." />
 			<string name="sErrorVlc" value="Ошибка медиа потока" />
+      <string name="sErrorVlcPlayer" value="Ошибка при проигрывании видео потока" />
 			<string name="sErrorVlcMediaUriIsEmpty" value="Пустая ссылка на видео поток" />
 			<string name="sErrorVlcMediaUriIsBad" value="Неверная ссылка на видео поток" />
 		</region>
@@ -100,18 +101,18 @@
 			<string name="sPropertyDigitalIOButtonTriggerRelay" value="Trigger relay" />
 		</region>
 		<region name="Property Maintenance">
-			<string name="sPropertyMaintenanceTitle" value="Maintenance" />
-			<string name="sPropertyMaintenanceConfiguration" value="Configuration" />
-			<string name="sPropertyMaintenanceBTNBackup" value="Backup" />
-			<string name="sPropertyMaintenanceBTNRestore" value="Restore" />
-			<string name="sPropertyMaintenanceFactoryReset" value="Factory reset" />
-			<string name="sPropertyMaintenanceBTNSoftReset" value="Soft reset" />
-			<string name="sPropertyMaintenanceBTNHardReset" value="Hard reset" />
-			<string name="sPropertyMaintenanceDiagnostics" value="Diagnostics and support" />
-			<string name="sPropertyMaintenanceBTNDownloadDump" value="Download Dump" />
-			<string name="sPropertyMaintenanceFirmwareVer" value="Current firmware version" />
-			<string name="sPropertyMaintenanceUpgrateFirmware" value="Upgrade firmware" />
-			<string name="sPropertyMaintenanceBTNUpgrate" value="Upgrate" />
+			<string name="sPropertyMaintenanceTitle" value="Поддержка" />
+			<string name="sPropertyMaintenanceConfiguration" value="Конфигурация" />
+			<string name="sPropertyMaintenanceBTNBackup" value="Резервная копия" />
+			<string name="sPropertyMaintenanceBTNRestore" value="Восстановление" />
+			<string name="sPropertyMaintenanceFactoryReset" value="Сброс установок" />
+			<string name="sPropertyMaintenanceBTNSoftReset" value="Перезарузка" />
+			<string name="sPropertyMaintenanceBTNHardReset" value="Вернуться к заводским установкам" />
+			<string name="sPropertyMaintenanceDiagnostics" value="Диагностика и поддержка" />
+			<string name="sPropertyMaintenanceBTNDownloadDump" value="Скачать логи" />
+			<string name="sPropertyMaintenanceFirmwareVer" value="Текущая прошивка" />
+			<string name="sPropertyMaintenanceUpgrateFirmware" value="Изменить прошивку" />
+			<string name="sPropertyMaintenanceBTNUpgrate" value="Обновить" />
 		</region>
 		<region name="Property Live Video">
 			<string name="sPropertyLiveVideoTitle" value="Живое видео" />
