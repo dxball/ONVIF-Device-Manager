@@ -2,29 +2,29 @@
 <localized-strings lang-iso3="rus">
 	<module name="SaveSettingsFormStrings" namespace="nvc.controls">
 		<string name="Title" value="Сохранение изменений..." />
-		<string name="Text" value="Пожалуйста подождите пока изменения применятся" />
+		<string name="Text" value="Пожалуйста, подождите пока изменения применятся" />
 	</module>
 	<module name="Constants" namespace="nvc">
 		<region name="Exceptions">
 			<string name="sExceptionWSDiscoveryTitle" value="Ошибка в WSDiscovery" />
-			<string name="sErrorDevInfoNull" value="Ошибка при чтении конфигурации устройства. Пожалуйста обновите список устройств." />
-			<string name="sErrorDeviceName" value="путо" />
-			<string name="sErrorDeviceFirmware" value="пусто" />
-			<string name="sErrorSaveNetworkSettings" value="Ошибка при записи сетевых настроек. Пожалуйста обновите список устройств." />
-			<string name="sErrorVlc" value="Ошибка медиа потока" />
-      <string name="sErrorVlcPlayer" value="Ошибка при проигрывании видео потока" />
-			<string name="sErrorVlcMediaUriIsEmpty" value="Пустая ссылка на видео поток" />
-			<string name="sErrorVlcMediaUriIsBad" value="Неверная ссылка на видео поток" />
+			<string name="sErrorDevInfoNull" value="Ошибка при чтении конфигурации устройства. Пожалуйста, обновите список устройств." />
+			<string name="sErrorDeviceName" value="Не задано" />
+			<string name="sErrorDeviceFirmware" value="Не задано" />
+			<string name="sErrorSaveNetworkSettings" value="Ошибка при записи сетевых настроек. Пожалуйста, обновите список устройств." />
+			<string name="sErrorVlc" value="Ошибка медийного потока" />
+      <string name="sErrorVlcPlayer" value="Ошибка при проигрывании видеопотока" />
+			<string name="sErrorVlcMediaUriIsEmpty" value="Пустая ссылка на видеопоток" />
+			<string name="sErrorVlcMediaUriIsBad" value="Неверная ссылка на видеопоток" />
 		</region>
 		<region name="Common application sets">
 			<string name="sCommonAppOn" value="Включено" />
 			<string name="sCommonAppOff" value="Выключено" />
 			<string name="sCommonAppYes" value="Да" />
 			<string name="sCommonAppNo" value="Нет" />
-			<string name="sVideoPriorityStreaming" value="Streaming" />
-			<string name="sVideoPriorityAnalytics" value="Analytics" />
-			<string name="sLoadingData" value="Загрузка данных ..." />
-			<string name="sApplicationName" value="Network Video Console" />
+			<string name="sVideoPriorityStreaming" value="Стриминг" />
+			<string name="sVideoPriorityAnalytics" value="Аналитика" />
+			<string name="sLoadingData" value="Загрузка данных..." />
+			<string name="sApplicationName" value="Менеджер устройств ONVIF" />
 		</region>
 		<region name="DeviceControl">
 			<string name="sDeviceControlTitle" value="Конфигурация устройства" />
@@ -39,20 +39,20 @@
 			<string name="sDevicesListControlColumnType" value="Прошивка" />
 		</region>
 		<region name="LinkButtons names">
-			<string name="constLinkButtonIdentificationAndStatus" value="Идентификация и статус" />
+			<string name="constLinkButtonIdentificationAndStatus" value="Идентификация" />
 			<string name="constLinkButtonNetworkSettings" value="Настройки сети" />
-			<string name="constLinkButtonDigitalIO" value="Цифровые входы-выходы" />
+			<string name="constLinkButtonDigitalIO" value="Цифровые входы и выходы" />
 			<string name="constLinkButtonMaintenance" value="Обслуживание" />
 			<string name="constLinkButtonLiveVideo" value="Живое видео" />
 			<string name="constLinkButtonEvents" value="События" />
 			<string name="constLinkButtonDepthCalibration" value="Колибровка глубины" />
-			<string name="constLinkButtonVideoStreaming" value="Видео поток" />
+			<string name="constLinkButtonVideoStreaming" value="Стриминг видео" />
 			<string name="constLinkButtonDisplayAnnotation" value="Выводимая анотация" />
-			<string name="constLinkButtonTamperingDetectors" value="Фальсификация детекторов" />
-			<string name="constLinkButtonObjectTracker" value="Трекер объектов" />
+			<string name="constLinkButtonTamperingDetectors" value="Тамперинг-детекторы" />
+			<string name="constLinkButtonObjectTracker" value="Сопровождение объектов" />
 			<string name="constLinkButtonRuleEngine" value="Настройка правил" />
 			<string name="constLinkButtonAntishaker" value="Стабилизатор" />
-			<string name="constLinkButtonRotation" value="Поворот" />
+			<string name="constLinkButtonRotation" value="Поворот и отражение" />
 		</region>
 		<region name="Buttons">
 			<string name="sButtonSave" value="Сохранить" />
@@ -61,51 +61,51 @@
 		</region>
 		<region name="Empty selection notifier">
 			<string name="sNotifierTextTitle" value="Нет подключенных устройств" />
-			<string name="sNotifierText" value="Пожалуйста проверте, что устройство подключено правильно, или свяжитесь со службой поддержки" />
+			<string name="sNotifierText" value="Пожалуйста, проверте, что устройство подключено правильно" />
 			<string name="sNotifierTextContacts" value="" />
 		</region>
 		<region name="Property Device identification and status">
-			<string name="sPropertyDeviceInfoStatusTitle" value="Идентификация и статус устройства" />
-			<string name="sPropertyDeviceInfoStatusLableName" value="Имя" />
+			<string name="sPropertyDeviceInfoStatusTitle" value="Идентификация устройства" />
+			<string name="sPropertyDeviceInfoStatusLableName" value="Название" />
 			<string name="sPropertyDeviceInfoStatusLableDeviceID" value="ID устройства" />
-			<string name="sPropertyDeviceInfoStatusLableFirmware" value="Версия программы" />
-			<string name="sPropertyDeviceInfoStatusLableHardware" value="Версия прошивки" />
+			<string name="sPropertyDeviceInfoStatusLableFirmware" value="Программное обеспечение" />
+			<string name="sPropertyDeviceInfoStatusLableHardware" value="Аппаратное обеспечение" />
 			<string name="sPropertyDeviceInfoStatusLableVersion" value="Версия" />
 			<string name="sPropertyDeviceInfoStatusLableIPAddr" value="Сетевой адрес" />
-			<string name="sPropertyDeviceInfoStatusLableMACAddr" value="MAC адрес" />
+			<string name="sPropertyDeviceInfoStatusLableMACAddr" value="MAC-адрес" />
 		</region>
 		<region name="Property Network settings">
 			<string name="sPropertyNetworkSettingsTitle" value="Настройки сети" />
 			<string name="sPropertyNetworkSettingsDHCP" value="DHCP" />
-			<string name="sPropertyNetworkSettingsIPaddr" value="IP адрес устройства " />
+			<string name="sPropertyNetworkSettingsIPaddr" value="IP-адрес устройства " />
 			<string name="sPropertyNetworkSettingsSubnetMask" value="Маска подсети" />
 			<string name="sPropertyNetworkSettingsGateAddr" value="Адрес шлюза" />
-			<string name="sPropertyNetworkSettingsDNSaddr" value="DNS адрес" />
-			<string name="sPropertyNetworkSettingsMACaddr" value="MAC адрес" />
+			<string name="sPropertyNetworkSettingsDNSaddr" value="DNS-адрес" />
+			<string name="sPropertyNetworkSettingsMACaddr" value="MAC-адрес" />
 		</region>
 		<region name="PropertyDigitalIO">
-			<string name="sPropertyDigitalIOTitle" value="Цифровые входы-выходы" />
+			<string name="sPropertyDigitalIOTitle" value="Цифровые входы и выходы" />
 			<string name="sPropertyDigitalIOInputName" value="Имя" />
-			<string name="sPropertyDigitalIOInputNormalStatus" value="Normal status" />
-			<string name="sPropertyDigitalIOInputCurrentStatus" value="Current status" />
-			<string name="sPropertyDigitalIOOutputName" value="Name" />
-			<string name="sPropertyDigitalIOOutputIdleStatus" value="Idle status" />
-			<string name="sPropertyDigitalIOOutputCurrentStatus" value="Current status" />
-			<string name="sPropertyDigitalIOInputs" value="Digital inputs" />
-			<string name="sPropertyDigitalIOOutputs" value="Digital outputs (relays)" />
-			<string name="sPropertyDigitalIOEventAction" value="Event action" />
-			<string name="sPropertyDigitalIOEventSendONVIFmessage" value="Send ONVIF message" />
-			<string name="sPropertyDigitalIOTriggerRelay" value="Trigger relay" />
-			<string name="sPropertyDigitalIORecordChannel" value="Record channel" />
-			<string name="sPropertyDigitalIOSwitchAnalogue" value="Switch analogue video on" />
-			<string name="sPropertyDigitalIOButtonTriggerRelay" value="Trigger relay" />
+			<string name="sPropertyDigitalIOInputNormalStatus" value="Нормальное состояние" />
+			<string name="sPropertyDigitalIOInputCurrentStatus" value="Текущее состояние" />
+			<string name="sPropertyDigitalIOOutputName" value="Имя" />
+			<string name="sPropertyDigitalIOOutputIdleStatus" value="Нормальное состояние" />
+			<string name="sPropertyDigitalIOOutputCurrentStatus" value="Текущее состояние" />
+			<string name="sPropertyDigitalIOInputs" value="Цифровые входы" />
+			<string name="sPropertyDigitalIOOutputs" value="Цифровые выходы (реле)" />
+			<string name="sPropertyDigitalIOEventAction" value="Действие по событию" />
+			<string name="sPropertyDigitalIOEventSendONVIFmessage" value="Отправить сообщение ONVIF" />
+			<string name="sPropertyDigitalIOTriggerRelay" value="Включить реле" />
+			<string name="sPropertyDigitalIORecordChannel" value="Включить запись канала" />
+			<string name="sPropertyDigitalIOSwitchAnalogue" value="Включить аналоговый выход" />
+			<string name="sPropertyDigitalIOButtonTriggerRelay" value="Переключить реле" />
 		</region>
 		<region name="Property Maintenance">
-			<string name="sPropertyMaintenanceTitle" value="Поддержка" />
+			<string name="sPropertyMaintenanceTitle" value="Обслуживание" />
 			<string name="sPropertyMaintenanceConfiguration" value="Конфигурация" />
 			<string name="sPropertyMaintenanceBTNBackup" value="Резервная копия" />
 			<string name="sPropertyMaintenanceBTNRestore" value="Восстановление" />
-			<string name="sPropertyMaintenanceFactoryReset" value="Сброс установок" />
+			<string name="sPropertyMaintenanceFactoryReset" value="Сброс настроек" />
 			<string name="sPropertyMaintenanceBTNSoftReset" value="Перезарузка" />
 			<string name="sPropertyMaintenanceBTNHardReset" value="Вернуться к заводским установкам" />
 			<string name="sPropertyMaintenanceDiagnostics" value="Диагностика и поддержка" />
@@ -118,18 +118,18 @@
 			<string name="sPropertyLiveVideoTitle" value="Живое видео" />
 		</region>
 		<region name="Property Events">
-			<string name="sPropertyEventsTitle" value="Events" />
-			<string name="sPropertyEventsColumnID" value="Rule ID" />
-			<string name="sPropertyEventsColumnDate" value="Date/Time" />
-			<string name="sPropertyEventsColumnType" value="Type" />
-			<string name="sPropertyEventsColumnDetails" value="Details" />
+			<string name="sPropertyEventsTitle" value="События" />
+			<string name="sPropertyEventsColumnID" value="ID-правила" />
+			<string name="sPropertyEventsColumnDate" value="Дата/время" />
+			<string name="sPropertyEventsColumnType" value="Тип" />
+			<string name="sPropertyEventsColumnDetails" value="Подробности" />
 		</region>
 		<region name="Property Video Streaming">
-			<string name="sPropertyVideoStreamingTitle" value="Потоковое видео" />
-			<string name="sPropertyVideoStreamingResolution" value="Разрешение, pixels" />
+			<string name="sPropertyVideoStreamingTitle" value="Стриминг видео" />
+			<string name="sPropertyVideoStreamingResolution" value="Разрешение, пиксели" />
 			<string name="sPropertyVideoStreamingFrameRate" value="Частота кадров, fps" />
 			<string name="sPropertyVideoStreamingEncoder" value="Энкодер" />
-			<string name="sPropertyVideoStreamingBitrate" value="Bitrate устройства, kbps" />
+			<string name="sPropertyVideoStreamingBitrate" value="Битрейт, kbps" />
 			<string name="sPropertyVideoStreamingPrioriy" value="Приоритет" />
 		</region>
 	</module>
