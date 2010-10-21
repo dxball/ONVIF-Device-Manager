@@ -3,8 +3,8 @@
 
 	<module name="SaveSettingsFormStrings" namespace="nvc.controls">
 		<string name="Title" value="Saving changes..." />
-		<string name="Text" value="Please wait until changes will be applied" />
-		<string name="NeedToReboot" value="Device need to be rebooted. Please refresh devices list." />
+		<string name="Text" value="Please wait while your changes are applied." />
+		<string name="NeedToReboot" value="The device has to be rebooted. Please refresh the device list." />
 	</module>
 
 	<module name="Constants" namespace="nvc">
