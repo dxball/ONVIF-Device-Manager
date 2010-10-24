@@ -4,7 +4,41 @@
 		<string name="Title" value="Сохранение изменений..." />
 		<string name="Text" value="Пожалуйста, подождите пока изменения применятся" />
 	</module>
-	<module name="Constants" namespace="nvc">
+  
+  <module name="RuleEngineStrings" namespace="nvc.controls">
+    <string name="title" value="Настройка правил" />
+    <string name="btnAdd" value="Добавить" />
+    <string name="btnRemove" value="Удалить" />
+    <string name="name" value="Имя" />
+    <string name="groupRule" value="Сгенерировать тревогу когда:" />
+    <string name="groupAction" value="По тревоге:" />
+    <string name="moving" value="Движение" />
+    <string name="meters" value="м" />
+    <string name="movingInDirections" value="в направлениях:" />
+    <string name="loitering" value="Шатание" />
+    <string name="seconds" value="с" />
+    <string name="within" value="в течение" />
+    <string name="running" value="Бежит быстрее чем" />
+    <string name="speed" value="m/s" />
+    <string name="abandoning" value="Оставлена вещь" />
+    <string name="sendOnvif" value="Послать ONVIF сообщение" />
+    <string name="setFramerate" value="Уст. Framerate" />
+    <string name="fps" value="fps" />
+    <string name="turnOnRelay" value="Включить реле" />
+    <string name="turnOnAnalog" value="Включить аналог. выход" />
+    <string name="record" value="Записать на диск" />
+    <string name="ptz" value="Target PTZ-camera" />
+  </module>
+  
+  <module name="EventsStrings" namespace="nvc.controls">
+    <string name="title" value="События" />
+    <string name="ruleID" value="ID Правила" />
+    <string name="dateTime" value="Дата/Время" />
+    <string name="type" value="Тип" />
+    <string name="details" value="Детали" />
+  </module>
+	
+  <module name="Constants" namespace="nvc">
 		<region name="Exceptions">
 			<string name="sExceptionWSDiscoveryTitle" value="Ошибка в WSDiscovery" />
 			<string name="sErrorDevInfoNull" value="Ошибка при чтении конфигурации устройства. Пожалуйста, обновите список устройств." />
@@ -117,6 +151,29 @@
 		<region name="Property Live Video">
 			<string name="sPropertyLiveVideoTitle" value="Живое видео" />
 		</region>
+
+    <region name="Калибровка глубины">
+      <string name="sPropertyDepthCalibrationPhysHeightTitle" value="Настройка маркера высоты" />
+      <string name="sPropertyDepthCalibrationTitle" value="Калибровка глубины" />
+      <string name="sPropertyDepthCalibrationFocalLength" value="Focal length, mm" />
+      <string name="sPropertyDepthCalibrationSensorPixel" value="Размер пикселя фотосенсора, m*" />
+      <string name="sPropertyDepthCalibrationMatrixFormat" value="Формат матрицы" />
+      <string name="sPropertyDepthCalibrationSave" value="Калибровать" />
+      <string name="sPropertyDepthCalibrationHeightMarker" value="Маркер высоты" />
+      <string name="sPropertyDepthCalibration2DMarker" value="2D-маркер" />
+      <string name="sPropertyDepthCalibrationUnknow" value="Не знаю" />
+      <string name="sPropertyDepthCalibrationPhysHeight" value="Высота реального объекта, cm" />
+    </region>
+
+    <region name="Настройка слежения за объектом">
+      <string name="sPropertyObjectTrackerTitle" value="Слежение за объектом" />
+      <string name="sPropertyObjectTrackerContrast" value="Чуствительность контраста" />
+      <string name="sPropertyObjectTrackerAreaMin" value="Площадь объекта min, m*m" />
+      <string name="sPropertyObjectTrackerAreaMax" value="Площадь объекта max, m*m" />
+      <string name="sPropertyObjectTrackerSpeedMax" value="Скорость max, m/s" />
+      <string name="sPropertyObjectTrackerStabilization" value="Время стабилизации, ms" />
+    </region>
+    
 		<region name="Property Events">
 			<string name="sPropertyEventsTitle" value="События" />
 			<string name="sPropertyEventsColumnID" value="ID-правила" />

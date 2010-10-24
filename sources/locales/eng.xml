@@ -9,6 +9,39 @@
 
 	<module name="Constants" namespace="nvc">
 
+    <module name="RuleEngineStrings" namespace="nvc.controls">
+      <string name="title" value="Rule engine" />
+      <string name="btnAdd" value="Add" />
+      <string name="btnRemove" value="Remove" />
+      <string name="name" value="Name" />
+      <string name="groupRule" value="Generate alarm when:" />
+      <string name="groupAction" value="Upon alarm:" />
+      <string name="moving" value="Moving" />
+      <string name="meters" value="m" />
+      <string name="movingInDirections" value="in directions:" />
+      <string name="loitering" value="Loitering" />
+      <string name="seconds" value="s" />
+      <string name="within" value="within" />
+      <string name="running" value="Running faster then" />
+      <string name="speed" value="m/s" />
+      <string name="abandoning" value="Abandoning item" />
+      <string name="sendOnvif" value="Send ONVIF message" />
+      <string name="setFramerate" value="Set Framerate to" />
+      <string name="fps" value="fps" />
+      <string name="turnOnRelay" value="Turn on" />
+      <string name="turnOnAnalog" value="Turn on analogue output" />
+      <string name="record" value="Record to local or network drive" />
+      <string name="ptz" value="Target PTZ-camera" />
+    </module>
+
+    <module name="EventsStrings" namespace="nvc.controls">
+      <string name="title" value="Events" />
+      <string name="ruleID" value="Rule ID" />
+      <string name="dateTime" value="Date/Time" />
+      <string name="type" value="Type" />
+      <string name="details" value="Details" />
+    </module>
+    
 		<region name="Exceptions">
 			<string name="sExceptionWSDiscoveryTitle" value="WSDiscovery error" />
 			<string name="sErrorDevInfoNull" value="Error was during device configuration reading. Please refresh devices list" />
@@ -33,7 +66,7 @@
 			<string name="sVideoPriorityStreaming" value="Streaming" />
 			<string name="sVideoPriorityAnalytics" value="Analytics" />
 			<string name="sLoadingData" value="Loading data ..." />
-			<string name="sApplicationName" value="Network Video Console" />
+			<string name="sApplicationName" value="ONVIF Device Manager" />
 		</region>
 
 		<region name="DeviceControl">
@@ -139,6 +172,28 @@
 			<string name="sPropertyLiveVideoTitle" value="Live video" />
 		</region>
 
+    <region name="Property Depth Calibtation">
+      <string name="sPropertyDepthCalibrationPhysHeightTitle" value="Height marker setup" />
+      <string name="sPropertyDepthCalibrationTitle" value="Depth calibration" />
+      <string name="sPropertyDepthCalibrationFocalLength" value="Focal length, mm" />
+      <string name="sPropertyDepthCalibrationSensorPixel" value="Photosensor pixel size, m*" />
+      <string name="sPropertyDepthCalibrationMatrixFormat" value="Matrix format" />
+      <string name="sPropertyDepthCalibrationSave" value="Calibrate" />
+      <string name="sPropertyDepthCalibrationHeightMarker" value="Height marker" />
+      <string name="sPropertyDepthCalibration2DMarker" value="2D-marker" />
+      <string name="sPropertyDepthCalibrationUnknow" value="I don't know" />
+      <string name="sPropertyDepthCalibrationPhysHeight" value="Real perspector height, cm" />
+    </region>
+
+    <region name="Property Object Tracker">
+      <string name="sPropertyObjectTrackerTitle" value="Object tracker" />
+      <string name="sPropertyObjectTrackerContrast" value="Contrast sensitivity" />
+      <string name="sPropertyObjectTrackerAreaMin" value="Object area min, m*m" />
+      <string name="sPropertyObjectTrackerAreaMax" value="Object area max, m*m" />
+      <string name="sPropertyObjectTrackerSpeedMax" value="Speed max, m/s" />
+      <string name="sPropertyObjectTrackerStabilization" value="Stabilization time, ms" />
+    </region>
+    
 		<region name="Property Events">
 			<string name="sPropertyEventsTitle" value="Events" />
 			<string name="sPropertyEventsColumnID" value="Rule ID" />
