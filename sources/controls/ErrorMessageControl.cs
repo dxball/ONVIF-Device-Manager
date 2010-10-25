@@ -40,11 +40,11 @@ namespace nvc.controls
             InitializeControl_i();
         }
 		void Localization(){
-			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sErrorDevInfoNull);
+			_title.CreateBinding(x=>x.Text, ExceptionStrings.Instance, x=>x.sErrorDevInfoNull);
 			if (_devInfo != null)
 				_tbErrorMsg.Text = Environment.NewLine + "device address: " + _devInfo.Address + Environment.NewLine + Environment.NewLine;
 			else
-				_tbErrorMsg.Text = Constants.Instance.sErrorDevInfoNull;
+				_tbErrorMsg.Text = ExceptionStrings.Instance.sErrorDevInfoNull;
 		}
         public ErrorMessageControl()
         {

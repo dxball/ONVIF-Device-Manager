@@ -5,7 +5,7 @@ using System.Text;
 using nvc.onvif;
 
 using onvif.services.media;
-using nvc.utils;
+using onvifdm.utils;
 namespace nvc.models {
 	public class LiveVideoModel : ModelBase<LiveVideoModel> {
 		ChannelDescription m_channel;
@@ -25,25 +25,40 @@ namespace nvc.models {
 			}
 			DebugHelper.Assert(profile != null);
 
+			if (profile.VideoSourceConfiguration == null) {
+				//add default video source configuration
+				VideoSourceConfiguration[] vscs = null;
+				yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
+				DebugHelper.Assert(vscs != null);
+				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+				profile.VideoSourceConfiguration = vsc;
+			}
+
+			var vec = profile.VideoEncoderConfiguration;
+			if (vec == null) {
+				//add default video encoder
+				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
+				DebugHelper.Assert(vec != null);
+				profile.VideoEncoderConfiguration = vec;
+			}
+
 			var streamSetup = new StreamSetup();
 			streamSetup.Stream = StreamType.RTPUnicast;
 			streamSetup.Transport = new Transport();
 			streamSetup.Transport.Protocol = TransportProtocol.UDP;
 			streamSetup.Transport.Tunnel = null;
 
-			string uri = null;
-			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => uri = x);
-			DebugHelper.Assert(uri != null);
-
-			MediaUri = uri;
-			NotifyPropertyChanged(x => x.MediaUri);
+			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
+			DebugHelper.Assert(mediaUri != null);
+			NotifyPropertyChanged(x => x.mediaUri);
 
 			if (observer != null) {
 				observer.OnNext(this);
 			}
 		}
 
-		public string MediaUri {
+		public string mediaUri {
 			get;
 			private set;
 		}

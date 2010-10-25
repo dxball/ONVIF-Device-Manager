@@ -33,7 +33,7 @@ namespace nvc.controllers
 	using nvc.models;
 	using System.Disposables;
 	using nvc.entities;
-	using nvc.utils;
+	using onvifdm.utils;
 
 	//public class DeviceModelArg : EventArgs
 	//{
@@ -80,30 +80,17 @@ namespace nvc.controllers
         #region Controls factory  
         public void ReleaseControllers()
         {
-            if (_propIdentificationController != null)
-            {
-				_propIdentificationController.ReleaseAll();
-                _propIdentificationController = null;
-            }
-            if (_propNetworkSettingsController != null)
-            {
-				_propNetworkSettingsController.ReleaseAll();
-                _propNetworkSettingsController = null;
-            }
-            if (_propLiveVideoController != null)
-            {
-				_propLiveVideoController.ReleaseAll();
-                _propLiveVideoController = null;
-            }
-            if (_propVideoStreamingController != null)
-            {
-				_propVideoStreamingController.ReleaseAll();
-                _propVideoStreamingController = null;
-            }
-			if (_mainFrameController != null) {
-				_mainFrameController.ReleaseAll();
-				_mainFrameController = null;
-			}
+			ReleaseIdentificationController();
+			ReleaseLiveVideoController();
+			ReleaseMaintenanceController();
+			ReleaseNetworkSettingsController();
+			ReleaseVideoStreamingController();
+			ReleaseDepthCalibrationController();
+			ReleaseObjectTrackerController();
+			ReleaseEventController();
+			ReleaseRuleEngineController();
+
+			ReleaseMainFrameController();
         }
 
         ErrorFrameController _errorFrameController;
@@ -168,6 +155,18 @@ namespace nvc.controllers
 				_propNetworkSettingsController = null;
 			}
 		}
+		PropertyMaintenanceController _propMaintenanceController;
+		public PropertyMaintenanceController GetPropertyMaintenanceController() {
+			if (_propMaintenanceController == null)
+				_propMaintenanceController = new PropertyMaintenanceController();
+			return _propMaintenanceController;
+		}
+		public void ReleaseMaintenanceController() {
+			if (_propMaintenanceController != null) {
+				_propMaintenanceController.ReleaseAll();
+				_propMaintenanceController = null;
+			}
+		}
         PropertyLiveVideoController _propLiveVideoController;
         public PropertyLiveVideoController GetPropLiveVideoController()
         {
@@ -194,7 +193,54 @@ namespace nvc.controllers
 				_propVideoStreamingController = null;
 			}
 		}
-		
+		PropertyDepthCalibrationController _propDepthCalibrationController;
+		public PropertyDepthCalibrationController GetPropDepthCalibrationController() {
+			if (_propDepthCalibrationController == null)
+				_propDepthCalibrationController = new PropertyDepthCalibrationController();
+			return _propDepthCalibrationController;
+		}
+		public void ReleaseDepthCalibrationController() {
+			if (_propDepthCalibrationController != null) {
+				_propDepthCalibrationController.ReleaseAll();
+				_propDepthCalibrationController = null;
+			}
+		}
+		PropertyEventsController _propEventController;
+		public PropertyEventsController GetPropEventController() {
+			if (_propEventController == null)
+				_propEventController = new PropertyEventsController();
+			return _propEventController;
+		}
+		public void ReleaseEventController() {
+			if (_propEventController != null) {
+				_propEventController.ReleaseAll();
+				_propEventController = null;
+			}
+		}
+		PropertyRuleEngineController _propRuleEngineController;
+		public PropertyRuleEngineController GetPropRuleEngineController() {
+			if (_propRuleEngineController == null)
+				_propRuleEngineController = new PropertyRuleEngineController();
+			return _propRuleEngineController;
+		}
+		public void ReleaseRuleEngineController() {
+			if (_propRuleEngineController != null) {
+				_propRuleEngineController.ReleaseAll();
+				_propRuleEngineController = null;
+			}
+		}
+		PropertyObjectTrackerController _propObjectTrackerController;
+		public PropertyObjectTrackerController GetPropObjectTrackerController() {
+			if (_propObjectTrackerController == null)
+				_propObjectTrackerController = new PropertyObjectTrackerController();
+			return _propObjectTrackerController;
+		}
+		public void ReleaseObjectTrackerController() {
+			if (_propObjectTrackerController != null) {
+				_propObjectTrackerController.ReleaseAll();
+				_propObjectTrackerController = null;
+			}
+		}		
         #endregion
     }
 }

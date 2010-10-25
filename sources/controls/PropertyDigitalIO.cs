@@ -26,43 +26,41 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace nvc.controls
-{
-    public partial class PropertyDigitalIO : BasePropertyControl
-    {
-        public PropertyDigitalIO()
-        {
-            InitializeComponent();
+namespace nvc.controls {
+	public partial class PropertyDigitalIO : BasePropertyControl {
+		protected PropertyDigitalIOStrings strings = PropertyDigitalIOStrings.Instance;
+		public override void ReleaseUnmanaged() { }
+		public PropertyDigitalIO() {
+			InitializeComponent();
 
-            InitControls();
-        }
+			InitControls();
+		}
 
-		void Localization(){
-			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOTitle);
-			_grpDigitalInputs.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputs);
-			_grpDigitalOutputs.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputs);
-			_lblInputCurrentStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputCurrentStatus);
-			_lblInputName.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputName);
-			_lblInputNormalStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOInputNormalStatus);
-			_lblOutputCurrentStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputCurrentStatus);
-			_lblOutputIdleStatus.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputIdleStatus);
-			_lblOutputName.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOOutputName);
-			_btnTriggerRelay.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOButtonTriggerRelay);
-			_checkRecordChannel.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIORecordChannel);
-			_checkSendMessage.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOEventSendONVIFmessage);
-			_checkSwitchVideo.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOSwitchAnalogue);
-			_checkTriggerRelay.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyDigitalIOTriggerRelay);
+		void Localization() {
+			_title.CreateBinding(x => x.Text, strings, x => x.title);
+			_grpDigitalInputs.CreateBinding(x => x.Text, strings, x => x.inputs);
+			_grpDigitalOutputs.CreateBinding(x => x.Text, strings, x => x.outputs);
+			_lblInputCurrentStatus.CreateBinding(x => x.Text, strings, x => x.inputCurrentStatus);
+			_lblInputName.CreateBinding(x => x.Text, strings, x => x.inputName);
+			_lblInputNormalStatus.CreateBinding(x => x.Text, strings, x => x.inputNormalStatus);
+			_lblOutputCurrentStatus.CreateBinding(x => x.Text, strings, x => x.outputCurrentStatus);
+			_lblOutputIdleStatus.CreateBinding(x => x.Text, strings, x => x.outputIdleStatus);
+			_lblOutputName.CreateBinding(x => x.Text, strings, x => x.outputName);
+			_btnTriggerRelay.CreateBinding(x => x.Text, strings, x => x.buttonTriggerRelay);
+			_checkRecordChannel.CreateBinding(x => x.Text, strings, x => x.recordChannel);
+			_checkSendMessage.CreateBinding(x => x.Text, strings, x => x.eventSendONVIFmessage);
+			_checkSwitchVideo.CreateBinding(x => x.Text, strings, x => x.switchAnalogue);
+			_checkTriggerRelay.CreateBinding(x => x.Text, strings, x => x.triggerRelay);
 		}
 
 
-        void InitControls()
-        {
+		void InitControls() {
 			Localization();
-            //Colors
-            _title.BackColor = ColorDefinition.colTitleBackground;
-            _grpDigitalInputs.BackColor = ColorDefinition.colControlBackground;
-            _grpDigitalOutputs.BackColor = ColorDefinition.colControlBackground;
-            BackColor = ColorDefinition.colControlBackground;
-        }
-    }
+			//Colors
+			_title.BackColor = ColorDefinition.colTitleBackground;
+			_grpDigitalInputs.BackColor = ColorDefinition.colControlBackground;
+			_grpDigitalOutputs.BackColor = ColorDefinition.colControlBackground;
+			BackColor = ColorDefinition.colControlBackground;
+		}
+	}
 }

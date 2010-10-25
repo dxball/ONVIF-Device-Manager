@@ -33,6 +33,10 @@ namespace nvc.controls {
 	public partial class TitleBar : UserControl {
 		public TitleBar() {
 			InitializeComponent();
+			Load += new EventHandler(TitleBar_Load);
+		}
+
+		void TitleBar_Load(object sender, EventArgs e) {
 			InitControls();
 		}
 

@@ -25,7 +25,7 @@ using System.ServiceModel.Discovery;
 using System.Disposables;
 using System.Threading;
 
-using nvc.utils;
+using onvifdm.utils;
 using nvc.rx;
 
 namespace nvc {	
@@ -38,7 +38,8 @@ namespace nvc {
 				throw new ArgumentNullException("discoveryEndpoint");
 			}
 			m_getDiscoveryClient = () => {
-				return new DiscoveryClient(discoveryEndpoint);
+				var dc = new DiscoveryClient(discoveryEndpoint);
+				return dc;
 			};
 		}
 		public WsDiscoveryObservable(Func<DiscoveryClient> factory) {
@@ -51,11 +52,10 @@ namespace nvc {
 		public IObservable<EndpointDiscoveryMetadata> Find(FindCriteria findCriteria){
 			
 			return Observable.CreateWithDisposable<EndpointDiscoveryMetadata>(observer=>{
-
 				var dc = m_getDiscoveryClient();
 				var state = ObserverState.Create();
 				object sync = new Object();
-				
+				var dic = new HashSet<string>();
 				//dc.Open();
 				dc.FindCompleted += (sender, e) => {
 					bool completing = state.transit(ObserverState.subscribed, ObserverState.completed);
@@ -76,8 +76,11 @@ namespace nvc {
 
 	            dc.FindProgressChanged += (sender, e) => {
 					DebugHelper.Assert(!state.isDisposed());
-					state.value.ToString();
-					observer.OnNext(e.EndpointDiscoveryMetadata);
+					if (dic.Add(e.EndpointDiscoveryMetadata.Address.Uri.OriginalString)) {
+						observer.OnNext(e.EndpointDiscoveryMetadata);
+					} else {
+						DebugHelper.Error("duplicated ws-discovery probe match");
+					}
 			    };
 
 				dc.FindAsync(findCriteria, sync);

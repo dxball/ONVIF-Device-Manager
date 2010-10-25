@@ -27,8 +27,6 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace nvc.controls {
-
-
 	public partial class BasePropertyControl : UserControl{
 		public BasePropertyControl() {
 			SetStyle(ControlStyles.UserPaint, true);
@@ -39,5 +37,6 @@ namespace nvc.controls {
 			InitializeComponent();
 		}
 		void Localization(){ }
+		public virtual void ReleaseUnmanaged() { }
 	}
 }

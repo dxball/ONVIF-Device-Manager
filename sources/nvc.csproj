@@ -82,6 +82,50 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncState.cs" />
+    <Compile Include="controllers\PropertyDepthCalibrationController.cs" />
+    <Compile Include="controllers\PropertyMaintenanceController.cs" />
+    <Compile Include="controllers\PropertyObjectTrackerController.cs" />
+    <Compile Include="controls\SetSize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="controls\SetSize.Designer.cs">
+      <DependentUpon>SetSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\IPAddressControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\IPAddressControl.Designer.cs">
+      <DependentUpon>IPAddressControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\IPTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\OpacityControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="controls\OpacityControl.Designer.cs">
+      <DependentUpon>OpacityControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\PropertyDepthCalibration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\PropertyDepthCalibration.Designer.cs">
+      <DependentUpon>PropertyDepthCalibration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\PropertyObjectTracker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\PropertyObjectTracker.Designer.cs">
+      <DependentUpon>PropertyObjectTracker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\RegionEditor.cs" />
+    <Compile Include="onvif.AnalyticsObservable.cs" />
+    <Compile Include="models\DepthCalibrationModel.cs" />
+    <Compile Include="models\ObjectTrackerModel.cs" />
+    <Compile Include="rx.ObservableStream.cs" />
+    <Compile Include="models\ErrorInfoModel.cs" />
+    <Compile Include="models\OnvifDumpModel.cs" />
+    <Compile Include="models\DeviceMaintenanceModel.cs" />
     <Compile Include="rx.PendingScheduler.cs" />
     <Compile Include="controls.utils.ListItem.cs" />
     <Compile Include="localization\localization.cs" />
@@ -337,6 +381,12 @@
     <EmbeddedResource Include="controls\GroupBoxControl.resx">
       <DependentUpon>GroupBoxControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="controls\IPAddressControl.resx">
+      <DependentUpon>IPAddressControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\IPTextBox.resx">
+      <DependentUpon>IPTextBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="controls\LinkCheckButton.resx">
       <DependentUpon>LinkCheckButton.cs</DependentUpon>
     </EmbeddedResource>
@@ -345,6 +395,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="controls\MainFrame.resx">
       <DependentUpon>MainFrame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\OpacityControl.resx">
+      <DependentUpon>OpacityControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\PropertyDepthCalibration.resx">
+      <DependentUpon>PropertyDepthCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="controls\PropertyDeviceIdentificationAndStatus.resx">
       <DependentUpon>PropertyDeviceIdentificationAndStatus.cs</DependentUpon>
@@ -364,6 +420,9 @@
     <EmbeddedResource Include="controls\PropertyDigitalIO.resx">
       <DependentUpon>PropertyDigitalIO.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="controls\PropertyObjectTracker.resx">
+      <DependentUpon>PropertyObjectTracker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="controls\PropertyVideoStreaming.resx">
       <DependentUpon>PropertyVideoStreaming.cs</DependentUpon>
     </EmbeddedResource>
@@ -375,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="controls\InformationForm.resx">
       <DependentUpon>InformationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\SetSize.resx">
+      <DependentUpon>SetSize.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="controls\TitleBar.resx">
       <DependentUpon>TitleBar.cs</DependentUpon>
@@ -395,12 +457,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="onvif.Session.cs" />
-    <None Include="logs\app_messages.svclog">
+    <None Include="logs\net.log">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="logs\app_tracelog.svclog">
+    <None Include="logs\wcf.svclog">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="logs\serialization.svclog">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="logs\messages.svclog">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="nvc.targets">
@@ -418,6 +488,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="xml2html\XMLToHTML.xsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml2html\XmlToHtml10.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml2html\XmlToHtml10Basic.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml2html\XmlToHtml10Cdata.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml2html\XmlToHtml10Plus.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml2html\XSLTHtml20.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Xslt Include="localization\strings.xml">
       <Transformation>localization\strings.generator.xslt</Transformation>
       <Out>localization\strings.generated.cs</Out>
@@ -485,9 +573,17 @@
       <Project>{3515CD65-B9F0-44D1-A8D1-96655C590D11}</Project>
       <Name>liblenin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XmlExplorer.Controls\XmlExplorer.Controls.csproj">
+      <Project>{BF406750-6711-4034-A05A-46F8F8026CC4}</Project>
+      <Name>XmlExplorer.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="onvif.services\onvif.services.csproj">
       <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
       <Name>onvif.services</Name>
+    </ProjectReference>
+    <ProjectReference Include="onvif.types\onvif.types.csproj">
+      <Project>{B4EE4417-967D-4C03-90C5-99430B64E2D5}</Project>
+      <Name>onvif.types</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

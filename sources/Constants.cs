@@ -40,11 +40,15 @@ namespace nvc {
 	}
 	public class Defaults {
 		public static string sNotifierImg =@"Resources\Images\BigLogo.png";
+		#region Informatin Form
+		public const int iInformationFormInitialHeight = 131;
+		public const int iInformationFormXMLViewHeight = 556;
+		#endregion
 		#region DevicesListControl
-		public const int iDevicesListControlHeaderNameWidth = 100;
-		public const int iDevicesListControlHeaderIPWidth = 100;
-		public const int iDevicesListControlHeaderTypeWidth = 100;
-		public const int iDevicesListControlWidth = 350;
+		public const int iDevicesListControlHeaderNameWidth = 80;
+		public const int iDevicesListControlHeaderIPWidth = 75;
+		public const int iDevicesListControlHeaderTypeWidth = 110;
+		public const int iDevicesListControlWidth = 270;
 		#endregion
 		#region PropertyEvents
 		public const int iPropertyEventsHeaderIDWidth = 100;
@@ -52,6 +56,11 @@ namespace nvc {
 		public const int iPropertyEventsHeaderTypeWidth = 100;
 		public const int iPropertyEventsHeaderDetailsWidth = 100;
 		public const int iEventsMaxCount = 15;
+		#endregion
+		#region RuleEngine
+		public const int iRuleEngineHeaderName = 73;
+		public const int iRuleEngineHeaderNameWithScroll = 61;
+		public const int iRuleEngineHeaderIsChecked = 20;
 		#endregion
 		#region PropertyVideoStreaming
 		//public const int iPropertyVideoStreamingFrameRateMin = 1;

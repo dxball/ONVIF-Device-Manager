@@ -28,7 +28,56 @@ using nvc.onvif;
 using nvc.models;
 
 namespace nvc.controllers {
-
+	public class DataGridViewCheckBoxCellBindable : DataGridViewCheckBoxCell, IBindableComponent {
+		BindingContext _bindingContext;
+		public void Dispose() { }
+		public ISite Site { get { return null; } set { } }
+		public event EventHandler Disposed;
+		public BindingContext BindingContext {
+			get {
+				if (_bindingContext == null)
+					_bindingContext = new BindingContext();
+				return _bindingContext;
+			}
+			set {
+				_bindingContext = value;
+			}
+		}
+		ControlBindingsCollection _dataBindings;
+		public ControlBindingsCollection DataBindings {
+			get {
+				if (_dataBindings == null) {
+					_dataBindings = new ControlBindingsCollection(this);
+				}
+				return _dataBindings;
+			}
+		}
+	}
+	public class DataGridViewTextBoxCellBindable : DataGridViewTextBoxCell, IBindableComponent {
+		BindingContext _bindingContext;
+		public void Dispose() { }
+		public ISite Site { get { return null; } set { } }
+		public event EventHandler Disposed;
+		public BindingContext BindingContext {
+			get {
+				if (_bindingContext == null)
+					_bindingContext = new BindingContext();
+				return _bindingContext;
+			}
+			set {
+				_bindingContext = value;
+			}
+		}
+		ControlBindingsCollection _dataBindings;
+		public ControlBindingsCollection DataBindings {
+			get {
+				if (_dataBindings == null) {
+					_dataBindings = new ControlBindingsCollection(this);
+				}
+				return _dataBindings;
+			}
+		}
+	}
 	public class ListViewSubItemBindeble : System.Windows.Forms.ListViewItem.ListViewSubItem, IBindableComponent{
 		BindingContext _bindingContext;
 		public void Dispose() { }

@@ -33,6 +33,7 @@ namespace nvc.controls
 {
     public partial class PropertyLiveVideo : BasePropertyControl
     {
+		public override void ReleaseUnmanaged() { _vidPlayer.ReleaseUnmanaged(); }
 		VideoPlayerControl _vidPlayer;
 		public PropertyLiveVideo(LiveVideoModel devMod)
         {
@@ -41,7 +42,7 @@ namespace nvc.controls
 				this.ReleaseAll();
 			};
 
-			_vidPlayer = new VideoPlayerControl(devMod.MediaUri) { Dock = DockStyle.Fill };
+			_vidPlayer = new VideoPlayerControl(devMod.mediaUri) { Dock = DockStyle.Fill };
 			panel1.Controls.Add(_vidPlayer);
 
 			BackColor = ColorDefinition.colControlBackground;

@@ -44,6 +44,7 @@ namespace nvc.controls
 			this._lblFirmware = new System.Windows.Forms.TextBox();
 			this._lblDeviceId = new System.Windows.Forms.TextBox();
 			this._lblName = new System.Windows.Forms.TextBox();
+			this.textBox1 = new NumericTextBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -120,6 +121,7 @@ namespace nvc.controls
 			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Controls.Add(this.textBox1);
 			this.panel1.Controls.Add(this._tbIP);
 			this.panel1.Controls.Add(this._lblMac);
 			this.panel1.Controls.Add(this._lblIP);
@@ -145,6 +147,7 @@ namespace nvc.controls
 			this._tbIP.DateOnly = false;
 			this._tbIP.DecimalOnly = false;
 			this._tbIP.DigitOnly = false;
+			this._tbIP.IPAddress = null;
 			this._tbIP.IPAddrOnly = true;
 			this._tbIP.Location = new System.Drawing.Point(166, 107);
 			this._tbIP.Name = "_tbIP";
@@ -226,6 +229,13 @@ namespace nvc.controls
 			this._lblName.TabIndex = 15;
 			this._lblName.Text = "Name";
 			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(272, 163);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(100, 20);
+			this.textBox1.TabIndex = 27;
+			// 
 			// PropertyDeviceIdentificationAndStatus
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -257,5 +267,6 @@ namespace nvc.controls
         private System.Windows.Forms.TextBox _lblDeviceId;
 		private System.Windows.Forms.TextBox _lblName;
 		private IPAddrMaskedTextBox _tbIP;
+		private System.Windows.Forms.TextBox textBox1;
     }
 }

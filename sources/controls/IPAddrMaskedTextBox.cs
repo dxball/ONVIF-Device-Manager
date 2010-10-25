@@ -40,7 +40,8 @@ namespace nvc.controls {
 			} 
 			set {
 				base.Text = value == null? "": value.ToString();
-			} }
+			} 
+		}
 		public void SetIPAddress(System.Net.IPAddress ipaddr) {
 			base.Text = ipaddr.ToString();
 		}

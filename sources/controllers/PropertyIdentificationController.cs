@@ -27,7 +27,7 @@ using nvc.entities;
 using nvc.models;
 using nvc.onvif;
 using System.Threading;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.controllers {
 	public class PropertyIdentificationController : IRelesable, IPropertyController {
@@ -59,9 +59,15 @@ namespace nvc.controllers {
 				}, err => {
 					_savingSettingsForm = new InformationForm("ERROR");
 					_savingSettingsForm.SetErrorMessage(err.Message);
-					_savingSettingsForm.ShowCloseButton(null);
+					_savingSettingsForm.SetEttorXML(err);
+					_savingSettingsForm.ShowCloseButton(ReturnToMainFrame);
 					_savingSettingsForm.ShowDialog(_propertyIdentification);
 				});
+		}
+		public void ReturnToMainFrame() {
+			_propertyIdentification.Dispose();
+			WorkflowController.Instance.GetMainFrameController().ReleaseLinkSelection();
+			WorkflowController.Instance.ReleaseIdentificationController();
 		}
 		public BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription chan) {
 			_propertyPanel = propertyPanel;
@@ -76,17 +82,17 @@ namespace nvc.controllers {
 			return null;
 		}
 
-		void _devModel_IdentificationInitialised(object sender, EventArgs e) {
-			var control = CreatePropertyIdentification();
-			_propertyPanel.Controls.Clear();
-			control.Dock = DockStyle.Fill;
-			_propertyPanel.Controls.Add(control);
-		}
-		public BasePropertyControl CreatePropertyIdentification() {
-			_propertyIdentification = new PropertyDeviceIdentificationAndStatus(new DeviceIdentificationModel());
-			_propertyIdentification.Dock = DockStyle.Fill;
-			return _propertyIdentification;
-		}
+		//void _devModel_IdentificationInitialised(object sender, EventArgs e) {
+		//    var control = CreatePropertyIdentification();
+		//    _propertyPanel.Controls.Clear();
+		//    control.Dock = DockStyle.Fill;
+		//    _propertyPanel.Controls.Add(control);
+		//}
+		//public BasePropertyControl CreatePropertyIdentification() {
+		//    _propertyIdentification = new PropertyDeviceIdentificationAndStatus(new DeviceIdentificationModel());
+		//    _propertyIdentification.Dock = DockStyle.Fill;
+		//    return _propertyIdentification;
+		//}
 
 		void CancelChanges() {
 			_devIdentificationModel.RevertChanges();
@@ -111,8 +117,9 @@ namespace nvc.controllers {
 
 		void SaveDeviceNameError(string error) {
 			_savingSettingsForm.SetErrorMessage(error);
-			_savingSettingsForm.ShowCloseButton(KillEveryOne);
+			_savingSettingsForm.ShowCloseButton(ReturnToMainFrame);
 		}
+	
 		public void KillEveryOne() {
 			WorkflowController.Instance.KillEveryBody();
 		}

@@ -27,17 +27,21 @@ using System.Text;
 using System.Windows.Forms;
 using nvc.entities;
 using nvc.models;
+using onvifdm.utils;
+using System.Threading;
 
 namespace nvc.controls
 {
     public partial class PropertyVideoStreaming : BasePropertyControl
     {
+		PropertyVideoStreamingStrings strings = PropertyVideoStreamingStrings.Instance;
 		VideoStreamingModel _devModel;
 		VideoPlayerControl _vidPlayer;
 		
 		public Action Save { get; set; }
 		public Action Cancel { get; set; }
 
+		public override void ReleaseUnmanaged() { _vidPlayer.ReleaseUnmanaged(); }
 		public PropertyVideoStreaming(VideoStreamingModel devModel)
         {
             InitializeComponent();
@@ -63,6 +67,7 @@ namespace nvc.controls
 			}
 		}
 		public void InitUrl() {
+			DebugHelper.Assert(SynchronizationContext.Current != null);
 			_vidPlayer = new VideoPlayerControl(_devModel.mediaUri) { Dock = DockStyle.Fill};
 			panel1.Controls.Add(_vidPlayer);
 		}
@@ -110,12 +115,12 @@ namespace nvc.controls
 			_saveCancelControl._btnSave.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
 		}
 		void Localization(){
-			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingTitle);
-			_lblBitrate.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingBitrate);
-			_lblEncoder.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingEncoder);
-			_lblFrameRate.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingFrameRate);
-			_lblPriority.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingPrioriy);
-			_lblResolution.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyVideoStreamingResolution);
+			_title.CreateBinding(x=>x.Text, strings, x=>x.title);
+			_lblBitrate.CreateBinding(x=>x.Text, strings, x=>x.bitrate);
+			_lblEncoder.CreateBinding(x=>x.Text, strings, x=>x.encoder);
+			_lblFrameRate.CreateBinding(x=>x.Text, strings, x=>x.frameRate);
+			_lblPriority.CreateBinding(x=>x.Text, strings, x=>x.prioriy);
+			_lblResolution.CreateBinding(x=>x.Text, strings, x=>x.resolution);
 		}
         protected void IniControls(){
 			Localization();

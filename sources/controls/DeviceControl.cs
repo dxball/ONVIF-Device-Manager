@@ -44,7 +44,7 @@ namespace nvc.controls
             InitControls();
         }
 		void Localization() {
-			_title.CreateBinding(x=>x.Text, nvc.Constants.Instance, x=>x.sDeviceControlTitle);
+			_title.CreateBinding(x => x.Text, DeviceControlStrings.Instance, x => x.title);
 		}
         protected void InitControls()
         {

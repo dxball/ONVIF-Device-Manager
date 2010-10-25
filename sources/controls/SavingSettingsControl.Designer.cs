@@ -42,7 +42,9 @@
 			// 
 			this._tbInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
+			this._tbInfo.BackColor = System.Drawing.SystemColors.Control;
 			this._tbInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._tbInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this._tbInfo.Location = new System.Drawing.Point(3, 16);
 			this._tbInfo.Name = "_tbInfo";
 			this._tbInfo.ReadOnly = true;
@@ -64,6 +66,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.SystemColors.Control;
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this._tbInfo);
 			this.Controls.Add(this.progressBar1);

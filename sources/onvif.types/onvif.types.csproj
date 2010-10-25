@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>onvif.types</RootNamespace>
     <AssemblyName>onvif.types</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,41 +35,75 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="include_ws-addr_bf-2_b-2_t-1_xml_xmlmime_onvif.cs" />
+    <Compile Include="generated\events.generated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="generated\device.generated.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="schemas\onvif.designer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="b-2.xsd">
+    <None Include="schemas\b-2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="bf-2.xsd">
+    <None Include="schemas\bf-2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="include.xsd">
+    <None Include="schemas\devicemgmt.wsdl">
       <SubType>Designer</SubType>
     </None>
-    <None Include="onvif.xsd">
+    <None Include="schemas\event.wsdl">
       <SubType>Designer</SubType>
     </None>
-    <None Include="t-1.xsd">
+    <None Include="schemas\include.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="ws-addr.xsd">
+    <None Include="schemas\media.wsdl" />
+    <None Include="schemas\onvif.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="xml.xsd">
+    <None Include="schemas\t-1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="xmlmime.xsd">
+    <None Include="schemas\ws-addr.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="schemas\xml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\xmlmime.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="b-2.type-map.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="code-gen\xsd-map.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="events.ws-map.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="device.ws-map.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="code-gen\wcf-proxy-generator.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="known-types.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="code-gen\wsdl2ws-map.xslt">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

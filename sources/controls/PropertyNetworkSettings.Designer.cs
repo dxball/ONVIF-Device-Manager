@@ -30,10 +30,10 @@ namespace nvc.controls
         private void InitializeComponent()
         {
 			this.panel1 = new System.Windows.Forms.Panel();
-			this._tbmDNS = new nvc.controls.IPAddrMaskedTextBox();
-			this._tbmGate = new nvc.controls.IPAddrMaskedTextBox();
-			this._tbmSubnet = new nvc.controls.IPAddrMaskedTextBox();
-			this._tbmIPaddr = new nvc.controls.IPAddrMaskedTextBox();
+			this._tbmDNS = new nvc.controls.IPAddressControl();
+			this._tbmGate = new nvc.controls.IPAddressControl();
+			this._tbmSubnet = new nvc.controls.IPAddressControl();
+			this._tbmIPaddr = new nvc.controls.IPAddressControl();
 			this._cbDHCP = new System.Windows.Forms.ComboBox();
 			this._lblMACaddr = new System.Windows.Forms.TextBox();
 			this._lblDNSaddr = new System.Windows.Forms.TextBox();
@@ -74,64 +74,40 @@ namespace nvc.controls
 			// 
 			this._tbmDNS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._tbmDNS.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._tbmDNS.DateOnly = false;
-			this._tbmDNS.DecimalOnly = false;
-			this._tbmDNS.DigitOnly = false;
 			this._tbmDNS.IPAddress = null;
-			this._tbmDNS.IPAddrOnly = true;
 			this._tbmDNS.Location = new System.Drawing.Point(166, 107);
 			this._tbmDNS.Name = "_tbmDNS";
-			this._tbmDNS.PhoneWithAreaCode = false;
 			this._tbmDNS.Size = new System.Drawing.Size(232, 20);
-			this._tbmDNS.SSNOnly = false;
 			this._tbmDNS.TabIndex = 5;
 			// 
 			// _tbmGate
 			// 
 			this._tbmGate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._tbmGate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._tbmGate.DateOnly = false;
-			this._tbmGate.DecimalOnly = false;
-			this._tbmGate.DigitOnly = false;
 			this._tbmGate.IPAddress = null;
-			this._tbmGate.IPAddrOnly = true;
 			this._tbmGate.Location = new System.Drawing.Point(166, 81);
 			this._tbmGate.Name = "_tbmGate";
-			this._tbmGate.PhoneWithAreaCode = false;
 			this._tbmGate.Size = new System.Drawing.Size(232, 20);
-			this._tbmGate.SSNOnly = false;
 			this._tbmGate.TabIndex = 4;
 			// 
 			// _tbmSubnet
 			// 
 			this._tbmSubnet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._tbmSubnet.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._tbmSubnet.DateOnly = false;
-			this._tbmSubnet.DecimalOnly = false;
-			this._tbmSubnet.DigitOnly = false;
 			this._tbmSubnet.IPAddress = null;
-			this._tbmSubnet.IPAddrOnly = true;
 			this._tbmSubnet.Location = new System.Drawing.Point(166, 54);
 			this._tbmSubnet.Name = "_tbmSubnet";
-			this._tbmSubnet.PhoneWithAreaCode = false;
 			this._tbmSubnet.Size = new System.Drawing.Size(232, 20);
-			this._tbmSubnet.SSNOnly = false;
 			this._tbmSubnet.TabIndex = 3;
 			// 
 			// _tbmIPaddr
 			// 
 			this._tbmIPaddr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._tbmIPaddr.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this._tbmIPaddr.DateOnly = false;
-			this._tbmIPaddr.DecimalOnly = false;
-			this._tbmIPaddr.DigitOnly = false;
 			this._tbmIPaddr.IPAddress = null;
-			this._tbmIPaddr.IPAddrOnly = true;
 			this._tbmIPaddr.Location = new System.Drawing.Point(166, 28);
 			this._tbmIPaddr.Name = "_tbmIPaddr";
-			this._tbmIPaddr.PhoneWithAreaCode = false;
 			this._tbmIPaddr.Size = new System.Drawing.Size(232, 20);
-			this._tbmIPaddr.SSNOnly = false;
 			this._tbmIPaddr.TabIndex = 2;
 			// 
 			// _cbDHCP
@@ -280,9 +256,11 @@ namespace nvc.controls
         private System.Windows.Forms.TextBox _tbMACaddr;
         private GroupBoxControl _title;
 		private System.Windows.Forms.ComboBox _cbDHCP;
-		private IPAddrMaskedTextBox _tbmIPaddr;
-		private IPAddrMaskedTextBox _tbmDNS;
-		private IPAddrMaskedTextBox _tbmGate;
-		private IPAddrMaskedTextBox _tbmSubnet;
+		//private IPAddrMaskedTextBox _tbmIPaddr;
+		//private IPTextBox _tbmIPaddr;
+		private IPAddressControl _tbmIPaddr;
+		private IPAddressControl _tbmDNS;
+		private IPAddressControl _tbmGate;
+		private IPAddressControl _tbmSubnet;
     }
 }

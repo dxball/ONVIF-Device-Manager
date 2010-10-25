@@ -25,7 +25,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
-using nvc.utils;
+using onvifdm.utils;
 using System.Threading;
 using System.Concurrency;
 using System.Reflection;
@@ -33,7 +33,7 @@ using System.Reflection;
 namespace nvc {
 
 	
-	public static class BindingExtentions {
+	public static class BindingExtensions {
 		private class AnonymousBinding<TControlProperty, TSourceProperty> : Binding {
 			Func<TSourceProperty, TControlProperty> m_formater = null;
 			public AnonymousBinding(string propertyName, object dataSource, string dataMember, Func<TSourceProperty, TControlProperty> formater)

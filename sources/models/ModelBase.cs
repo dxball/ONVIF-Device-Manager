@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-using nvc.utils;
+using onvifdm.utils;
 using nvc.onvif;
 using System.Disposables;
 using nvc.rx;
@@ -19,22 +19,25 @@ namespace nvc.models {
 
 		protected abstract IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<T> observer);
 		protected virtual IEnumerable<IObservable<Object>> ApplyChangesImpl(Session session, IObserver<T> observer) {
-			throw new NotImplementedException();
+			var err = new NotImplementedException();
+			DebugHelper.Error(err);
+			throw err;
 		}
 		
 
-		public virtual IObservable<T> Load(Session session) {
+		public IObservable<T> Load(Session session) {
 			this.session = session;
 			DebugHelper.Assert(SynchronizationContext.Current != null);
 			return Observable.Iterate<T>(observer => LoadImpl(session, observer)).ObserveOn(SynchronizationContext.Current);
 		}
 
 		public virtual void RevertChanges() {
-			throw new NotImplementedException();
+			var err = new NotImplementedException();
+			DebugHelper.Error(err);
+			throw err;
 		}
-
 		
-		public virtual IObservable<T> ApplyChanges() {
+		public IObservable<T> ApplyChanges() {
 			DebugHelper.Assert(SynchronizationContext.Current != null);
 			return Observable.Iterate<T>(observer => ApplyChangesImpl(session, observer)).ObserveOn(SynchronizationContext.Current);
 		}
@@ -142,6 +145,13 @@ namespace nvc.models {
 		private T m_current;
 		private T m_origin;
 		private MutableDisposable changeSetNode = new MutableDisposable();
+
+		public ChangeTrackingProperty(){
+		}
+		public ChangeTrackingProperty(T init){
+			SetBoth(init);
+		}
+
 		public void SetBoth(T value) {
 			m_current = value;
 			m_origin = value;

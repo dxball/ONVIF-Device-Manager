@@ -21,10 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using onvif.services.device;
-using nvc.onvif;
 using System.Threading;
-using nvc.utils;
+
+using nvc.onvif;
+using onvifdm.utils;
+
+using onvif.services.device;
+using onvif.types;
 
 namespace nvc.models {
 	public class DeviceDescriptionModel : ModelBase<DeviceDescriptionModel> {
@@ -33,6 +36,7 @@ namespace nvc.models {
 		private string m_Location;
 		private string m_Id;
 		private string m_Firmware;
+		private Exception m_error;
 		
 		public DeviceDescriptionModel(DeviceDescription description) {
 			this.Name = description.Name;
@@ -40,14 +44,20 @@ namespace nvc.models {
 			this.Address = String.Join(" ,", description.Uris.Select(x => x.Host));
 		}
 
-		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<DeviceDescriptionModel> observer) {
+		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceDescriptionModel> observer) {
 			Capabilities caps = null;
 			DeviceInfo info = null;
-
 			yield return Observable.Merge(
 				session.GetCapabilities().Handle(x => caps = x),
 				session.GetDeviceInfo().Handle(x => info = x)
-			);
+			).HandleError(x=>m_error = x);
+
+			if (m_error != null) {
+				if (observer != null) {
+					observer.OnNext(this);
+				}
+				yield break;
+			}
 
 			DebugHelper.Assert(info != null);
 			DebugHelper.Assert(caps != null);
@@ -122,6 +132,19 @@ namespace nvc.models {
 				}
 			}
 		}
+
+		public Exception error {
+			get {
+				return m_error;
+			}
+			private set {
+				if (m_error != value) {
+					m_error = value;
+					NotifyPropertyChanged(x => x.error);
+				}
+			}
+		}
+
 
 	}
 }

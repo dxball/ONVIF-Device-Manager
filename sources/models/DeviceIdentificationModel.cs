@@ -8,7 +8,7 @@ using nvc.onvif;
 using onvif.services.device;
 using System.Concurrency;
 using System.Threading;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.models {
 	public partial class DeviceIdentificationModel : ModelBase<DeviceIdentificationModel> {
@@ -18,10 +18,11 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<DeviceIdentificationModel> observer) {
 			DeviceInfo info = null;
 			NetworkStatus netstat = null;
-			yield return Observable.Merge(
-				session.GetDeviceInfo().Handle(x => info = x),
-				session.GetNetworkStatus().Handle(x => netstat = x)
-			);
+			
+			//yield return Observable.Merge(
+				yield return session.GetDeviceInfo().Handle(x => info = x);
+				yield return session.GetNetworkStatus().Handle(x => netstat = x);
+			//);
 			DebugHelper.Assert(info != null);
 			DebugHelper.Assert(netstat != null);
 

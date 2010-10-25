@@ -27,7 +27,7 @@ using nvc.entities;
 using nvc.models;
 using nvc.onvif;
 using System.Threading;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.controllers {
 	public class PropertyVideoStreamingController : IPropertyController {
@@ -57,9 +57,15 @@ namespace nvc.controllers {
 				//DebugHelper.Error(err);
 				_savingSettingsForm = new InformationForm("ERROR");
 				_savingSettingsForm.SetErrorMessage(err.Message);
-				_savingSettingsForm.ShowCloseButton(null);
+				_savingSettingsForm.SetEttorXML(err);
+				_savingSettingsForm.ShowCloseButton(ReturnToMainFrame);
 				_savingSettingsForm.ShowDialog(_propertyPanel);
 			});
+		}
+		public void ReturnToMainFrame() {
+			_currentControl.Dispose();
+			WorkflowController.Instance.GetMainFrameController().ReleaseLinkSelection();
+			WorkflowController.Instance.ReleaseVideoStreamingController();
 		}
 		public BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription chan) {
 			_propertyPanel = propertyPanel;
@@ -102,6 +108,8 @@ namespace nvc.controllers {
 		}
 
 		void SaveVideoStreamingComplete() {
+			((PropertyVideoStreaming)_currentControl).StopStreaming();
+			((PropertyVideoStreaming)_currentControl).PlayStreaming();
 			_savingSettingsForm.Close();
 		}
 		

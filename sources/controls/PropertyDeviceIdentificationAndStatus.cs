@@ -33,6 +33,7 @@ namespace nvc.controls
 {
     public partial class PropertyDeviceIdentificationAndStatus : BasePropertyControl
     {
+		public override void ReleaseUnmanaged() { }
         public PropertyDeviceIdentificationAndStatus(DeviceIdentificationModel devMod)
         {
 			this.SuspendLayout();

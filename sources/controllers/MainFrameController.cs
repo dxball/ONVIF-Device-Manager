@@ -24,7 +24,7 @@ using System.Text;
 using nvc.controls;
 using System.Windows.Forms;
 using nvc.entities;
-using nvc.utils;
+using onvifdm.utils;
 using nvc.models;
 using nvc.onvif;
 
@@ -51,6 +51,11 @@ namespace nvc.controllers {
 		public MainFrameController() {
 			_lstDevCannelsCtrl = new List<DeviceChannelControl>();
 			_buttonsList = new List<LinkCheckButton>();
+			WorkflowController.Instance.GetMainWindowController().GetWindowRun().FormClosing += new FormClosingEventHandler(MainFrameController_FormClosing);
+		}
+
+		void MainFrameController_FormClosing(object sender, FormClosingEventArgs e) {
+			DisposeChilds(_settingsPanel);
 		}
 
 		#region Init section
@@ -71,6 +76,7 @@ namespace nvc.controllers {
 			}, err => {
 				_savingSettingsForm = new InformationForm("ERROR");
 				_savingSettingsForm.SetErrorMessage(err.Message);
+				_savingSettingsForm.SetEttorXML(err);
 				_savingSettingsForm.ShowCloseButton(WorkflowController.Instance.ReleaseMainFrameController);
 				_savingSettingsForm.ShowDialog(_mainFrame);
 			});
@@ -119,6 +125,16 @@ namespace nvc.controllers {
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseNetworkSettingsController;
 			link.Click = LbtnClick;
 			ctrl.AddLinkButton(link);
+			
+			//Maintenance button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonMaintenance);
+			link.ModelSession = _devCapabilityModel.session;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropertyMaintenanceController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseMaintenanceController;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
 		}
 		void CreateChannelControlLinkButtons(DeviceChannelControl ctrl, ChannelDescription channel) {
 			//LiveVideo button
@@ -132,6 +148,36 @@ namespace nvc.controllers {
 			link.Click = LbtnClick;
 			ctrl.AddLinkButton(link);
 
+			//Events button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonEvents);
+			link.ModelSession = _devCapabilityModel.session;
+			link.Channel = channel;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropEventController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseEventController;
+			if (_devCapabilityModel.capabilities.Events == null)
+				link.Enabled = false;
+			else
+				link.Enabled = _devCapabilityModel.capabilities.Events.WSPullPointSupport;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
+
+			//DepthCalibration button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonDepthCalibration);
+			link.ModelSession = _devCapabilityModel.session;
+			link.Channel = channel;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropDepthCalibrationController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseDepthCalibrationController;
+			link.Click = LbtnClick;
+			if (_devCapabilityModel.capabilities.Analytics == null)
+				link.Enabled = false;
+			else
+				link.Enabled = _devCapabilityModel.capabilities.Analytics.AnalyticsModuleSupport;
+			ctrl.AddLinkButton(link);
+
 			//VideoStreaming button
 			link = new LinkCheckButton(false, ctrl.SettingsFrame);
 			_buttonsList.Add(link);
@@ -140,6 +186,36 @@ namespace nvc.controllers {
 			link.Channel = channel;
 			link.CreatePropertyAction = WorkflowController.Instance.GetPropVideoStreamingController;
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseVideoStreamingController;
+			link.Click = LbtnClick;
+			ctrl.AddLinkButton(link);
+
+			//ObjectTracker button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonObjectTracker);
+			link.ModelSession = _devCapabilityModel.session;
+			link.Channel = channel;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropObjectTrackerController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseObjectTrackerController;
+			if (_devCapabilityModel.capabilities.Analytics == null)
+				link.Enabled = false;
+			else
+				link.Enabled = _devCapabilityModel.capabilities.Analytics.AnalyticsModuleSupport;
+			link.Click = LbtnClick;		
+			ctrl.AddLinkButton(link);
+
+			//Rule Engine button
+			link = new LinkCheckButton(false, ctrl.SettingsFrame);
+			_buttonsList.Add(link);
+			link.NameLable.CreateBinding(x => x.Text, Constants.Instance, x => x.constLinkButtonRuleEngine);
+			link.ModelSession = _devCapabilityModel.session;
+			link.Channel = channel;
+			link.CreatePropertyAction = WorkflowController.Instance.GetPropRuleEngineController;
+			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseRuleEngineController;
+			if (_devCapabilityModel.capabilities.Analytics == null)
+				link.Enabled = false;
+			else
+				link.Enabled = _devCapabilityModel.capabilities.Analytics.RuleSupport;
 			link.Click = LbtnClick;
 			ctrl.AddLinkButton(link);
 		}
@@ -187,6 +263,7 @@ namespace nvc.controllers {
 		private void CreatePropertyPanel() {
 			_settingsPanel = new Panel();
 			_settingsPanel.Dock = DockStyle.Fill;
+			_mainFrame._splitContainer.Panel2.Controls.Add(_settingsPanel);
 			_settingsPanel.SetDoubleBuffered(true);
 		}
 		#endregion
@@ -197,16 +274,20 @@ namespace nvc.controllers {
 		}
 		void DisposeChilds(Panel control) {
 			if (control != null)
-				foreach (UserControl value in control.Controls) {
+				foreach (BasePropertyControl value in control.Controls) {
+					value.ReleaseUnmanaged();
 					value.Dispose();
 				}
 		}
-		public void LbtnClick(LinkCheckButton sender) {
+		public void ReleaseLinkSelection() {
 			_buttonsList.ForEach(x => { x.SetUnclicked(); x.ReleasePropertyAction(); });
+		}
+		public void LbtnClick(LinkCheckButton sender) {
+			ReleaseLinkSelection();
 
 			IPropertyController propCtrl = sender.CreatePropertyAction();
 			sender.SetClicked();
-			_settingsPanel.SuspendLayout();
+			//_settingsPanel.SuspendLayout();
 
 			//Refreshing panel (removing recent controls) and add new one
 			DisposeChilds(_settingsPanel);
@@ -214,7 +295,7 @@ namespace nvc.controllers {
 
 			_settingsPanel.Controls.Add(propCtrl.CreateController(_settingsPanel, sender.ModelSession, sender.Channel));
 			
-			_settingsPanel.ResumeLayout();
+			//_settingsPanel.ResumeLayout();
 		}
 		#endregion
 

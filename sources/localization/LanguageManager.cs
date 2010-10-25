@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.XPath;
 using System.IO;
-using nvc.utils;
+using onvifdm.utils;
 using System.Globalization;
 
 namespace nvc.localization {

@@ -1,0 +1,5 @@
+D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\bin\Release\onvifdm.utils.dll
+D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\bin\Release\onvifdm.utils.pdb
+D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\obj\x86\Release\ResolveAssemblyReference.cache
+D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\obj\x86\Release\onvifdm.utils.dll
+D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\obj\x86\Release\onvifdm.utils.pdb

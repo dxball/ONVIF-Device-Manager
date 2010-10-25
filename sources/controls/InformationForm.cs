@@ -25,6 +25,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using nvc.onvif;
+using nvc.models;
+using System.IO;
+using System.Diagnostics;
 
 namespace nvc.controls {
 	public partial class InformationForm : Form {
@@ -33,13 +37,27 @@ namespace nvc.controls {
 			Text = errorMessage;
 			//savingSettingsControl1.SetErrorMessage(errorMessage);
 			savingSettingsControl1.OnClose += new EventHandler(savingSettingsControl1_OnClose);
+
+			InitialView();
 		}
 		public InformationForm() {
 			InitializeComponent();
 			Localization();
-
+			InitialView();
 			savingSettingsControl1.OnClose += new EventHandler(savingSettingsControl1_OnClose);
 		}
+
+		void InitialView() {
+			Height = Defaults.iInformationFormInitialHeight;
+			_webBrowser.Visible = false;
+			//this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+		}
+		void XmlView() {
+			Height = Defaults.iInformationFormXMLViewHeight;
+			_webBrowser.Visible = true;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+		}
+
 		Action KillEveryBody;
 		void savingSettingsControl1_OnClose(object sender, EventArgs e) {
 			if (KillEveryBody != null)
@@ -53,6 +71,14 @@ namespace nvc.controls {
 
 		public void SetErrorMessage(string errText) {
 			savingSettingsControl1.SetErrorMessage(errText);
+		}
+		[Conditional("DEBUG")]
+		public void SetEttorXML(Exception error) {
+			XmlView();
+			ErrorInfoModel errModel = new ErrorInfoModel(error);
+			string OutXml = errModel.htmlError;
+			//HtmlDocument 
+			_webBrowser.DocumentText = OutXml;
 		}
 		public void ShowCloseButton(Action killall) {
 			KillEveryBody = killall;

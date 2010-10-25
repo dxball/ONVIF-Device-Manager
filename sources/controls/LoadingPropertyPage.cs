@@ -30,6 +30,7 @@ namespace nvc.controls
 {
     public partial class LoadingPropertyPage : BasePropertyControl
     {
+		public override void ReleaseUnmanaged() { }
         public LoadingPropertyPage()
         {
             InitializeComponent();

@@ -26,7 +26,7 @@ using System.Threading;
 using System.ServiceModel;
 using System.Xml;
 using System.Windows.Threading;
-using nvc.utils;
+using onvifdm.utils;
 using System.ComponentModel;
 using System.Concurrency;
 using System.Disposables;
@@ -34,6 +34,8 @@ using System.Disposables;
 using dev=onvif.services.device;
 using nvc.models;
 using nvc.rx;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Discovery.VersionApril2005;
 
 namespace nvc.onvif {
 
@@ -95,6 +97,7 @@ namespace nvc.onvif {
 
 
     public class DeviceDiscovery{
+		
 		private class DescoveredDeviceDescription : DeviceDescription {
 			private EndpointDiscoveryMetadata m_epMetadata;
 			public DescoveredDeviceDescription(EndpointDiscoveryMetadata epMetadata) {
@@ -130,26 +133,38 @@ namespace nvc.onvif {
 		}
 
 		private WsDiscoveryObservable m_wsDiscovery;
-		public TimeSpan Duration = TimeSpan.FromSeconds(5);
-		
+		//public TimeSpan Duration = TimeSpan.FromSeconds(5);
+
+			
 		private FindCriteria m_getFindCriteria(){
 			var fc = new FindCriteria();
 			//fc.Scopes.Add(new Uri("onvif://www.onvif.org/type/video_encoder"));
 			//fc.Scopes.Add(new Uri("onvif://www.onvif.org"));
 			fc.ContractTypeNames.Add(new XmlQualifiedName("NetworkVideoTransmitter", @"http://www.onvif.org/ver10/network/wsdl"));
-			fc.Duration = Duration;
+			//fc.Duration = Duration;
+			fc.Duration = TimeSpan.MaxValue;
+			fc.MaxResults = int.MaxValue;
 			return fc;
 		}
 
 		private ResolveCriteria m_getResolveCriteria(string id) {
 			var rc = new ResolveCriteria();
 			rc.Address = new EndpointAddress(id);
-			rc.Duration = Duration;
+			//rc.Duration = Duration;
+			rc.Duration = TimeSpan.MaxValue;
 			return rc;
 		}
 		
-		public DeviceDiscovery() {
+		public DeviceDiscovery() : this(TimeSpan.FromSeconds(5)){
+		}
+
+		public DeviceDiscovery(TimeSpan duration) {
+			var binding = new CustomBinding();
+			binding.Elements.Add(new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8));
+			binding.Elements.Add(new HttpTransportBindingElement());
+
 			var ep = new UdpDiscoveryEndpoint(DiscoveryVersion.WSDiscoveryApril2005);
+			ep.MaxResponseDelay = duration;
 			m_wsDiscovery = new WsDiscoveryObservable(ep);
 		}
 

@@ -33,6 +33,9 @@ namespace nvc.controllers {
 
 		#region Init section
 		public MainWindowController() {
+		}
+
+		public void InitMainWindow() {
 			var mainWindow = new MainWindow();
 			_mainWindow = mainWindow;
 			_mainWindow.InitLeftFrame(WorkflowController.Instance.GetDeviceListController().CreateDeviceListControl());
@@ -57,6 +60,7 @@ namespace nvc.controllers {
 		public MainWindow GetWindowRun() {
 			return _mainWindow;
 		}
+
 		#endregion
 
 		public void SetStatusBarText1(string value) {

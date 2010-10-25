@@ -27,7 +27,7 @@ using nvc.models;
 using nvc.entities;
 using nvc.onvif;
 using System.Threading;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.controllers {
 	public class PropertyNetworkSettingsController : IRelesable, IPropertyController {
@@ -60,6 +60,7 @@ namespace nvc.controllers {
 				//DebugHelper.Error(err);
 				_savingSettingsForm = new InformationForm("ERROR");
 				_savingSettingsForm.SetErrorMessage(err.Message);
+				_savingSettingsForm.SetEttorXML(err);
 				_savingSettingsForm.ShowCloseButton(null);
 				_savingSettingsForm.ShowDialog(_propertyPanel);
 			});

@@ -28,16 +28,19 @@ using System.Disposables;
 using nvc.entities;
 using nvc.controls;
 using nvc.onvif;
-using nvc.utils;
+using onvifdm.utils;
 using nvc.models;
+using System.Xml.XPath;
+using System.Diagnostics;
 
 namespace nvc.controllers {
 	public class DeviceListController {
 		public DeviceListController() {
 			_deviceDescriptionModels = new List<DeviceDescriptionModel>();
-
 		}
 
+		DeviceDescriptionModel _currentSelection;
+		InformationForm _infoForm;
 		List<DeviceDescriptionModel> _deviceDescriptionModels;	// List of device descriptions from WD discovery to fill in UI list view
 		List<DeviceDescriptionModel> DeviceDescriptionModels {
 			get {
@@ -55,22 +58,19 @@ namespace nvc.controllers {
 		}
 		//Create UI control
 		public DevicesListControl CreateDeviceListControl() {
-			_devLsrCtrl = new DevicesListControl();
+			_devLsrCtrl = new DevicesListControl(DeviceItemSelected, RefreshDevicesList, CreateDumpViewer);
 			_devLsrCtrl.Dock = DockStyle.Fill;
-
-			SubscribeToEvents();
-			//[TODO] REMOVE!!!
-			//_devLsrCtrl.SubscribeToManualAdding(AddDeviceManually);
 
 			//Subscribe to WSDiscovery for devices
 			FillDeviceList();
 
 			return _devLsrCtrl;
 		}
-		protected void FillDeviceList() {
+		public void FillDeviceList() {
 			UnsubscribeFromWSDiscovery();
 			_discoverySubscription = SubscribeToWSDiscovery();
 		}
+
 		protected IDisposable SubscribeToWSDiscovery() {
 			var syncCtx = SynchronizationContext.Current;
 			var isActive = true;
@@ -88,9 +88,7 @@ namespace nvc.controllers {
 				if (!isActive) {
 					return;
 				}
-				var discoveryClient = new DeviceDiscovery() {
-					Duration = TimeSpan.FromSeconds(10)
-				}.Find();
+				var discoveryClient = new DeviceDiscovery(TimeSpan.FromSeconds(10)).Find();
 
 				subscription.Disposable = discoveryClient
 					.ObserveOn(syncCtx)
@@ -102,7 +100,7 @@ namespace nvc.controllers {
 						devModel.Load(Session.Create(devDescr)).Subscribe(dModel => {
 
 						}, err => {
-							//DebugHelper.Error(err);
+							DescoveryError(err);
 						});
 
 						AddDeviceDescription(devModel);
@@ -114,23 +112,20 @@ namespace nvc.controllers {
 			});
 			return subscription;
 		}
+		[Conditional("DEBUG")]
+		void DescoveryError(Exception err) {
+			InformationForm infoform = new InformationForm("ERROR");
+			infoform.SetErrorMessage(err.Message);
+			infoform.SetEttorXML(err);
+			infoform.ShowCloseButton(null);
+			infoform.ShowDialog(_devLsrCtrl);
+
+		}
 
 		void UnsubscribeFromWSDiscovery() {
 			if (_discoverySubscription != null) {
 				_discoverySubscription.Dispose();
 			}
-		}
-
-		//Subscribe to UI events
-		void SubscribeToEvents() {
-			_devLsrCtrl._onDeviceItemSelected += new DeviceListItemSelectedDelegate(devListctrl__onDeviceItemSelected);
-			_devLsrCtrl.RefreshDeviceList += new EventHandler(devListctrl_RefreshDeviceList);
-			//WorkflowController.Instance.ModelInfoAdded += new EventHandler(Instance_ModelInfoAdded);
-		}
-		//Subscribe from UI events
-		void UnsubscribeFromEvents() {
-			_devLsrCtrl._onDeviceItemSelected -= devListctrl__onDeviceItemSelected;
-			_devLsrCtrl.RefreshDeviceList -= devListctrl_RefreshDeviceList;
 		}
 
 		void ReleaseResources() {
@@ -139,14 +134,16 @@ namespace nvc.controllers {
 		}
 
 		public void RemoveDevListControlItem(DeviceDescriptionModel devModel) {
+			if (_currentSelection == devModel)
+				_currentSelection = null;
 			if (_devLsrCtrl != null) {
 				_devLsrCtrl.RemoveItem(devModel);
 			}
 		}
 
-		void devListctrl__onDeviceItemSelected(DeviceDescriptionModel devModel) {
+		void DeviceItemSelected(DeviceDescriptionModel devModel) {
 			ReleaseResources();
-
+			_currentSelection = devModel;
 			//Check if device valid
 			WorkflowController.Instance.GetMainWindowController().RunMainFrame(devModel);
 			SetStatusText(devModel);
@@ -160,11 +157,99 @@ namespace nvc.controllers {
 		public void RefreshDevicesList() {
 			WorkflowController.Instance.ReleaseMainFrameController();
 			_devLsrCtrl.RefreshItems();
+			_currentSelection = null;
 			DeviceDescriptionModels.Clear();
 			FillDeviceList();
 		}
-		void devListctrl_RefreshDeviceList(object sender, EventArgs e) {
-			RefreshDevicesList();
+
+		XmlExplorer.Controls.TabbedXmlExplorerWindow _dumpWnd;
+		public void CreateDumpViewer() {
+			if (_dumpWnd == null || _dumpWnd.IsDisposed)
+				_dumpWnd = new XmlExplorer.Controls.TabbedXmlExplorerWindow();
+			_dumpWnd.Show();
+			DumpModel onvifDump = new DumpModel();
+			if (_currentSelection != null) {
+				onvifDump.Load(_currentSelection.session).Subscribe(arg => {
+
+					_dumpWnd.Open(arg.xmlDump.CreateNavigator(), arg.name);
+					
+				}, err => {
+					//DebugHelper.Error(err);
+					_infoForm = new InformationForm("ERROR");
+					_infoForm.SetErrorMessage(err.Message);
+					_infoForm.SetEttorXML(err);
+					_infoForm.ShowCloseButton(null);
+					_infoForm.ShowDialog(_devLsrCtrl);
+				});
+				
+			}
 		}
+
+		/// <summary>
+		/// Implementation for UI Independent controller
+		/// </summary>
+		/// <param name="devModel"></param>
+		#region WPF
+		public Action<DeviceDescriptionModel> addToUi;
+
+		public void wpfRefreshDevicesList() {
+			WorkflowController.Instance.ReleaseMainFrameController();
+			_currentSelection = null;
+			DeviceDescriptionModels.Clear();
+			wpfFillDeviceList();
+		}
+		void wpfAddDeviceDescription(DeviceDescriptionModel devModel) {
+			DeviceDescriptionModels.Add(devModel);
+
+			if (addToUi != null) {
+				addToUi(devModel);
+			}
+		}
+		public void wpfFillDeviceList() {
+			UnsubscribeFromWSDiscovery();
+			_discoverySubscription = wpfSubscribeToWSDiscovery(wpfAddDeviceDescription);
+		}
+		protected IDisposable wpfSubscribeToWSDiscovery(Action<DeviceDescriptionModel> addDevDescr) {
+			var syncCtx = SynchronizationContext.Current;
+			var isActive = true;
+			var subscription = new MutableDisposable();
+
+			if (_discoverySubscription != null) {
+				_discoverySubscription.Dispose();
+			}
+			_discoverySubscription = Disposable.Create(() => {
+				isActive = false;
+				subscription.Dispose();
+			});
+
+			GlobalWorkItemQueue.Enqueue(() => {
+				if (!isActive) {
+					return;
+				}
+				var discoveryClient = new DeviceDiscovery(TimeSpan.FromSeconds(10)).Find();
+
+				subscription.Disposable = discoveryClient
+					.ObserveOn(syncCtx)
+					.Subscribe(devDescr => {
+						DebugHelper.Assert(SynchronizationContext.Current == syncCtx);
+						DebugHelper.Assert(isActive);
+
+						DeviceDescriptionModel devModel = new DeviceDescriptionModel(devDescr);
+						devModel.Load(Session.Create(devDescr)).Subscribe(dModel => {
+
+						}, err => {
+							DescoveryError(err);
+						});
+
+						addDevDescr(devModel);
+					}, err => {
+						DebugHelper.Assert(SynchronizationContext.Current == syncCtx);
+						DebugHelper.Assert(isActive);
+						DebugHelper.Error(err);
+					});
+			});
+			return subscription;
+		}
+		#endregion WPF
 	}
 }

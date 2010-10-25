@@ -5,13 +5,19 @@ using System.Text;
 using System.Net;
 
 using nvc.onvif;
-using nvc.utils;
+using onvifdm.utils;
 using nvc.entities;
-using dev=onvif.services.device;
+
+using onvif.services.device;
+using onvif.types;
+
+using dev = onvif.services.device;
+using tt = onvif.types;
+using net = System.Net;
 
 namespace nvc.models {
 	public partial class DeviceNetworkSettingsModel : ModelBase<DeviceNetworkSettingsModel> {
-		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
+		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
 			NetworkSettings netSettings = null;
 			NetworkStatus netstat = null;
 			yield return Observable.Merge(
@@ -22,142 +28,123 @@ namespace nvc.models {
 			DebugHelper.Assert(netstat != null);
 
 			m_dhcp.SetBoth(netSettings.dhcp);
-			m_staticIp.SetBoth(netSettings.staticIp);
-			m_subnetMask.SetBoth(NetMaskHelper.PrefixToMask(netSettings.subnetPrefix));
-			m_staticGateway.SetBoth(netSettings.defaultGateway);
-			m_staticDns.SetBoth(netSettings.staticDns);
-			
-			NotifyPropertyChanged(x=>x.staticIp);
-			NotifyPropertyChanged(x=>x.subnetMask);
-			NotifyPropertyChanged(x=>x.staticGateway);
-			NotifyPropertyChanged(x=>x.staticDns);
+			m_staticIp.SetBoth(netSettings.staticIp ?? new net::IPAddress(0));
+			m_subnetMask.SetBoth(NetMaskHelper.PrefixToMask(netSettings.subnetPrefix) ?? new net::IPAddress(0));
+			m_staticGateway.SetBoth(netSettings.defaultGateway ?? new net::IPAddress(0));
+			m_staticDns.SetBoth(netSettings.staticDns ?? new net::IPAddress(0));
 
-			mac = BitConverter.ToString(netstat.mac.GetAddressBytes());	
+			NotifyPropertyChanged(x => x.staticIp);
+			NotifyPropertyChanged(x => x.subnetMask);
+			NotifyPropertyChanged(x => x.staticGateway);
+			NotifyPropertyChanged(x => x.staticDns);
+
+			mac = BitConverter.ToString(netstat.mac.GetAddressBytes());
 
 			if (observer != null) {
 				observer.OnNext(this);
 			}
 		}
 
-		protected override IEnumerable<IObservable<Object>> ApplyChangesImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
+		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
 			if (!isModified) {
+				observer.OnNext(this);
 				yield break;
 			}
 
-			//var proxy = session.device;
-			//var id = session.deviceDescription.Id;
-
 			var dhcp_enabled = dhcp;
-
-			var dns_addresses = new dev::IPAddress[] { 
-			    new dev::IPAddress(){ 
-			        Type = dev::IPType.IPv4, 
-			        IPv4Address = staticDns.ToString()
-			    } 
-			};
-
-			var gateway_addresses = new string[]{
-			    staticGateway.ToString()
-			};
-
-			dev::NetworkInterface[] nics = null;
-			//yield return Observable.Merge(
-			bool success = true;
+				
+			if (m_staticDns.isModified || m_dhcp.isModified) {
+				var dns_addresses = new tt::IPAddress[] { 
+					new tt::IPAddress(){ 
+						Type = tt::IPType.IPv4, 
+						IPv4Address = staticDns.ToString()
+					}
+				};
+				Exception error = null;
 				yield return session.SetDNS(dhcp_enabled, dns_addresses)
-					.OnError(err => {
+					.Idle()
+					.HandleError(err => {
 						DebugHelper.Error(err);
-						success = false;
-					})
-					.Idle().IgnoreError();
-				//TODO: synesis 6407 start rebooting here
-				//if (!success) {
-					
-				//}
-				
-				success = true;
+						error = err;
+					});
+			}
+
+			if (m_staticGateway.isModified) {
+				var gateway_addresses = new string[]{
+					staticGateway.ToString()
+				};
+				Exception error = null;
 				yield return session.SetNetworkDefaultGateway(gateway_addresses, null)
-				.OnError(err => {
-					DebugHelper.Error(err);
-					success = false;
-				})
-				.Idle().IgnoreError();
+					.Idle()
+					.HandleError(err=>{
+						DebugHelper.Error(err);
+						error = err;
+					});
 				
-				if (!success) {
-					//TODO: work around for axis p3301
+
+				if (error!=null) {
+					//TODO: workaround for axis p3301
 					yield return Observable.Timer(TimeSpan.FromSeconds(6)).Idle();
 				}
-
-				yield return session.GetNetworkInterfaces().Handle(x => nics = x);
-			//);
-			DebugHelper.Assert(nics != null);
-			
-			var nic = nics.Where(x => x.Enabled).First();
-
-
-			var nic_set = new dev::NetworkInterfaceSetConfiguration();
-
-			nic_set.Enabled = true;
-			nic_set.EnabledSpecified = true;
-			if (nic.Info != null) {
-				nic_set.MTUSpecified = nic.Info.MTUSpecified;
-				nic_set.MTU = nic.Info.MTU;
-			} else {
-				nic_set.MTUSpecified = false;
 			}
-			
-			nic_set.IPv4 = new dev.IPv4NetworkInterfaceSetConfiguration();
-			nic_set.IPv4.DHCP = dhcp;
-			nic_set.IPv4.DHCPSpecified = true;
-			nic_set.IPv4.Enabled = true;
-			nic_set.IPv4.EnabledSpecified = true;
-			nic_set.IPv4.Manual = new dev::PrefixedIPv4Address[]{
-			    new dev::PrefixedIPv4Address(){
-			        Address = staticIp.ToString(),					
-			        PrefixLength = NetMaskHelper.MaskToPrefix(subnetMask.ToString())
-			    }
-			};
 
-			if (nic.Link != null) {
-				//nic_set_cfg.Link = new NetworkInterfaceConnectionSetting();
-				if (nic.Link.AdminSettings != null) {
-					nic_set.Link = nic.Link.AdminSettings;
-				} else if (nic.Link.OperSettings != null) {
-					nic_set.Link = nic.Link.OperSettings;
+			if (m_staticIp.isModified || m_subnetMask.isModified || m_dhcp.isModified) {
+				tt::NetworkInterface[] nics = null;
+				yield return session.GetNetworkInterfaces().Handle(x => nics = x);
+				DebugHelper.Assert(nics != null);
+
+				var nic = nics.Where(x => x.Enabled).First();
+				
+				var nic_set = new tt::NetworkInterfaceSetConfiguration();
+
+				nic_set.Enabled = true;
+				nic_set.EnabledSpecified = true;
+				if (nic.Info != null) {
+					nic_set.MTUSpecified = nic.Info.MTUSpecified;
+					nic_set.MTU = nic.Info.MTU;
+				} else {
+					nic_set.MTUSpecified = false;
+				}
+
+				nic_set.IPv4 = new IPv4NetworkInterfaceSetConfiguration();
+				nic_set.IPv4.DHCP = dhcp;
+				nic_set.IPv4.DHCPSpecified = true;
+				nic_set.IPv4.Enabled = true;
+				nic_set.IPv4.EnabledSpecified = true;
+				nic_set.IPv4.Manual = new tt::PrefixedIPv4Address[]{
+					new PrefixedIPv4Address(){
+						Address = staticIp.ToString(),					
+						PrefixLength = NetMaskHelper.MaskToPrefix(subnetMask.ToString())
+					}
+				};
+
+				if (nic.Link != null) {
+					//nic_set_cfg.Link = new NetworkInterfaceConnectionSetting();
+					if (nic.Link.AdminSettings != null) {
+						nic_set.Link = nic.Link.AdminSettings;
+					} else if (nic.Link.OperSettings != null) {
+						nic_set.Link = nic.Link.OperSettings;
+					}
+				}
+
+				bool isRebootNeeded = false;
+				yield return session.SetNetworkInterfaces(nic.token, nic_set).Handle(x => isRebootNeeded = x);
+
+				if (isRebootNeeded) {
+					//yield return session.SystemReboot().Idle();				
 				}
 			}
 
-			bool isRebootNeeded = false;
-			yield return session.SetNetworkInterfaces(nic.token, nic_set).Handle(x=>isRebootNeeded = x);
-
-			if (isRebootNeeded) {
-				//yield return session.SystemReboot().Idle();				
-			}
-			
-			//    if (isRebootNeeded) {
-			//        var message = proxy.SystemReboot().First();
-			//        //DebugHelper.Break();
-			//        return null;
-			//    }
-			//    var resolver = new DeviceDiscovery() {
-			//        Duration = TimeSpan.FromSeconds(5)
-			//    }.Resolve(id);
-			//    try {
-			//        var devDescr = resolver.First();
-			//        return devDescr;
-			//    } catch {
-			//        return null;
-			//    }
-			
 			if (observer != null) {
 				observer.OnNext(this);
 			}
 		}
 
-		private ChangeTrackingProperty<bool> m_dhcp = new ChangeTrackingProperty<bool>();
-		private ChangeTrackingProperty<IPAddress> m_staticIp = new ChangeTrackingProperty<IPAddress>();
-		private ChangeTrackingProperty<IPAddress> m_subnetMask = new ChangeTrackingProperty<IPAddress>();
-		private ChangeTrackingProperty<IPAddress> m_staticGateway = new ChangeTrackingProperty<IPAddress>();
-		private ChangeTrackingProperty<IPAddress> m_staticDns = new ChangeTrackingProperty<IPAddress>();
+		private ChangeTrackingProperty<bool> m_dhcp = new ChangeTrackingProperty<bool>(false);
+		private ChangeTrackingProperty<net::IPAddress> m_staticIp = new ChangeTrackingProperty<net::IPAddress>(new net::IPAddress(0));
+		private ChangeTrackingProperty<net::IPAddress> m_subnetMask = new ChangeTrackingProperty<net::IPAddress>(new net::IPAddress(0));
+		private ChangeTrackingProperty<net::IPAddress> m_staticGateway = new ChangeTrackingProperty<net::IPAddress>(new net::IPAddress(0));
+		private ChangeTrackingProperty<net::IPAddress> m_staticDns = new ChangeTrackingProperty<net::IPAddress>(new net::IPAddress(0));
 
 		private string m_mac;
 
@@ -185,7 +172,7 @@ namespace nvc.models {
 				}
 			}
 		}
-		public IPAddress staticIp {
+		public net::IPAddress staticIp {
 			get {
 				return m_staticIp.current;
 			}
@@ -196,7 +183,7 @@ namespace nvc.models {
 				}
 			}
 		}
-		public IPAddress subnetMask {
+		public net::IPAddress subnetMask {
 			get {
 				return m_subnetMask.current;
 			}
@@ -207,7 +194,7 @@ namespace nvc.models {
 				}
 			}
 		}
-		public IPAddress staticGateway {
+		public net::IPAddress staticGateway {
 			get {
 				return m_staticGateway.current;
 			}
@@ -218,7 +205,7 @@ namespace nvc.models {
 				}
 			}
 		}
-		public IPAddress staticDns {
+		public net::IPAddress staticDns {
 			get {
 				return m_staticDns.current;
 			}

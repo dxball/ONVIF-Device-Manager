@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.controls.utils {
 	public class ListItem {

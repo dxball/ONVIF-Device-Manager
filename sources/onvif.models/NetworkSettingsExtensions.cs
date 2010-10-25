@@ -27,7 +27,7 @@ using System.Net.NetworkInformation;
 
 using nvc.onvif;
 using dev = onvif.services.device;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.models {
 	//public static class NetworkSettingsExtensions {

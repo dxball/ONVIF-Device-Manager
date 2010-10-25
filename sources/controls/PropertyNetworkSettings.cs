@@ -29,12 +29,14 @@ using nvc.models;
 using nvc.entities;
 using System.Net;
 using nvc.controls.utils;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.controls
 {
     public partial class PropertyNetworkSettings : BasePropertyControl
     {
+		protected PropertyNetworkSettingsStrings strings = PropertyNetworkSettingsStrings.Instance;
+		public override void ReleaseUnmanaged() {}
 		public PropertyNetworkSettings(DeviceNetworkSettingsModel devMod)
         {
 		    InitializeComponent();
@@ -81,13 +83,13 @@ namespace nvc.controls
 			_saveCancelControl._btnSave.CreateBinding(x => x.Enabled, devModel, x => x.isModified);
 		}
 		void Localization(){
-			_title.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyDeviceInfoStatusTitle);
-			_lblDHCP.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyNetworkSettingsDHCP);
-			_lblDNSaddr.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyNetworkSettingsDNSaddr);
-			_lblGateAddr.CreateBinding(x => x.Text,Constants.Instance, x => x.sPropertyNetworkSettingsGateAddr);
-			_lblIPaddress.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyNetworkSettingsIPaddr);
-			_lblMACaddr.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyNetworkSettingsMACaddr);
-			_lblSubnetMask.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyNetworkSettingsSubnetMask);
+			_title.CreateBinding(x => x.Text,strings, x => x.title);
+			_lblDHCP.CreateBinding(x => x.Text,strings, x => x.dhcp);
+			_lblDNSaddr.CreateBinding(x => x.Text,strings, x => x.dnsAddr);
+			_lblGateAddr.CreateBinding(x => x.Text,strings, x => x.gateAddr);
+			_lblIPaddress.CreateBinding(x => x.Text, strings, x => x.ipAddr);
+			_lblMACaddr.CreateBinding(x => x.Text, strings, x => x.macAddr);
+			_lblSubnetMask.CreateBinding(x => x.Text, strings, x => x.subnetMask);
 		}
 
         void InitControls()

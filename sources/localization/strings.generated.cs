@@ -82,14 +82,778 @@ namespace nvc.controls {
 }
 	
 			
-namespace nvc {
-	public partial class Constants: LocalizedStringsBase<Constants>{
+namespace nvc.controls {
+	public partial class DepthCalibrationStrings: LocalizedStringsBase<DepthCalibrationStrings>{
+		
+
+
+		private const string s_physHeightTitle = @"Height marker setup";
+		private string m_physHeightTitle=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='physHeightTitle']/@value")]
+		public string physHeightTitle {
+			get { 
+				if( m_physHeightTitle == null){
+					return s_physHeightTitle;
+				}
+				return m_physHeightTitle; 
+			}
+			set { 
+				if( value != m_physHeightTitle){
+					m_physHeightTitle = value;
+					NotifyPropertyChanged("physHeightTitle");
+				}
+			}  
+		}
+	
+
+
+		private const string s_title = @"Depth calibration";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_focalLength = @"Focal length, mm";
+		private string m_focalLength=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='focalLength']/@value")]
+		public string focalLength {
+			get { 
+				if( m_focalLength == null){
+					return s_focalLength;
+				}
+				return m_focalLength; 
+			}
+			set { 
+				if( value != m_focalLength){
+					m_focalLength = value;
+					NotifyPropertyChanged("focalLength");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sensorPixel = @"Photosensor pixel size, m*";
+		private string m_sensorPixel=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='sensorPixel']/@value")]
+		public string sensorPixel {
+			get { 
+				if( m_sensorPixel == null){
+					return s_sensorPixel;
+				}
+				return m_sensorPixel; 
+			}
+			set { 
+				if( value != m_sensorPixel){
+					m_sensorPixel = value;
+					NotifyPropertyChanged("sensorPixel");
+				}
+			}  
+		}
+	
+
+
+		private const string s_matrixFormat = @"Matrix format";
+		private string m_matrixFormat=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='matrixFormat']/@value")]
+		public string matrixFormat {
+			get { 
+				if( m_matrixFormat == null){
+					return s_matrixFormat;
+				}
+				return m_matrixFormat; 
+			}
+			set { 
+				if( value != m_matrixFormat){
+					m_matrixFormat = value;
+					NotifyPropertyChanged("matrixFormat");
+				}
+			}  
+		}
+	
+
+
+		private const string s_save = @"Calibrate";
+		private string m_save=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='save']/@value")]
+		public string save {
+			get { 
+				if( m_save == null){
+					return s_save;
+				}
+				return m_save; 
+			}
+			set { 
+				if( value != m_save){
+					m_save = value;
+					NotifyPropertyChanged("save");
+				}
+			}  
+		}
+	
+
+
+		private const string s_heightMarker = @"Height marker";
+		private string m_heightMarker=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='heightMarker']/@value")]
+		public string heightMarker {
+			get { 
+				if( m_heightMarker == null){
+					return s_heightMarker;
+				}
+				return m_heightMarker; 
+			}
+			set { 
+				if( value != m_heightMarker){
+					m_heightMarker = value;
+					NotifyPropertyChanged("heightMarker");
+				}
+			}  
+		}
+	
+
+
+		private const string s_marker2D = @"2D-marker";
+		private string m_marker2D=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='marker2D']/@value")]
+		public string marker2D {
+			get { 
+				if( m_marker2D == null){
+					return s_marker2D;
+				}
+				return m_marker2D; 
+			}
+			set { 
+				if( value != m_marker2D){
+					m_marker2D = value;
+					NotifyPropertyChanged("marker2D");
+				}
+			}  
+		}
+	
+
+
+		private const string s_unknow = @"I don't know";
+		private string m_unknow=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='unknow']/@value")]
+		public string unknow {
+			get { 
+				if( m_unknow == null){
+					return s_unknow;
+				}
+				return m_unknow; 
+			}
+			set { 
+				if( value != m_unknow){
+					m_unknow = value;
+					NotifyPropertyChanged("unknow");
+				}
+			}  
+		}
+	
+
+
+		private const string s_physHeight = @"Real perspector height, cm";
+		private string m_physHeight=null;
+		[XPath(@"/localized-strings/module[@name='DepthCalibrationStrings' and @namespace='nvc.controls']/descendant::string[@name='physHeight']/@value")]
+		public string physHeight {
+			get { 
+				if( m_physHeight == null){
+					return s_physHeight;
+				}
+				return m_physHeight; 
+			}
+			set { 
+				if( value != m_physHeight){
+					m_physHeight = value;
+					NotifyPropertyChanged("physHeight");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class RuleEngineStrings: LocalizedStringsBase<RuleEngineStrings>{
+		
+
+
+		private const string s_title = @"Rule engine";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_btnAdd = @"Add";
+		private string m_btnAdd=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='btnAdd']/@value")]
+		public string btnAdd {
+			get { 
+				if( m_btnAdd == null){
+					return s_btnAdd;
+				}
+				return m_btnAdd; 
+			}
+			set { 
+				if( value != m_btnAdd){
+					m_btnAdd = value;
+					NotifyPropertyChanged("btnAdd");
+				}
+			}  
+		}
+	
+
+
+		private const string s_btnRemove = @"Remove";
+		private string m_btnRemove=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='btnRemove']/@value")]
+		public string btnRemove {
+			get { 
+				if( m_btnRemove == null){
+					return s_btnRemove;
+				}
+				return m_btnRemove; 
+			}
+			set { 
+				if( value != m_btnRemove){
+					m_btnRemove = value;
+					NotifyPropertyChanged("btnRemove");
+				}
+			}  
+		}
+	
+
+
+		private const string s_name = @"Name";
+		private string m_name=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='name']/@value")]
+		public string name {
+			get { 
+				if( m_name == null){
+					return s_name;
+				}
+				return m_name; 
+			}
+			set { 
+				if( value != m_name){
+					m_name = value;
+					NotifyPropertyChanged("name");
+				}
+			}  
+		}
+	
+
+
+		private const string s_groupRule = @"Generate alarm when:";
+		private string m_groupRule=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='groupRule']/@value")]
+		public string groupRule {
+			get { 
+				if( m_groupRule == null){
+					return s_groupRule;
+				}
+				return m_groupRule; 
+			}
+			set { 
+				if( value != m_groupRule){
+					m_groupRule = value;
+					NotifyPropertyChanged("groupRule");
+				}
+			}  
+		}
+	
+
+
+		private const string s_groupAction = @"Upon alarm:";
+		private string m_groupAction=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='groupAction']/@value")]
+		public string groupAction {
+			get { 
+				if( m_groupAction == null){
+					return s_groupAction;
+				}
+				return m_groupAction; 
+			}
+			set { 
+				if( value != m_groupAction){
+					m_groupAction = value;
+					NotifyPropertyChanged("groupAction");
+				}
+			}  
+		}
+	
+
+
+		private const string s_moving = @"Moving";
+		private string m_moving=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='moving']/@value")]
+		public string moving {
+			get { 
+				if( m_moving == null){
+					return s_moving;
+				}
+				return m_moving; 
+			}
+			set { 
+				if( value != m_moving){
+					m_moving = value;
+					NotifyPropertyChanged("moving");
+				}
+			}  
+		}
+	
+
+
+		private const string s_meters = @"m";
+		private string m_meters=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='meters']/@value")]
+		public string meters {
+			get { 
+				if( m_meters == null){
+					return s_meters;
+				}
+				return m_meters; 
+			}
+			set { 
+				if( value != m_meters){
+					m_meters = value;
+					NotifyPropertyChanged("meters");
+				}
+			}  
+		}
+	
+
+
+		private const string s_movingInDirections = @"in directions:";
+		private string m_movingInDirections=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='movingInDirections']/@value")]
+		public string movingInDirections {
+			get { 
+				if( m_movingInDirections == null){
+					return s_movingInDirections;
+				}
+				return m_movingInDirections; 
+			}
+			set { 
+				if( value != m_movingInDirections){
+					m_movingInDirections = value;
+					NotifyPropertyChanged("movingInDirections");
+				}
+			}  
+		}
+	
+
+
+		private const string s_loitering = @"Loitering";
+		private string m_loitering=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='loitering']/@value")]
+		public string loitering {
+			get { 
+				if( m_loitering == null){
+					return s_loitering;
+				}
+				return m_loitering; 
+			}
+			set { 
+				if( value != m_loitering){
+					m_loitering = value;
+					NotifyPropertyChanged("loitering");
+				}
+			}  
+		}
+	
+
+
+		private const string s_seconds = @"s";
+		private string m_seconds=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='seconds']/@value")]
+		public string seconds {
+			get { 
+				if( m_seconds == null){
+					return s_seconds;
+				}
+				return m_seconds; 
+			}
+			set { 
+				if( value != m_seconds){
+					m_seconds = value;
+					NotifyPropertyChanged("seconds");
+				}
+			}  
+		}
+	
+
+
+		private const string s_within = @"within";
+		private string m_within=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='within']/@value")]
+		public string within {
+			get { 
+				if( m_within == null){
+					return s_within;
+				}
+				return m_within; 
+			}
+			set { 
+				if( value != m_within){
+					m_within = value;
+					NotifyPropertyChanged("within");
+				}
+			}  
+		}
+	
+
+
+		private const string s_running = @"Running faster then";
+		private string m_running=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='running']/@value")]
+		public string running {
+			get { 
+				if( m_running == null){
+					return s_running;
+				}
+				return m_running; 
+			}
+			set { 
+				if( value != m_running){
+					m_running = value;
+					NotifyPropertyChanged("running");
+				}
+			}  
+		}
+	
+
+
+		private const string s_speed = @"m/s";
+		private string m_speed=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='speed']/@value")]
+		public string speed {
+			get { 
+				if( m_speed == null){
+					return s_speed;
+				}
+				return m_speed; 
+			}
+			set { 
+				if( value != m_speed){
+					m_speed = value;
+					NotifyPropertyChanged("speed");
+				}
+			}  
+		}
+	
+
+
+		private const string s_abandoning = @"Abandoning item";
+		private string m_abandoning=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='abandoning']/@value")]
+		public string abandoning {
+			get { 
+				if( m_abandoning == null){
+					return s_abandoning;
+				}
+				return m_abandoning; 
+			}
+			set { 
+				if( value != m_abandoning){
+					m_abandoning = value;
+					NotifyPropertyChanged("abandoning");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sendOnvif = @"Send ONVIF message";
+		private string m_sendOnvif=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='sendOnvif']/@value")]
+		public string sendOnvif {
+			get { 
+				if( m_sendOnvif == null){
+					return s_sendOnvif;
+				}
+				return m_sendOnvif; 
+			}
+			set { 
+				if( value != m_sendOnvif){
+					m_sendOnvif = value;
+					NotifyPropertyChanged("sendOnvif");
+				}
+			}  
+		}
+	
+
+
+		private const string s_setFramerate = @"Set Framerate to";
+		private string m_setFramerate=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='setFramerate']/@value")]
+		public string setFramerate {
+			get { 
+				if( m_setFramerate == null){
+					return s_setFramerate;
+				}
+				return m_setFramerate; 
+			}
+			set { 
+				if( value != m_setFramerate){
+					m_setFramerate = value;
+					NotifyPropertyChanged("setFramerate");
+				}
+			}  
+		}
+	
+
+
+		private const string s_fps = @"fps";
+		private string m_fps=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='fps']/@value")]
+		public string fps {
+			get { 
+				if( m_fps == null){
+					return s_fps;
+				}
+				return m_fps; 
+			}
+			set { 
+				if( value != m_fps){
+					m_fps = value;
+					NotifyPropertyChanged("fps");
+				}
+			}  
+		}
+	
+
+
+		private const string s_turnOnRelay = @"Turn on";
+		private string m_turnOnRelay=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='turnOnRelay']/@value")]
+		public string turnOnRelay {
+			get { 
+				if( m_turnOnRelay == null){
+					return s_turnOnRelay;
+				}
+				return m_turnOnRelay; 
+			}
+			set { 
+				if( value != m_turnOnRelay){
+					m_turnOnRelay = value;
+					NotifyPropertyChanged("turnOnRelay");
+				}
+			}  
+		}
+	
+
+
+		private const string s_turnOnAnalog = @"Turn on analogue output";
+		private string m_turnOnAnalog=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='turnOnAnalog']/@value")]
+		public string turnOnAnalog {
+			get { 
+				if( m_turnOnAnalog == null){
+					return s_turnOnAnalog;
+				}
+				return m_turnOnAnalog; 
+			}
+			set { 
+				if( value != m_turnOnAnalog){
+					m_turnOnAnalog = value;
+					NotifyPropertyChanged("turnOnAnalog");
+				}
+			}  
+		}
+	
+
+
+		private const string s_record = @"Record to local or network drive";
+		private string m_record=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='record']/@value")]
+		public string record {
+			get { 
+				if( m_record == null){
+					return s_record;
+				}
+				return m_record; 
+			}
+			set { 
+				if( value != m_record){
+					m_record = value;
+					NotifyPropertyChanged("record");
+				}
+			}  
+		}
+	
+
+
+		private const string s_ptz = @"Target PTZ-camera";
+		private string m_ptz=null;
+		[XPath(@"/localized-strings/module[@name='RuleEngineStrings' and @namespace='nvc.controls']/descendant::string[@name='ptz']/@value")]
+		public string ptz {
+			get { 
+				if( m_ptz == null){
+					return s_ptz;
+				}
+				return m_ptz; 
+			}
+			set { 
+				if( value != m_ptz){
+					m_ptz = value;
+					NotifyPropertyChanged("ptz");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class EventsStrings: LocalizedStringsBase<EventsStrings>{
+		
+
+
+		private const string s_title = @"Events";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='EventsStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_ruleID = @"Rule ID";
+		private string m_ruleID=null;
+		[XPath(@"/localized-strings/module[@name='EventsStrings' and @namespace='nvc.controls']/descendant::string[@name='ruleID']/@value")]
+		public string ruleID {
+			get { 
+				if( m_ruleID == null){
+					return s_ruleID;
+				}
+				return m_ruleID; 
+			}
+			set { 
+				if( value != m_ruleID){
+					m_ruleID = value;
+					NotifyPropertyChanged("ruleID");
+				}
+			}  
+		}
+	
+
+
+		private const string s_dateTime = @"Date/Time";
+		private string m_dateTime=null;
+		[XPath(@"/localized-strings/module[@name='EventsStrings' and @namespace='nvc.controls']/descendant::string[@name='dateTime']/@value")]
+		public string dateTime {
+			get { 
+				if( m_dateTime == null){
+					return s_dateTime;
+				}
+				return m_dateTime; 
+			}
+			set { 
+				if( value != m_dateTime){
+					m_dateTime = value;
+					NotifyPropertyChanged("dateTime");
+				}
+			}  
+		}
+	
+
+
+		private const string s_type = @"Type";
+		private string m_type=null;
+		[XPath(@"/localized-strings/module[@name='EventsStrings' and @namespace='nvc.controls']/descendant::string[@name='type']/@value")]
+		public string type {
+			get { 
+				if( m_type == null){
+					return s_type;
+				}
+				return m_type; 
+			}
+			set { 
+				if( value != m_type){
+					m_type = value;
+					NotifyPropertyChanged("type");
+				}
+			}  
+		}
+	
+
+
+		private const string s_details = @"Details";
+		private string m_details=null;
+		[XPath(@"/localized-strings/module[@name='EventsStrings' and @namespace='nvc.controls']/descendant::string[@name='details']/@value")]
+		public string details {
+			get { 
+				if( m_details == null){
+					return s_details;
+				}
+				return m_details; 
+			}
+			set { 
+				if( value != m_details){
+					m_details = value;
+					NotifyPropertyChanged("details");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class ExceptionStrings: LocalizedStringsBase<ExceptionStrings>{
 		
 
 
 		private const string s_sExceptionWSDiscoveryTitle = @"WSDiscovery error";
 		private string m_sExceptionWSDiscoveryTitle=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sExceptionWSDiscoveryTitle']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sExceptionWSDiscoveryTitle']/@value")]
 		public string sExceptionWSDiscoveryTitle {
 			get { 
 				if( m_sExceptionWSDiscoveryTitle == null){
@@ -109,7 +873,7 @@ namespace nvc {
 
 		private const string s_sErrorDevInfoNull = @"Error was during device configuration reading. Please refresh devices list";
 		private string m_sErrorDevInfoNull=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorDevInfoNull']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorDevInfoNull']/@value")]
 		public string sErrorDevInfoNull {
 			get { 
 				if( m_sErrorDevInfoNull == null){
@@ -129,7 +893,7 @@ namespace nvc {
 
 		private const string s_sErrorDeviceName = @"none";
 		private string m_sErrorDeviceName=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorDeviceName']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorDeviceName']/@value")]
 		public string sErrorDeviceName {
 			get { 
 				if( m_sErrorDeviceName == null){
@@ -149,7 +913,7 @@ namespace nvc {
 
 		private const string s_sErrorDeviceFirmware = @"none";
 		private string m_sErrorDeviceFirmware=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorDeviceFirmware']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorDeviceFirmware']/@value")]
 		public string sErrorDeviceFirmware {
 			get { 
 				if( m_sErrorDeviceFirmware == null){
@@ -169,7 +933,7 @@ namespace nvc {
 
 		private const string s_sErrorSaveVideoStreaming = @"Error was during saving video streaming settings. Please refresh device.";
 		private string m_sErrorSaveVideoStreaming=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorSaveVideoStreaming']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorSaveVideoStreaming']/@value")]
 		public string sErrorSaveVideoStreaming {
 			get { 
 				if( m_sErrorSaveVideoStreaming == null){
@@ -189,7 +953,7 @@ namespace nvc {
 
 		private const string s_sErrorSaveNetworkSettings = @"Error was during saving network settings. Please refresh device.";
 		private string m_sErrorSaveNetworkSettings=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorSaveNetworkSettings']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorSaveNetworkSettings']/@value")]
 		public string sErrorSaveNetworkSettings {
 			get { 
 				if( m_sErrorSaveNetworkSettings == null){
@@ -209,7 +973,7 @@ namespace nvc {
 
 		private const string s_sErrorSaveDeviceNameSettings = @"Error was during saving device name. Please refresh device.";
 		private string m_sErrorSaveDeviceNameSettings=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorSaveDeviceNameSettings']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorSaveDeviceNameSettings']/@value")]
 		public string sErrorSaveDeviceNameSettings {
 			get { 
 				if( m_sErrorSaveDeviceNameSettings == null){
@@ -229,7 +993,7 @@ namespace nvc {
 
 		private const string s_sErrorVlc = @"Media stream error";
 		private string m_sErrorVlc=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorVlc']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorVlc']/@value")]
 		public string sErrorVlc {
 			get { 
 				if( m_sErrorVlc == null){
@@ -247,9 +1011,29 @@ namespace nvc {
 	
 
 
+		private const string s_sErrorVlcPlayer = @"Cann't play media stream.";
+		private string m_sErrorVlcPlayer=null;
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorVlcPlayer']/@value")]
+		public string sErrorVlcPlayer {
+			get { 
+				if( m_sErrorVlcPlayer == null){
+					return s_sErrorVlcPlayer;
+				}
+				return m_sErrorVlcPlayer; 
+			}
+			set { 
+				if( value != m_sErrorVlcPlayer){
+					m_sErrorVlcPlayer = value;
+					NotifyPropertyChanged("sErrorVlcPlayer");
+				}
+			}  
+		}
+	
+
+
 		private const string s_sErrorVlcMediaUriIsEmpty = @"Stream uri is emtpy";
 		private string m_sErrorVlcMediaUriIsEmpty=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorVlcMediaUriIsEmpty']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorVlcMediaUriIsEmpty']/@value")]
 		public string sErrorVlcMediaUriIsEmpty {
 			get { 
 				if( m_sErrorVlcMediaUriIsEmpty == null){
@@ -269,7 +1053,7 @@ namespace nvc {
 
 		private const string s_sErrorVlcMediaUriIsBad = @"Stream uri is unknown";
 		private string m_sErrorVlcMediaUriIsBad=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sErrorVlcMediaUriIsBad']/@value")]
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='nvc.controls']/descendant::string[@name='sErrorVlcMediaUriIsBad']/@value")]
 		public string sErrorVlcMediaUriIsBad {
 			get { 
 				if( m_sErrorVlcMediaUriIsBad == null){
@@ -285,6 +1069,774 @@ namespace nvc {
 			}  
 		}
 	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class DeviceControlStrings: LocalizedStringsBase<DeviceControlStrings>{
+		
+
+
+		private const string s_title = @"Device configuration";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_languageEng = @"English";
+		private string m_languageEng=null;
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='nvc.controls']/descendant::string[@name='languageEng']/@value")]
+		public string languageEng {
+			get { 
+				if( m_languageEng == null){
+					return s_languageEng;
+				}
+				return m_languageEng; 
+			}
+			set { 
+				if( value != m_languageEng){
+					m_languageEng = value;
+					NotifyPropertyChanged("languageEng");
+				}
+			}  
+		}
+	
+
+
+		private const string s_languageRus = @"Русский";
+		private string m_languageRus=null;
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='nvc.controls']/descendant::string[@name='languageRus']/@value")]
+		public string languageRus {
+			get { 
+				if( m_languageRus == null){
+					return s_languageRus;
+				}
+				return m_languageRus; 
+			}
+			set { 
+				if( value != m_languageRus){
+					m_languageRus = value;
+					NotifyPropertyChanged("languageRus");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class DevicesListControlStrings: LocalizedStringsBase<DevicesListControlStrings>{
+		
+
+
+		private const string s_title = @"Network";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_refresh = @"Refresh";
+		private string m_refresh=null;
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='nvc.controls']/descendant::string[@name='refresh']/@value")]
+		public string refresh {
+			get { 
+				if( m_refresh == null){
+					return s_refresh;
+				}
+				return m_refresh; 
+			}
+			set { 
+				if( value != m_refresh){
+					m_refresh = value;
+					NotifyPropertyChanged("refresh");
+				}
+			}  
+		}
+	
+
+
+		private const string s_columnName = @"Name";
+		private string m_columnName=null;
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='nvc.controls']/descendant::string[@name='columnName']/@value")]
+		public string columnName {
+			get { 
+				if( m_columnName == null){
+					return s_columnName;
+				}
+				return m_columnName; 
+			}
+			set { 
+				if( value != m_columnName){
+					m_columnName = value;
+					NotifyPropertyChanged("columnName");
+				}
+			}  
+		}
+	
+
+
+		private const string s_columnIPadress = @"IP Adress";
+		private string m_columnIPadress=null;
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='nvc.controls']/descendant::string[@name='columnIPadress']/@value")]
+		public string columnIPadress {
+			get { 
+				if( m_columnIPadress == null){
+					return s_columnIPadress;
+				}
+				return m_columnIPadress; 
+			}
+			set { 
+				if( value != m_columnIPadress){
+					m_columnIPadress = value;
+					NotifyPropertyChanged("columnIPadress");
+				}
+			}  
+		}
+	
+
+
+		private const string s_columnType = @"Firmware";
+		private string m_columnType=null;
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='nvc.controls']/descendant::string[@name='columnType']/@value")]
+		public string columnType {
+			get { 
+				if( m_columnType == null){
+					return s_columnType;
+				}
+				return m_columnType; 
+			}
+			set { 
+				if( value != m_columnType){
+					m_columnType = value;
+					NotifyPropertyChanged("columnType");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class PropertyNetworkSettingsStrings: LocalizedStringsBase<PropertyNetworkSettingsStrings>{
+		
+
+
+		private const string s_title = @"Network settings";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_dhcp = @"DHCP";
+		private string m_dhcp=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='dhcp']/@value")]
+		public string dhcp {
+			get { 
+				if( m_dhcp == null){
+					return s_dhcp;
+				}
+				return m_dhcp; 
+			}
+			set { 
+				if( value != m_dhcp){
+					m_dhcp = value;
+					NotifyPropertyChanged("dhcp");
+				}
+			}  
+		}
+	
+
+
+		private const string s_ipAddr = @"Device IP address ";
+		private string m_ipAddr=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='ipAddr']/@value")]
+		public string ipAddr {
+			get { 
+				if( m_ipAddr == null){
+					return s_ipAddr;
+				}
+				return m_ipAddr; 
+			}
+			set { 
+				if( value != m_ipAddr){
+					m_ipAddr = value;
+					NotifyPropertyChanged("ipAddr");
+				}
+			}  
+		}
+	
+
+
+		private const string s_subnetMask = @"Subnet mask";
+		private string m_subnetMask=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='subnetMask']/@value")]
+		public string subnetMask {
+			get { 
+				if( m_subnetMask == null){
+					return s_subnetMask;
+				}
+				return m_subnetMask; 
+			}
+			set { 
+				if( value != m_subnetMask){
+					m_subnetMask = value;
+					NotifyPropertyChanged("subnetMask");
+				}
+			}  
+		}
+	
+
+
+		private const string s_gateAddr = @"Gateway address";
+		private string m_gateAddr=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='gateAddr']/@value")]
+		public string gateAddr {
+			get { 
+				if( m_gateAddr == null){
+					return s_gateAddr;
+				}
+				return m_gateAddr; 
+			}
+			set { 
+				if( value != m_gateAddr){
+					m_gateAddr = value;
+					NotifyPropertyChanged("gateAddr");
+				}
+			}  
+		}
+	
+
+
+		private const string s_dnsAddr = @"DNS address";
+		private string m_dnsAddr=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='dnsAddr']/@value")]
+		public string dnsAddr {
+			get { 
+				if( m_dnsAddr == null){
+					return s_dnsAddr;
+				}
+				return m_dnsAddr; 
+			}
+			set { 
+				if( value != m_dnsAddr){
+					m_dnsAddr = value;
+					NotifyPropertyChanged("dnsAddr");
+				}
+			}  
+		}
+	
+
+
+		private const string s_macAddr = @"MAC address";
+		private string m_macAddr=null;
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='nvc.controls']/descendant::string[@name='macAddr']/@value")]
+		public string macAddr {
+			get { 
+				if( m_macAddr == null){
+					return s_macAddr;
+				}
+				return m_macAddr; 
+			}
+			set { 
+				if( value != m_macAddr){
+					m_macAddr = value;
+					NotifyPropertyChanged("macAddr");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class PropertyDigitalIOStrings: LocalizedStringsBase<PropertyDigitalIOStrings>{
+		
+
+
+		private const string s_title = @"Digital IO";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_inputName = @"Name";
+		private string m_inputName=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='inputName']/@value")]
+		public string inputName {
+			get { 
+				if( m_inputName == null){
+					return s_inputName;
+				}
+				return m_inputName; 
+			}
+			set { 
+				if( value != m_inputName){
+					m_inputName = value;
+					NotifyPropertyChanged("inputName");
+				}
+			}  
+		}
+	
+
+
+		private const string s_inputNormalStatus = @"Normal status";
+		private string m_inputNormalStatus=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='inputNormalStatus']/@value")]
+		public string inputNormalStatus {
+			get { 
+				if( m_inputNormalStatus == null){
+					return s_inputNormalStatus;
+				}
+				return m_inputNormalStatus; 
+			}
+			set { 
+				if( value != m_inputNormalStatus){
+					m_inputNormalStatus = value;
+					NotifyPropertyChanged("inputNormalStatus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_inputCurrentStatus = @"Current status";
+		private string m_inputCurrentStatus=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='inputCurrentStatus']/@value")]
+		public string inputCurrentStatus {
+			get { 
+				if( m_inputCurrentStatus == null){
+					return s_inputCurrentStatus;
+				}
+				return m_inputCurrentStatus; 
+			}
+			set { 
+				if( value != m_inputCurrentStatus){
+					m_inputCurrentStatus = value;
+					NotifyPropertyChanged("inputCurrentStatus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_outputName = @"Name";
+		private string m_outputName=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='outputName']/@value")]
+		public string outputName {
+			get { 
+				if( m_outputName == null){
+					return s_outputName;
+				}
+				return m_outputName; 
+			}
+			set { 
+				if( value != m_outputName){
+					m_outputName = value;
+					NotifyPropertyChanged("outputName");
+				}
+			}  
+		}
+	
+
+
+		private const string s_outputIdleStatus = @"Idle status";
+		private string m_outputIdleStatus=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='outputIdleStatus']/@value")]
+		public string outputIdleStatus {
+			get { 
+				if( m_outputIdleStatus == null){
+					return s_outputIdleStatus;
+				}
+				return m_outputIdleStatus; 
+			}
+			set { 
+				if( value != m_outputIdleStatus){
+					m_outputIdleStatus = value;
+					NotifyPropertyChanged("outputIdleStatus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_outputCurrentStatus = @"Current status";
+		private string m_outputCurrentStatus=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='outputCurrentStatus']/@value")]
+		public string outputCurrentStatus {
+			get { 
+				if( m_outputCurrentStatus == null){
+					return s_outputCurrentStatus;
+				}
+				return m_outputCurrentStatus; 
+			}
+			set { 
+				if( value != m_outputCurrentStatus){
+					m_outputCurrentStatus = value;
+					NotifyPropertyChanged("outputCurrentStatus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_inputs = @"Digital inputs";
+		private string m_inputs=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='inputs']/@value")]
+		public string inputs {
+			get { 
+				if( m_inputs == null){
+					return s_inputs;
+				}
+				return m_inputs; 
+			}
+			set { 
+				if( value != m_inputs){
+					m_inputs = value;
+					NotifyPropertyChanged("inputs");
+				}
+			}  
+		}
+	
+
+
+		private const string s_outputs = @"Digital outputs (relays)";
+		private string m_outputs=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='outputs']/@value")]
+		public string outputs {
+			get { 
+				if( m_outputs == null){
+					return s_outputs;
+				}
+				return m_outputs; 
+			}
+			set { 
+				if( value != m_outputs){
+					m_outputs = value;
+					NotifyPropertyChanged("outputs");
+				}
+			}  
+		}
+	
+
+
+		private const string s_eventAction = @"Event action";
+		private string m_eventAction=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='eventAction']/@value")]
+		public string eventAction {
+			get { 
+				if( m_eventAction == null){
+					return s_eventAction;
+				}
+				return m_eventAction; 
+			}
+			set { 
+				if( value != m_eventAction){
+					m_eventAction = value;
+					NotifyPropertyChanged("eventAction");
+				}
+			}  
+		}
+	
+
+
+		private const string s_eventSendONVIFmessage = @"Send ONVIF message";
+		private string m_eventSendONVIFmessage=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='eventSendONVIFmessage']/@value")]
+		public string eventSendONVIFmessage {
+			get { 
+				if( m_eventSendONVIFmessage == null){
+					return s_eventSendONVIFmessage;
+				}
+				return m_eventSendONVIFmessage; 
+			}
+			set { 
+				if( value != m_eventSendONVIFmessage){
+					m_eventSendONVIFmessage = value;
+					NotifyPropertyChanged("eventSendONVIFmessage");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerRelay = @"Trigger relay";
+		private string m_triggerRelay=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='triggerRelay']/@value")]
+		public string triggerRelay {
+			get { 
+				if( m_triggerRelay == null){
+					return s_triggerRelay;
+				}
+				return m_triggerRelay; 
+			}
+			set { 
+				if( value != m_triggerRelay){
+					m_triggerRelay = value;
+					NotifyPropertyChanged("triggerRelay");
+				}
+			}  
+		}
+	
+
+
+		private const string s_recordChannel = @"Record channel";
+		private string m_recordChannel=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='recordChannel']/@value")]
+		public string recordChannel {
+			get { 
+				if( m_recordChannel == null){
+					return s_recordChannel;
+				}
+				return m_recordChannel; 
+			}
+			set { 
+				if( value != m_recordChannel){
+					m_recordChannel = value;
+					NotifyPropertyChanged("recordChannel");
+				}
+			}  
+		}
+	
+
+
+		private const string s_switchAnalogue = @"Switch analogue video on";
+		private string m_switchAnalogue=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='switchAnalogue']/@value")]
+		public string switchAnalogue {
+			get { 
+				if( m_switchAnalogue == null){
+					return s_switchAnalogue;
+				}
+				return m_switchAnalogue; 
+			}
+			set { 
+				if( value != m_switchAnalogue){
+					m_switchAnalogue = value;
+					NotifyPropertyChanged("switchAnalogue");
+				}
+			}  
+		}
+	
+
+
+		private const string s_buttonTriggerRelay = @"Trigger relay";
+		private string m_buttonTriggerRelay=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='nvc.controls']/descendant::string[@name='buttonTriggerRelay']/@value")]
+		public string buttonTriggerRelay {
+			get { 
+				if( m_buttonTriggerRelay == null){
+					return s_buttonTriggerRelay;
+				}
+				return m_buttonTriggerRelay; 
+			}
+			set { 
+				if( value != m_buttonTriggerRelay){
+					m_buttonTriggerRelay = value;
+					NotifyPropertyChanged("buttonTriggerRelay");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc.controls {
+	public partial class PropertyVideoStreamingStrings: LocalizedStringsBase<PropertyVideoStreamingStrings>{
+		
+
+
+		private const string s_title = @"Video streaming";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='nvc.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_resolution = @"Resolution, pixels";
+		private string m_resolution=null;
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='nvc.controls']/descendant::string[@name='resolution']/@value")]
+		public string resolution {
+			get { 
+				if( m_resolution == null){
+					return s_resolution;
+				}
+				return m_resolution; 
+			}
+			set { 
+				if( value != m_resolution){
+					m_resolution = value;
+					NotifyPropertyChanged("resolution");
+				}
+			}  
+		}
+	
+
+
+		private const string s_frameRate = @"Frame rate, fps";
+		private string m_frameRate=null;
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='nvc.controls']/descendant::string[@name='frameRate']/@value")]
+		public string frameRate {
+			get { 
+				if( m_frameRate == null){
+					return s_frameRate;
+				}
+				return m_frameRate; 
+			}
+			set { 
+				if( value != m_frameRate){
+					m_frameRate = value;
+					NotifyPropertyChanged("frameRate");
+				}
+			}  
+		}
+	
+
+
+		private const string s_encoder = @"Encoder";
+		private string m_encoder=null;
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='nvc.controls']/descendant::string[@name='encoder']/@value")]
+		public string encoder {
+			get { 
+				if( m_encoder == null){
+					return s_encoder;
+				}
+				return m_encoder; 
+			}
+			set { 
+				if( value != m_encoder){
+					m_encoder = value;
+					NotifyPropertyChanged("encoder");
+				}
+			}  
+		}
+	
+
+
+		private const string s_bitrate = @"Target bitrate, kbps";
+		private string m_bitrate=null;
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='nvc.controls']/descendant::string[@name='bitrate']/@value")]
+		public string bitrate {
+			get { 
+				if( m_bitrate == null){
+					return s_bitrate;
+				}
+				return m_bitrate; 
+			}
+			set { 
+				if( value != m_bitrate){
+					m_bitrate = value;
+					NotifyPropertyChanged("bitrate");
+				}
+			}  
+		}
+	
+
+
+		private const string s_prioriy = @"Priority";
+		private string m_prioriy=null;
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='nvc.controls']/descendant::string[@name='prioriy']/@value")]
+		public string prioriy {
+			get { 
+				if( m_prioriy == null){
+					return s_prioriy;
+				}
+				return m_prioriy; 
+			}
+			set { 
+				if( value != m_prioriy){
+					m_prioriy = value;
+					NotifyPropertyChanged("prioriy");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+			
+namespace nvc {
+	public partial class Constants: LocalizedStringsBase<Constants>{
+		
 
 
 		private const string s_sCommonAppOn = @"On";
@@ -427,7 +1979,7 @@ namespace nvc {
 	
 
 
-		private const string s_sApplicationName = @"Network Video Console";
+		private const string s_sApplicationName = @"ONVIF Device Manager";
 		private string m_sApplicationName=null;
 		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sApplicationName']/@value")]
 		public string sApplicationName {
@@ -441,166 +1993,6 @@ namespace nvc {
 				if( value != m_sApplicationName){
 					m_sApplicationName = value;
 					NotifyPropertyChanged("sApplicationName");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDeviceControlTitle = @"Device configuration";
-		private string m_sDeviceControlTitle=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDeviceControlTitle']/@value")]
-		public string sDeviceControlTitle {
-			get { 
-				if( m_sDeviceControlTitle == null){
-					return s_sDeviceControlTitle;
-				}
-				return m_sDeviceControlTitle; 
-			}
-			set { 
-				if( value != m_sDeviceControlTitle){
-					m_sDeviceControlTitle = value;
-					NotifyPropertyChanged("sDeviceControlTitle");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDeviceControlLanguageEng = @"English";
-		private string m_sDeviceControlLanguageEng=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDeviceControlLanguageEng']/@value")]
-		public string sDeviceControlLanguageEng {
-			get { 
-				if( m_sDeviceControlLanguageEng == null){
-					return s_sDeviceControlLanguageEng;
-				}
-				return m_sDeviceControlLanguageEng; 
-			}
-			set { 
-				if( value != m_sDeviceControlLanguageEng){
-					m_sDeviceControlLanguageEng = value;
-					NotifyPropertyChanged("sDeviceControlLanguageEng");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDeviceControlLanguageRus = @"Русский";
-		private string m_sDeviceControlLanguageRus=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDeviceControlLanguageRus']/@value")]
-		public string sDeviceControlLanguageRus {
-			get { 
-				if( m_sDeviceControlLanguageRus == null){
-					return s_sDeviceControlLanguageRus;
-				}
-				return m_sDeviceControlLanguageRus; 
-			}
-			set { 
-				if( value != m_sDeviceControlLanguageRus){
-					m_sDeviceControlLanguageRus = value;
-					NotifyPropertyChanged("sDeviceControlLanguageRus");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDevicesListControlTitle = @"Network";
-		private string m_sDevicesListControlTitle=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDevicesListControlTitle']/@value")]
-		public string sDevicesListControlTitle {
-			get { 
-				if( m_sDevicesListControlTitle == null){
-					return s_sDevicesListControlTitle;
-				}
-				return m_sDevicesListControlTitle; 
-			}
-			set { 
-				if( value != m_sDevicesListControlTitle){
-					m_sDevicesListControlTitle = value;
-					NotifyPropertyChanged("sDevicesListControlTitle");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDevicesListControlRefresh = @"Refresh";
-		private string m_sDevicesListControlRefresh=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDevicesListControlRefresh']/@value")]
-		public string sDevicesListControlRefresh {
-			get { 
-				if( m_sDevicesListControlRefresh == null){
-					return s_sDevicesListControlRefresh;
-				}
-				return m_sDevicesListControlRefresh; 
-			}
-			set { 
-				if( value != m_sDevicesListControlRefresh){
-					m_sDevicesListControlRefresh = value;
-					NotifyPropertyChanged("sDevicesListControlRefresh");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDevicesListControlColumnName = @"Name";
-		private string m_sDevicesListControlColumnName=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDevicesListControlColumnName']/@value")]
-		public string sDevicesListControlColumnName {
-			get { 
-				if( m_sDevicesListControlColumnName == null){
-					return s_sDevicesListControlColumnName;
-				}
-				return m_sDevicesListControlColumnName; 
-			}
-			set { 
-				if( value != m_sDevicesListControlColumnName){
-					m_sDevicesListControlColumnName = value;
-					NotifyPropertyChanged("sDevicesListControlColumnName");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDevicesListControlColumnIPadress = @"IP Adress";
-		private string m_sDevicesListControlColumnIPadress=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDevicesListControlColumnIPadress']/@value")]
-		public string sDevicesListControlColumnIPadress {
-			get { 
-				if( m_sDevicesListControlColumnIPadress == null){
-					return s_sDevicesListControlColumnIPadress;
-				}
-				return m_sDevicesListControlColumnIPadress; 
-			}
-			set { 
-				if( value != m_sDevicesListControlColumnIPadress){
-					m_sDevicesListControlColumnIPadress = value;
-					NotifyPropertyChanged("sDevicesListControlColumnIPadress");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sDevicesListControlColumnType = @"Firmware";
-		private string m_sDevicesListControlColumnType=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sDevicesListControlColumnType']/@value")]
-		public string sDevicesListControlColumnType {
-			get { 
-				if( m_sDevicesListControlColumnType == null){
-					return s_sDevicesListControlColumnType;
-				}
-				return m_sDevicesListControlColumnType; 
-			}
-			set { 
-				if( value != m_sDevicesListControlColumnType){
-					m_sDevicesListControlColumnType = value;
-					NotifyPropertyChanged("sDevicesListControlColumnType");
 				}
 			}  
 		}
@@ -1167,446 +2559,6 @@ namespace nvc {
 	
 
 
-		private const string s_sPropertyNetworkSettingsTitle = @"Network settings";
-		private string m_sPropertyNetworkSettingsTitle=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsTitle']/@value")]
-		public string sPropertyNetworkSettingsTitle {
-			get { 
-				if( m_sPropertyNetworkSettingsTitle == null){
-					return s_sPropertyNetworkSettingsTitle;
-				}
-				return m_sPropertyNetworkSettingsTitle; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsTitle){
-					m_sPropertyNetworkSettingsTitle = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsTitle");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyNetworkSettingsDHCP = @"DHCP";
-		private string m_sPropertyNetworkSettingsDHCP=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsDHCP']/@value")]
-		public string sPropertyNetworkSettingsDHCP {
-			get { 
-				if( m_sPropertyNetworkSettingsDHCP == null){
-					return s_sPropertyNetworkSettingsDHCP;
-				}
-				return m_sPropertyNetworkSettingsDHCP; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsDHCP){
-					m_sPropertyNetworkSettingsDHCP = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsDHCP");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyNetworkSettingsIPaddr = @"Device IP address ";
-		private string m_sPropertyNetworkSettingsIPaddr=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsIPaddr']/@value")]
-		public string sPropertyNetworkSettingsIPaddr {
-			get { 
-				if( m_sPropertyNetworkSettingsIPaddr == null){
-					return s_sPropertyNetworkSettingsIPaddr;
-				}
-				return m_sPropertyNetworkSettingsIPaddr; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsIPaddr){
-					m_sPropertyNetworkSettingsIPaddr = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsIPaddr");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyNetworkSettingsSubnetMask = @"Subnet mask";
-		private string m_sPropertyNetworkSettingsSubnetMask=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsSubnetMask']/@value")]
-		public string sPropertyNetworkSettingsSubnetMask {
-			get { 
-				if( m_sPropertyNetworkSettingsSubnetMask == null){
-					return s_sPropertyNetworkSettingsSubnetMask;
-				}
-				return m_sPropertyNetworkSettingsSubnetMask; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsSubnetMask){
-					m_sPropertyNetworkSettingsSubnetMask = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsSubnetMask");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyNetworkSettingsGateAddr = @"Gateway address";
-		private string m_sPropertyNetworkSettingsGateAddr=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsGateAddr']/@value")]
-		public string sPropertyNetworkSettingsGateAddr {
-			get { 
-				if( m_sPropertyNetworkSettingsGateAddr == null){
-					return s_sPropertyNetworkSettingsGateAddr;
-				}
-				return m_sPropertyNetworkSettingsGateAddr; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsGateAddr){
-					m_sPropertyNetworkSettingsGateAddr = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsGateAddr");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyNetworkSettingsDNSaddr = @"DNS address";
-		private string m_sPropertyNetworkSettingsDNSaddr=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsDNSaddr']/@value")]
-		public string sPropertyNetworkSettingsDNSaddr {
-			get { 
-				if( m_sPropertyNetworkSettingsDNSaddr == null){
-					return s_sPropertyNetworkSettingsDNSaddr;
-				}
-				return m_sPropertyNetworkSettingsDNSaddr; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsDNSaddr){
-					m_sPropertyNetworkSettingsDNSaddr = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsDNSaddr");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyNetworkSettingsMACaddr = @"MAC address";
-		private string m_sPropertyNetworkSettingsMACaddr=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyNetworkSettingsMACaddr']/@value")]
-		public string sPropertyNetworkSettingsMACaddr {
-			get { 
-				if( m_sPropertyNetworkSettingsMACaddr == null){
-					return s_sPropertyNetworkSettingsMACaddr;
-				}
-				return m_sPropertyNetworkSettingsMACaddr; 
-			}
-			set { 
-				if( value != m_sPropertyNetworkSettingsMACaddr){
-					m_sPropertyNetworkSettingsMACaddr = value;
-					NotifyPropertyChanged("sPropertyNetworkSettingsMACaddr");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOTitle = @"Digital IO";
-		private string m_sPropertyDigitalIOTitle=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOTitle']/@value")]
-		public string sPropertyDigitalIOTitle {
-			get { 
-				if( m_sPropertyDigitalIOTitle == null){
-					return s_sPropertyDigitalIOTitle;
-				}
-				return m_sPropertyDigitalIOTitle; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOTitle){
-					m_sPropertyDigitalIOTitle = value;
-					NotifyPropertyChanged("sPropertyDigitalIOTitle");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOInputName = @"Name";
-		private string m_sPropertyDigitalIOInputName=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOInputName']/@value")]
-		public string sPropertyDigitalIOInputName {
-			get { 
-				if( m_sPropertyDigitalIOInputName == null){
-					return s_sPropertyDigitalIOInputName;
-				}
-				return m_sPropertyDigitalIOInputName; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOInputName){
-					m_sPropertyDigitalIOInputName = value;
-					NotifyPropertyChanged("sPropertyDigitalIOInputName");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOInputNormalStatus = @"Normal status";
-		private string m_sPropertyDigitalIOInputNormalStatus=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOInputNormalStatus']/@value")]
-		public string sPropertyDigitalIOInputNormalStatus {
-			get { 
-				if( m_sPropertyDigitalIOInputNormalStatus == null){
-					return s_sPropertyDigitalIOInputNormalStatus;
-				}
-				return m_sPropertyDigitalIOInputNormalStatus; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOInputNormalStatus){
-					m_sPropertyDigitalIOInputNormalStatus = value;
-					NotifyPropertyChanged("sPropertyDigitalIOInputNormalStatus");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOInputCurrentStatus = @"Current status";
-		private string m_sPropertyDigitalIOInputCurrentStatus=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOInputCurrentStatus']/@value")]
-		public string sPropertyDigitalIOInputCurrentStatus {
-			get { 
-				if( m_sPropertyDigitalIOInputCurrentStatus == null){
-					return s_sPropertyDigitalIOInputCurrentStatus;
-				}
-				return m_sPropertyDigitalIOInputCurrentStatus; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOInputCurrentStatus){
-					m_sPropertyDigitalIOInputCurrentStatus = value;
-					NotifyPropertyChanged("sPropertyDigitalIOInputCurrentStatus");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOOutputName = @"Name";
-		private string m_sPropertyDigitalIOOutputName=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOOutputName']/@value")]
-		public string sPropertyDigitalIOOutputName {
-			get { 
-				if( m_sPropertyDigitalIOOutputName == null){
-					return s_sPropertyDigitalIOOutputName;
-				}
-				return m_sPropertyDigitalIOOutputName; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOOutputName){
-					m_sPropertyDigitalIOOutputName = value;
-					NotifyPropertyChanged("sPropertyDigitalIOOutputName");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOOutputIdleStatus = @"Idle status";
-		private string m_sPropertyDigitalIOOutputIdleStatus=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOOutputIdleStatus']/@value")]
-		public string sPropertyDigitalIOOutputIdleStatus {
-			get { 
-				if( m_sPropertyDigitalIOOutputIdleStatus == null){
-					return s_sPropertyDigitalIOOutputIdleStatus;
-				}
-				return m_sPropertyDigitalIOOutputIdleStatus; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOOutputIdleStatus){
-					m_sPropertyDigitalIOOutputIdleStatus = value;
-					NotifyPropertyChanged("sPropertyDigitalIOOutputIdleStatus");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOOutputCurrentStatus = @"Current status";
-		private string m_sPropertyDigitalIOOutputCurrentStatus=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOOutputCurrentStatus']/@value")]
-		public string sPropertyDigitalIOOutputCurrentStatus {
-			get { 
-				if( m_sPropertyDigitalIOOutputCurrentStatus == null){
-					return s_sPropertyDigitalIOOutputCurrentStatus;
-				}
-				return m_sPropertyDigitalIOOutputCurrentStatus; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOOutputCurrentStatus){
-					m_sPropertyDigitalIOOutputCurrentStatus = value;
-					NotifyPropertyChanged("sPropertyDigitalIOOutputCurrentStatus");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOInputs = @"Digital inputs";
-		private string m_sPropertyDigitalIOInputs=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOInputs']/@value")]
-		public string sPropertyDigitalIOInputs {
-			get { 
-				if( m_sPropertyDigitalIOInputs == null){
-					return s_sPropertyDigitalIOInputs;
-				}
-				return m_sPropertyDigitalIOInputs; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOInputs){
-					m_sPropertyDigitalIOInputs = value;
-					NotifyPropertyChanged("sPropertyDigitalIOInputs");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOOutputs = @"Digital outputs (relays)";
-		private string m_sPropertyDigitalIOOutputs=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOOutputs']/@value")]
-		public string sPropertyDigitalIOOutputs {
-			get { 
-				if( m_sPropertyDigitalIOOutputs == null){
-					return s_sPropertyDigitalIOOutputs;
-				}
-				return m_sPropertyDigitalIOOutputs; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOOutputs){
-					m_sPropertyDigitalIOOutputs = value;
-					NotifyPropertyChanged("sPropertyDigitalIOOutputs");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOEventAction = @"Event action";
-		private string m_sPropertyDigitalIOEventAction=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOEventAction']/@value")]
-		public string sPropertyDigitalIOEventAction {
-			get { 
-				if( m_sPropertyDigitalIOEventAction == null){
-					return s_sPropertyDigitalIOEventAction;
-				}
-				return m_sPropertyDigitalIOEventAction; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOEventAction){
-					m_sPropertyDigitalIOEventAction = value;
-					NotifyPropertyChanged("sPropertyDigitalIOEventAction");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOEventSendONVIFmessage = @"Send ONVIF message";
-		private string m_sPropertyDigitalIOEventSendONVIFmessage=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOEventSendONVIFmessage']/@value")]
-		public string sPropertyDigitalIOEventSendONVIFmessage {
-			get { 
-				if( m_sPropertyDigitalIOEventSendONVIFmessage == null){
-					return s_sPropertyDigitalIOEventSendONVIFmessage;
-				}
-				return m_sPropertyDigitalIOEventSendONVIFmessage; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOEventSendONVIFmessage){
-					m_sPropertyDigitalIOEventSendONVIFmessage = value;
-					NotifyPropertyChanged("sPropertyDigitalIOEventSendONVIFmessage");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOTriggerRelay = @"Trigger relay";
-		private string m_sPropertyDigitalIOTriggerRelay=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOTriggerRelay']/@value")]
-		public string sPropertyDigitalIOTriggerRelay {
-			get { 
-				if( m_sPropertyDigitalIOTriggerRelay == null){
-					return s_sPropertyDigitalIOTriggerRelay;
-				}
-				return m_sPropertyDigitalIOTriggerRelay; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOTriggerRelay){
-					m_sPropertyDigitalIOTriggerRelay = value;
-					NotifyPropertyChanged("sPropertyDigitalIOTriggerRelay");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIORecordChannel = @"Record channel";
-		private string m_sPropertyDigitalIORecordChannel=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIORecordChannel']/@value")]
-		public string sPropertyDigitalIORecordChannel {
-			get { 
-				if( m_sPropertyDigitalIORecordChannel == null){
-					return s_sPropertyDigitalIORecordChannel;
-				}
-				return m_sPropertyDigitalIORecordChannel; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIORecordChannel){
-					m_sPropertyDigitalIORecordChannel = value;
-					NotifyPropertyChanged("sPropertyDigitalIORecordChannel");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOSwitchAnalogue = @"Switch analogue video on";
-		private string m_sPropertyDigitalIOSwitchAnalogue=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOSwitchAnalogue']/@value")]
-		public string sPropertyDigitalIOSwitchAnalogue {
-			get { 
-				if( m_sPropertyDigitalIOSwitchAnalogue == null){
-					return s_sPropertyDigitalIOSwitchAnalogue;
-				}
-				return m_sPropertyDigitalIOSwitchAnalogue; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOSwitchAnalogue){
-					m_sPropertyDigitalIOSwitchAnalogue = value;
-					NotifyPropertyChanged("sPropertyDigitalIOSwitchAnalogue");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyDigitalIOButtonTriggerRelay = @"Trigger relay";
-		private string m_sPropertyDigitalIOButtonTriggerRelay=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyDigitalIOButtonTriggerRelay']/@value")]
-		public string sPropertyDigitalIOButtonTriggerRelay {
-			get { 
-				if( m_sPropertyDigitalIOButtonTriggerRelay == null){
-					return s_sPropertyDigitalIOButtonTriggerRelay;
-				}
-				return m_sPropertyDigitalIOButtonTriggerRelay; 
-			}
-			set { 
-				if( value != m_sPropertyDigitalIOButtonTriggerRelay){
-					m_sPropertyDigitalIOButtonTriggerRelay = value;
-					NotifyPropertyChanged("sPropertyDigitalIOButtonTriggerRelay");
-				}
-			}  
-		}
-	
-
-
 		private const string s_sPropertyMaintenanceTitle = @"Maintenance";
 		private string m_sPropertyMaintenanceTitle=null;
 		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyMaintenanceTitle']/@value")]
@@ -1867,6 +2819,126 @@ namespace nvc {
 	
 
 
+		private const string s_sPropertyObjectTrackerTitle = @"Object tracker";
+		private string m_sPropertyObjectTrackerTitle=null;
+		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyObjectTrackerTitle']/@value")]
+		public string sPropertyObjectTrackerTitle {
+			get { 
+				if( m_sPropertyObjectTrackerTitle == null){
+					return s_sPropertyObjectTrackerTitle;
+				}
+				return m_sPropertyObjectTrackerTitle; 
+			}
+			set { 
+				if( value != m_sPropertyObjectTrackerTitle){
+					m_sPropertyObjectTrackerTitle = value;
+					NotifyPropertyChanged("sPropertyObjectTrackerTitle");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sPropertyObjectTrackerContrast = @"Contrast sensitivity";
+		private string m_sPropertyObjectTrackerContrast=null;
+		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyObjectTrackerContrast']/@value")]
+		public string sPropertyObjectTrackerContrast {
+			get { 
+				if( m_sPropertyObjectTrackerContrast == null){
+					return s_sPropertyObjectTrackerContrast;
+				}
+				return m_sPropertyObjectTrackerContrast; 
+			}
+			set { 
+				if( value != m_sPropertyObjectTrackerContrast){
+					m_sPropertyObjectTrackerContrast = value;
+					NotifyPropertyChanged("sPropertyObjectTrackerContrast");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sPropertyObjectTrackerAreaMin = @"Object area min, m*m";
+		private string m_sPropertyObjectTrackerAreaMin=null;
+		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyObjectTrackerAreaMin']/@value")]
+		public string sPropertyObjectTrackerAreaMin {
+			get { 
+				if( m_sPropertyObjectTrackerAreaMin == null){
+					return s_sPropertyObjectTrackerAreaMin;
+				}
+				return m_sPropertyObjectTrackerAreaMin; 
+			}
+			set { 
+				if( value != m_sPropertyObjectTrackerAreaMin){
+					m_sPropertyObjectTrackerAreaMin = value;
+					NotifyPropertyChanged("sPropertyObjectTrackerAreaMin");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sPropertyObjectTrackerAreaMax = @"Object area max, m*m";
+		private string m_sPropertyObjectTrackerAreaMax=null;
+		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyObjectTrackerAreaMax']/@value")]
+		public string sPropertyObjectTrackerAreaMax {
+			get { 
+				if( m_sPropertyObjectTrackerAreaMax == null){
+					return s_sPropertyObjectTrackerAreaMax;
+				}
+				return m_sPropertyObjectTrackerAreaMax; 
+			}
+			set { 
+				if( value != m_sPropertyObjectTrackerAreaMax){
+					m_sPropertyObjectTrackerAreaMax = value;
+					NotifyPropertyChanged("sPropertyObjectTrackerAreaMax");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sPropertyObjectTrackerSpeedMax = @"Speed max, m/s";
+		private string m_sPropertyObjectTrackerSpeedMax=null;
+		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyObjectTrackerSpeedMax']/@value")]
+		public string sPropertyObjectTrackerSpeedMax {
+			get { 
+				if( m_sPropertyObjectTrackerSpeedMax == null){
+					return s_sPropertyObjectTrackerSpeedMax;
+				}
+				return m_sPropertyObjectTrackerSpeedMax; 
+			}
+			set { 
+				if( value != m_sPropertyObjectTrackerSpeedMax){
+					m_sPropertyObjectTrackerSpeedMax = value;
+					NotifyPropertyChanged("sPropertyObjectTrackerSpeedMax");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sPropertyObjectTrackerStabilization = @"Stabilization time, ms";
+		private string m_sPropertyObjectTrackerStabilization=null;
+		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyObjectTrackerStabilization']/@value")]
+		public string sPropertyObjectTrackerStabilization {
+			get { 
+				if( m_sPropertyObjectTrackerStabilization == null){
+					return s_sPropertyObjectTrackerStabilization;
+				}
+				return m_sPropertyObjectTrackerStabilization; 
+			}
+			set { 
+				if( value != m_sPropertyObjectTrackerStabilization){
+					m_sPropertyObjectTrackerStabilization = value;
+					NotifyPropertyChanged("sPropertyObjectTrackerStabilization");
+				}
+			}  
+		}
+	
+
+
 		private const string s_sPropertyEventsTitle = @"Events";
 		private string m_sPropertyEventsTitle=null;
 		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyEventsTitle']/@value")]
@@ -1961,126 +3033,6 @@ namespace nvc {
 				if( value != m_sPropertyEventsColumnDetails){
 					m_sPropertyEventsColumnDetails = value;
 					NotifyPropertyChanged("sPropertyEventsColumnDetails");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyVideoStreamingTitle = @"Video streaming";
-		private string m_sPropertyVideoStreamingTitle=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyVideoStreamingTitle']/@value")]
-		public string sPropertyVideoStreamingTitle {
-			get { 
-				if( m_sPropertyVideoStreamingTitle == null){
-					return s_sPropertyVideoStreamingTitle;
-				}
-				return m_sPropertyVideoStreamingTitle; 
-			}
-			set { 
-				if( value != m_sPropertyVideoStreamingTitle){
-					m_sPropertyVideoStreamingTitle = value;
-					NotifyPropertyChanged("sPropertyVideoStreamingTitle");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyVideoStreamingResolution = @"Resolution, pixels";
-		private string m_sPropertyVideoStreamingResolution=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyVideoStreamingResolution']/@value")]
-		public string sPropertyVideoStreamingResolution {
-			get { 
-				if( m_sPropertyVideoStreamingResolution == null){
-					return s_sPropertyVideoStreamingResolution;
-				}
-				return m_sPropertyVideoStreamingResolution; 
-			}
-			set { 
-				if( value != m_sPropertyVideoStreamingResolution){
-					m_sPropertyVideoStreamingResolution = value;
-					NotifyPropertyChanged("sPropertyVideoStreamingResolution");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyVideoStreamingFrameRate = @"Frame rate, fps";
-		private string m_sPropertyVideoStreamingFrameRate=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyVideoStreamingFrameRate']/@value")]
-		public string sPropertyVideoStreamingFrameRate {
-			get { 
-				if( m_sPropertyVideoStreamingFrameRate == null){
-					return s_sPropertyVideoStreamingFrameRate;
-				}
-				return m_sPropertyVideoStreamingFrameRate; 
-			}
-			set { 
-				if( value != m_sPropertyVideoStreamingFrameRate){
-					m_sPropertyVideoStreamingFrameRate = value;
-					NotifyPropertyChanged("sPropertyVideoStreamingFrameRate");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyVideoStreamingEncoder = @"Encoder";
-		private string m_sPropertyVideoStreamingEncoder=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyVideoStreamingEncoder']/@value")]
-		public string sPropertyVideoStreamingEncoder {
-			get { 
-				if( m_sPropertyVideoStreamingEncoder == null){
-					return s_sPropertyVideoStreamingEncoder;
-				}
-				return m_sPropertyVideoStreamingEncoder; 
-			}
-			set { 
-				if( value != m_sPropertyVideoStreamingEncoder){
-					m_sPropertyVideoStreamingEncoder = value;
-					NotifyPropertyChanged("sPropertyVideoStreamingEncoder");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyVideoStreamingBitrate = @"Target bitrate, kbps";
-		private string m_sPropertyVideoStreamingBitrate=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyVideoStreamingBitrate']/@value")]
-		public string sPropertyVideoStreamingBitrate {
-			get { 
-				if( m_sPropertyVideoStreamingBitrate == null){
-					return s_sPropertyVideoStreamingBitrate;
-				}
-				return m_sPropertyVideoStreamingBitrate; 
-			}
-			set { 
-				if( value != m_sPropertyVideoStreamingBitrate){
-					m_sPropertyVideoStreamingBitrate = value;
-					NotifyPropertyChanged("sPropertyVideoStreamingBitrate");
-				}
-			}  
-		}
-	
-
-
-		private const string s_sPropertyVideoStreamingPrioriy = @"Priority";
-		private string m_sPropertyVideoStreamingPrioriy=null;
-		[XPath(@"/localized-strings/module[@name='Constants' and @namespace='nvc']/descendant::string[@name='sPropertyVideoStreamingPrioriy']/@value")]
-		public string sPropertyVideoStreamingPrioriy {
-			get { 
-				if( m_sPropertyVideoStreamingPrioriy == null){
-					return s_sPropertyVideoStreamingPrioriy;
-				}
-				return m_sPropertyVideoStreamingPrioriy; 
-			}
-			set { 
-				if( value != m_sPropertyVideoStreamingPrioriy){
-					m_sPropertyVideoStreamingPrioriy = value;
-					NotifyPropertyChanged("sPropertyVideoStreamingPrioriy");
 				}
 			}  
 		}

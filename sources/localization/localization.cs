@@ -24,7 +24,7 @@ using System.Text;
 using System.Xml.XPath;
 using System.Reflection;
 using System.ComponentModel;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.localization {	
 

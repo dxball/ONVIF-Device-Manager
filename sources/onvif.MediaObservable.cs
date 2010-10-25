@@ -32,22 +32,18 @@ namespace nvc.onvif {
 			m_proxy = proxy;
 		}
 
-		public IObservable<VideoSource[]> GetVideoSources(){
-			var request = new GetVideoSourcesRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetVideoSourcesRequest, GetVideoSourcesResponse>(m_proxy.BeginGetVideoSources, m_proxy.EndGetVideoSources);
-			return asyncOp(request).Select(x=>x.VideoSources);
-		}
-
-		public IObservable<Profile> GetProfile(string profileToken) {
-			var request = new GetProfileRequest(profileToken);
-			var asyncOp = Observable.FromAsyncPattern<GetProfileRequest, GetProfileResponse>(m_proxy.BeginGetProfile, m_proxy.EndGetProfile);
-			return asyncOp(request).Select(x => x.Profile);
-		}
+		//Profile functions
 
 		public IObservable<Profile[]> GetProfiles() {
 			var request = new GetProfilesRequest();
 			var asyncOp = Observable.FromAsyncPattern<GetProfilesRequest, GetProfilesResponse>(m_proxy.BeginGetProfiles, m_proxy.EndGetProfiles);
 			return asyncOp(request).Select(x => x.Profiles);
+		}
+		
+		public IObservable<Profile> GetProfile(string profileToken) {
+			var request = new GetProfileRequest(profileToken);
+			var asyncOp = Observable.FromAsyncPattern<GetProfileRequest, GetProfileResponse>(m_proxy.BeginGetProfile, m_proxy.EndGetProfile);
+			return asyncOp(request).Select(x => x.Profile);
 		}
 
 		public IObservable<Profile> CreateProfile(string name, string token) {
@@ -60,6 +56,26 @@ namespace nvc.onvif {
 			var request = new DeleteProfileRequest(token);
 			var asyncOp = Observable.FromAsyncPattern<DeleteProfileRequest, DeleteProfileResponse>(m_proxy.BeginDeleteProfile, m_proxy.EndDeleteProfile);
 			return asyncOp(request).Select(x => new Unit());			
+		}
+
+		//Video source functions
+
+		public IObservable<VideoSource[]> GetVideoSources() {
+			var request = new GetVideoSourcesRequest();
+			var asyncOp = Observable.FromAsyncPattern<GetVideoSourcesRequest, GetVideoSourcesResponse>(m_proxy.BeginGetVideoSources, m_proxy.EndGetVideoSources);
+			return asyncOp(request).Select(x => x.VideoSources);
+		}
+
+		public IObservable<VideoSourceConfiguration[]> GetVideoSourceConfigurations() {
+			var request = new GetVideoSourceConfigurationsRequest();
+			var asyncOp = Observable.FromAsyncPattern<GetVideoSourceConfigurationsRequest, GetVideoSourceConfigurationsResponse>(m_proxy.BeginGetVideoSourceConfigurations, m_proxy.EndGetVideoSourceConfigurations);
+			return asyncOp(request).Select(x => x.Configurations);
+		}
+
+		public IObservable<VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(string profileToken) {
+			var request = new GetCompatibleVideoSourceConfigurationsRequest(profileToken);
+			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoSourceConfigurationsRequest, GetCompatibleVideoSourceConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoSourceConfigurations, m_proxy.EndGetCompatibleVideoSourceConfigurations);
+			return asyncOp(request).Select(x => x.Configurations);
 		}
 
 		public IObservable<Unit> AddVideoSourceConfiguration(string profileToken, string configurationToken) {
@@ -78,19 +94,9 @@ namespace nvc.onvif {
 			var request = new SetVideoSourceConfigurationRequest(configuration, forcePersistance);
 			var asyncOp = Observable.FromAsyncPattern<SetVideoSourceConfigurationRequest,SetVideoSourceConfigurationResponse>(m_proxy.BeginSetVideoSourceConfiguration, m_proxy.EndSetVideoSourceConfiguration);
 			return asyncOp(request).Select(x => new Unit());				
-		}
+		}		
 
-		public IObservable<VideoSourceConfiguration[]> GetVideoSourceConfigurations() {
-			var request = new GetVideoSourceConfigurationsRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetVideoSourceConfigurationsRequest, GetVideoSourceConfigurationsResponse>(m_proxy.BeginGetVideoSourceConfigurations, m_proxy.EndGetVideoSourceConfigurations);
-			return asyncOp(request).Select(x => x.Configurations);
-		}
-
-		public IObservable<VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(string profileToken) {
-			var request = new GetCompatibleVideoSourceConfigurationsRequest(profileToken);
-			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoSourceConfigurationsRequest, GetCompatibleVideoSourceConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoSourceConfigurations, m_proxy.EndGetCompatibleVideoSourceConfigurations);
-			return asyncOp(request).Select(x => x.Configurations);
-		}
+		//Video Encoder functions
 
 		public IObservable<Unit> AddVideoEncoderConfiguration(string profileToken, string configurationToken) {
 			var request = new AddVideoEncoderConfigurationRequest(profileToken, configurationToken);
@@ -157,6 +163,38 @@ namespace nvc.onvif {
 			};
 			var asyncOp = Observable.FromAsyncPattern<GetStreamUriRequest, GetStreamUriResponse>(m_proxy.BeginGetStreamUri, m_proxy.EndGetStreamUri);
 			return asyncOp(request).Select(x => x.MediaUri);				
+		}
+
+		//Video Analytics functions
+
+		public IObservable<Unit> AddVideoAnalyticsConfiguration(string profileToken, string configurationToken) {
+			var request = new AddVideoAnalyticsConfigurationRequest(profileToken, configurationToken);
+			var asyncOp = Observable.FromAsyncPattern<AddVideoAnalyticsConfigurationRequest, AddVideoAnalyticsConfigurationResponse>(m_proxy.BeginAddVideoAnalyticsConfiguration, m_proxy.EndAddVideoAnalyticsConfiguration);
+			return asyncOp(request).Select(x => new Unit());
+		}
+
+		public IObservable<Unit> RemoveVideoAnalyticsConfiguration(string profileToken) {
+			var request = new RemoveVideoAnalyticsConfigurationRequest(profileToken);
+			var asyncOp = Observable.FromAsyncPattern<RemoveVideoAnalyticsConfigurationRequest, RemoveVideoAnalyticsConfigurationResponse>(m_proxy.BeginRemoveVideoAnalyticsConfiguration, m_proxy.EndRemoveVideoAnalyticsConfiguration);
+			return asyncOp(request).Select(x => new Unit());
+		}
+
+		public IObservable<VideoAnalyticsConfiguration[]> GetCompatibleVideoAnalyticsConfigurations(string profileToken) {
+			var request = new GetCompatibleVideoAnalyticsConfigurationsRequest(profileToken);
+			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoAnalyticsConfigurationsRequest, GetCompatibleVideoAnalyticsConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoAnalyticsConfigurations, m_proxy.EndGetCompatibleVideoAnalyticsConfigurations);
+			return asyncOp(request).Select(x => x.Configurations);
+		}
+
+		public IObservable<VideoAnalyticsConfiguration[]> GetVideoAnalyticsConfigurations() {
+			var request = new GetVideoAnalyticsConfigurationsRequest();
+			var asyncOp = Observable.FromAsyncPattern<GetVideoAnalyticsConfigurationsRequest, GetVideoAnalyticsConfigurationsResponse>(m_proxy.BeginGetVideoAnalyticsConfigurations, m_proxy.EndGetVideoAnalyticsConfigurations);
+			return asyncOp(request).Select(x => x.Configurations);
+		}
+
+		public IObservable<Unit> SetVideoAnalyticsConfiguration(VideoAnalyticsConfiguration configuration, bool forcePersistance) {
+			var request = new SetVideoAnalyticsConfigurationRequest(configuration, forcePersistance);
+			var asyncOp = Observable.FromAsyncPattern<SetVideoAnalyticsConfigurationRequest, SetVideoAnalyticsConfigurationResponse>(m_proxy.BeginSetVideoAnalyticsConfiguration, m_proxy.EndSetVideoAnalyticsConfiguration);
+			return asyncOp(request).Select(x => new Unit());
 		}
 		
 		public void Dispose() {

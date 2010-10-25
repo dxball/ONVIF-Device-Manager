@@ -23,6 +23,7 @@
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 			this._splitContainerA = new System.Windows.Forms.SplitContainer();
 			this._mainStatusStrip = new System.Windows.Forms.StatusStrip();
 			this._lblStatus1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -44,8 +45,9 @@
 			this._splitContainerA.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
 			this._splitContainerA.Location = new System.Drawing.Point(0, 33);
 			this._splitContainerA.Name = "_splitContainerA";
-			this._splitContainerA.Size = new System.Drawing.Size(1008, 504);
-			this._splitContainerA.SplitterDistance = 266;
+			this._splitContainerA.Panel2MinSize = 820;
+			this._splitContainerA.Size = new System.Drawing.Size(1044, 504);
+			this._splitContainerA.SplitterDistance = 220;
 			this._splitContainerA.TabIndex = 0;
 			this._splitContainerA.TabStop = false;
 			// 
@@ -57,7 +59,7 @@
             this._lblStatus3});
 			this._mainStatusStrip.Location = new System.Drawing.Point(0, 551);
 			this._mainStatusStrip.Name = "_mainStatusStrip";
-			this._mainStatusStrip.Size = new System.Drawing.Size(1016, 22);
+			this._mainStatusStrip.Size = new System.Drawing.Size(1046, 22);
 			this._mainStatusStrip.TabIndex = 2;
 			this._mainStatusStrip.Text = "_mainStatusStrip";
 			// 
@@ -80,7 +82,7 @@
 			// 
 			this._langPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this._langPanel.Controls.Add(this.titleBar1);
-			this._langPanel.Location = new System.Drawing.Point(796, 5);
+			this._langPanel.Location = new System.Drawing.Point(818, 5);
 			this._langPanel.Margin = new System.Windows.Forms.Padding(0);
 			this._langPanel.Name = "_langPanel";
 			this._langPanel.Size = new System.Drawing.Size(211, 25);
@@ -88,7 +90,8 @@
 			// 
 			// titleBar1
 			// 
-			this.titleBar1.Location = new System.Drawing.Point(105, 3);
+			this.titleBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.titleBar1.Location = new System.Drawing.Point(105, 0);
 			this.titleBar1.Name = "titleBar1";
 			this.titleBar1.Size = new System.Drawing.Size(103, 22);
 			this.titleBar1.TabIndex = 0;
@@ -97,11 +100,12 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1016, 573);
+			this.ClientSize = new System.Drawing.Size(1046, 573);
 			this.Controls.Add(this._langPanel);
 			this.Controls.Add(this._mainStatusStrip);
 			this.Controls.Add(this._splitContainerA);
-			this.MinimumSize = new System.Drawing.Size(1024, 600);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.MinimumSize = new System.Drawing.Size(1054, 600);
 			this.Name = "MainWindow";
 			this.Text = "Video console";
 			((System.ComponentModel.ISupportInitialize)(this._splitContainerA)).EndInit();

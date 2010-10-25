@@ -47,7 +47,7 @@
 			this._panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this._panelMain.Location = new System.Drawing.Point(0, 0);
 			this._panelMain.Name = "_panelMain";
-			this._panelMain.Size = new System.Drawing.Size(350, 105);
+			this._panelMain.Size = new System.Drawing.Size(325, 105);
 			this._panelMain.TabIndex = 0;
 			// 
 			// _title
@@ -57,7 +57,7 @@
 			this._title.BackColor = System.Drawing.SystemColors.ControlLight;
 			this._title.Location = new System.Drawing.Point(140, 3);
 			this._title.Name = "_title";
-			this._title.Size = new System.Drawing.Size(210, 23);
+			this._title.Size = new System.Drawing.Size(185, 23);
 			this._title.TabIndex = 3;
 			// 
 			// _grpBox
@@ -68,7 +68,7 @@
 			this._grpBox.Controls.Add(this._flowPanelLinksList);
 			this._grpBox.Location = new System.Drawing.Point(140, 26);
 			this._grpBox.Name = "_grpBox";
-			this._grpBox.Size = new System.Drawing.Size(210, 76);
+			this._grpBox.Size = new System.Drawing.Size(185, 76);
 			this._grpBox.TabIndex = 2;
 			// 
 			// _flowPanelLinksList
@@ -79,7 +79,7 @@
 			this._flowPanelLinksList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
 			this._flowPanelLinksList.Location = new System.Drawing.Point(0, 0);
 			this._flowPanelLinksList.Name = "_flowPanelLinksList";
-			this._flowPanelLinksList.Size = new System.Drawing.Size(210, 76);
+			this._flowPanelLinksList.Size = new System.Drawing.Size(185, 76);
 			this._flowPanelLinksList.TabIndex = 0;
 			this._flowPanelLinksList.WrapContents = false;
 			// 
@@ -101,7 +101,7 @@
 			this.Controls.Add(this._panelMain);
 			this.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.Name = "DeviceControl";
-			this.Size = new System.Drawing.Size(350, 105);
+			this.Size = new System.Drawing.Size(325, 105);
 			this.MouseEnter += new System.EventHandler(this.DeviceControl_MouseEnter);
 			this.MouseLeave += new System.EventHandler(this.DeviceControl_MouseLeave);
 			this._panelMain.ResumeLayout(false);

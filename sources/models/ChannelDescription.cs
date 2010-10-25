@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using onvif.services.device;
+using onvif.types;
 
 namespace nvc.models {
 	public abstract class ChannelDescription {

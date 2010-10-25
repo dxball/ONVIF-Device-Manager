@@ -6,7 +6,8 @@ using System.Text;
 
 using onvif.services.media;
 using nvc.onvif;
-using nvc.utils;
+using onvifdm.utils;
+using med=onvif.services.media;
 
 namespace nvc.models {
 
@@ -23,6 +24,7 @@ namespace nvc.models {
 		public VideoEncoder(Encoding encoding) {
 			this.encoding = encoding;
 		}
+
 		public VideoEncoder() {			
 		}
 
@@ -68,6 +70,7 @@ namespace nvc.models {
 						encoder.minBitrate = options.JPEG.FrameRateRange.Min;						
 					}
 					break;
+
 				case VideoEncoding.MPEG4:
 					if (options.MPEG4 != null) {
 						encoder = new VideoEncoder(VideoEncoder.Encoding.MPEG4);
@@ -103,11 +106,22 @@ namespace nvc.models {
 				//create default profile
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
+
+			if (profile.VideoSourceConfiguration == null) {
+				//add default video source configuration
+				VideoSourceConfiguration[] vscs = null;
+				yield return session.GetVideoSourceConfigurations().Handle(x=>vscs=x);
+				DebugHelper.Assert(vscs != null);
+				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+				profile.VideoSourceConfiguration = vsc;
+			}
 			
 			var vec = profile.VideoEncoderConfiguration;
 			if (vec == null) {
 				//add default video encoder
 				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
+				DebugHelper.Assert(vec != null);
 				profile.VideoEncoderConfiguration = vec;
 			}
 
@@ -212,7 +226,7 @@ namespace nvc.models {
 
 			m_currentResolution.SetBoth(resolutions[new Tuple<int,int>(vec.Resolution.Width, vec.Resolution.Height)]);
 			m_currentEncoder.SetBoth(encoders[convert_encoding(vec.Encoding)]);
-			this.frameRate = vec.RateControl.FrameRateLimit;
+			m_frameRate.SetBoth(vec.RateControl.FrameRateLimit);
 			this.bitrate = vec.RateControl.BitrateLimit;
 			this.supportedEncoders = encoders.Values;
 			this.supportedResolutions = resolutions.Values;
@@ -238,54 +252,171 @@ namespace nvc.models {
 			}
 
 		}
+		IEnumerable<IObservable<Object>> ConfigVec(VideoEncoderConfiguration vec, VideoEncoderConfigurationOptions opt, Profile profile) {
+			Exception _error = null;
+			vec.Resolution = new med::VideoResolution() {
+					Width = currentResolution.width,
+					Height = currentResolution.height
+			};
 
+			yield return session.SetVideoEncoderConfiguration(vec, true).Idle().HandleError(x => _error = x);
+			if (_error != null) {
+				yield break;
+			}
+
+			yield return session.AddVideoEncoderConfiguration(profile.token, vec.token).Idle().HandleError(x => _error = x);
+			if (_error == null) {
+				profile.VideoEncoderConfiguration = vec;
+			}
+		}
 
 		protected override IEnumerable<IObservable<Object>> ApplyChangesImpl(Session session, IObserver<VideoStreamingModel> observer) {
 			if (!isModified) {
 				yield break;
 			}
-			Profile[] profiles = null;
-			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
-
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			DebugHelper.Assert(profile != null);
-
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
 			DebugHelper.Assert(media != null);
 
-			VideoEncoderConfigurationOptions options = null;
-			yield return media.GetVideoEncoderConfigurationOptions().Handle(x => options = x);
-			DebugHelper.Assert(options != null);
+			yield return media.DeleteProfile(NvcHelper.GetChannelProfileToken(m_channel.Id)).Idle().IgnoreError();
 
-			VideoEncoderConfiguration[] vecs = null;
-			yield return session.GetVideoEncoderConfigurations().Handle(x => vecs = x);
-			DebugHelper.Assert(vecs != null);
+			Profile profile = null;
+			yield return media.CreateProfile(NvcHelper.GetChannelProfileToken(m_channel.Id), NvcHelper.GetChannelProfileToken(m_channel.Id)).Handle(x => profile = x);
 
-			var new_vec = new VideoEncoderConfiguration();
-			switch(currentEncoder.encoding){
-				case VideoEncoder.Encoding.H264:
-					new_vec.Encoding = VideoEncoding.H264;
+			//Profile[] profiles = null;
+			//yield return session.GetProfiles().Handle(x => profiles = x);
+			//DebugHelper.Assert(profiles != null);
+
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//DebugHelper.Assert(profile != null);
+
+			
+
+			
+			//if (profile.VideoEncoderConfiguration != null) {
+			//    yield return media.RemoveVideoEncoderConfiguration(profile.token).Idle();
+			//    profile.VideoEncoderConfiguration = null;
+			//}
+
+			//if (profile.VideoSourceConfiguration != null) {
+			//    yield return media.RemoveVideoSourceConfiguration(profile.token).Idle();
+			//    profile.VideoSourceConfiguration = null;
+			//}
+
+			//VideoEncoderConfigurationOptions options = null;
+			//yield return media.GetVideoEncoderConfigurationOptions().Handle(x => options = x);
+			//DebugHelper.Assert(options != null);
+			
+
+			VideoSourceConfiguration[] vscs = null;
+			yield return media.GetCompatibleVideoSourceConfigurations(profile.token).Handle(x => vscs = x);
+			//var vsc = vscs.Where(x=>x.SourceToken == m_channel.Id).OrderByDescending(x => new Tuple<int, int>(x.Bounds.width, x.Bounds.height)).FirstOrDefault();
+			foreach (var _vsc in vscs.Where(x => x.SourceToken == m_channel.Id).OrderBy(x => x.UseCount)) {
+				yield return session.AddVideoSourceConfiguration(profile.token, _vsc.token);
+				profile.VideoSourceConfiguration = _vsc;
+				VideoEncoderConfiguration[] _vecs = null;
+				yield return media.GetCompatibleVideoEncoderConfigurations(profile.token).Handle(x => _vecs = x);
+				foreach(var _vec in _vecs.OrderBy(x=>x.UseCount)){
+					VideoEncoderConfigurationOptions _vec_opt = null;
+					yield return media.GetVideoEncoderConfigurationOptions(_vec.token, null).Handle(x => _vec_opt = x);
+					switch(currentEncoder.encoding){
+						case VideoEncoder.Encoding.H264:
+							if(_vec_opt.H264!=null){
+								if(_vec_opt.H264.ResolutionsAvailable.Any(x=>x.Height==currentResolution.height && x.Width==currentResolution.width)){
+									Exception _error = null;
+									_vec.Encoding = VideoEncoding.H264;
+									var frameRateRange = _vec_opt.H264.FrameRateRange;
+									var _frameRate = frameRate;
+									if (_frameRate < frameRateRange.Min) {
+										_frameRate = frameRateRange.Min;
+									} else if (_frameRate > frameRateRange.Max) {
+										_frameRate = frameRateRange.Max;
+									}
+									_vec.RateControl.FrameRateLimit = _frameRate;
+									_vec.Resolution = new med::VideoResolution() {
+										Width = currentResolution.width,
+										Height = currentResolution.height
+									};
+									yield return media.SetVideoEncoderConfiguration(_vec, true).Idle().HandleError(x => _error = x);
+									if (_error != null) {
+										break;
+									}
+									yield return session.AddVideoEncoderConfiguration(profile.token, _vec.token).Idle().HandleError(x=>_error = x);
+									if (_error == null) {
+										profile.VideoEncoderConfiguration = _vec;
+									}
+								}
+							}
+							break;
+						case VideoEncoder.Encoding.JPEG:
+							if (_vec_opt.JPEG != null) {
+								if (_vec_opt.JPEG.ResolutionsAvailable.Any(x => x.Height == currentResolution.height && x.Width == currentResolution.width)) {
+									Exception _error = null;
+									_vec.Encoding = VideoEncoding.JPEG;
+									var frameRateRange = _vec_opt.JPEG.FrameRateRange;
+									var _frameRate = frameRate;
+									if (_frameRate < frameRateRange.Min) {
+										_frameRate = frameRateRange.Min;
+									} else if (_frameRate > frameRateRange.Max) {
+										_frameRate = frameRateRange.Max;
+									}
+									_vec.RateControl.FrameRateLimit = _frameRate;
+									_vec.Resolution = new med::VideoResolution() {
+										Width = currentResolution.width,
+										Height = currentResolution.height
+									};
+									yield return media.SetVideoEncoderConfiguration(_vec, true).Idle().HandleError(x => _error = x);
+									if (_error != null) {
+										break;
+									}
+									yield return session.AddVideoEncoderConfiguration(profile.token, _vec.token).Idle().HandleError(x=>_error = x);
+									if (_error == null) {
+										profile.VideoEncoderConfiguration = _vec;
+									}
+								}
+							}
+							break;
+						case VideoEncoder.Encoding.MPEG4:
+							if (_vec_opt.MPEG4 != null) {
+								if (_vec_opt.MPEG4.ResolutionsAvailable.Any(x => x.Height == currentResolution.height && x.Width == currentResolution.width)) {
+									Exception _error = null;
+									_vec.Encoding = VideoEncoding.MPEG4;
+									var frameRateRange = _vec_opt.MPEG4.FrameRateRange;
+									var _frameRate = frameRate;
+									if (_frameRate < frameRateRange.Min) {
+										_frameRate = frameRateRange.Min;
+									} else if (_frameRate > frameRateRange.Max) {
+										_frameRate = frameRateRange.Max;
+									}
+									_vec.RateControl.FrameRateLimit = _frameRate;
+									_vec.Resolution = new med::VideoResolution() {
+										Width = currentResolution.width,
+										Height = currentResolution.height
+									};
+									yield return media.SetVideoEncoderConfiguration(_vec, true).Idle().HandleError(x => _error = x);
+									if (_error != null) {
+										break;
+									}
+									yield return session.AddVideoEncoderConfiguration(profile.token, _vec.token).Idle().HandleError(x=>_error = x);
+									if (_error == null) {
+										profile.VideoEncoderConfiguration = _vec;
+									}
+								}
+							}
+							break;				
+					}
+					if (profile.VideoEncoderConfiguration != null) {
+						break;
+					}
+				}
+				if (profile.VideoEncoderConfiguration != null) {
 					break;
-				case VideoEncoder.Encoding.JPEG:
-					new_vec.Encoding = VideoEncoding.JPEG;
-					break;
-				case VideoEncoder.Encoding.MPEG4:
-					new_vec.Encoding = VideoEncoding.MPEG4;
-					break;
+				} else {
+					yield return media.RemoveVideoSourceConfiguration(profile.token).Idle();
+					profile.VideoSourceConfiguration = null;
+				}
 			}
-
-			var vec = vecs.Where(x => x.Encoding == new_vec.Encoding).FirstOrDefault();
-			vec.Resolution.Width = currentResolution.width;
-			vec.Resolution.Height = currentResolution.height;
-
-			yield return media.SetVideoEncoderConfiguration(vec, true).Idle();
-
-			if(profile.VideoEncoderConfiguration == null || profile.VideoEncoderConfiguration.token != vec.token){
-				yield return media.AddVideoEncoderConfiguration(profile.token, vec.token).Idle();
-			}
-
+			
 			yield return Observable.Concat(LoadImpl(session, null));
 
 			if (observer != null) {
@@ -300,6 +431,7 @@ namespace nvc.models {
 
 		private ChangeTrackingProperty<VideoEncoder> m_currentEncoder = new ChangeTrackingProperty<VideoEncoder>();
 		private ChangeTrackingProperty<VideoResolution> m_currentResolution = new ChangeTrackingProperty<VideoResolution>();
+		private ChangeTrackingProperty<int> m_frameRate = new ChangeTrackingProperty<int>();
 		
 		public string mediaUri { get; private set; }
 		public IEnumerable<VideoResolution> supportedResolutions { get; private set; }
@@ -314,6 +446,7 @@ namespace nvc.models {
 				}
 			}
 		}
+
 		public IEnumerable<VideoEncoder> supportedEncoders { get; private set; }
 		public VideoEncoder currentEncoder {
 			get {
@@ -326,7 +459,19 @@ namespace nvc.models {
 				}
 			}
 		}
-		public int frameRate { get; private set; }
+		public int frameRate {
+			get {
+				return m_frameRate.current;
+			}
+			set {
+				if (m_frameRate.current != value) {
+					m_frameRate.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.frameRate);
+				}
+			}
+		}
+
+		
 		public int maxFrameRate { get; private set; }
 		public int minFrameRate { get; private set; }
 		public int bitrate { get; private set; }

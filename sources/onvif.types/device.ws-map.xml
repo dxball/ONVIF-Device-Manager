@@ -1,0 +1,897 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ws-map>
+  <service port-name="Device" port-ns="http://www.onvif.org/ver10/device/wsdl">
+    <operation name="GetDeviceInformation" soap-action="http://www.onvif.org/ver10/device/wsdl/GetDeviceInformation">
+      <request message-name="GetDeviceInformationRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetDeviceInformationResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetSystemDateAndTime" soap-action="http://www.onvif.org/ver10/device/wsdl/SetSystemDateAndTime">
+      <request message-name="SetSystemDateAndTimeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetSystemDateAndTimeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetSystemDateAndTime" soap-action="http://www.onvif.org/ver10/device/wsdl/GetSystemDateAndTime">
+      <request message-name="GetSystemDateAndTimeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetSystemDateAndTimeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetSystemFactoryDefault" soap-action="http://www.onvif.org/ver10/device/wsdl/SetSystemFactoryDefault">
+      <request message-name="SetSystemFactoryDefaultRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetSystemFactoryDefaultResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="UpgradeSystemFirmware" soap-action="http://www.onvif.org/ver10/device/wsdl/UpgradeSystemFirmware">
+      <request message-name="UpgradeSystemFirmwareRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="UpgradeSystemFirmwareResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="StartFirmwareUpgrade" soap-action="http://www.onvif.org/ver10/device/wsdl/StartFirmwareUpgrade">
+      <request message-name="StartFirmwareUpgradeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="StartFirmwareUpgradeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SystemReboot" soap-action="http://www.onvif.org/ver10/device/wsdl/SystemReboot">
+      <request message-name="SystemRebootRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SystemRebootResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="RestoreSystem" soap-action="http://www.onvif.org/ver10/device/wsdl/RestoreSystem">
+      <request message-name="RestoreSystemRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="RestoreSystemResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetSystemBackup" soap-action="http://www.onvif.org/ver10/device/wsdl/GetSystemBackup">
+      <request message-name="GetSystemBackupRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetSystemBackupResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetSystemLog" soap-action="http://www.onvif.org/ver10/device/wsdl/GetSystemLog">
+      <request message-name="GetSystemLogRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetSystemLogResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetSystemSupportInformation" soap-action="http://www.onvif.org/ver10/device/wsdl/GetSystemSupportInformation">
+      <request message-name="GetSystemSupportInformationRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetSystemSupportInformationResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetScopes" soap-action="http://www.onvif.org/ver10/device/wsdl/GetScopes">
+      <request message-name="GetScopesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetScopesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetScopes" soap-action="http://www.onvif.org/ver10/device/wsdl/SetScopes">
+      <request message-name="SetScopesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetScopesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="AddScopes" soap-action="http://www.onvif.org/ver10/device/wsdl/AddScopes">
+      <request message-name="AddScopesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="AddScopesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="RemoveScopes" soap-action="http://www.onvif.org/ver10/device/wsdl/RemoveScopes">
+      <request message-name="RemoveScopesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="RemoveScopesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetDiscoveryMode" soap-action="http://www.onvif.org/ver10/device/wsdl/GetDiscoveryMode">
+      <request message-name="GetDiscoveryModeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetDiscoveryModeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetDiscoveryMode" soap-action="http://www.onvif.org/ver10/device/wsdl/SetDiscoveryMode">
+      <request message-name="SetDiscoveryModeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetDiscoveryModeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetRemoteDiscoveryMode" soap-action="http://www.onvif.org/ver10/device/wsdl/GetRemoteDiscoveryMode">
+      <request message-name="GetRemoteDiscoveryModeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetRemoteDiscoveryModeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetRemoteDiscoveryMode" soap-action="http://www.onvif.org/ver10/device/wsdl/SetRemoteDiscoveryMode">
+      <request message-name="SetRemoteDiscoveryModeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetRemoteDiscoveryModeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetDPAddresses" soap-action="http://www.onvif.org/ver10/device/wsdl/GetDPAddresses">
+      <request message-name="GetDPAddressesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetDPAddressesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetDPAddresses" soap-action="http://www.onvif.org/ver10/device/wsdl/SetDPAddresses">
+      <request message-name="SetDPAddressesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetDPAddressesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetUsers" soap-action="http://www.onvif.org/ver10/device/wsdl/GetUsers">
+      <request message-name="GetUsersRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetUsersResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="CreateUsers" soap-action="http://www.onvif.org/ver10/device/wsdl/CreateUsers">
+      <request message-name="CreateUsersRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="CreateUsersResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="DeleteUsers" soap-action="http://www.onvif.org/ver10/device/wsdl/DeleteUsers">
+      <request message-name="DeleteUsersRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="DeleteUsersResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetUser" soap-action="http://www.onvif.org/ver10/device/wsdl/SetUser">
+      <request message-name="SetUserRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetUserResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetWsdlUrl" soap-action="http://www.onvif.org/ver10/device/wsdl/GetWsdlUrl">
+      <request message-name="GetWsdlUrlRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetWsdlUrlResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetCapabilities" soap-action="http://www.onvif.org/ver10/device/wsdl/GetCapabilities">
+      <request message-name="GetCapabilitiesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetCapabilitiesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetHostname" soap-action="http://www.onvif.org/ver10/device/wsdl/GetHostname">
+      <request message-name="GetHostnameRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetHostnameResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetHostname" soap-action="http://www.onvif.org/ver10/device/wsdl/SetHostname">
+      <request message-name="SetHostnameRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetHostnameResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetDNS" soap-action="http://www.onvif.org/ver10/device/wsdl/GetDNS">
+      <request message-name="GetDNSRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetDNSResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetDNS" soap-action="http://www.onvif.org/ver10/device/wsdl/SetDNS">
+      <request message-name="SetDNSRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetDNSResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetNTP" soap-action="http://www.onvif.org/ver10/device/wsdl/GetNTP">
+      <request message-name="GetNTPRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetNTPResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetNTP" soap-action="http://www.onvif.org/ver10/device/wsdl/SetNTP">
+      <request message-name="SetNTPRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetNTPResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetDynamicDNS" soap-action="http://www.onvif.org/ver10/device/wsdl/GetDynamicDNS">
+      <request message-name="GetDynamicDNSRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetDynamicDNSResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetDynamicDNS" soap-action="http://www.onvif.org/ver10/device/wsdl/SetDynamicDNS">
+      <request message-name="SetDynamicDNSRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetDynamicDNSResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetNetworkInterfaces" soap-action="http://www.onvif.org/ver10/device/wsdl/GetNetworkInterfaces">
+      <request message-name="GetNetworkInterfacesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetNetworkInterfacesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetNetworkInterfaces" soap-action="http://www.onvif.org/ver10/device/wsdl/SetNetworkInterfaces">
+      <request message-name="SetNetworkInterfacesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetNetworkInterfacesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetNetworkProtocols" soap-action="http://www.onvif.org/ver10/device/wsdl/GetNetworkProtocols">
+      <request message-name="GetNetworkProtocolsRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetNetworkProtocolsResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetNetworkProtocols" soap-action="http://www.onvif.org/ver10/device/wsdl/SetNetworkProtocols">
+      <request message-name="SetNetworkProtocolsRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetNetworkProtocolsResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetNetworkDefaultGateway" soap-action="http://www.onvif.org/ver10/device/wsdl/GetNetworkDefaultGateway">
+      <request message-name="GetNetworkDefaultGatewayRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetNetworkDefaultGatewayResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetNetworkDefaultGateway" soap-action="http://www.onvif.org/ver10/device/wsdl/SetNetworkDefaultGateway">
+      <request message-name="SetNetworkDefaultGatewayRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetNetworkDefaultGatewayResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetZeroConfiguration" soap-action="http://www.onvif.org/ver10/device/wsdl/GetZeroConfiguration">
+      <request message-name="GetZeroConfigurationRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetZeroConfigurationResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetZeroConfiguration" soap-action="http://www.onvif.org/ver10/device/wsdl/SetZeroConfiguration">
+      <request message-name="SetZeroConfigurationRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetZeroConfigurationResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetIPAddressFilter" soap-action="http://www.onvif.org/ver10/device/wsdl/GetIPAddressFilter">
+      <request message-name="GetIPAddressFilterRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetIPAddressFilterResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetIPAddressFilter" soap-action="http://www.onvif.org/ver10/device/wsdl/SetIPAddressFilter">
+      <request message-name="SetIPAddressFilterRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetIPAddressFilterResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="AddIPAddressFilter" soap-action="http://www.onvif.org/ver10/device/wsdl/AddIPAddressFilter">
+      <request message-name="AddIPAddressFilterRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="AddIPAddressFilterResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="RemoveIPAddressFilter" soap-action="http://www.onvif.org/ver10/device/wsdl/RemoveIPAddressFilter">
+      <request message-name="RemoveIPAddressFilterRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="RemoveIPAddressFilterResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetAccessPolicy" soap-action="http://www.onvif.org/ver10/device/wsdl/GetAccessPolicy">
+      <request message-name="GetAccessPolicyRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetAccessPolicyResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetAccessPolicy" soap-action="http://www.onvif.org/ver10/device/wsdl/SetAccessPolicy">
+      <request message-name="SetAccessPolicyRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetAccessPolicyResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="CreateCertificate" soap-action="http://www.onvif.org/ver10/device/wsdl/CreateCertificate">
+      <request message-name="CreateCertificateRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="CreateCertificateResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetCertificates" soap-action="http://www.onvif.org/ver10/device/wsdl/GetCertificates">
+      <request message-name="GetCertificatesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetCertificatesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetCertificatesStatus" soap-action="http://www.onvif.org/ver10/device/wsdl/GetCertificatesStatus">
+      <request message-name="GetCertificatesStatusRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetCertificatesStatusResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetCertificatesStatus" soap-action="http://www.onvif.org/ver10/device/wsdl/SetCertificatesStatus">
+      <request message-name="SetCertificatesStatusRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetCertificatesStatusResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="DeleteCertificates" soap-action="http://www.onvif.org/ver10/device/wsdl/DeleteCertificates">
+      <request message-name="DeleteCertificatesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="DeleteCertificatesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetPkcs10Request" soap-action="http://www.onvif.org/ver10/device/wsdl/GetPkcs10Request">
+      <request message-name="GetPkcs10RequestRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetPkcs10RequestResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="LoadCertificates" soap-action="http://www.onvif.org/ver10/device/wsdl/LoadCertificates">
+      <request message-name="LoadCertificatesRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="LoadCertificatesResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetClientCertificateMode" soap-action="http://www.onvif.org/ver10/device/wsdl/GetClientCertificateMode">
+      <request message-name="GetClientCertificateModeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetClientCertificateModeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetClientCertificateMode" soap-action="http://www.onvif.org/ver10/device/wsdl/SetClientCertificateMode">
+      <request message-name="SetClientCertificateModeRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetClientCertificateModeResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="GetRelayOutputs" soap-action="http://www.onvif.org/ver10/device/wsdl/GetRelayOutputs">
+      <request message-name="GetRelayOutputsRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="GetRelayOutputsResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetRelayOutputSettings" soap-action="http://www.onvif.org/ver10/device/wsdl/SetRelayOutputSettings">
+      <request message-name="SetRelayOutputSettingsRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetRelayOutputSettingsResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+    <operation name="SetRelayOutputState" soap-action="http://www.onvif.org/ver10/device/wsdl/SetRelayOutputState">
+      <request message-name="SetRelayOutputStateRequest" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+      <response message-name="SetRelayOutputStateResponse" message-ns="http://www.onvif.org/ver10/device/wsdl" />
+    </operation>
+  </service>
+  <message name="GetDeviceInformationRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDeviceInformation" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDeviceInformationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDeviceInformationResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetSystemDateAndTimeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetSystemDateAndTime" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetSystemDateAndTimeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetSystemDateAndTimeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemDateAndTimeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemDateAndTime" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemDateAndTimeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemDateAndTimeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetSystemFactoryDefaultRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetSystemFactoryDefault" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetSystemFactoryDefaultResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetSystemFactoryDefaultResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="UpgradeSystemFirmwareRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="UpgradeSystemFirmware" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="UpgradeSystemFirmwareResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="UpgradeSystemFirmwareResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="StartFirmwareUpgradeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="StartFirmwareUpgrade" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="StartFirmwareUpgradeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="StartFirmwareUpgradeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SystemRebootRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SystemReboot" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SystemRebootResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SystemRebootResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemBackupRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemBackup" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemBackupResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemBackupResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="RestoreSystemRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="RestoreSystem" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="RestoreSystemResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="RestoreSystemResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemSupportInformationRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemSupportInformation" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemSupportInformationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemSupportInformationResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemLogRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemLog" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetSystemLogResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetSystemLogResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetScopesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetScopes" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetScopesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetScopesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetScopes" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetScopesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="AddScopesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="AddScopes" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="AddScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="AddScopesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="RemoveScopesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="RemoveScopes" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="RemoveScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="RemoveScopesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDiscoveryModeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDiscoveryMode" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDiscoveryModeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDiscoveryModeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDiscoveryMode" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDiscoveryModeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetRemoteDiscoveryModeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetRemoteDiscoveryMode" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetRemoteDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetRemoteDiscoveryModeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetRemoteDiscoveryModeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetRemoteDiscoveryMode" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetRemoteDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetRemoteDiscoveryModeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDPAddressesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDPAddresses" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDPAddressesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDPAddressesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDPAddressesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDPAddresses" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDPAddressesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDPAddressesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetUsersRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetUsers" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetUsersResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetUsersResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="CreateUsersRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="CreateUsers" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="CreateUsersResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="CreateUsersResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="DeleteUsersRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="DeleteUsers" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="DeleteUsersResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="DeleteUsersResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetUserRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetUser" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetUserResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetUserResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetWsdlUrlRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetWsdlUrl" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetWsdlUrlResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetWsdlUrlResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetCapabilitiesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetCapabilities" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetCapabilitiesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetCapabilitiesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetHostnameRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetHostname" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetHostnameResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetHostnameResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetHostnameRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetHostname" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetHostnameResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetHostnameResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDNSRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDNS" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDNSResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDNSRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDNS" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDNSResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNTPRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNTP" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNTPResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNTPResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNTPRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNTP" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNTPResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNTPResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDynamicDNSRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDynamicDNS" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetDynamicDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetDynamicDNSResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDynamicDNSRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDynamicDNS" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetDynamicDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetDynamicDNSResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNetworkInterfacesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNetworkInterfaces" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNetworkInterfacesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNetworkInterfacesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNetworkInterfacesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNetworkInterfaces" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNetworkInterfacesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNetworkInterfacesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNetworkProtocolsRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNetworkProtocols" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNetworkProtocolsResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNetworkProtocolsResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNetworkProtocolsRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNetworkProtocols" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNetworkProtocolsResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNetworkProtocolsResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNetworkDefaultGatewayRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNetworkDefaultGateway" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetNetworkDefaultGatewayResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetNetworkDefaultGatewayResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNetworkDefaultGatewayRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNetworkDefaultGateway" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetNetworkDefaultGatewayResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetNetworkDefaultGatewayResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetZeroConfigurationRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetZeroConfiguration" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetZeroConfigurationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetZeroConfigurationResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetZeroConfigurationRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetZeroConfiguration" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetZeroConfigurationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetZeroConfigurationResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetIPAddressFilterRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetIPAddressFilter" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetIPAddressFilterResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetIPAddressFilterRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetIPAddressFilter" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetIPAddressFilterResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="AddIPAddressFilterRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="AddIPAddressFilter" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="AddIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="AddIPAddressFilterResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="RemoveIPAddressFilterRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="RemoveIPAddressFilter" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="RemoveIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="RemoveIPAddressFilterResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetAccessPolicyRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetAccessPolicy" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetAccessPolicyResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetAccessPolicyResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetAccessPolicyRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetAccessPolicy" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetAccessPolicyResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetAccessPolicyResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="CreateCertificateRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="CreateCertificate" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="CreateCertificateResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="CreateCertificateResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetCertificatesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetCertificates" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetCertificatesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetCertificatesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetCertificatesStatusRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetCertificatesStatus" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetCertificatesStatusResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetCertificatesStatusResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetCertificatesStatusRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetCertificatesStatus" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetCertificatesStatusResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetCertificatesStatusResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="DeleteCertificatesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="DeleteCertificates" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="DeleteCertificatesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="DeleteCertificatesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetPkcs10RequestRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetPkcs10Request" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetPkcs10RequestResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetPkcs10RequestResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="LoadCertificatesRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="LoadCertificates" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="LoadCertificatesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="LoadCertificatesResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetClientCertificateModeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetClientCertificateMode" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetClientCertificateModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetClientCertificateModeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetClientCertificateModeRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetClientCertificateMode" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetClientCertificateModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetClientCertificateModeResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetRelayOutputsRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetRelayOutputs" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="GetRelayOutputsResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="GetRelayOutputsResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetRelayOutputSettingsRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetRelayOutputSettings" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetRelayOutputSettingsResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetRelayOutputSettingsResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetRelayOutputStateRequest" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetRelayOutputState" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <message name="SetRelayOutputStateResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <part name="parameters" type-name="SetRelayOutputStateResponse" type-ns="http://www.onvif.org/ver10/device/wsdl" />
+  </message>
+  <class name="GetDeviceInformation" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDeviceInformationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Manufacturer" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <required name="Model" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <required name="FirmwareVersion" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <required name="SerialNumber" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <required name="HardwareId" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetSystemDateAndTime" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="DateTimeType" type-name="SetDateTimeType" type-ns="http://www.onvif.org/ver10/schema" />
+    <required name="DaylightSavings" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="TimeZone" type-name="TimeZone" type-ns="http://www.onvif.org/ver10/schema" />
+    <optional name="UTCDateTime" type-name="DateTime" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetSystemDateAndTimeResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetSystemDateAndTime" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetSystemDateAndTimeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="SystemDateAndTime" type-name="SystemDateTime" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetSystemFactoryDefault" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="FactoryDefault" type-name="FactoryDefaultType" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetSystemFactoryDefaultResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="UpgradeSystemFirmware" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Firmware" type-name="AttachmentData" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="UpgradeSystemFirmwareResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <optional name="Message" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="StartFirmwareUpgrade" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="StartFirmwareUpgradeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="UploadUri" type-name="anyURI" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="UploadDelay" type-name="duration" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="ExpectedDownTime" type-name="duration" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SystemReboot" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="SystemRebootResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Message" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="RestoreSystem" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="BackupFiles" type-name="BackupFile" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="RestoreSystemResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetSystemBackup" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetSystemBackupResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="BackupFiles" type-name="BackupFile" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetSystemSupportInformation" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetSystemSupportInformationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="SupportInformation" type-name="SupportInformation" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetSystemLog" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="LogType" type-name="SystemLogType" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetSystemLogResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="SystemLog" type-name="SystemLog" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetScopes" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="Scopes" type-name="Scope" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetScopes" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="Scopes" type-name="anyURI" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="AddScopes" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="ScopeItem" type-name="anyURI" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="AddScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="RemoveScopes" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="ScopeItem" type-name="anyURI" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="RemoveScopesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="ScopeItem" type-name="anyURI" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="GetDiscoveryMode" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="DiscoveryMode" type-name="DiscoveryMode" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDiscoveryMode" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="DiscoveryMode" type-name="DiscoveryMode" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetRemoteDiscoveryMode" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetRemoteDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="RemoteDiscoveryMode" type-name="DiscoveryMode" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetRemoteDiscoveryMode" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="RemoteDiscoveryMode" type-name="DiscoveryMode" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetRemoteDiscoveryModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDPAddresses" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDPAddressesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="DPAddress" type-name="NetworkHost" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDPAddresses" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="DPAddress" type-name="NetworkHost" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDPAddressesResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetUsers" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetUsersResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="User" type-name="User" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="CreateUsers" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="User" type-name="User" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="CreateUsersResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="DeleteUsers" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="Username" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="DeleteUsersResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="SetUser" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="User" type-name="User" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetUserResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetWsdlUrl" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetWsdlUrlResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="WsdlUrl" type-name="anyURI" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="GetCapabilities" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="Category" type-name="CapabilityCategory" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetCapabilitiesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Capabilities" type-name="Capabilities" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetHostname" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetHostnameResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="HostnameInformation" type-name="HostnameInformation" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetHostname" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Name" type-name="token" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetHostnameResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDNS" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="DNSInformation" type-name="DNSInformation" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDNS" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="FromDHCP" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <collection name="SearchDomain" type-name="token" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <collection name="DNSManual" type-name="IPAddress" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNTP" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNTPResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="NTPInformation" type-name="NTPInformation" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNTP" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="FromDHCP" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <collection name="NTPManual" type-name="NetworkHost" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNTPResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDynamicDNS" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetDynamicDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="DynamicDNSInformation" type-name="DynamicDNSInformation" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetDynamicDNS" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Type" type-name="DynamicDNSType" type-ns="http://www.onvif.org/ver10/schema" />
+    <optional name="Name" type-name="DNSName" type-ns="http://www.onvif.org/ver10/schema" />
+    <optional name="TTL" type-name="duration" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetDynamicDNSResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNetworkInterfaces" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNetworkInterfacesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="NetworkInterfaces" type-name="NetworkInterface" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNetworkInterfaces" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="InterfaceToken" type-name="ReferenceToken" type-ns="http://www.onvif.org/ver10/schema" />
+    <required name="NetworkInterface" type-name="NetworkInterfaceSetConfiguration" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNetworkInterfacesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="RebootNeeded" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="GetNetworkProtocols" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNetworkProtocolsResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="NetworkProtocols" type-name="NetworkProtocol" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNetworkProtocols" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="NetworkProtocols" type-name="NetworkProtocol" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNetworkProtocolsResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNetworkDefaultGateway" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetNetworkDefaultGatewayResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="NetworkGateway" type-name="NetworkGateway" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNetworkDefaultGateway" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="IPv4Address" type-name="IPv4Address" type-ns="http://www.onvif.org/ver10/schema" />
+    <collection name="IPv6Address" type-name="IPv6Address" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetNetworkDefaultGatewayResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetZeroConfiguration" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetZeroConfigurationResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="ZeroConfiguration" type-name="NetworkZeroConfiguration" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetZeroConfiguration" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="InterfaceToken" type-name="ReferenceToken" type-ns="http://www.onvif.org/ver10/schema" />
+    <required name="Enabled" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetZeroConfigurationResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetIPAddressFilter" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="IPAddressFilter" type-name="IPAddressFilter" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetIPAddressFilter" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="IPAddressFilter" type-name="IPAddressFilter" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="AddIPAddressFilter" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="IPAddressFilter" type-name="IPAddressFilter" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="AddIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="RemoveIPAddressFilter" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="IPAddressFilter" type-name="IPAddressFilter" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="RemoveIPAddressFilterResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetAccessPolicy" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetAccessPolicyResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="PolicyFile" type-name="BinaryData" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetAccessPolicy" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="PolicyFile" type-name="BinaryData" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetAccessPolicyResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="CreateCertificate" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <optional name="CertificateID" type-name="token" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="Subject" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="ValidNotBefore" type-name="dateTime" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="ValidNotAfter" type-name="dateTime" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="CreateCertificateResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="NvtCertificate" type-name="Certificate" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetCertificates" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetCertificatesResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="NvtCertificate" type-name="Certificate" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetCertificatesStatus" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetCertificatesStatusResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="CertificateStatus" type-name="CertificateStatus" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetCertificatesStatus" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="CertificateStatus" type-name="CertificateStatus" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetCertificatesStatusResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="DeleteCertificates" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="CertificateID" type-name="token" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="DeleteCertificatesResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetPkcs10Request" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="CertificateID" type-name="token" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="Subject" type-name="string" type-ns="http://www.w3.org/2001/XMLSchema" />
+    <optional name="Attributes" type-name="BinaryData" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="GetPkcs10RequestResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Pkcs10Request" type-name="BinaryData" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="LoadCertificates" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="NVTCertificate" type-name="Certificate" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="LoadCertificatesResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetClientCertificateMode" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetClientCertificateModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Enabled" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetClientCertificateMode" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="Enabled" type-name="boolean" type-ns="http://www.w3.org/2001/XMLSchema" />
+  </class>
+  <class name="SetClientCertificateModeResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetRelayOutputs" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="GetRelayOutputsResponse" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <collection name="RelayOutputs" type-name="RelayOutput" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetRelayOutputSettings" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="RelayOutputToken" type-name="ReferenceToken" type-ns="http://www.onvif.org/ver10/schema" />
+    <required name="Properties" type-name="RelayOutputSettings" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetRelayOutputSettingsResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+  <class name="SetRelayOutputState" namespace="http://www.onvif.org/ver10/device/wsdl">
+    <required name="RelayOutputToken" type-name="ReferenceToken" type-ns="http://www.onvif.org/ver10/schema" />
+    <required name="LogicalState" type-name="RelayLogicalState" type-ns="http://www.onvif.org/ver10/schema" />
+  </class>
+  <class name="SetRelayOutputStateResponse" namespace="http://www.onvif.org/ver10/device/wsdl" />
+</ws-map>

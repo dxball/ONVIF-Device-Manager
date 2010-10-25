@@ -42,8 +42,10 @@ namespace nvc.controls
 			this._splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
 			this._splitContainer.Location = new System.Drawing.Point(0, 0);
 			this._splitContainer.Name = "_splitContainer";
-			this._splitContainer.Size = new System.Drawing.Size(627, 515);
-			this._splitContainer.SplitterDistance = 350;
+			this._splitContainer.Panel1MinSize = 325;
+			this._splitContainer.Panel2MinSize = 490;
+			this._splitContainer.Size = new System.Drawing.Size(820, 515);
+			this._splitContainer.SplitterDistance = 325;
 			this._splitContainer.TabIndex = 0;
 			// 
 			// MainFrame
@@ -51,8 +53,9 @@ namespace nvc.controls
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this._splitContainer);
+			this.MinimumSize = new System.Drawing.Size(820, 0);
 			this.Name = "MainFrame";
-			this.Size = new System.Drawing.Size(627, 515);
+			this.Size = new System.Drawing.Size(820, 515);
 			((System.ComponentModel.ISupportInitialize)(this._splitContainer)).EndInit();
 			this._splitContainer.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -61,6 +64,7 @@ namespace nvc.controls
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer _splitContainer;
-    }
+		public SplitContainer _splitContainer;
+
+	}
 }

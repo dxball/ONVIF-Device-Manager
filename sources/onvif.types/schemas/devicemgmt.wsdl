@@ -1,0 +1,2076 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2008-2010 by ONVIF: Open Network Video Interface Forum. All rights reserved.
+
+Recipients of this document may copy, distribute, publish, or display this document so long as this copyright notice, license and disclaimer are retained with all copies of the document. No license is granted to modify this document.
+
+THIS DOCUMENT IS PROVIDED "AS IS," AND THE CORPORATION AND ITS MEMBERS AND THEIR AFFILIATES, MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THIS DOCUMENT ARE SUITABLE FOR ANY PURPOSE; OR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE OR CONSEQUENTIAL DAMAGES, ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT, WHETHER OR NOT (1) THE CORPORATION, MEMBERS OR THEIR AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, OR (2) SUCH DAMAGES WERE REASONABLY FORESEEABLE, AND ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT.  THE FOREGOING DISCLAIMER AND LIMITATION ON LIABILITY DO NOT APPLY TO, INVALIDATE, OR LIMIT REPRESENTATIONS AND WARRANTIES MADE BY THE MEMBERS AND THEIR RESPECTIVE AFFILIATES TO THE CORPORATION AND OTHER MEMBERS IN CERTAIN WRITTEN POLICIES OF THE CORPORATION.
+-->
+<wsdl:definitions xmlns:tds="http://www.onvif.org/ver10/device/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.onvif.org/ver10/device/wsdl">
+	<wsdl:types>
+		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" elementFormDefault="qualified">
+			<xs:import namespace="http://www.onvif.org/ver10/schema" schemaLocation="http://www.onvif.org/onvif/ver10/schema/onvif.xsd"/>
+			<!--  Message Request/Responses elements  -->
+			<!--===============================-->
+			<xs:element name="GetDeviceInformation">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetDeviceInformationResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Manufacturer" type="xs:string"/>
+						<xs:element name="Model" type="xs:string"/>
+						<xs:element name="FirmwareVersion" type="xs:string"/>
+						<xs:element name="SerialNumber" type="xs:string"/>
+						<xs:element name="HardwareId" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetSystemDateAndTime">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:annotation>
+							<xs:documentation>
+              If time is obtained via NTP, UTCDateTime has no meaning
+            </xs:documentation>
+						</xs:annotation>
+						<xs:element name="DateTimeType" type="tt:SetDateTimeType"/>
+						<xs:element name="DaylightSavings" type="xs:boolean"/>
+						<xs:element name="TimeZone" type="tt:TimeZone" minOccurs="0"/>
+						<xs:element name="UTCDateTime" type="tt:DateTime" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetSystemDateAndTimeResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetSystemDateAndTime">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetSystemDateAndTimeResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SystemDateAndTime" type="tt:SystemDateTime"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetSystemFactoryDefault">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="FactoryDefault" type="tt:FactoryDefaultType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetSystemFactoryDefaultResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="UpgradeSystemFirmware">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Firmware" type="tt:AttachmentData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="UpgradeSystemFirmwareResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Message" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<!-- StartFirmwareUpgrade is taken from ONVIF 2.0 -->
+			<xs:element name="StartFirmwareUpgrade">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="StartFirmwareUpgradeResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="UploadUri" type="xs:anyURI"/>
+            <xs:element name="UploadDelay" type="xs:duration" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ExpectedDownTime" type="xs:duration" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+
+			<xs:element name="SystemReboot">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SystemRebootResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Message" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="RestoreSystem">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="BackupFiles" type="tt:BackupFile" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RestoreSystemResponse">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetSystemBackup">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetSystemBackupResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="BackupFiles" type="tt:BackupFile" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetSystemSupportInformation">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetSystemSupportInformationResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SupportInformation" type="tt:SupportInformation"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetSystemLog">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="LogType" type="tt:SystemLogType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetSystemLogResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SystemLog" type="tt:SystemLog"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetScopes">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetScopesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Scopes" type="tt:Scope" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetScopes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Scopes" type="xs:anyURI" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetScopesResponse">
+				<xs:complexType>
+					<xs:sequence>
+           </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="AddScopes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ScopeItem" type="xs:anyURI" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="AddScopesResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="RemoveScopes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ScopeItem" type="xs:anyURI" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RemoveScopesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ScopeItem" type="xs:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetDiscoveryMode">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetDiscoveryModeResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DiscoveryMode" type="tt:DiscoveryMode"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetDiscoveryMode">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DiscoveryMode" type="tt:DiscoveryMode"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetDiscoveryModeResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetRemoteDiscoveryMode">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetRemoteDiscoveryModeResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RemoteDiscoveryMode" type="tt:DiscoveryMode"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetRemoteDiscoveryMode">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RemoteDiscoveryMode" type="tt:DiscoveryMode"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetRemoteDiscoveryModeResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetDPAddresses">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetDPAddressesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DPAddress" type="tt:NetworkHost" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetDPAddresses">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DPAddress" type="tt:NetworkHost" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetDPAddressesResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetUsers">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetUsersResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="User" type="tt:User" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="CreateUsers">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="User" type="tt:User" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="CreateUsersResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="DeleteUsers">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Username" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DeleteUsersResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetUser">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="User" type="tt:User" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetUserResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetWsdlUrl">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetWsdlUrlResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="WsdlUrl" type="xs:anyURI"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetCapabilities">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Category" type="tt:CapabilityCategory" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+				<!--===============================-->
+			</xs:element>
+			<xs:element name="GetCapabilitiesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Capabilities" type="tt:Capabilities"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetHostname">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetHostnameResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="HostnameInformation" type="tt:HostnameInformation"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetHostname">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Name" type="xs:token"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetHostnameResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetDNS">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetDNSResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DNSInformation" type="tt:DNSInformation"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetDNS">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="FromDHCP" type="xs:boolean"/>
+						<xs:element name="SearchDomain" type="xs:token" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="DNSManual" type="tt:IPAddress" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetDNSResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetNTP">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetNTPResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NTPInformation" type="tt:NTPInformation"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetNTP">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="FromDHCP" type="xs:boolean"/>
+						<xs:element name="NTPManual" type="tt:NetworkHost" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetNTPResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetDynamicDNS">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetDynamicDNSResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DynamicDNSInformation" type="tt:DynamicDNSInformation"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetDynamicDNS">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Type" type="tt:DynamicDNSType"/>
+						<xs:element name="Name" type="tt:DNSName" minOccurs="0"/>
+						<xs:element name="TTL" type="xs:duration" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetDynamicDNSResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetNetworkInterfaces">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetNetworkInterfacesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NetworkInterfaces" type="tt:NetworkInterface" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetNetworkInterfaces">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="InterfaceToken" type="tt:ReferenceToken"/>
+						<xs:element name="NetworkInterface" type="tt:NetworkInterfaceSetConfiguration"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetNetworkInterfacesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RebootNeeded" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetNetworkProtocols">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetNetworkProtocolsResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NetworkProtocols" type="tt:NetworkProtocol" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetNetworkProtocols">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NetworkProtocols" type="tt:NetworkProtocol" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetNetworkProtocolsResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetNetworkDefaultGateway">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetNetworkDefaultGatewayResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NetworkGateway" type="tt:NetworkGateway"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetNetworkDefaultGateway">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IPv4Address" type="tt:IPv4Address" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="IPv6Address" type="tt:IPv6Address" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetNetworkDefaultGatewayResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetZeroConfiguration">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetZeroConfigurationResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ZeroConfiguration" type="tt:NetworkZeroConfiguration"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetZeroConfiguration">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="InterfaceToken" type="tt:ReferenceToken"/>
+						<xs:element name="Enabled" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetZeroConfigurationResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetIPAddressFilter">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetIPAddressFilterResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IPAddressFilter" type="tt:IPAddressFilter"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetIPAddressFilter">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IPAddressFilter" type="tt:IPAddressFilter"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetIPAddressFilterResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="AddIPAddressFilter">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IPAddressFilter" type="tt:IPAddressFilter"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="AddIPAddressFilterResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="RemoveIPAddressFilter">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IPAddressFilter" type="tt:IPAddressFilter"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RemoveIPAddressFilterResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetAccessPolicy">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetAccessPolicyResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PolicyFile" type="tt:BinaryData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetAccessPolicy">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PolicyFile" type="tt:BinaryData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetAccessPolicyResponse">
+				<xs:complexType>
+					<xs:sequence>
+                    </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="CreateCertificate">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CertificateID" type="xs:token" minOccurs="0"/>
+						<xs:element name="Subject" type="xs:string" minOccurs="0"/>
+						<xs:element name="ValidNotBefore" type="xs:dateTime" minOccurs="0"/>
+						<xs:element name="ValidNotAfter" type="xs:dateTime" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="CreateCertificateResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NvtCertificate" type="tt:Certificate"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetCertificates">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetCertificatesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NvtCertificate" type="tt:Certificate" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetCertificatesStatus">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetCertificatesStatusResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CertificateStatus" type="tt:CertificateStatus" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetCertificatesStatus">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CertificateStatus" type="tt:CertificateStatus" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetCertificatesStatusResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="DeleteCertificates">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CertificateID" type="xs:token" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DeleteCertificatesResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetPkcs10Request">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CertificateID" type="xs:token"/>
+						<xs:element name="Subject" type="xs:string" minOccurs="0"/>
+						<xs:element name="Attributes" type="tt:BinaryData" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetPkcs10RequestResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Pkcs10Request" type="tt:BinaryData"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="LoadCertificates">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NVTCertificate" type="tt:Certificate" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LoadCertificatesResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetClientCertificateMode">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetClientCertificateModeResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Enabled" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetClientCertificateMode">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Enabled" type="xs:boolean"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetClientCertificateModeResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetRelayOutputs">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetRelayOutputsResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RelayOutputs" type="tt:RelayOutput" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetRelayOutputSettings">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RelayOutputToken" type="tt:ReferenceToken"/>
+						<xs:element name="Properties" type="tt:RelayOutputSettings"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetRelayOutputSettingsResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetRelayOutputState">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RelayOutputToken" type="tt:ReferenceToken" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="LogicalState" type="tt:RelayLogicalState" minOccurs="1" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetRelayOutputStateResponse">
+				<xs:complexType>
+					<xs:sequence>
+          </xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="GetDeviceInformationRequest">
+		<wsdl:part name="parameters" element="tds:GetDeviceInformation"/>
+	</wsdl:message>
+	<wsdl:message name="GetDeviceInformationResponse">
+		<wsdl:part name="parameters" element="tds:GetDeviceInformationResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetSystemDateAndTimeRequest">
+		<wsdl:part name="parameters" element="tds:SetSystemDateAndTime"/>
+	</wsdl:message>
+	<wsdl:message name="SetSystemDateAndTimeResponse">
+		<wsdl:part name="parameters" element="tds:SetSystemDateAndTimeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemDateAndTimeRequest">
+		<wsdl:part name="parameters" element="tds:GetSystemDateAndTime"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemDateAndTimeResponse">
+		<wsdl:part name="parameters" element="tds:GetSystemDateAndTimeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetSystemFactoryDefaultRequest">
+		<wsdl:part name="parameters" element="tds:SetSystemFactoryDefault"/>
+	</wsdl:message>
+	<wsdl:message name="SetSystemFactoryDefaultResponse">
+		<wsdl:part name="parameters" element="tds:SetSystemFactoryDefaultResponse"/>
+	</wsdl:message>
+	<wsdl:message name="UpgradeSystemFirmwareRequest">
+		<wsdl:part name="parameters" element="tds:UpgradeSystemFirmware"/>
+	</wsdl:message>
+	<wsdl:message name="UpgradeSystemFirmwareResponse">
+		<wsdl:part name="parameters" element="tds:UpgradeSystemFirmwareResponse"/>
+	</wsdl:message>
+	<wsdl:message name="StartFirmwareUpgradeRequest">
+		<wsdl:part name="parameters" element="tds:StartFirmwareUpgrade"/>
+	</wsdl:message>
+	<wsdl:message name="StartFirmwareUpgradeResponse">
+		<wsdl:part name="parameters" element="tds:StartFirmwareUpgradeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SystemRebootRequest">
+		<wsdl:part name="parameters" element="tds:SystemReboot"/>
+	</wsdl:message>
+	<wsdl:message name="SystemRebootResponse">
+		<wsdl:part name="parameters" element="tds:SystemRebootResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemBackupRequest">
+		<wsdl:part name="parameters" element="tds:GetSystemBackup"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemBackupResponse">
+		<wsdl:part name="parameters" element="tds:GetSystemBackupResponse"/>
+	</wsdl:message>
+	<wsdl:message name="RestoreSystemRequest">
+		<wsdl:part name="parameters" element="tds:RestoreSystem"/>
+	</wsdl:message>
+	<wsdl:message name="RestoreSystemResponse">
+		<wsdl:part name="parameters" element="tds:RestoreSystemResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemSupportInformationRequest">
+		<wsdl:part name="parameters" element="tds:GetSystemSupportInformation"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemSupportInformationResponse">
+		<wsdl:part name="parameters" element="tds:GetSystemSupportInformationResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemLogRequest">
+		<wsdl:part name="parameters" element="tds:GetSystemLog"/>
+	</wsdl:message>
+	<wsdl:message name="GetSystemLogResponse">
+		<wsdl:part name="parameters" element="tds:GetSystemLogResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetScopesRequest">
+		<wsdl:part name="parameters" element="tds:GetScopes"/>
+	</wsdl:message>
+	<wsdl:message name="GetScopesResponse">
+		<wsdl:part name="parameters" element="tds:GetScopesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetScopesRequest">
+		<wsdl:part name="parameters" element="tds:SetScopes"/>
+	</wsdl:message>
+	<wsdl:message name="SetScopesResponse">
+		<wsdl:part name="parameters" element="tds:SetScopesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="AddScopesRequest">
+		<wsdl:part name="parameters" element="tds:AddScopes"/>
+	</wsdl:message>
+	<wsdl:message name="AddScopesResponse">
+		<wsdl:part name="parameters" element="tds:AddScopesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="RemoveScopesRequest">
+		<wsdl:part name="parameters" element="tds:RemoveScopes"/>
+	</wsdl:message>
+	<wsdl:message name="RemoveScopesResponse">
+		<wsdl:part name="parameters" element="tds:RemoveScopesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDiscoveryModeRequest">
+		<wsdl:part name="parameters" element="tds:GetDiscoveryMode"/>
+	</wsdl:message>
+	<wsdl:message name="GetDiscoveryModeResponse">
+		<wsdl:part name="parameters" element="tds:GetDiscoveryModeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDiscoveryModeRequest">
+		<wsdl:part name="parameters" element="tds:SetDiscoveryMode"/>
+	</wsdl:message>
+	<wsdl:message name="SetDiscoveryModeResponse">
+		<wsdl:part name="parameters" element="tds:SetDiscoveryModeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetRemoteDiscoveryModeRequest">
+		<wsdl:part name="parameters" element="tds:GetRemoteDiscoveryMode"/>
+	</wsdl:message>
+	<wsdl:message name="GetRemoteDiscoveryModeResponse">
+		<wsdl:part name="parameters" element="tds:GetRemoteDiscoveryModeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetRemoteDiscoveryModeRequest">
+		<wsdl:part name="parameters" element="tds:SetRemoteDiscoveryMode"/>
+	</wsdl:message>
+	<wsdl:message name="SetRemoteDiscoveryModeResponse">
+		<wsdl:part name="parameters" element="tds:SetRemoteDiscoveryModeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDPAddressesRequest">
+		<wsdl:part name="parameters" element="tds:GetDPAddresses"/>
+	</wsdl:message>
+	<wsdl:message name="GetDPAddressesResponse">
+		<wsdl:part name="parameters" element="tds:GetDPAddressesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDPAddressesRequest">
+		<wsdl:part name="parameters" element="tds:SetDPAddresses"/>
+	</wsdl:message>
+	<wsdl:message name="SetDPAddressesResponse">
+		<wsdl:part name="parameters" element="tds:SetDPAddressesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetUsersRequest">
+		<wsdl:part name="parameters" element="tds:GetUsers"/>
+	</wsdl:message>
+	<wsdl:message name="GetUsersResponse">
+		<wsdl:part name="parameters" element="tds:GetUsersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CreateUsersRequest">
+		<wsdl:part name="parameters" element="tds:CreateUsers"/>
+	</wsdl:message>
+	<wsdl:message name="CreateUsersResponse">
+		<wsdl:part name="parameters" element="tds:CreateUsersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="DeleteUsersRequest">
+		<wsdl:part name="parameters" element="tds:DeleteUsers"/>
+	</wsdl:message>
+	<wsdl:message name="DeleteUsersResponse">
+		<wsdl:part name="parameters" element="tds:DeleteUsersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetUserRequest">
+		<wsdl:part name="parameters" element="tds:SetUser"/>
+	</wsdl:message>
+	<wsdl:message name="SetUserResponse">
+		<wsdl:part name="parameters" element="tds:SetUserResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetWsdlUrlRequest">
+		<wsdl:part name="parameters" element="tds:GetWsdlUrl"/>
+	</wsdl:message>
+	<wsdl:message name="GetWsdlUrlResponse">
+		<wsdl:part name="parameters" element="tds:GetWsdlUrlResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCapabilitiesRequest">
+		<wsdl:part name="parameters" element="tds:GetCapabilities"/>
+	</wsdl:message>
+	<wsdl:message name="GetCapabilitiesResponse">
+		<wsdl:part name="parameters" element="tds:GetCapabilitiesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetHostnameRequest">
+		<wsdl:part name="parameters" element="tds:GetHostname"/>
+	</wsdl:message>
+	<wsdl:message name="GetHostnameResponse">
+		<wsdl:part name="parameters" element="tds:GetHostnameResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetHostnameRequest">
+		<wsdl:part name="parameters" element="tds:SetHostname"/>
+	</wsdl:message>
+	<wsdl:message name="SetHostnameResponse">
+		<wsdl:part name="parameters" element="tds:SetHostnameResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDNSRequest">
+		<wsdl:part name="parameters" element="tds:GetDNS"/>
+	</wsdl:message>
+	<wsdl:message name="GetDNSResponse">
+		<wsdl:part name="parameters" element="tds:GetDNSResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDNSRequest">
+		<wsdl:part name="parameters" element="tds:SetDNS"/>
+	</wsdl:message>
+	<wsdl:message name="SetDNSResponse">
+		<wsdl:part name="parameters" element="tds:SetDNSResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetNTPRequest">
+		<wsdl:part name="parameters" element="tds:GetNTP"/>
+	</wsdl:message>
+	<wsdl:message name="GetNTPResponse">
+		<wsdl:part name="parameters" element="tds:GetNTPResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetNTPRequest">
+		<wsdl:part name="parameters" element="tds:SetNTP"/>
+	</wsdl:message>
+	<wsdl:message name="SetNTPResponse">
+		<wsdl:part name="parameters" element="tds:SetNTPResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetDynamicDNSRequest">
+		<wsdl:part name="parameters" element="tds:GetDynamicDNS"/>
+	</wsdl:message>
+	<wsdl:message name="GetDynamicDNSResponse">
+		<wsdl:part name="parameters" element="tds:GetDynamicDNSResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetDynamicDNSRequest">
+		<wsdl:part name="parameters" element="tds:SetDynamicDNS"/>
+	</wsdl:message>
+	<wsdl:message name="SetDynamicDNSResponse">
+		<wsdl:part name="parameters" element="tds:SetDynamicDNSResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkInterfacesRequest">
+		<wsdl:part name="parameters" element="tds:GetNetworkInterfaces"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkInterfacesResponse">
+		<wsdl:part name="parameters" element="tds:GetNetworkInterfacesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetNetworkInterfacesRequest">
+		<wsdl:part name="parameters" element="tds:SetNetworkInterfaces"/>
+	</wsdl:message>
+	<wsdl:message name="SetNetworkInterfacesResponse">
+		<wsdl:part name="parameters" element="tds:SetNetworkInterfacesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkProtocolsRequest">
+		<wsdl:part name="parameters" element="tds:GetNetworkProtocols"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkProtocolsResponse">
+		<wsdl:part name="parameters" element="tds:GetNetworkProtocolsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetNetworkProtocolsRequest">
+		<wsdl:part name="parameters" element="tds:SetNetworkProtocols"/>
+	</wsdl:message>
+	<wsdl:message name="SetNetworkProtocolsResponse">
+		<wsdl:part name="parameters" element="tds:SetNetworkProtocolsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkDefaultGatewayRequest">
+		<wsdl:part name="parameters" element="tds:GetNetworkDefaultGateway"/>
+	</wsdl:message>
+	<wsdl:message name="GetNetworkDefaultGatewayResponse">
+		<wsdl:part name="parameters" element="tds:GetNetworkDefaultGatewayResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetNetworkDefaultGatewayRequest">
+		<wsdl:part name="parameters" element="tds:SetNetworkDefaultGateway"/>
+	</wsdl:message>
+	<wsdl:message name="SetNetworkDefaultGatewayResponse">
+		<wsdl:part name="parameters" element="tds:SetNetworkDefaultGatewayResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetZeroConfigurationRequest">
+		<wsdl:part name="parameters" element="tds:GetZeroConfiguration"/>
+	</wsdl:message>
+	<wsdl:message name="GetZeroConfigurationResponse">
+		<wsdl:part name="parameters" element="tds:GetZeroConfigurationResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetZeroConfigurationRequest">
+		<wsdl:part name="parameters" element="tds:SetZeroConfiguration"/>
+	</wsdl:message>
+	<wsdl:message name="SetZeroConfigurationResponse">
+		<wsdl:part name="parameters" element="tds:SetZeroConfigurationResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetIPAddressFilterRequest">
+		<wsdl:part name="parameters" element="tds:GetIPAddressFilter"/>
+	</wsdl:message>
+	<wsdl:message name="GetIPAddressFilterResponse">
+		<wsdl:part name="parameters" element="tds:GetIPAddressFilterResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetIPAddressFilterRequest">
+		<wsdl:part name="parameters" element="tds:SetIPAddressFilter"/>
+	</wsdl:message>
+	<wsdl:message name="SetIPAddressFilterResponse">
+		<wsdl:part name="parameters" element="tds:SetIPAddressFilterResponse"/>
+	</wsdl:message>
+	<wsdl:message name="AddIPAddressFilterRequest">
+		<wsdl:part name="parameters" element="tds:AddIPAddressFilter"/>
+	</wsdl:message>
+	<wsdl:message name="AddIPAddressFilterResponse">
+		<wsdl:part name="parameters" element="tds:AddIPAddressFilterResponse"/>
+	</wsdl:message>
+	<wsdl:message name="RemoveIPAddressFilterRequest">
+		<wsdl:part name="parameters" element="tds:RemoveIPAddressFilter"/>
+	</wsdl:message>
+	<wsdl:message name="RemoveIPAddressFilterResponse">
+		<wsdl:part name="parameters" element="tds:RemoveIPAddressFilterResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetAccessPolicyRequest">
+		<wsdl:part name="parameters" element="tds:GetAccessPolicy"/>
+	</wsdl:message>
+	<wsdl:message name="GetAccessPolicyResponse">
+		<wsdl:part name="parameters" element="tds:GetAccessPolicyResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetAccessPolicyRequest">
+		<wsdl:part name="parameters" element="tds:SetAccessPolicy"/>
+	</wsdl:message>
+	<wsdl:message name="SetAccessPolicyResponse">
+		<wsdl:part name="parameters" element="tds:SetAccessPolicyResponse"/>
+	</wsdl:message>
+	<wsdl:message name="CreateCertificateRequest">
+		<wsdl:part name="parameters" element="tds:CreateCertificate"/>
+	</wsdl:message>
+	<wsdl:message name="CreateCertificateResponse">
+		<wsdl:part name="parameters" element="tds:CreateCertificateResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCertificatesRequest">
+		<wsdl:part name="parameters" element="tds:GetCertificates"/>
+	</wsdl:message>
+	<wsdl:message name="GetCertificatesResponse">
+		<wsdl:part name="parameters" element="tds:GetCertificatesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetCertificatesStatusRequest">
+		<wsdl:part name="parameters" element="tds:GetCertificatesStatus"/>
+	</wsdl:message>
+	<wsdl:message name="GetCertificatesStatusResponse">
+		<wsdl:part name="parameters" element="tds:GetCertificatesStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetCertificatesStatusRequest">
+		<wsdl:part name="parameters" element="tds:SetCertificatesStatus"/>
+	</wsdl:message>
+	<wsdl:message name="SetCertificatesStatusResponse">
+		<wsdl:part name="parameters" element="tds:SetCertificatesStatusResponse"/>
+	</wsdl:message>
+	<wsdl:message name="DeleteCertificatesRequest">
+		<wsdl:part name="parameters" element="tds:DeleteCertificates"/>
+	</wsdl:message>
+	<wsdl:message name="DeleteCertificatesResponse">
+		<wsdl:part name="parameters" element="tds:DeleteCertificatesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetPkcs10RequestRequest">
+		<wsdl:part name="parameters" element="tds:GetPkcs10Request"/>
+	</wsdl:message>
+	<wsdl:message name="GetPkcs10RequestResponse">
+		<wsdl:part name="parameters" element="tds:GetPkcs10RequestResponse"/>
+	</wsdl:message>
+	<wsdl:message name="LoadCertificatesRequest">
+		<wsdl:part name="parameters" element="tds:LoadCertificates"/>
+	</wsdl:message>
+	<wsdl:message name="LoadCertificatesResponse">
+		<wsdl:part name="parameters" element="tds:LoadCertificatesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetClientCertificateModeRequest">
+		<wsdl:part name="parameters" element="tds:GetClientCertificateMode"/>
+	</wsdl:message>
+	<wsdl:message name="GetClientCertificateModeResponse">
+		<wsdl:part name="parameters" element="tds:GetClientCertificateModeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetClientCertificateModeRequest">
+		<wsdl:part name="parameters" element="tds:SetClientCertificateMode"/>
+	</wsdl:message>
+	<wsdl:message name="SetClientCertificateModeResponse">
+		<wsdl:part name="parameters" element="tds:SetClientCertificateModeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetRelayOutputsRequest">
+		<wsdl:part name="parameters" element="tds:GetRelayOutputs"/>
+	</wsdl:message>
+	<wsdl:message name="GetRelayOutputsResponse">
+		<wsdl:part name="parameters" element="tds:GetRelayOutputsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetRelayOutputSettingsRequest">
+		<wsdl:part name="parameters" element="tds:SetRelayOutputSettings"/>
+	</wsdl:message>
+	<wsdl:message name="SetRelayOutputSettingsResponse">
+		<wsdl:part name="parameters" element="tds:SetRelayOutputSettingsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetRelayOutputStateRequest">
+		<wsdl:part name="parameters" element="tds:SetRelayOutputState"/>
+	</wsdl:message>
+	<wsdl:message name="SetRelayOutputStateResponse">
+		<wsdl:part name="parameters" element="tds:SetRelayOutputStateResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="Device">
+		<wsdl:operation name="GetDeviceInformation">
+			<wsdl:input message="tds:GetDeviceInformationRequest"/>
+			<wsdl:output message="tds:GetDeviceInformationResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetSystemDateAndTime">
+			<wsdl:input message="tds:SetSystemDateAndTimeRequest"/>
+			<wsdl:output message="tds:SetSystemDateAndTimeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemDateAndTime">
+			<wsdl:input message="tds:GetSystemDateAndTimeRequest"/>
+			<wsdl:output message="tds:GetSystemDateAndTimeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetSystemFactoryDefault">
+			<wsdl:input message="tds:SetSystemFactoryDefaultRequest"/>
+			<wsdl:output message="tds:SetSystemFactoryDefaultResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="UpgradeSystemFirmware">
+			<wsdl:input message="tds:UpgradeSystemFirmwareRequest"/>
+			<wsdl:output message="tds:UpgradeSystemFirmwareResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="StartFirmwareUpgrade">
+			<wsdl:input message="tds:StartFirmwareUpgradeRequest"/>
+			<wsdl:output message="tds:StartFirmwareUpgradeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SystemReboot">
+			<wsdl:input message="tds:SystemRebootRequest"/>
+			<wsdl:output message="tds:SystemRebootResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="RestoreSystem">
+			<wsdl:input message="tds:RestoreSystemRequest"/>
+			<wsdl:output message="tds:RestoreSystemResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemBackup">
+			<wsdl:input message="tds:GetSystemBackupRequest"/>
+			<wsdl:output message="tds:GetSystemBackupResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemLog">
+			<wsdl:input message="tds:GetSystemLogRequest"/>
+			<wsdl:output message="tds:GetSystemLogResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemSupportInformation">
+			<wsdl:input message="tds:GetSystemSupportInformationRequest"/>
+			<wsdl:output message="tds:GetSystemSupportInformationResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetScopes">
+			<wsdl:input message="tds:GetScopesRequest"/>
+			<wsdl:output message="tds:GetScopesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetScopes">
+			<wsdl:input message="tds:SetScopesRequest"/>
+			<wsdl:output message="tds:SetScopesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="AddScopes">
+			<wsdl:input message="tds:AddScopesRequest"/>
+			<wsdl:output message="tds:AddScopesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="RemoveScopes">
+			<wsdl:input message="tds:RemoveScopesRequest"/>
+			<wsdl:output message="tds:RemoveScopesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDiscoveryMode">
+			<wsdl:input message="tds:GetDiscoveryModeRequest"/>
+			<wsdl:output message="tds:GetDiscoveryModeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDiscoveryMode">
+			<wsdl:input message="tds:SetDiscoveryModeRequest"/>
+			<wsdl:output message="tds:SetDiscoveryModeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetRemoteDiscoveryMode">
+			<wsdl:input message="tds:GetRemoteDiscoveryModeRequest"/>
+			<wsdl:output message="tds:GetRemoteDiscoveryModeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetRemoteDiscoveryMode">
+			<wsdl:input message="tds:SetRemoteDiscoveryModeRequest"/>
+			<wsdl:output message="tds:SetRemoteDiscoveryModeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDPAddresses">
+			<wsdl:input message="tds:GetDPAddressesRequest"/>
+			<wsdl:output message="tds:GetDPAddressesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDPAddresses">
+			<wsdl:input message="tds:SetDPAddressesRequest"/>
+			<wsdl:output message="tds:SetDPAddressesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetUsers">
+			<wsdl:input message="tds:GetUsersRequest"/>
+			<wsdl:output message="tds:GetUsersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="CreateUsers">
+			<wsdl:input message="tds:CreateUsersRequest"/>
+			<wsdl:output message="tds:CreateUsersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="DeleteUsers">
+			<wsdl:input message="tds:DeleteUsersRequest"/>
+			<wsdl:output message="tds:DeleteUsersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetUser">
+			<wsdl:input message="tds:SetUserRequest"/>
+			<wsdl:output message="tds:SetUserResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetWsdlUrl">
+			<wsdl:input message="tds:GetWsdlUrlRequest"/>
+			<wsdl:output message="tds:GetWsdlUrlResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCapabilities">
+			<wsdl:input message="tds:GetCapabilitiesRequest"/>
+			<wsdl:output message="tds:GetCapabilitiesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetHostname">
+			<wsdl:input message="tds:GetHostnameRequest"/>
+			<wsdl:output message="tds:GetHostnameResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetHostname">
+			<wsdl:input message="tds:SetHostnameRequest"/>
+			<wsdl:output message="tds:SetHostnameResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDNS">
+			<wsdl:input message="tds:GetDNSRequest"/>
+			<wsdl:output message="tds:GetDNSResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDNS">
+			<wsdl:input message="tds:SetDNSRequest"/>
+			<wsdl:output message="tds:SetDNSResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetNTP">
+			<wsdl:input message="tds:GetNTPRequest"/>
+			<wsdl:output message="tds:GetNTPResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetNTP">
+			<wsdl:input message="tds:SetNTPRequest"/>
+			<wsdl:output message="tds:SetNTPResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetDynamicDNS">
+			<wsdl:input message="tds:GetDynamicDNSRequest"/>
+			<wsdl:output message="tds:GetDynamicDNSResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetDynamicDNS">
+			<wsdl:input message="tds:SetDynamicDNSRequest"/>
+			<wsdl:output message="tds:SetDynamicDNSResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkInterfaces">
+			<wsdl:input message="tds:GetNetworkInterfacesRequest"/>
+			<wsdl:output message="tds:GetNetworkInterfacesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetNetworkInterfaces">
+			<wsdl:input message="tds:SetNetworkInterfacesRequest"/>
+			<wsdl:output message="tds:SetNetworkInterfacesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkProtocols">
+			<wsdl:input message="tds:GetNetworkProtocolsRequest"/>
+			<wsdl:output message="tds:GetNetworkProtocolsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetNetworkProtocols">
+			<wsdl:input message="tds:SetNetworkProtocolsRequest"/>
+			<wsdl:output message="tds:SetNetworkProtocolsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkDefaultGateway">
+			<wsdl:input message="tds:GetNetworkDefaultGatewayRequest"/>
+			<wsdl:output message="tds:GetNetworkDefaultGatewayResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetNetworkDefaultGateway">
+			<wsdl:input message="tds:SetNetworkDefaultGatewayRequest"/>
+			<wsdl:output message="tds:SetNetworkDefaultGatewayResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetZeroConfiguration">
+			<wsdl:input message="tds:GetZeroConfigurationRequest"/>
+			<wsdl:output message="tds:GetZeroConfigurationResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetZeroConfiguration">
+			<wsdl:input message="tds:SetZeroConfigurationRequest"/>
+			<wsdl:output message="tds:SetZeroConfigurationResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetIPAddressFilter">
+			<wsdl:input message="tds:GetIPAddressFilterRequest"/>
+			<wsdl:output message="tds:GetIPAddressFilterResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetIPAddressFilter">
+			<wsdl:input message="tds:SetIPAddressFilterRequest"/>
+			<wsdl:output message="tds:SetIPAddressFilterResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="AddIPAddressFilter">
+			<wsdl:input message="tds:AddIPAddressFilterRequest"/>
+			<wsdl:output message="tds:AddIPAddressFilterResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="RemoveIPAddressFilter">
+			<wsdl:input message="tds:RemoveIPAddressFilterRequest"/>
+			<wsdl:output message="tds:RemoveIPAddressFilterResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetAccessPolicy">
+			<wsdl:input message="tds:GetAccessPolicyRequest"/>
+			<wsdl:output message="tds:GetAccessPolicyResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetAccessPolicy">
+			<wsdl:input message="tds:SetAccessPolicyRequest"/>
+			<wsdl:output message="tds:SetAccessPolicyResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="CreateCertificate">
+			<wsdl:input message="tds:CreateCertificateRequest"/>
+			<wsdl:output message="tds:CreateCertificateResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCertificates">
+			<wsdl:input message="tds:GetCertificatesRequest"/>
+			<wsdl:output message="tds:GetCertificatesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetCertificatesStatus">
+			<wsdl:input message="tds:GetCertificatesStatusRequest"/>
+			<wsdl:output message="tds:GetCertificatesStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetCertificatesStatus">
+			<wsdl:input message="tds:SetCertificatesStatusRequest"/>
+			<wsdl:output message="tds:SetCertificatesStatusResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="DeleteCertificates">
+			<wsdl:input message="tds:DeleteCertificatesRequest"/>
+			<wsdl:output message="tds:DeleteCertificatesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetPkcs10Request">
+			<wsdl:input message="tds:GetPkcs10RequestRequest"/>
+			<wsdl:output message="tds:GetPkcs10RequestResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="LoadCertificates">
+			<wsdl:input message="tds:LoadCertificatesRequest"/>
+			<wsdl:output message="tds:LoadCertificatesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetClientCertificateMode">
+			<wsdl:input message="tds:GetClientCertificateModeRequest"/>
+			<wsdl:output message="tds:GetClientCertificateModeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetClientCertificateMode">
+			<wsdl:input message="tds:SetClientCertificateModeRequest"/>
+			<wsdl:output message="tds:SetClientCertificateModeResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetRelayOutputs">
+			<wsdl:input message="tds:GetRelayOutputsRequest"/>
+			<wsdl:output message="tds:GetRelayOutputsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetRelayOutputSettings">
+			<wsdl:input message="tds:SetRelayOutputSettingsRequest"/>
+			<wsdl:output message="tds:SetRelayOutputSettingsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetRelayOutputState">
+			<wsdl:input message="tds:SetRelayOutputStateRequest"/>
+			<wsdl:output message="tds:SetRelayOutputStateResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="DeviceBinding" type="tds:Device">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetDeviceInformation">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetDeviceInformation"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetSystemDateAndTime">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetSystemDateAndTime"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemDateAndTime">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetSystemDateAndTime"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetSystemFactoryDefault">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetSystemFactoryDefault"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="UpgradeSystemFirmware">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/UpgradeSystemFirmware"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="StartFirmwareUpgrade">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/StartFirmwareUpgrade"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SystemReboot">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SystemReboot"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RestoreSystem">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/RestoreSystem"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemBackup">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetSystemBackup"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemLog">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetSystemLog"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSystemSupportInformation">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetSystemSupportInformation"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetScopes">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetScopes"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetScopes">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetScopes"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="AddScopes">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/AddScopes"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RemoveScopes">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/RemoveScopes"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDiscoveryMode">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetDiscoveryMode"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDiscoveryMode">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetDiscoveryMode"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetRemoteDiscoveryMode">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetRemoteDiscoveryMode"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetRemoteDiscoveryMode">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetRemoteDiscoveryMode"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDPAddresses">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetDPAddresses"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetUsers">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetUsers"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CreateUsers">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/CreateUsers"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DeleteUsers">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/DeleteUsers"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetUser">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetUser"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetWsdlUrl">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetWsdlUrl"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCapabilities">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetCapabilities"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDPAddresses">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetDPAddresses"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetHostname">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetHostname"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetHostname">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetHostname"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDNS">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetDNS"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDNS">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetDNS"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetNTP">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetNTP"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetNTP">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetNTP"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetDynamicDNS">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetDynamicDNS"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetDynamicDNS">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetDynamicDNS"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkInterfaces">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetNetworkInterfaces"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetNetworkInterfaces">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetNetworkInterfaces"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkProtocols">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetNetworkProtocols"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetNetworkProtocols">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetNetworkProtocols"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetNetworkDefaultGateway">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetNetworkDefaultGateway"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetNetworkDefaultGateway">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetNetworkDefaultGateway"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetZeroConfiguration">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetZeroConfiguration"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetZeroConfiguration">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetZeroConfiguration"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetIPAddressFilter">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetIPAddressFilter"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetIPAddressFilter">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetIPAddressFilter"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="AddIPAddressFilter">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/AddIPAddressFilter"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="RemoveIPAddressFilter">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/RemoveIPAddressFilter"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetAccessPolicy">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetAccessPolicy"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetAccessPolicy">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetAccessPolicy"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CreateCertificate">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/CreateCertificate"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCertificates">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetCertificates"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetCertificatesStatus">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetCertificatesStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetCertificatesStatus">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetCertificatesStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DeleteCertificates">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/DeleteCertificates"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetPkcs10Request">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetPkcs10Request"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LoadCertificates">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LoadCertificates"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetClientCertificateMode">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetClientCertificateMode"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetClientCertificateMode">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetClientCertificateMode"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetRelayOutputs">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/GetRelayOutputs"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetRelayOutputSettings">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetRelayOutputSettings"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SetRelayOutputState">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SetRelayOutputState"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+</wsdl:definitions>

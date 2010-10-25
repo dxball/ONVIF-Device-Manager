@@ -26,8 +26,14 @@ using System.Net;
 using System.Net.NetworkInformation;
 
 using nvc.onvif;
+using onvifdm.utils;
+
+using onvif.services.device;
+using onvif.types;
+
 using dev = onvif.services.device;
-using nvc.utils;
+using tt = onvif.types;
+
 
 namespace nvc.models {
 
@@ -40,16 +46,16 @@ namespace nvc.models {
 
 
 
-		static IEnumerable<IObservable<Object>> SetNameImpl(Session session, string name, IObserver<Unit> observer) {
+		static IEnumerable<IObservable<object>> SetNameImpl(Session session, string name, IObserver<Unit> observer) {
 			
 			var scope_prefix = NvcHelper.SynesisNameScope;
-			dev::Scope[] scopes = null;
+			Scope[] scopes = null;
 			yield return session.GetScopes().Handle(x=>scopes = x);
 
 			DebugHelper.Assert(scopes != null);
 
 			var use_onvif_scope = scopes
-				.Where(x => x.ScopeDef == dev::ScopeDefinition.Configurable)
+				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
 				.Any(x => x.ScopeItem.StartsWith(NvcHelper.OnvifNameScope));
 
 			if (use_onvif_scope) {
@@ -58,7 +64,7 @@ namespace nvc.models {
 
 			var name_scope = String.Concat(scope_prefix, Uri.EscapeDataString(name));
 			var scopes_to_set = scopes
-				.Where(x => x.ScopeDef == dev::ScopeDefinition.Configurable)
+				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
 				.Select(x => x.ScopeItem)
 				.Where(x => !x.StartsWith(scope_prefix))
 				.Append(name_scope)

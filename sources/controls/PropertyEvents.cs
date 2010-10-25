@@ -26,28 +26,34 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using nvc.controllers;
+using nvc.models;
 
 namespace nvc.controls
 {
-    public partial class PropertyEvents : BasePropertyControl
-    {
-        public PropertyEvents()
+    public partial class PropertyEvents : BasePropertyControl{
+		private EventsStrings strings = EventsStrings.Instance;
+		public override void ReleaseUnmanaged() { }
+		public PropertyEvents(EventsDisplayModel devModel)
         {
             InitializeComponent();
 
             InitConrols();
         }
-		ColumnHeader _columnHeaderId = new ColumnHeader();
-		ColumnHeader _columnHeaderDate = new ColumnHeader();
-		ColumnHeader _columnHeaderType = new ColumnHeader();
-		ColumnHeader _columnHeaderDetails = new ColumnHeader();
+
+		EventsDisplayModel _devModel;
+
+		ColumnHeaderBindable _columnHeaderId = new ColumnHeaderBindable();
+		ColumnHeaderBindable _columnHeaderDate = new ColumnHeaderBindable();
+		ColumnHeaderBindable _columnHeaderType = new ColumnHeaderBindable();
+		ColumnHeaderBindable _columnHeaderDetails = new ColumnHeaderBindable();
         //IEntities Entity = WorkflowController.Instance;
+		
 		void Localization() {
-			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyEventsTitle);
-			_lviewEvents.DataBindings.Add(new Binding("Columns[0].Text", Constants.Instance, "sPropertyEventsColumnID"));
-			_lviewEvents.DataBindings.Add(new Binding("Columns[1].Text", Constants.Instance, "sPropertyEventsColumnType"));
-			_lviewEvents.DataBindings.Add(new Binding("Columns[2].Text", Constants.Instance, "sPropertyEventsColumnDate"));
-			_lviewEvents.DataBindings.Add(new Binding("Columns[3].Text", Constants.Instance, "sPropertyEventsColumnDetails"));
+			_title.CreateBinding(x => x.Text, strings, x => x.title);
+			_columnHeaderId.CreateBinding(x => x.Text, strings, x => x.ruleID);
+			_columnHeaderDate.CreateBinding(x => x.Text, strings, x => x.dateTime);
+			_columnHeaderType.CreateBinding(x => x.Text, strings, x => x.type);
+			_columnHeaderDetails.CreateBinding(x => x.Text, strings, x => x.details);
 		}
 
         protected void InitConrols()
@@ -59,6 +65,8 @@ namespace nvc.controls
 
             _imgBox.SizeMode = PictureBoxSizeMode.Zoom;
             //_imgBox.Image;// = WorkflowController.Instance.GetCurrentDevice().GetDeviceImage();
+
+			FillListView();
         }
         protected void InitTable()
         {
@@ -78,11 +86,12 @@ namespace nvc.controls
         {
             //foreach (var item in Entity.GetCurrentDevice().CurrentChannel.GetEventsList())
             //{
-            //    AddListItem(item);
+                AddListItem();//item);
             //}
         }
-        private void AddListItem(EventDescriptor eventDescr)
+        private void AddListItem()//EventDescriptor eventDescr)
         {
+			ListViewItemBindable lvItem = new ListViewItemBindable();
 			//ListViewItem lvItem = new ListViewItem();
 			//lvItem.Text = eventDescr.RuleID.ToString();
 

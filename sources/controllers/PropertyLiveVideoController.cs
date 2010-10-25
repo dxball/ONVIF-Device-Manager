@@ -26,7 +26,7 @@ using nvc.controls;
 using nvc.entities;
 using nvc.onvif;
 using nvc.models;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc.controllers {
 	public class PropertyLiveVideoController : IRelesable, IPropertyController {
@@ -52,15 +52,21 @@ namespace nvc.controllers {
 				_propertyPanel.Controls.Add(_currentControl);
 				_propertyPanel.ResumeLayout();
 			}, err => {
-				DebugHelper.Error(err);
+				//DebugHelper.Error(err);
 				_savingSettingsForm = new InformationForm("ERROR");
 				_savingSettingsForm.SetErrorMessage(err.Message);
-				_savingSettingsForm.ShowCloseButton(null);
+				_savingSettingsForm.SetEttorXML(err);
+				_savingSettingsForm.ShowCloseButton(ReturnToMainFrame);
 				_savingSettingsForm.ShowDialog(_propertyPanel);
 			});
 		}
 		public void KillEveryOne() {
 			WorkflowController.Instance.KillEveryBody();
+		}
+		public void ReturnToMainFrame() {
+			_currentControl.Dispose();
+			WorkflowController.Instance.GetMainFrameController().ReleaseLinkSelection();
+			WorkflowController.Instance.ReleaseLiveVideoController();
 		}
 		public BasePropertyControl CreateController(Panel propertyPanel, Session session, ChannelDescription channel) {
 			CurrentChannel = channel;

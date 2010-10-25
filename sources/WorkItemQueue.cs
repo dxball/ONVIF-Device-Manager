@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using nvc.utils;
+using onvifdm.utils;
 
 namespace nvc {
 	public class WorkItemQueue {
@@ -55,8 +55,8 @@ namespace nvc {
 						if (_action != null) {
 							try {
 								_action();
-							} catch {
-								DebugHelper.Assert(false);
+							} catch(Exception err) {
+								DebugHelper.Error(err);
 							}
 						}
 					}

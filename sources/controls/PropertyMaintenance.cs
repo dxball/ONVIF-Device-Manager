@@ -25,39 +25,75 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using nvc.models;
+using System.IO;
+using System.Diagnostics;
 
-namespace nvc.controls
-{
-    public partial class PropertyMaintenance : BasePropertyControl
-    {
-        public PropertyMaintenance()
-        {
-            InitializeComponent();
+namespace nvc.controls {
+	public partial class PropertyMaintenance : BasePropertyControl {
+		public override void ReleaseUnmanaged() { }
+		public Action<string> Upgrade {get; set;}
+		public Action SoftReset { get; set; }
 
-            InitControls();
-        }
-		void Localization(){
-			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceTitle);
-			_lblConfig.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceConfiguration);
-			_lblDiagnostics.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceDiagnostics);
-			_lblFactoryReset.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceFactoryReset);
-			_lblFirmwareVer.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceFirmwareVer);
-			_lblUpgrade.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceUpgrateFirmware);
-			//_linkSupport.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNSupportLink);
-			_btnBackup.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNBackup);
-			_btnHardReset.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNHardReset);
-			_btnRestore.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNRestore);
-			_btnSoftReset.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNSoftReset);
-			_btnUpgrade.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNUpgrate);
-			_btnDiagnostics.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNDownloadDump);
+		public PropertyMaintenance(DeviceMaintenanceModel devModel) {
+			InitializeComponent();
+			_btnSoftReset.Enabled = false;
+			BindData(devModel);
+			InitControls();
 		}
-        protected void InitControls()
-        {
+
+		void Localization() {
+			_title.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceTitle);
+			_lblConfig.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceConfiguration);
+			_lblDiagnostics.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceDiagnostics);
+			_lblFactoryReset.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceFactoryReset);
+			_lblFirmwareVer.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceFirmwareVer);
+			_lblUpgrade.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceUpgrateFirmware);
+			//_linkSupport.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sPropertyMaintenanceBTNSupportLink);
+			_btnBackup.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceBTNBackup);
+			_btnHardReset.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceBTNHardReset);
+			_btnRestore.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceBTNRestore);
+			_btnSoftReset.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceBTNSoftReset);
+			_btnUpgrade.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceBTNUpgrate);
+			_btnDiagnostics.CreateBinding(x => x.Text, Constants.Instance, x => x.sPropertyMaintenanceBTNDownloadDump);
+		}
+		[Conditional("DEBUG")]
+		void SetEnables() {
+			_btnSoftReset.Enabled = true;
+		}
+		protected void InitControls() {
 			Localization();
+			SetEnables();
+			_btnUpgrade.Click += new EventHandler(_btnUpgrade_Click);
+			_btnSoftReset.Click += new EventHandler(_btnSoftReset_Click);
 
-            //[TODO] Get data from device
-            //_tbFirmwareVer.Text = "00000001";
-        }
+			//Color
+			_title.BackColor = ColorDefinition.colTitleBackground;
+			BackColor = ColorDefinition.colControlBackground;
+		}
 
-    }
+		void _btnSoftReset_Click(object sender, EventArgs e) {
+			if (SoftReset != null) {
+				SoftReset();
+			}
+		}
+
+		void BindData(DeviceMaintenanceModel devModel) {
+			_tbFirmwareVer.CreateBinding(x => x.Text, devModel, x => x.currentFirmwareVersion);
+			_btnUpgrade.CreateBinding(x => x.Enabled, devModel, x => x.firmwareUpgradeSupported);
+		}
+
+		void _btnUpgrade_Click(object sender, EventArgs e) {
+			var openDialog = new OpenFileDialog();
+			openDialog.Filter = "Binary files (*.bin)|*.bin";
+			openDialog.InitialDirectory = Directory.GetCurrentDirectory();
+			var results = openDialog.ShowDialog(this);
+			if (results == DialogResult.OK) {
+				string path = openDialog.FileName;
+				if (Upgrade != null)
+					Upgrade(path);
+			}
+		}
+
+	}
 }

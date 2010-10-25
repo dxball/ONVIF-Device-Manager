@@ -29,7 +29,7 @@ using System.Collections.Generic;
 //using System.ServiceModel.Channels;
 //using System.Threading;
 
-//using nvc.utils;
+//using onvifdm.utils;
 //using nvc.models;
 
 namespace nvc.onvif {

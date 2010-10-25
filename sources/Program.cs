@@ -25,6 +25,8 @@ using nvc.controls;
 using nvc.controllers;
 using System.Reflection;
 using System.IO;
+using System.Threading;
+using onvifdm.utils;
 
 namespace nvc {
 	public static class Program {
@@ -39,15 +41,25 @@ namespace nvc {
 			}
 			return fullPath;
 		}
+		static Thread s_uiThread = null;
+		public static Thread uiThread {
+			get {
+				DebugHelper.Assert(s_uiThread != null);
+				return s_uiThread;
+			}
+		}
+
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
 		static void Main() {
+			s_uiThread = Thread.CurrentThread;
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
             var _controller = WorkflowController.Instance;
             var mainController = _controller.GetMainWindowController();
+			mainController.InitMainWindow();
             Application.Run(mainController.GetWindowRun());
 		}
 	}

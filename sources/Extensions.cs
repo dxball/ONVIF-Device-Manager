@@ -27,10 +27,99 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Threading;
 using System.Xml.XPath;
-using nvc.utils;
+using System.Xml;
+
+using onvifdm.utils;
+using System.Xml.Serialization;
+
 
 namespace nvc {
-	
+	public static class XmlExtensions {
+
+		public static T Deserialize<T>(this XmlNode xmlNode) {
+			var root = new XmlRootAttribute(xmlNode.LocalName){
+				Namespace = xmlNode.NamespaceURI
+			};
+			var serializer = new XmlSerializer(typeof(T), root);
+			using(var reader = new XmlNodeReader(xmlNode)){
+				return (T)serializer.Deserialize(reader);
+			}
+		}
+		public static XmlElement Serialize<T>(this T obj) {
+			var serializer = new XmlSerializer(typeof(T));
+			var  xmlDoc = new XmlDocument();
+			
+			using (var writer = xmlDoc.CreateNavigator().AppendChild()) {
+				serializer.Serialize(writer, obj);
+			}
+
+			return xmlDoc.DocumentElement;
+		}
+		public static XmlElement Serialize<T>(this T obj, XmlQualifiedName root) {
+			var rootAttr = new XmlRootAttribute(root.Name);
+			rootAttr.Namespace = root.Namespace;
+			var serializer = new XmlSerializer(typeof(T), rootAttr);
+			var xmlDoc = new XmlDocument();
+
+			using (var writer = xmlDoc.CreateNavigator().AppendChild()) {
+				serializer.Serialize(writer, obj);
+			}
+
+			return xmlDoc.DocumentElement;
+		}
+
+	}
+	public static class ObservableExtensions {
+		public static IObservable<Object> Handle<T>(this IObservable<T> observable, Action<T> act) {
+			return observable.Do(act).TakeLast(0).Select(x => new object());
+		}
+
+		public static IObservable<Object> Idle<T>(this IObservable<T> observable) {
+			return Observable.CreateWithDisposable<Object>(observer => {
+				return observable.Subscribe(_ => {
+				}, observer.OnError, observer.OnCompleted);
+			});
+		}
+
+		public static IObservable<T> IgnoreError<T>(this IObservable<T> observable) {
+			return Observable.CreateWithDisposable<T>(observer => {
+				return observable.Subscribe(observer.OnNext, err => observer.OnCompleted(), observer.OnCompleted);
+			});
+		}
+		public static IObservable<T> HandleError<T>(this IObservable<T> observable, Action<Exception> errorHandler) {
+			return Observable.CreateWithDisposable<T>(observer => {
+				return observable.Subscribe(observer.OnNext, 
+					err => {
+						try {
+							errorHandler(err);
+						} finally {
+							observer.OnCompleted();
+						}
+					}, 
+					observer.OnCompleted);
+			});
+		}
+	}
+
+
+	public static class XPathNavigable {
+		private class AnonymousXPathNavigable:IXPathNavigable {
+			private Func<XPathNavigator> m_factory;
+			public AnonymousXPathNavigable(Func<XPathNavigator> factory) {
+				if (factory == null) {
+					throw new ArgumentNullException("factory");
+				}
+				m_factory = factory;
+			}
+
+			public XPathNavigator CreateNavigator() {
+				return m_factory();
+			}
+		}
+		public static IXPathNavigable Create(Func<XPathNavigator> factory) {
+			return new AnonymousXPathNavigable(factory);
+		}
+	}
 	public static class XPathExtensions {
 		//private static Dictionary<string, XPathExpression> m_ExpressionCache = new Dictionary<string, XPathExpression>();
 		

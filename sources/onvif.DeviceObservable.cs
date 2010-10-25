@@ -22,11 +22,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Disposables;
-using onvif.services.device;
 using System.ServiceModel.Discovery;
 using System.Threading;
 using System.ServiceModel;
-using nvc.utils;
+
+using onvif.services.device;
+using onvifdm.utils;
+
+using onvif.types;
+
 
 namespace nvc.onvif {
 	public class  DeviceObservable:IDisposable{
@@ -46,20 +50,22 @@ namespace nvc.onvif {
 		//}
 
 		public IObservable<GetDeviceInformationResponse> GetDeviceInformation() {
-			var request = new GetDeviceInformationRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetDeviceInformationRequest, GetDeviceInformationResponse>(m_proxy.BeginGetDeviceInformation, m_proxy.EndGetDeviceInformation);
-			return asyncOp(request);
+			var request = new MsgGetDeviceInformationRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetDeviceInformationRequest, MsgGetDeviceInformationResponse>(m_proxy.BeginGetDeviceInformation, m_proxy.EndGetDeviceInformation);
+			return asyncOp(request).Select(x => x.parameters);
 		}
 
 		public IObservable<Scope[]> GetScopes() {
-			var request = new GetScopesRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetScopesRequest, GetScopesResponse>(m_proxy.BeginGetScopes, m_proxy.EndGetScopes);
-			return asyncOp(request).Select(x=>x.Scopes);
+			var request = new MsgGetScopesRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetScopesRequest, MsgGetScopesResponse>(m_proxy.BeginGetScopes, m_proxy.EndGetScopes);
+			return asyncOp(request).Select(x=>x.parameters.Scopes);
 		}
 
-		public IObservable<SetScopesResponse> SetScopes(string[] scopes) {
-			var request = new SetScopesRequest(scopes);
-			var asyncOp = Observable.FromAsyncPattern<SetScopesRequest, SetScopesResponse>(m_proxy.BeginSetScopes, m_proxy.EndSetScopes);
+		public IObservable<MsgSetScopesResponse> SetScopes(string[] scopes) {
+			var request = new MsgSetScopesRequest();
+			request.parameters.Scopes = scopes;
+
+			var asyncOp = Observable.FromAsyncPattern<MsgSetScopesRequest, MsgSetScopesResponse>(m_proxy.BeginSetScopes, m_proxy.EndSetScopes);
 			return asyncOp(request);
 		}
 
@@ -67,51 +73,69 @@ namespace nvc.onvif {
 			if (categories == null || categories.IsEmpty()) {
 				categories = new CapabilityCategory[] { CapabilityCategory.All };
 			}
-			var request = new GetCapabilitiesRequest(categories);
-			var asyncOp = Observable.FromAsyncPattern<GetCapabilitiesRequest, GetCapabilitiesResponse>(m_proxy.BeginGetCapabilities, m_proxy.EndGetCapabilities);
-			return asyncOp(request).Select(x => x.Capabilities);		
+			var request = new MsgGetCapabilitiesRequest();
+			request.parameters.Category = categories;
+			
+			var asyncOp = Observable.FromAsyncPattern<MsgGetCapabilitiesRequest, MsgGetCapabilitiesResponse>(m_proxy.BeginGetCapabilities, m_proxy.EndGetCapabilities);
+			return asyncOp(request).Select(x => x.parameters.Capabilities);		
 		}
 
 		public IObservable<NetworkInterface[]> GetNetworkInterfaces() {
-			var request = new GetNetworkInterfacesRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetNetworkInterfacesRequest, GetNetworkInterfacesResponse>(m_proxy.BeginGetNetworkInterfaces, m_proxy.EndGetNetworkInterfaces);
-			return asyncOp(request).Select(x => x.NetworkInterfaces);
+			var request = new MsgGetNetworkInterfacesRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetNetworkInterfacesRequest, MsgGetNetworkInterfacesResponse>(m_proxy.BeginGetNetworkInterfaces, m_proxy.EndGetNetworkInterfaces);
+			return asyncOp(request).Select(x => x.parameters.NetworkInterfaces);
 		}
 
 		public IObservable<bool> SetNetworkInterfaces(string interfaceToken, NetworkInterfaceSetConfiguration networkInterface) {
-			var request = new SetNetworkInterfacesRequest(interfaceToken, networkInterface);
-			var asyncOp = Observable.FromAsyncPattern<SetNetworkInterfacesRequest, SetNetworkInterfacesResponse>(m_proxy.BeginSetNetworkInterfaces, m_proxy.EndSetNetworkInterfaces);
-			return asyncOp(request).Select(x => x.RebootNeeded);
+			var request = new MsgSetNetworkInterfacesRequest();
+			request.parameters.InterfaceToken = interfaceToken;
+			request.parameters.NetworkInterface = networkInterface;
+
+			var asyncOp = Observable.FromAsyncPattern<MsgSetNetworkInterfacesRequest, MsgSetNetworkInterfacesResponse>(m_proxy.BeginSetNetworkInterfaces, m_proxy.EndSetNetworkInterfaces);
+			return asyncOp(request).Select(x => x.parameters.RebootNeeded);
 		}
 
 		public IObservable<NetworkGateway> GetNetworkDefaultGateway() {
-			var request = new GetNetworkDefaultGatewayRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetNetworkDefaultGatewayRequest, GetNetworkDefaultGatewayResponse>(m_proxy.BeginGetNetworkDefaultGateway, m_proxy.EndGetNetworkDefaultGateway);
-			return asyncOp(request).Select(x => x.NetworkGateway);
+			var request = new MsgGetNetworkDefaultGatewayRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetNetworkDefaultGatewayRequest, MsgGetNetworkDefaultGatewayResponse>(m_proxy.BeginGetNetworkDefaultGateway, m_proxy.EndGetNetworkDefaultGateway);
+			return asyncOp(request).Select(x => x.parameters.NetworkGateway);
 		}
 
 		public IObservable<DNSInformation> GetDNS() {
-			var request = new GetDNSRequest();
-			var asyncOp = Observable.FromAsyncPattern<GetDNSRequest, GetDNSResponse>(m_proxy.BeginGetDNS, m_proxy.EndGetDNS);
-			return asyncOp(request).Select(x => x.DNSInformation);	
+			var request = new MsgGetDNSRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetDNSRequest, MsgGetDNSResponse>(m_proxy.BeginGetDNS, m_proxy.EndGetDNS);
+			return asyncOp(request).Select(x => x.parameters.DNSInformation);	
 		}
 
 		public IObservable<Unit> SetDNS(bool fromDHCP, string[] searchDomain, IPAddress[] DNSManual) {
-			var request = new SetDNSRequest(fromDHCP, searchDomain, DNSManual);
-			var asyncOp = Observable.FromAsyncPattern<SetDNSRequest, SetDNSResponse>(m_proxy.BeginSetDNS, m_proxy.EndSetDNS);
+			var request = new MsgSetDNSRequest();
+			request.parameters.DNSManual = DNSManual;
+			request.parameters.FromDHCP = fromDHCP;
+			request.parameters.SearchDomain = searchDomain;
+			
+			var asyncOp = Observable.FromAsyncPattern<MsgSetDNSRequest, MsgSetDNSResponse>(m_proxy.BeginSetDNS, m_proxy.EndSetDNS);
 			return asyncOp(request).Select(x => new Unit());		
 		}
 
 		public IObservable<Unit> SetNetworkDefaultGateway(string[] ipv4Addresses, string[] ipv6Addresses) {
-			var request = new SetNetworkDefaultGatewayRequest(ipv4Addresses, ipv6Addresses);
-			var asyncOp = Observable.FromAsyncPattern<SetNetworkDefaultGatewayRequest, SetNetworkDefaultGatewayResponse>(m_proxy.BeginSetNetworkDefaultGateway, m_proxy.EndSetNetworkDefaultGateway);
+			var request = new MsgSetNetworkDefaultGatewayRequest();
+			request.parameters.IPv4Address = ipv4Addresses;
+			request.parameters.IPv6Address = ipv6Addresses;
+			
+			var asyncOp = Observable.FromAsyncPattern<MsgSetNetworkDefaultGatewayRequest, MsgSetNetworkDefaultGatewayResponse>(m_proxy.BeginSetNetworkDefaultGateway, m_proxy.EndSetNetworkDefaultGateway);
 			return asyncOp(request).Select(x => new Unit());		
 		}
 
 		public IObservable<string> SystemReboot() {
-			var request = new SystemRebootRequest();
-			var asyncOp = Observable.FromAsyncPattern<SystemRebootRequest, SystemRebootResponse>(m_proxy.BeginSystemReboot, m_proxy.EndSystemReboot);
-			return asyncOp(request).Select(x => x.Message);
+			var request = new MsgSystemRebootRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgSystemRebootRequest, MsgSystemRebootResponse>(m_proxy.BeginSystemReboot, m_proxy.EndSystemReboot);
+			return asyncOp(request).Select(x => x.parameters.Message);
+		}
+
+		public IObservable<StartFirmwareUpgradeResponse> StartFirmwareUpgrade() {
+			var request = new MsgStartFirmwareUpgradeRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgStartFirmwareUpgradeRequest, MsgStartFirmwareUpgradeResponse>(m_proxy.BeginStartFirmwareUpgrade, m_proxy.EndStartFirmwareUpgrade);
+			return asyncOp(request).Select(x => x.parameters);
 		}
 
 		public void Dispose() {

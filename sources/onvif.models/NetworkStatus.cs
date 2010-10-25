@@ -36,6 +36,12 @@ namespace nvc.models {
 		private IPAddress m_dns;
 		//private IPAddress m_defaultGateway;
 		
+		public NetworkStatus() {
+			m_mac = PhysicalAddress.None;
+			m_ip = new IPAddress(0);
+			m_dns = new IPAddress(0); 
+		}
+		
 		public PhysicalAddress mac {
 			get {
 				return m_mac;

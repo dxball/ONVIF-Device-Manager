@@ -29,34 +29,47 @@ using System.Threading;
 using nvc.entities;
 using nvc.controllers;
 using nvc.models;
-
+using XmlExplorer.Controls;
+using System.Xml.XPath;
+using System.Diagnostics;
 namespace nvc.controls
 {
-	public delegate void DeviceListItemSelectedDelegate(DeviceDescriptionModel devModel);
     public partial class DevicesListControl : UserControl
     {
-        public event DeviceListItemSelectedDelegate _onDeviceItemSelected;
-        public event EventHandler RefreshDeviceList;
-
+		protected DevicesListControlStrings strings = DevicesListControlStrings.Instance;
 		ColumnHeaderBindable _columnHeaderName = new ColumnHeaderBindable();
 		ColumnHeaderBindable _columnHeaderIP = new ColumnHeaderBindable();
 		ColumnHeaderBindable _columnHeaderType = new ColumnHeaderBindable();
 
-        public DevicesListControl()
+		public Action CreateDump;
+		public Action<DeviceDescriptionModel> ItemSelected;
+		public Action RefreshDeviceList;
+
+		public DevicesListControl(Action<DeviceDescriptionModel> itemSelected, Action refreshDevicesList, Action CreateD)
         {
+			CreateDump = CreateD;
+			ItemSelected = itemSelected;
+			RefreshDeviceList = refreshDevicesList;
+
             InitializeComponent();
             InitDevicesListView();
             InitEvents();
 			Localization();
+			_btnGetDump.Visible = false;
+
+			DebugInfo();
         }
-
+		[Conditional("DEBUG")]
+		void DebugInfo() {
+			_btnGetDump.Visible = true;
+		}
 		public void Localization() {
-			_title.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlTitle);
-			_btnRefresh.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlRefresh);
+			_title.CreateBinding(x => x.Text, strings, x => x.title);
+			_btnRefresh.CreateBinding(x => x.Text, strings, x => x.refresh);
 
-			_columnHeaderName.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlColumnName);
-			_columnHeaderIP.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlColumnIPadress);
-			_columnHeaderType.CreateBinding(x=>x.Text, Constants.Instance, x=>x.sDevicesListControlColumnType);
+			_columnHeaderName.CreateBinding(x => x.Text, strings, x => x.columnName);
+			_columnHeaderIP.CreateBinding(x => x.Text, strings, x => x.columnIPadress);
+			_columnHeaderType.CreateBinding(x => x.Text, strings, x => x.columnType);
 		}
         #region Iitialisation
         protected void InitDevicesListView()
@@ -88,15 +101,22 @@ namespace nvc.controls
         private void _btnRefresh_Click(object sender, EventArgs e)
         {
             if (RefreshDeviceList != null)
-                RefreshDeviceList(sender, e);
+                RefreshDeviceList();
         }
         void _lviewDevices_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+			_lviewDevices.Items.ForEach(x => {
+				((ListViewItem)x).BackColor = Color.FromKnownColor(KnownColor.Window);
+				((ListViewItem)x).ForeColor = Color.FromKnownColor(KnownColor.WindowText);
+			});
+			e.Item.BackColor = Color.FromKnownColor(KnownColor.Highlight);
+			e.Item.ForeColor = Color.FromKnownColor(KnownColor.HighlightText);
+
 			if(_lviewDevices.SelectedItems.Count != 0){
 				if (!CheckSameSelection()) {
 					currentSelection = e.Item;
-					if (_onDeviceItemSelected != null)
-						_onDeviceItemSelected((DeviceDescriptionModel)e.Item.Tag);
+					if (ItemSelected != null)
+						ItemSelected((DeviceDescriptionModel)e.Item.Tag);
 				}
 			}
         }
@@ -117,7 +137,6 @@ namespace nvc.controls
 		}
         public void AddItem(DeviceDescriptionModel devModel){
 			ListViewItemBindable lvItem = new ListViewItemBindable();
-
 
 			lvItem.Tag = devModel;
 			lvItem.CreateBinding(x => x.Text, devModel, x => x.Name);
@@ -148,11 +167,23 @@ namespace nvc.controls
 			if (_lviewDevices.SelectedItems.Count == 0) {
 				if(_lviewDevices.Items.Count != 0){
 					_lviewDevices.TopItem.Selected = true;
+					_lviewDevices.Items.ForEach(x => {
+						((ListViewItem)x).BackColor = Color.FromKnownColor(KnownColor.Window);
+						((ListViewItem)x).ForeColor = Color.FromKnownColor(KnownColor.WindowText);
+					});
+					_lviewDevices.TopItem.BackColor = Color.FromKnownColor(KnownColor.Highlight);
+					_lviewDevices.TopItem.ForeColor = Color.FromKnownColor(KnownColor.HighlightText);
 				}
 				return false;
 			}
 			return true;
 		}
         #endregion Items list
+
+		private void _btnGetDump_Click(object sender, EventArgs e) {
+			if (CreateDump != null)
+				CreateDump();
+			
+		}
     }
 }
