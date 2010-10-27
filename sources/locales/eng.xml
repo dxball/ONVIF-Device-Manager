@@ -65,7 +65,7 @@
 			<!--<string name="sVideoResolution720x576" value="720x576" />-->
 			<string name="sVideoPriorityStreaming" value="Streaming" />
 			<string name="sVideoPriorityAnalytics" value="Analytics" />
-			<string name="sLoadingData" value="Loading data ..." />
+			<string name="sLoadingData" value="Loading data..." />
 			<string name="sApplicationName" value="ONVIF Device Manager" />
 		</region>
 
