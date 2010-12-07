@@ -1,5 +1,0 @@
-D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\bin\Debug\onvifdm.utils.dll
-D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\bin\Debug\onvifdm.utils.pdb
-D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\obj\x86\Debug\ResolveAssemblyReference.cache
-D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\obj\x86\Debug\onvifdm.utils.dll
-D:\Work\Projects\NetworkVideoConsole\cam-soft\sources\utils\obj\x86\Debug\onvifdm.utils.pdb
