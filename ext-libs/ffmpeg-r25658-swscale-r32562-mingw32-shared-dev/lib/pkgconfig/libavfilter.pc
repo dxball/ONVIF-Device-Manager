@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libavfilter
+Description: FFmpeg video filtering library
+Version: 1.54.0
+Requires: 
+Requires.private: libavcore = 0.12.0
+Conflicts:
+Libs: -L${libdir} -lavfilter 
+Libs.private: -lavicap32 -lws2_32 -lxvidcore -lx264 -lvpx -lvorbisenc -lvorbis -logg -ltheoraenc -ltheoradec -logg -lspeex -L/usr/i686-mingw32/lib -lschroedinger-1.0 -lm -lorc-0.4 -L/usr/i686-mingw32/lib -lrtmp -lz -lopenjpeg -lopencore-amrwb -lopencore-amrnb -lmp3lame -lgsm -lavifil32 -lm -lbz2 -lz -lpsapi -lrtmp -lpolarssl -lws2_32 -lwinmm -lx264 -lpthread
+Cflags: -I${includedir}

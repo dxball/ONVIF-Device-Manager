@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1594296D-114A-4772-A5EA-4EFA85BF040A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>odm</RootNamespace>
+    <AssemblyName>odm-core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.CoreEx">
+      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.CoreEx.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Interactive">
+      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Interactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async">
+      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AsyncState.cs" />
+    <Compile Include="Buffer.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="models\AnnotationsModel.cs" />
+    <Compile Include="models\AntishakerModel.cs" />
+    <Compile Include="models\ChannelDescription.cs" />
+    <Compile Include="models\DateTimeSettingsModel.cs" />
+    <Compile Include="models\DepthCalibrationModel.cs" />
+    <Compile Include="models\DeviceCapabilityModel.cs" />
+    <Compile Include="models\DeviceDescriptionModel.cs" />
+    <Compile Include="models\DeviceIdentificationModel.cs" />
+    <Compile Include="models\DeviceInfo.cs" />
+    <Compile Include="models\DeviceInfoExtensions.cs" />
+    <Compile Include="models\DeviceMaintenanceModel.cs" />
+    <Compile Include="models\DeviceNetworkSettingsModel.cs" />
+    <Compile Include="models\DumpModel.cs" />
+    <Compile Include="models\ErrorInfoModel.cs" />
+    <Compile Include="models\EventsDisplayModel.cs" />
+    <Compile Include="models\ImagingSettingsModel.cs" />
+    <Compile Include="models\LiveModel.cs" />
+    <Compile Include="models\ModelBase.cs" />
+    <Compile Include="models\NetworkSettings.cs" />
+    <Compile Include="models\NetworkSettingsExtensions.cs" />
+    <Compile Include="models\NetworkStatus.cs" />
+    <Compile Include="models\NetworkStatusExtensions.cs" />
+    <Compile Include="models\ObjectTrackerModel.cs" />
+    <Compile Include="models\RuleEngineModel.cs" />
+    <Compile Include="models\VideoStreamingModel.cs" />
+    <Compile Include="models\VideoStreamingSettings.cs" />
+    <Compile Include="models\VideoStreamingSettingsExtensions.cs" />
+    <Compile Include="NotifyPropertyChangedBase.cs" />
+    <Compile Include="onvif.AnalyticsObservable.cs" />
+    <Compile Include="onvif.DeviceDescription.cs" />
+    <Compile Include="onvif.DeviceManager.cs" />
+    <Compile Include="onvif.DeviceObservable.cs" />
+    <Compile Include="onvif.Discovery.cs" />
+    <Compile Include="onvif.EventsObservable.cs" />
+    <Compile Include="onvif.ImagingObservable.cs" />
+    <Compile Include="onvif.MediaObservable.cs" />
+    <Compile Include="onvif.Session.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="rx.BatchOperation.cs" />
+    <Compile Include="rx.ObservableStream.cs" />
+    <Compile Include="rx.ObserverState.cs" />
+    <Compile Include="rx.PendingScheduler.cs" />
+    <Compile Include="synesis.onvif.extensions.cs" />
+    <Compile Include="WorkItemQueue.cs" />
+    <Compile Include="WsDiscoveryObservable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\onvif.services\onvif.services.csproj">
+      <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
+      <Name>onvif.services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\onvif.types\onvif.types.csproj">
+      <Project>{B4EE4417-967D-4C03-90C5-99430B64E2D5}</Project>
+      <Name>onvif.types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utils\utils.csproj">
+      <Project>{D4D3FFCE-F536-4ECA-9C36-4EE36F9AD98E}</Project>
+      <Name>utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

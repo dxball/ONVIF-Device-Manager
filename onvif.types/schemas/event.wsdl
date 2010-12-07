@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2008-2010 by ONVIF: Open Network Video Interface Forum. All rights reserved.
+
+Recipients of this document may copy, distribute, publish, or display this document so long as this copyright notice, license and disclaimer are retained with all copies of the document. No license is granted to modify this document.
+
+THIS DOCUMENT IS PROVIDED "AS IS," AND THE CORPORATION AND ITS MEMBERS AND THEIR AFFILIATES, MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THIS DOCUMENT ARE SUITABLE FOR ANY PURPOSE; OR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE OR CONSEQUENTIAL DAMAGES, ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT, WHETHER OR NOT (1) THE CORPORATION, MEMBERS OR THEIR AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, OR (2) SUCH DAMAGES WERE REASONABLY FORESEEABLE, AND ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT.  THE FOREGOING DISCLAIMER AND LIMITATION ON LIABILITY DO NOT APPLY TO, INVALIDATE, OR LIMIT REPRESENTATIONS AND WARRANTIES MADE BY THE MEMBERS AND THEIR RESPECTIVE AFFILIATES TO THE CORPORATION AND OTHER MEMBERS IN CERTAIN WRITTEN POLICIES OF THE CORPORATION.
+-->
+<wsdl:definitions xmlns:tev="http://www.onvif.org/ver10/events/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsnt="http://docs.oasis-open.org/wsn/b-2" xmlns:wsntw="http://docs.oasis-open.org/wsn/bw-2" xmlns:wsa="http://www.w3.org/2005/08/addressing" targetNamespace="http://www.onvif.org/ver10/events/wsdl">
+	<wsdl:import namespace="http://docs.oasis-open.org/wsn/bw-2" location="http://docs.oasis-open.org/wsn/bw-2.wsdl"/>
+	<wsdl:types>
+		<xs:schema targetNamespace="http://www.onvif.org/ver10/events/wsdl" xmlns:wstop="http://docs.oasis-open.org/wsn/t-1" xmlns:wsnt="http://docs.oasis-open.org/wsn/b-2" elementFormDefault="qualified">
+			<xs:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="http://www.w3.org/2005/08/addressing/ws-addr.xsd"/>
+			<xs:import namespace="http://docs.oasis-open.org/wsn/t-1" schemaLocation="http://docs.oasis-open.org/wsn/t-1.xsd"/>
+			<xs:import namespace="http://docs.oasis-open.org/wsn/b-2" schemaLocation="http://docs.oasis-open.org/wsn/b-2.xsd"/>
+			<!--  Message Request/Responses elements  -->
+			<!--===============================-->
+			<xs:element name="CreatePullPointSubscription">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Filter" type="wsnt:FilterType" minOccurs="0"/>
+						<xs:element name="InitialTerminationTime" type="wsnt:AbsoluteOrRelativeTimeType" nillable="true" minOccurs="0"/>
+						<xs:element name="SubscriptionPolicy" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="CreatePullPointSubscriptionResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SubscriptionReference" type="wsa:EndpointReferenceType"/>
+						<xs:element ref="wsnt:CurrentTime"/>
+						<xs:element ref="wsnt:TerminationTime"/>
+						<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="PullMessages">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Timeout" type="xs:duration"/>
+						<xs:element name="MessageLimit" type="xs:int"/>
+						<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PullMessagesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CurrentTime" type="xs:dateTime"/>
+						<xs:element name="TerminationTime" type="xs:dateTime"/>
+						<!--<xs:element name="NotificationMessage" type="wsnt:NotificationMessageHolderType" minOccurs="0" maxOccurs="unbounded"/>-->
+						<xs:element ref="wsnt:NotificationMessage" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PullMessagesFaultResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="MaxTimeout" type="xs:duration"/>
+						<xs:element name="MaxMessageLimit" type="xs:int"/>
+						<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="SetSynchronizationPoint">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SetSynchronizationPointResponse">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+			<xs:element name="GetEventProperties">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetEventPropertiesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="TopicNamespaceLocation" type="xs:anyURI" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element ref="wsnt:FixedTopicSet"/>
+						<xs:element ref="wstop:TopicSet"/>
+						<xs:element ref="wsnt:TopicExpressionDialect" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element name="MessageContentFilterDialect" type="xs:anyURI" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element name="ProducerPropertiesFilterDialect" type="xs:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="MessageContentSchemaLocation" type="xs:anyURI" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!--===============================-->
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="CreatePullPointSubscriptionRequest">
+		<wsdl:part name="parameters" element="tev:CreatePullPointSubscription"/>
+	</wsdl:message>
+	<wsdl:message name="CreatePullPointSubscriptionResponse">
+		<wsdl:part name="parameters" element="tev:CreatePullPointSubscriptionResponse"/>
+	</wsdl:message>
+	<wsdl:message name="PullMessagesRequest">
+		<wsdl:part name="parameters" element="tev:PullMessages"/>
+	</wsdl:message>
+	<wsdl:message name="PullMessagesResponse">
+		<wsdl:part name="parameters" element="tev:PullMessagesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="PullMessagesFaultResponse">
+		<wsdl:part name="parameters" element="tev:PullMessagesFaultResponse"/>
+	</wsdl:message>
+	<wsdl:message name="SetSynchronizationPointRequest">
+		<wsdl:part name="parameters" element="tev:SetSynchronizationPoint"/>
+	</wsdl:message>
+	<wsdl:message name="SetSynchronizationPointResponse">
+		<wsdl:part name="parameters" element="tev:SetSynchronizationPointResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetEventPropertiesRequest">
+		<wsdl:part name="parameters" element="tev:GetEventProperties"/>
+	</wsdl:message>
+	<wsdl:message name="GetEventPropertiesResponse">
+		<wsdl:part name="parameters" element="tev:GetEventPropertiesResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="EventPortType">
+		<wsdl:operation name="CreatePullPointSubscription">
+			<wsdl:input message="tev:CreatePullPointSubscriptionRequest" wsa:Action="http://www.onvif.org/ver10/events/wsdl/EventPortType/CreatePullPointSubscriptionRequest"/>
+			<wsdl:output message="tev:CreatePullPointSubscriptionResponse" wsa:Action="http://www.onvif.org/ver10/events/wsdl/EventPortType/CreatePullPointSubscriptionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetEventProperties">
+			<wsdl:input message="tev:GetEventPropertiesRequest" wsa:Action="http://www.onvif.org/ver10/events/wsdl/EventPortType/GetEventPropertiesRequest"/>
+			<wsdl:output message="tev:GetEventPropertiesResponse" wsa:Action="http://www.onvif.org/ver10/events/wsdl/EventPortType/GetEventPropertiesResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="PullPointSubscription">
+		<wsdl:operation name="PullMessages">
+			<wsdl:input message="tev:PullMessagesRequest" wsa:Action="http://www.onvif.org/ver10/events/wsdl/PullPointSubscription/PullMessagesRequest"/>
+			<wsdl:output message="tev:PullMessagesResponse" wsa:Action="http://www.onvif.org/ver10/events/wsdl/PullPointSubscription/PullMessagesResponse"/>
+			<wsdl:fault name="PullMessagesFaultResponse" message="tev:PullMessagesFaultResponse" wsa:Action="http://www.onvif.org/ver10/events/wsdl/PullPointSubscription/PullMessages/Fault/PullMessagesFaultResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="SetSynchronizationPoint">
+			<wsdl:input message="tev:SetSynchronizationPointRequest" wsa:Action="http://www.onvif.org/ver10/events/wsdl/PullPointSubscription/SetSynchronizationPointRequest"/>
+			<wsdl:output message="tev:SetSynchronizationPointResponse" wsa:Action="http://www.onvif.org/ver10/events/wsdl/PullPointSubscription/SetSynchronizationPointResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="PullPointSubscriptionBinding" type="tev:PullPointSubscription">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="PullMessages">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/PullMessages"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="PullMessagesFaultResponse">
+				<soap:fault name="PullMessagesFaultResponse" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="SetSynchronizationPoint">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/SetSynchronizationPoint"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="EventBinding" type="tev:EventPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="CreatePullPointSubscription">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/CreatePullPointSubscription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEventProperties">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/GetEventProperties"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="SubscriptionManagerBinding" type="wsntw:SubscriptionManager">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="Renew">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/Renew"/>
+			<wsdl:input name="RenewRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="RenewResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="wsnt:ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnacceptableTerminationTimeFault">
+				<soap:fault name="wsnt:UnacceptableTerminationTimeFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Unsubscribe">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/Unsubscribe"/>
+			<wsdl:input name="UnsubscribeRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="UnsubscribeResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="wsnt:ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnableToDestroySubscriptionFault">
+				<soap:fault name="wsnt:UnableToDestroySubscriptionFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="NotificationProducerBinding" type="wsntw:NotificationProducer">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="Subscribe">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/Subscribe"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="wsnt:ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidFilterFault">
+				<soap:fault name="wsnt:InvalidFilterFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="TopicExpressionDialectUnknownFault">
+				<soap:fault name="wsnt:TopicExpressionDialectUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidTopicExpressionFault">
+				<soap:fault name="wsnt:InvalidTopicExpressionFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="TopicNotSupportedFault">
+				<soap:fault name="wsnt:TopicNotSupportedFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidProducerPropertiesExpressionFault">
+				<soap:fault name="wsnt:InvalidProducerPropertiesExpressionFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidMessageContentExpressionFault">
+				<soap:fault name="wsnt:InvalidMessageContentExpressionFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnacceptableInitialTerminationTimeFault">
+				<soap:fault name="wsnt:UnacceptableInitialTerminationTimeFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnrecognizedPolicyRequestFault">
+				<soap:fault name="wsnt:UnrecognizedPolicyRequestFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnsupportedPolicyRequestFault">
+				<soap:fault name="wsnt:UnsupportedPolicyRequestFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="NotifyMessageNotSupportedFault">
+				<soap:fault name="wsnt:NotifyMessageNotSupportedFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="SubscribeCreationFailedFault">
+				<soap:fault name="wsnt:SubscribeCreationFailedFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetCurrentMessage">
+			<soap:operation soapAction="http://www.onvif.org/ver10/events/wsdl/GetCurrentMessage"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="wsnt:ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="TopicExpressionDialectUnknownFault">
+				<soap:fault name="wsnt:TopicExpressionDialectUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="InvalidTopicExpressionFault">
+				<soap:fault name="wsnt:InvalidTopicExpressionFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="TopicNotSupportedFault">
+				<soap:fault name="wsnt:TopicNotSupportedFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="NoCurrentMessageOnTopicFault">
+				<soap:fault name="wsnt:NoCurrentMessageOnTopicFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="MultipleTopicsSpecifiedFault">
+				<soap:fault name="wsnt:MultipleTopicsSpecifiedFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="NotificationConsumerBinding" type="wsntw:NotificationConsumer">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="Notify">
+			<soap:operation soapAction="urn:#Notify"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="PullPointBinding" type="wsntw:PullPoint">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="GetMessages">
+			<soap:operation soapAction="urn:#GetMessages"/>
+			<wsdl:input name="GetMessagesRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="GetMessagesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnableToGetMessagesFault">
+				<soap:fault name="UnableToGetMessagesFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="DestroyPullPoint">
+			<soap:operation soapAction="urn:#DestroyPullPoint"/>
+			<wsdl:input name="DestroyPullPointRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="DestroyPullPointResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnableToDestroyPullPointFault">
+				<soap:fault name="UnableToDestroyPullPointFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Notify">
+			<soap:operation soapAction="urn:#Notify"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="CreatePullPointBinding" type="wsntw:CreatePullPoint">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="CreatePullPoint">
+			<soap:operation soapAction="urn:#CreatePullPoint"/>
+			<wsdl:input name="CreatePullPointRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="CreatePullPointResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="UnableToCreatePullPointFault">
+				<soap:fault name="UnableToCreatePullPointFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="PausableSubscriptionManagerBinding" type="wsntw:PausableSubscriptionManager">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="Renew">
+			<soap:operation soapAction="urn:#Renew"/>
+			<wsdl:input name="RenewRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="RenewResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnacceptableTerminationTimeFault">
+				<soap:fault name="UnacceptableTerminationTimeFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Unsubscribe">
+			<soap:operation soapAction="urn:#Unsubscribe"/>
+			<wsdl:input name="UnsubscribeRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="UnsubscribeResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="UnableToDestroySubscriptionFault">
+				<soap:fault name="UnableToDestroySubscriptionFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="PauseSubscription">
+			<soap:operation soapAction="urn:#PauseSubscription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="PauseFailedFault">
+				<soap:fault name="PauseFailedFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="ResumeSubscription">
+			<soap:operation soapAction="urn:#ResumeSubscription"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="ResourceUnknownFault">
+				<soap:fault name="ResourceUnknownFault" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="ResumeFailedFault">
+				<soap:fault name="ResumeFailedFault" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+</wsdl:definitions>

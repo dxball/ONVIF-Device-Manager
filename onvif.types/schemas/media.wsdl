@@ -1,0 +1,1785 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:trt="http://www.onvif.org/ver10/media/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.onvif.org/ver10/media/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:tt="http://www.onvif.org/ver10/schema" elementFormDefault="qualified" targetNamespace="http://www.onvif.org/ver10/media/wsdl">
+      <xs:import schemaLocation="http://www.onvif.org/onvif/ver10/schema/onvif.xsd" namespace="http://www.onvif.org/ver10/schema" />
+      <xs:element name="GetVideoSources">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourcesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="VideoSources" type="tt:VideoSource" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSources">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourcesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="AudioSources" type="tt:AudioSource" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CreateProfile">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="tt:Name" />
+            <xs:element minOccurs="0" name="Token" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CreateProfileResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Profile" type="tt:Profile" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetProfile">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetProfileResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Profile" type="tt:Profile" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetProfiles">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetProfilesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Profiles" type="tt:Profile" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddVideoEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddVideoEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveVideoEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveVideoEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddVideoSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddVideoSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveVideoSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveVideoSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddAudioEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddAudioEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveAudioEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveAudioEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddAudioSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddAudioSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveAudioSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveAudioSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddPTZConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddPTZConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemovePTZConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemovePTZConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddVideoAnalyticsConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddVideoAnalyticsConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveVideoAnalyticsConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveVideoAnalyticsConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddMetadataConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddMetadataConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveMetadataConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="RemoveMetadataConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeleteProfile">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeleteProfileResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoEncoderConfigurations">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoEncoderConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:VideoEncoderConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourceConfigurations">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourceConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:VideoSourceConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioEncoderConfigurations">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioEncoderConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:AudioEncoderConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourceConfigurations">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourceConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:AudioSourceConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoAnalyticsConfigurations">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoAnalyticsConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:VideoAnalyticsConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMetadataConfigurations">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMetadataConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:MetadataConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:VideoSourceConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:VideoEncoderConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:AudioSourceConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:AudioEncoderConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoAnalyticsConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoAnalyticsConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:VideoAnalyticsConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMetadataConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMetadataConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:MetadataConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleVideoEncoderConfigurations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleVideoEncoderConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:VideoEncoderConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleVideoSourceConfigurations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleVideoSourceConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:VideoSourceConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleAudioEncoderConfigurations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleAudioEncoderConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:AudioEncoderConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleAudioSourceConfigurations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleAudioSourceConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:AudioSourceConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleVideoAnalyticsConfigurations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleVideoAnalyticsConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:VideoAnalyticsConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleMetadataConfigurations">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCompatibleMetadataConfigurationsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Configurations" type="tt:MetadataConfiguration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetVideoEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:VideoEncoderConfiguration" />
+            <xs:element name="ForcePersistence" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetVideoEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetVideoSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:VideoSourceConfiguration" />
+            <xs:element name="ForcePersistence" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetVideoSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAudioEncoderConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:AudioEncoderConfiguration" />
+            <xs:element name="ForcePersistence" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAudioEncoderConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAudioSourceConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:AudioSourceConfiguration" />
+            <xs:element name="ForcePersistence" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAudioSourceConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetVideoAnalyticsConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:VideoAnalyticsConfiguration" />
+            <xs:element name="ForcePersistence" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetVideoAnalyticsConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetMetadataConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="tt:MetadataConfiguration" />
+            <xs:element name="ForcePersistence" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetMetadataConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourceConfigurationOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="ConfigurationToken" type="tt:ReferenceToken" />
+            <xs:element minOccurs="0" name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoSourceConfigurationOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Options" type="tt:VideoSourceConfigurationOptions" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoEncoderConfigurationOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="ConfigurationToken" type="tt:ReferenceToken" />
+            <xs:element minOccurs="0" name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetVideoEncoderConfigurationOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Options" type="tt:VideoEncoderConfigurationOptions" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourceConfigurationOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="ConfigurationToken" type="tt:ReferenceToken" />
+            <xs:element minOccurs="0" name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioSourceConfigurationOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Options" type="tt:AudioSourceConfigurationOptions" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioEncoderConfigurationOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="ConfigurationToken" type="tt:ReferenceToken" />
+            <xs:element minOccurs="0" name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetAudioEncoderConfigurationOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Options" type="tt:AudioEncoderConfigurationOptions" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMetadataConfigurationOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="ConfigurationToken" type="tt:ReferenceToken" />
+            <xs:element minOccurs="0" name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMetadataConfigurationOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Options" type="tt:MetadataConfigurationOptions" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetGuaranteedNumberOfVideoEncoderInstances">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConfigurationToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetGuaranteedNumberOfVideoEncoderInstancesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="TotalNumber" type="xs:int" />
+            <xs:element minOccurs="0" name="JPEG" type="xs:int" />
+            <xs:element minOccurs="0" name="H264" type="xs:int" />
+            <xs:element minOccurs="0" name="MPEG4" type="xs:int" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetStreamUri">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="StreamSetup" type="tt:StreamSetup" />
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetStreamUriResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="MediaUri" type="tt:MediaUri" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="StartMulticastStreaming">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="StartMulticastStreamingResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="StopMulticastStreaming">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="StopMulticastStreamingResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetSynchronizationPoint">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetSynchronizationPointResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetSnapshotUri">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ProfileToken" type="tt:ReferenceToken" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetSnapshotUriResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="MediaUri" type="tt:MediaUri" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetVideoSourcesRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoSources" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourcesResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoSourcesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourcesRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioSources" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourcesResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioSourcesResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateProfileRequest">
+    <wsdl:part name="parameters" element="trt:CreateProfile" />
+  </wsdl:message>
+  <wsdl:message name="CreateProfileResponse">
+    <wsdl:part name="parameters" element="trt:CreateProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProfileRequest">
+    <wsdl:part name="parameters" element="trt:GetProfile" />
+  </wsdl:message>
+  <wsdl:message name="GetProfileResponse">
+    <wsdl:part name="parameters" element="trt:GetProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProfilesRequest">
+    <wsdl:part name="parameters" element="trt:GetProfiles" />
+  </wsdl:message>
+  <wsdl:message name="GetProfilesResponse">
+    <wsdl:part name="parameters" element="trt:GetProfilesResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddVideoEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddVideoEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddVideoEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddVideoEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveVideoEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemoveVideoEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemoveVideoEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemoveVideoEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddVideoSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddVideoSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddVideoSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddVideoSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveVideoSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemoveVideoSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemoveVideoSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemoveVideoSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddAudioEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddAudioEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddAudioEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddAudioEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAudioEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemoveAudioEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAudioEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemoveAudioEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddAudioSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddAudioSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddAudioSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddAudioSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAudioSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemoveAudioSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAudioSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemoveAudioSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPTZConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddPTZConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddPTZConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddPTZConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemovePTZConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemovePTZConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemovePTZConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemovePTZConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddVideoAnalyticsConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddVideoAnalyticsConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddVideoAnalyticsConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddVideoAnalyticsConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveVideoAnalyticsConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemoveVideoAnalyticsConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemoveVideoAnalyticsConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemoveVideoAnalyticsConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddMetadataConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:AddMetadataConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="AddMetadataConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:AddMetadataConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveMetadataConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:RemoveMetadataConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="RemoveMetadataConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:RemoveMetadataConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteProfileRequest">
+    <wsdl:part name="parameters" element="trt:DeleteProfile" />
+  </wsdl:message>
+  <wsdl:message name="DeleteProfileResponse">
+    <wsdl:part name="parameters" element="trt:DeleteProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourceConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoSourceConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourceConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoSourceConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoEncoderConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoEncoderConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoEncoderConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoEncoderConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourceConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioSourceConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourceConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioSourceConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioEncoderConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioEncoderConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioEncoderConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioEncoderConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoAnalyticsConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoAnalyticsConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoAnalyticsConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoAnalyticsConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetMetadataConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetMetadataConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoAnalyticsConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoAnalyticsConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoAnalyticsConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoAnalyticsConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:GetMetadataConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:GetMetadataConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleVideoEncoderConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetCompatibleVideoEncoderConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleVideoEncoderConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetCompatibleVideoEncoderConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleVideoSourceConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetCompatibleVideoSourceConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleVideoSourceConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetCompatibleVideoSourceConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleAudioEncoderConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetCompatibleAudioEncoderConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleAudioEncoderConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetCompatibleAudioEncoderConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleAudioSourceConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetCompatibleAudioSourceConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleAudioSourceConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetCompatibleAudioSourceConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleVideoAnalyticsConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetCompatibleVideoAnalyticsConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleVideoAnalyticsConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetCompatibleVideoAnalyticsConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleMetadataConfigurationsRequest">
+    <wsdl:part name="parameters" element="trt:GetCompatibleMetadataConfigurations" />
+  </wsdl:message>
+  <wsdl:message name="GetCompatibleMetadataConfigurationsResponse">
+    <wsdl:part name="parameters" element="trt:GetCompatibleMetadataConfigurationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetVideoSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:SetVideoSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="SetVideoSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:SetVideoSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetVideoEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:SetVideoEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="SetVideoEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:SetVideoEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetAudioSourceConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:SetAudioSourceConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="SetAudioSourceConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:SetAudioSourceConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetAudioEncoderConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:SetAudioEncoderConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="SetAudioEncoderConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:SetAudioEncoderConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetVideoAnalyticsConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:SetVideoAnalyticsConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="SetVideoAnalyticsConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:SetVideoAnalyticsConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetMetadataConfigurationRequest">
+    <wsdl:part name="parameters" element="trt:SetMetadataConfiguration" />
+  </wsdl:message>
+  <wsdl:message name="SetMetadataConfigurationResponse">
+    <wsdl:part name="parameters" element="trt:SetMetadataConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourceConfigurationOptionsRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoSourceConfigurationOptions" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoSourceConfigurationOptionsResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoSourceConfigurationOptionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoEncoderConfigurationOptionsRequest">
+    <wsdl:part name="parameters" element="trt:GetVideoEncoderConfigurationOptions" />
+  </wsdl:message>
+  <wsdl:message name="GetVideoEncoderConfigurationOptionsResponse">
+    <wsdl:part name="parameters" element="trt:GetVideoEncoderConfigurationOptionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourceConfigurationOptionsRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioSourceConfigurationOptions" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioSourceConfigurationOptionsResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioSourceConfigurationOptionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioEncoderConfigurationOptionsRequest">
+    <wsdl:part name="parameters" element="trt:GetAudioEncoderConfigurationOptions" />
+  </wsdl:message>
+  <wsdl:message name="GetAudioEncoderConfigurationOptionsResponse">
+    <wsdl:part name="parameters" element="trt:GetAudioEncoderConfigurationOptionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataConfigurationOptionsRequest">
+    <wsdl:part name="parameters" element="trt:GetMetadataConfigurationOptions" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataConfigurationOptionsResponse">
+    <wsdl:part name="parameters" element="trt:GetMetadataConfigurationOptionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetGuaranteedNumberOfVideoEncoderInstancesRequest">
+    <wsdl:part name="parameters" element="trt:GetGuaranteedNumberOfVideoEncoderInstances" />
+  </wsdl:message>
+  <wsdl:message name="GetGuaranteedNumberOfVideoEncoderInstancesResponse">
+    <wsdl:part name="parameters" element="trt:GetGuaranteedNumberOfVideoEncoderInstancesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStreamUriRequest">
+    <wsdl:part name="parameters" element="trt:GetStreamUri" />
+  </wsdl:message>
+  <wsdl:message name="GetStreamUriResponse">
+    <wsdl:part name="parameters" element="trt:GetStreamUriResponse" />
+  </wsdl:message>
+  <wsdl:message name="StartMulticastStreamingRequest">
+    <wsdl:part name="parameters" element="trt:StartMulticastStreaming" />
+  </wsdl:message>
+  <wsdl:message name="StartMulticastStreamingResponse">
+    <wsdl:part name="parameters" element="trt:StartMulticastStreamingResponse" />
+  </wsdl:message>
+  <wsdl:message name="StopMulticastStreamingRequest">
+    <wsdl:part name="parameters" element="trt:StopMulticastStreaming" />
+  </wsdl:message>
+  <wsdl:message name="StopMulticastStreamingResponse">
+    <wsdl:part name="parameters" element="trt:StopMulticastStreamingResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetSynchronizationPointRequest">
+    <wsdl:part name="parameters" element="trt:SetSynchronizationPoint" />
+  </wsdl:message>
+  <wsdl:message name="SetSynchronizationPointResponse">
+    <wsdl:part name="parameters" element="trt:SetSynchronizationPointResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSnapshotUriRequest">
+    <wsdl:part name="parameters" element="trt:GetSnapshotUri" />
+  </wsdl:message>
+  <wsdl:message name="GetSnapshotUriResponse">
+    <wsdl:part name="parameters" element="trt:GetSnapshotUriResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Media">
+    <wsdl:operation name="GetVideoSources">
+      <wsdl:input message="trt:GetVideoSourcesRequest" />
+      <wsdl:output message="trt:GetVideoSourcesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSources">
+      <wsdl:input message="trt:GetAudioSourcesRequest" />
+      <wsdl:output message="trt:GetAudioSourcesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateProfile">
+      <wsdl:input message="trt:CreateProfileRequest" />
+      <wsdl:output message="trt:CreateProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProfile">
+      <wsdl:input message="trt:GetProfileRequest" />
+      <wsdl:output message="trt:GetProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProfiles">
+      <wsdl:input message="trt:GetProfilesRequest" />
+      <wsdl:output message="trt:GetProfilesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddVideoEncoderConfiguration">
+      <wsdl:input message="trt:AddVideoEncoderConfigurationRequest" />
+      <wsdl:output message="trt:AddVideoEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveVideoEncoderConfiguration">
+      <wsdl:input message="trt:RemoveVideoEncoderConfigurationRequest" />
+      <wsdl:output message="trt:RemoveVideoEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddVideoSourceConfiguration">
+      <wsdl:input message="trt:AddVideoSourceConfigurationRequest" />
+      <wsdl:output message="trt:AddVideoSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveVideoSourceConfiguration">
+      <wsdl:input message="trt:RemoveVideoSourceConfigurationRequest" />
+      <wsdl:output message="trt:RemoveVideoSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddAudioEncoderConfiguration">
+      <wsdl:input message="trt:AddAudioEncoderConfigurationRequest" />
+      <wsdl:output message="trt:AddAudioEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAudioEncoderConfiguration">
+      <wsdl:input message="trt:RemoveAudioEncoderConfigurationRequest" />
+      <wsdl:output message="trt:RemoveAudioEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddAudioSourceConfiguration">
+      <wsdl:input message="trt:AddAudioSourceConfigurationRequest" />
+      <wsdl:output message="trt:AddAudioSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAudioSourceConfiguration">
+      <wsdl:input message="trt:RemoveAudioSourceConfigurationRequest" />
+      <wsdl:output message="trt:RemoveAudioSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPTZConfiguration">
+      <wsdl:input message="trt:AddPTZConfigurationRequest" />
+      <wsdl:output message="trt:AddPTZConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemovePTZConfiguration">
+      <wsdl:input message="trt:RemovePTZConfigurationRequest" />
+      <wsdl:output message="trt:RemovePTZConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddVideoAnalyticsConfiguration">
+      <wsdl:input message="trt:AddVideoAnalyticsConfigurationRequest" />
+      <wsdl:output message="trt:AddVideoAnalyticsConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveVideoAnalyticsConfiguration">
+      <wsdl:input message="trt:RemoveVideoAnalyticsConfigurationRequest" />
+      <wsdl:output message="trt:RemoveVideoAnalyticsConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddMetadataConfiguration">
+      <wsdl:input message="trt:AddMetadataConfigurationRequest" />
+      <wsdl:output message="trt:AddMetadataConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveMetadataConfiguration">
+      <wsdl:input message="trt:RemoveMetadataConfigurationRequest" />
+      <wsdl:output message="trt:RemoveMetadataConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProfile">
+      <wsdl:input message="trt:DeleteProfileRequest" />
+      <wsdl:output message="trt:DeleteProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoSourceConfigurations">
+      <wsdl:input message="trt:GetVideoSourceConfigurationsRequest" />
+      <wsdl:output message="trt:GetVideoSourceConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoEncoderConfigurations">
+      <wsdl:input message="trt:GetVideoEncoderConfigurationsRequest" />
+      <wsdl:output message="trt:GetVideoEncoderConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSourceConfigurations">
+      <wsdl:input message="trt:GetAudioSourceConfigurationsRequest" />
+      <wsdl:output message="trt:GetAudioSourceConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioEncoderConfigurations">
+      <wsdl:input message="trt:GetAudioEncoderConfigurationsRequest" />
+      <wsdl:output message="trt:GetAudioEncoderConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoAnalyticsConfigurations">
+      <wsdl:input message="trt:GetVideoAnalyticsConfigurationsRequest" />
+      <wsdl:output message="trt:GetVideoAnalyticsConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataConfigurations">
+      <wsdl:input message="trt:GetMetadataConfigurationsRequest" />
+      <wsdl:output message="trt:GetMetadataConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoSourceConfiguration">
+      <wsdl:input message="trt:GetVideoSourceConfigurationRequest" />
+      <wsdl:output message="trt:GetVideoSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoEncoderConfiguration">
+      <wsdl:input message="trt:GetVideoEncoderConfigurationRequest" />
+      <wsdl:output message="trt:GetVideoEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSourceConfiguration">
+      <wsdl:input message="trt:GetAudioSourceConfigurationRequest" />
+      <wsdl:output message="trt:GetAudioSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioEncoderConfiguration">
+      <wsdl:input message="trt:GetAudioEncoderConfigurationRequest" />
+      <wsdl:output message="trt:GetAudioEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoAnalyticsConfiguration">
+      <wsdl:input message="trt:GetVideoAnalyticsConfigurationRequest" />
+      <wsdl:output message="trt:GetVideoAnalyticsConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataConfiguration">
+      <wsdl:input message="trt:GetMetadataConfigurationRequest" />
+      <wsdl:output message="trt:GetMetadataConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleVideoEncoderConfigurations">
+      <wsdl:input message="trt:GetCompatibleVideoEncoderConfigurationsRequest" />
+      <wsdl:output message="trt:GetCompatibleVideoEncoderConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleVideoSourceConfigurations">
+      <wsdl:input message="trt:GetCompatibleVideoSourceConfigurationsRequest" />
+      <wsdl:output message="trt:GetCompatibleVideoSourceConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleAudioEncoderConfigurations">
+      <wsdl:input message="trt:GetCompatibleAudioEncoderConfigurationsRequest" />
+      <wsdl:output message="trt:GetCompatibleAudioEncoderConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleAudioSourceConfigurations">
+      <wsdl:input message="trt:GetCompatibleAudioSourceConfigurationsRequest" />
+      <wsdl:output message="trt:GetCompatibleAudioSourceConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleVideoAnalyticsConfigurations">
+      <wsdl:input message="trt:GetCompatibleVideoAnalyticsConfigurationsRequest" />
+      <wsdl:output message="trt:GetCompatibleVideoAnalyticsConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleMetadataConfigurations">
+      <wsdl:input message="trt:GetCompatibleMetadataConfigurationsRequest" />
+      <wsdl:output message="trt:GetCompatibleMetadataConfigurationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetVideoSourceConfiguration">
+      <wsdl:input message="trt:SetVideoSourceConfigurationRequest" />
+      <wsdl:output message="trt:SetVideoSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetVideoEncoderConfiguration">
+      <wsdl:input message="trt:SetVideoEncoderConfigurationRequest" />
+      <wsdl:output message="trt:SetVideoEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAudioSourceConfiguration">
+      <wsdl:input message="trt:SetAudioSourceConfigurationRequest" />
+      <wsdl:output message="trt:SetAudioSourceConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAudioEncoderConfiguration">
+      <wsdl:input message="trt:SetAudioEncoderConfigurationRequest" />
+      <wsdl:output message="trt:SetAudioEncoderConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetVideoAnalyticsConfiguration">
+      <wsdl:input message="trt:SetVideoAnalyticsConfigurationRequest" />
+      <wsdl:output message="trt:SetVideoAnalyticsConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetMetadataConfiguration">
+      <wsdl:input message="trt:SetMetadataConfigurationRequest" />
+      <wsdl:output message="trt:SetMetadataConfigurationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoSourceConfigurationOptions">
+      <wsdl:input message="trt:GetVideoSourceConfigurationOptionsRequest" />
+      <wsdl:output message="trt:GetVideoSourceConfigurationOptionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoEncoderConfigurationOptions">
+      <wsdl:input message="trt:GetVideoEncoderConfigurationOptionsRequest" />
+      <wsdl:output message="trt:GetVideoEncoderConfigurationOptionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSourceConfigurationOptions">
+      <wsdl:input message="trt:GetAudioSourceConfigurationOptionsRequest" />
+      <wsdl:output message="trt:GetAudioSourceConfigurationOptionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioEncoderConfigurationOptions">
+      <wsdl:input message="trt:GetAudioEncoderConfigurationOptionsRequest" />
+      <wsdl:output message="trt:GetAudioEncoderConfigurationOptionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataConfigurationOptions">
+      <wsdl:input message="trt:GetMetadataConfigurationOptionsRequest" />
+      <wsdl:output message="trt:GetMetadataConfigurationOptionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGuaranteedNumberOfVideoEncoderInstances">
+      <wsdl:input message="trt:GetGuaranteedNumberOfVideoEncoderInstancesRequest" />
+      <wsdl:output message="trt:GetGuaranteedNumberOfVideoEncoderInstancesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStreamUri">
+      <wsdl:input message="trt:GetStreamUriRequest" />
+      <wsdl:output message="trt:GetStreamUriResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="StartMulticastStreaming">
+      <wsdl:input message="trt:StartMulticastStreamingRequest" />
+      <wsdl:output message="trt:StartMulticastStreamingResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="StopMulticastStreaming">
+      <wsdl:input message="trt:StopMulticastStreamingRequest" />
+      <wsdl:output message="trt:StopMulticastStreamingResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetSynchronizationPoint">
+      <wsdl:input message="trt:SetSynchronizationPointRequest" />
+      <wsdl:output message="trt:SetSynchronizationPointResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSnapshotUri">
+      <wsdl:input message="trt:GetSnapshotUriRequest" />
+      <wsdl:output message="trt:GetSnapshotUriResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MediaBinding" type="trt:Media">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetVideoSources">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdlGetVideoSources/" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSources">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetAudioSources" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateProfile">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/CreateProfile" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProfile">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdlGetProfile/" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProfiles">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetProfiles" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddVideoEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddVideoEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddVideoSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddVideoSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddAudioEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddAudioEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddAudioSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddAudioSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPTZConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddPTZConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddVideoAnalyticsConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddVideoAnalyticsConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMetadataConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/AddMetadataConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveVideoEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemoveVideoEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveVideoSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemoveVideoSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAudioEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemoveAudioEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAudioSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemoveAudioSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemovePTZConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemovePTZConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveVideoAnalyticsConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemoveVideoAnalyticsConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveMetadataConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/RemoveMetadataConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProfile">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/DeleteProfile" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoSourceConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoSourceConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoEncoderConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoEncoderConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSourceConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdlGetAudioSourceConfigurations/" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioEncoderConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetAudioEncoderConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoAnalyticsConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoAnalyticsConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetMetadataConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetAudioSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetAudioEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoAnalyticsConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoAnalyticsConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetMetadataConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleVideoEncoderConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetCompatibleVideoEncoderConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleVideoSourceConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetCompatibleVideoSourceConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleAudioEncoderConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetCompatibleAudioEncoderConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleAudioSourceConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetCompatibleAudioSourceConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleVideoAnalyticsConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetCompatibleVideoAnalyticsConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompatibleMetadataConfigurations">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetCompatibleMetadataConfigurations" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetVideoSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetVideoSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetVideoEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetVideoEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAudioSourceConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetAudioSourceConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAudioEncoderConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetAudioEncoderConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetVideoAnalyticsConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetVideoAnalyticsConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetMetadataConfiguration">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetMetadataConfiguration" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoSourceConfigurationOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdlGetVideoSourceConfigurationOptions/" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVideoEncoderConfigurationOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetVideoEncoderConfigurationOptions" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioSourceConfigurationOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetAudioSourceConfigurationOptions" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAudioEncoderConfigurationOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetAudioEncoderConfigurationOptions" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataConfigurationOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetMetadataConfigurationOptions" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGuaranteedNumberOfVideoEncoderInstances">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/ GetGuaranteedNumberOfVideoEncoderInstances" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStreamUri">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetStreamUri" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartMulticastStreaming">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/StartMulticastStreaming" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StopMulticastStreaming">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/StopMulticastStreaming" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetSynchronizationPoint">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/SetSynchronizationPoint" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSnapshotUri">
+      <soap:operation soapAction="http://www.onvif.org/ver10/media/wsdl/GetSnapshotUri" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

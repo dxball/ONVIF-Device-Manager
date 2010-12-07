@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2008 by ONVIF: Open Network Video Interface Forum. All rights reserved.
+
+Recipients of this document may copy, distribute, publish, or display this document so long as this copyright notice, license and disclaimer are retained with all copies of the document. No license is granted to modify this document.
+
+THIS DOCUMENT IS PROVIDED "AS IS," AND THE CORPORATION AND ITS MEMBERS AND THEIR AFFILIATES, MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THIS DOCUMENT ARE SUITABLE FOR ANY PURPOSE; OR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE OR CONSEQUENTIAL DAMAGES, ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT, WHETHER OR NOT (1) THE CORPORATION, MEMBERS OR THEIR AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, OR (2) SUCH DAMAGES WERE REASONABLY FORESEEABLE, AND ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT.  THE FOREGOING DISCLAIMER AND LIMITATION ON LIABILITY DO NOT APPLY TO, INVALIDATE, OR LIMIT REPRESENTATIONS AND WARRANTIES MADE BY THE MEMBERS AND THEIR RESPECTIVE AFFILIATES TO THE CORPORATION AND OTHER MEMBERS IN CERTAIN WRITTEN POLICIES OF THE CORPORATION.
+-->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:timg="http://www.onvif.org/ver10/imaging/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tt="http://www.onvif.org/ver10/schema" name="ImagingService" targetNamespace="http://www.onvif.org/ver10/imaging/wsdl">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:timg="http://www.onvif.org/ver10/imaging/wsdl" targetNamespace="http://www.onvif.org/ver10/imaging/wsdl">
+      <xs:import namespace="http://www.onvif.org/ver10/schema" schemaLocation="onvif.xsd"/>
+      <!--  Message Request/Responses elements  -->
+      <!--===============================-->
+      <xs:element name="GetImagingSettings">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetImagingSettingsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ImagingSettings" type="tt:ImagingSettings"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===============================-->
+      <xs:element name="SetImagingSettings">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+            <xs:element name="ImagingSettings" type="tt:ImagingSettings"/>
+            <xs:element name="ForcePersistence " type="xs:boolean" maxOccurs="1" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetImagingSettingsResponse">
+        <xs:complexType/>
+      </xs:element>
+      <!--===============================-->
+      <xs:element name="GetOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ImagingOptions" type="tt:ImagingOptions"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===============================-->
+      <xs:element name="Move">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+            <xs:element name="Focus" type="tt:FocusMove"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="MoveResponse">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===============================-->
+      <xs:element name="GetMoveOptions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMoveOptionsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="MoveOptions" type="tt:MoveOptions"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===============================-->
+      <xs:element name="Stop">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="StopResponse">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===============================-->
+      <xs:element name="GetStatus">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="VideoSourceToken" type="tt:ReferenceToken"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetStatusResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Status" type="tt:ImagingStatus"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===============================-->
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetImagingSettingsRequest">
+    <wsdl:part name="parameters" element="timg:GetImagingSettings"/>
+  </wsdl:message>
+  <wsdl:message name="GetImagingSettingsResponse">
+    <wsdl:part name="parameters" element="timg:GetImagingSettingsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SetImagingSettingsRequest">
+    <wsdl:part name="parameters" element="timg:SetImagingSettings"/>
+  </wsdl:message>
+  <wsdl:message name="SetImagingSettingsResponse">
+    <wsdl:part name="parameters" element="timg:SetImagingSettingsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetOptionsRequest">
+    <wsdl:part name="parameters" element="timg:GetOptions"/>
+  </wsdl:message>
+  <wsdl:message name="GetOptionsResponse">
+    <wsdl:part name="parameters" element="timg:GetOptionsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="MoveRequest">
+    <wsdl:part name="parameters" element="timg:Move"/>
+  </wsdl:message>
+  <wsdl:message name="MoveResponse">
+    <wsdl:part name="parameters" element="timg:MoveResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetMoveOptionsRequest">
+    <wsdl:part name="parameters" element="timg:GetMoveOptions"/>
+  </wsdl:message>
+  <wsdl:message name="GetMoveOptionsResponse">
+    <wsdl:part name="parameters" element="timg:GetMoveOptionsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="StopRequest">
+    <wsdl:part name="parameters" element="timg:Stop"/>
+  </wsdl:message>
+  <wsdl:message name="StopResponse">
+    <wsdl:part name="parameters" element="timg:StopResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetStatusRequest">
+    <wsdl:part name="parameters" element="timg:GetStatus"/>
+  </wsdl:message>
+  <wsdl:message name="GetStatusResponse">
+    <wsdl:part name="parameters" element="timg:GetStatusResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="ImagingPort">
+    <wsdl:operation name="GetImagingSettings">
+      <wsdl:documentation>Get the ImagingConfiguration for the requested VideoSource.</wsdl:documentation>
+      <wsdl:input message="timg:GetImagingSettingsRequest"/>
+      <wsdl:output message="timg:GetImagingSettingsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="SetImagingSettings">
+      <wsdl:documentation>Set the ImagingConfiguration for the requested VideoSource.</wsdl:documentation>
+      <wsdl:input message="timg:SetImagingSettingsRequest"/>
+      <wsdl:output message="timg:SetImagingSettingsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetOptions">
+      <wsdl:documentation>Get device specific ranges for Imaging parameters and functions.</wsdl:documentation>
+      <wsdl:input message="timg:GetOptionsRequest"/>
+      <wsdl:output message="timg:GetOptionsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="Move">
+      <wsdl:documentation>Imaging move operation
+			</wsdl:documentation>
+      <wsdl:input message="timg:MoveRequest"/>
+      <wsdl:output message="timg:MoveResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetMoveOptions">
+      <wsdl:documentation>Imaging move operation options</wsdl:documentation>
+      <wsdl:input message="timg:GetMoveOptionsRequest"/>
+      <wsdl:output message="timg:GetMoveOptionsResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="Stop">
+      <wsdl:documentation>Imaging stop operation</wsdl:documentation>
+      <wsdl:input message="timg:StopRequest"/>
+      <wsdl:output message="timg:StopResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <wsdl:documentation>Imaging status operation.</wsdl:documentation>
+      <wsdl:input message="timg:GetStatusRequest"/>
+      <wsdl:output message="timg:GetStatusResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ImagingBinding" type="timg:ImagingPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetImagingSettings">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/GetImagingSettings"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetImagingSettings">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/SetImagingSettings"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/GetOptions"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Move">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/Move"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Stop">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/FocusStop"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/GetStatus"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMoveOptions">
+      <soap:operation soapAction="http://www.onvif.org/ver10/imaging/wsdl/GetMoveOptions"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ImagingService">
+    <wsdl:port name="ImagingPort" binding="timg:ImagingBinding">
+      <soap:address location="http://localhost:8000/WebService/Imaging"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B4EE4417-967D-4C03-90C5-99430B64E2D5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>onvif.types</RootNamespace>
+    <AssemblyName>onvif.types</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="generated\events.generated.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="generated\device.generated.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="schemas\onvif.designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="schemas\b-2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\bf-2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\devicemgmt.wsdl">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\event.wsdl">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\include.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\media.wsdl" />
+    <None Include="schemas\onvif.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\t-1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\ws-addr.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\xml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="schemas\xmlmime.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="b-2.type-map.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="code-gen\xsd-map.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="events.ws-map.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="device.ws-map.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="code-gen\wcf-proxy-generator.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="known-types.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="code-gen\wsdl2ws-map.xslt">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ns-map.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
