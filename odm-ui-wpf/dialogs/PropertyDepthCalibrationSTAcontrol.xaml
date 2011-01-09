@@ -1,0 +1,22 @@
+﻿<my:CustomDialogWindow x:Class="odm.controls.PropertyDepthCalibrationSTAcontrol"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:my="clr-namespace:odm.controls"
+		Style="{StaticResource ResourceKey='Common.CustomDialogWindow'}"
+        Title="PropertyDepthCalibrationSTAcontrol" 
+		WindowStartupLocation="CenterScreen"
+		SizeToContent="WidthAndHeight"
+		ShowInTaskbar="False" ResizeMode="NoResize">
+    <Grid>
+        <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="12,4,0,0" Name="rb1d" VerticalAlignment="Top" />
+        <RadioButton Content="RadioButton" Height="16" HorizontalAlignment="Left" Margin="12,21,0,0" Name="rb2d" VerticalAlignment="Top" />
+        <GroupBox Header="" Height="110" HorizontalAlignment="Left" Margin="188,12,0,0" Name="groupBox1" VerticalAlignment="Top" Width="291">
+            <Grid>
+                <my:EditTextBox HorizontalAlignment="Left" Margin="6,6,0,0" x:Name="editFocalLength" VerticalAlignment="Top" Width="263" />
+                <my:EditComboBox HorizontalAlignment="Left" Margin="6,40,0,0" x:Name="editMatrixFormat" VerticalAlignment="Top" Width="263" />
+            </Grid>
+        </GroupBox>
+        <my:SaveCancelControl HorizontalAlignment="Left" Margin="194,122,0,0" x:Name="_saveCancelControl" VerticalAlignment="Top" Width="178" />
+        <my:MarkerPhysSize HorizontalAlignment="Left" Margin="12,39,0,0" x:Name="markerPhysSize" VerticalAlignment="Top" Height="111" />
+    </Grid>
+</my:CustomDialogWindow>

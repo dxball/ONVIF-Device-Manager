@@ -1,0 +1,8 @@
+﻿<Window x:Class="odm.dialogs.GetDump"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GetDump" Height="300" Width="300" xmlns:my="clr-namespace:odm.controls" Icon="/odm;component/Images/Onvif-DM.ico">
+    <Grid>
+        <my:GetDumpControl x:Name="dumpControl"/>
+    </Grid>
+</Window>

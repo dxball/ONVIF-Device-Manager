@@ -1,0 +1,52 @@
+﻿<Local:BasePropertyControl 
+	xmlns:wtk="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended"
+	x:Class="odm.controls.PropertyVideoStreaming"
+    xmlns:Local="clr-namespace:odm.controls"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	mc:Ignorable="d"
+	d:DesignHeight="418"
+	d:DesignWidth="736" VerticalAlignment="Stretch">
+
+	<DockPanel>
+		<Local:Title x:Name="title" VerticalAlignment="Top" Height="23" DockPanel.Dock="Top" Margin="0,0,0,6"/>
+		<Local:SaveCancelControl x:Name="_saveCancelControl" Height="26" DockPanel.Dock="Bottom" Margin="0"/>
+		
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Margin="0" Name="form">
+			
+        	<StackPanel>
+				<Label Name="channelNameCaption" Content="Channel name" Margin="0,0,0,6"/>
+				<Label Name="resolutionCaption" Content="Resolution" Margin="0,0,0,6" />
+				<Label Name="frameRateCaption" Content="Frame rate" Margin="0,0,0,6" />
+				<Label Name="encodingIntervalCaption" Content="Encoding interval" Margin="0,0,0,6"/>
+				<Label Name="encoderCaption" Content="Encoder" Margin="0,0,0,6" />
+				<Label Name="bitrateCaption" Content="Bitrate" Margin="0,0,0,6" />
+				<Label Name="metadataCaption" Content="Metadata" Margin="0,0,0,6" />
+				<Label Name="priorityCaption" Visibility="Hidden" Content="Priority" Margin="0,0,0,6" IsEnabled="False" />                
+			</StackPanel>
+			
+			<StackPanel>
+				<TextBox Name="channelName" Text="Channel name" Height="{Binding ElementName=channelNameCaption, Path=ActualHeight}" Width="{Binding ElementName=resolution, Path=ActualWidth}" Margin="0,0,0,6" />
+				<ComboBox Name="resolution"  Height="{Binding ElementName=resolutionCaption, Path=ActualHeight}" Margin="0,0,0,6" />
+				<wtk:NumericUpDown Name="frameRate" Height="{Binding ElementName=frameRateCaption, Path=ActualHeight}" Margin="0,0,0,6" />
+				<DockPanel Height="{Binding ElementName=encodingIntervalCaption, Path=ActualHeight}" Margin="0,0,0,6">
+					<Label Name="encodingValue" VerticalAlignment="Center" DockPanel.Dock="Right" MinWidth="50" FlowDirection="RightToLeft">
+						<TextBlock Text="{Binding Value, ElementName=encodingInterval, StringFormat=F1}"/>
+					</Label>
+					<Slider Name="encodingInterval" VerticalAlignment="Center" Value="1.9090923"  MinWidth="150" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Value}"/>
+				</DockPanel>				
+				<ComboBox Name="encoder" Height="{Binding ElementName=encoderCaption, Path=ActualHeight}" Margin="0,0,0,6" />
+				<wtk:NumericUpDown Name="bitrate" Height="{Binding ElementName=bitrateCaption, Path=ActualHeight}" Margin="0,0,0,6"  />
+				<ContentControl Height="{Binding ElementName=metadataCaption, Path=ActualHeight}" Margin="0,0,0,6" >
+					<CheckBox Name="metadata" VerticalAlignment="Center"/>
+				</ContentControl>
+				<ComboBox Name="priority" Visibility="Hidden" Height="{Binding ElementName=priorityCaption, Path=ActualHeight}" Margin="0,0,0,6" IsEnabled="False" />
+			</StackPanel>
+			
+		</StackPanel>
+		<Local:VideoPlayer Margin="0,0,0,6" x:Name="_videoPlayer" Background="Black" MinHeight="100" MinWidth="{Binding ElementName=form, Path=ActualWidth}"/>
+		
+	</DockPanel>
+</Local:BasePropertyControl>

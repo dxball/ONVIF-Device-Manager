@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="odm.controls.DeviceChannelControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="221" d:DesignWidth="265" xmlns:my="clr-namespace:odm.controls">
+    <GroupBox BorderThickness="1">
+		<GroupBox.Header>
+			<Label x:Name="title"/>
+		</GroupBox.Header>
+		<StackPanel Orientation="Horizontal" Margin="3">
+			<Image Height="128" HorizontalAlignment="Left" Name="_img" Stretch="Uniform" VerticalAlignment="Top" Width="128" Margin="3" />
+			<StackPanel x:Name="_channelLinksPanel" Margin="3" DockPanel.Dock="Right"/>
+		</StackPanel>
+		<!--<Image Height="98" HorizontalAlignment="Left" Name="_img" Stretch="Uniform" VerticalAlignment="Top" Width="98" Margin="4,4,0,0" />
+        <my:Title Margin="108,0,8,0" x:Name="title" VerticalAlignment="Top" />
+        <StackPanel Margin="108,32,8,8" Name="_channelLinksPanel" />-->
+	</GroupBox>
+</UserControl>

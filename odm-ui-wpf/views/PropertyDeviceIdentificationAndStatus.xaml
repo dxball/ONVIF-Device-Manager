@@ -1,0 +1,42 @@
+﻿<local:BasePropertyControl x:Class="odm.controls.PropertyDeviceIdentificationAndStatus"
+	xmlns:local="clr-namespace:odm.controls"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	x:Name="ctrl"
+	mc:Ignorable="d" 
+	d:DesignHeight="248" d:DesignWidth="300">
+	
+    <DockPanel VerticalAlignment="Top">
+		<local:Title x:Name="title" DockPanel.Dock="Top" Margin="0,0,0,6" Content="Identification and status"/>
+		<local:SaveCancelControl x:Name="saveCancel" Margin="0,6,0,0" HorizontalAlignment="Left" DockPanel.Dock="Bottom" />
+		
+		<Grid DockPanel.Dock="Left">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition  Height="auto"/>
+				<RowDefinition  Height="auto"/>
+				<RowDefinition  Height="auto"/>
+				<RowDefinition  Height="auto"/>
+				<RowDefinition  Height="auto"/>
+				<RowDefinition  Height="auto"/>
+			</Grid.RowDefinitions>
+			<Label x:Name="lbName" Margin="0,0,0,6" Grid.Row="0" Grid.Column="0"  Content="Name"/>
+			<TextBox x:Name="tbName" Margin="0,0,0,6" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center"/>
+			<Label x:Name="lbHardware" Margin="0,0,0,6" Grid.Row="1" Grid.Column="0"  Content="Hardware"/>
+			<TextBox x:Name="tbHardware" Margin="0,0,0,6" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center"/>
+			<Label x:Name="lbFirmware" Margin="0,0,0,6" Grid.Row="2" Grid.Column="0"  Content="Firmware"/>
+			<TextBox x:Name="tbFirmware" Margin="0,0,0,6" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center"/>
+			<Label x:Name="lbDevID" Margin="0,0,0,6" Grid.Row="3" Grid.Column="0"  Content="Device Id"/>
+			<TextBox x:Name="tbDevID" Margin="0,0,0,6" Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center"/>
+			<Label x:Name="lbIPAddr" Margin="0,0,0,6" Grid.Row="4" Grid.Column="0"  Content="Ip address"/>
+			<TextBox x:Name="tbIPAddr" Margin="0,0,0,6" Grid.Row="4" Grid.Column="1" VerticalContentAlignment="Center"/>
+			<Label x:Name="lbMACAddr" Margin="0,0,0,6" Grid.Row="5" Grid.Column="0"  Content="MAC"/>
+			<TextBox x:Name="tbMACAddr" Margin="0,0,0,6" Grid.Row="5" Grid.Column="1" VerticalContentAlignment="Center"/>
+		</Grid>		
+	</DockPanel>
+</local:BasePropertyControl>

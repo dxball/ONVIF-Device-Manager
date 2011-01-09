@@ -1,0 +1,10 @@
+﻿<Window x:Class="odm.controls.PropertyDepthCalibrationSTA"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PropertyDepthCalibrationSTA" Height="300" Width="300" xmlns:my="clr-namespace:odm.controls" ResizeMode="NoResize" ShowInTaskbar="False" WindowState="Maximized" WindowStyle="None" xmlns:my1="clr-namespace:odm.controls.GraphEditor">
+    <Grid Name="mainGrid">
+        <my:VideoPlayer x:Name="_videoPlayer" />
+        
+        <my1:RegionEditor x:Name="regionEditor" />
+    </Grid>
+</Window>

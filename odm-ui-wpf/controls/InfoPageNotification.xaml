@@ -1,0 +1,17 @@
+﻿<Local:BasePropertyControl x:Class="odm.controls.InfoPageNotification"
+             xmlns:Local="clr-namespace:odm.controls"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Local:Title x:Name="title" VerticalAlignment="Top" />
+        <TextBlock Height="19" Margin="12,32,12,0" Name="lText" Text="TextBlock" VerticalAlignment="Top" />
+        <ProgressBar Height="10" Margin="12,57,12,0" Name="_progressBar" VerticalAlignment="Top" IsIndeterminate="True" />
+        <Button Content="Button" Height="23" Margin="0,73,12,0" Name="_btnClose" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Style="{StaticResource CommonButtonStyle}" Visibility="Hidden" />
+        <WebBrowser Margin="12,108,12,12" Name="detailsView" Visibility="Hidden" />
+        <Button Content="Details" Height="23" HorizontalAlignment="Left" Margin="12,73,0,0" Name="details" VerticalAlignment="Top" Width="75" Visibility="Hidden" />
+    </Grid>
+</Local:BasePropertyControl>

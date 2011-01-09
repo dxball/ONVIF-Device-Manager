@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<localized-strings lang-iso3="rus">
+
+<!-- REGION Common Application -->
+  <module name="CommonApplicationStrings" namespace="nvc">
+    <string name="On" value="Включено" />
+    <string name="Off" value="Выключено" />
+    <string name="Yes" value="Да" />
+    <string name="No" value="Нет" />
+    <string name="streaming" value="Стриминг" />
+    <string name="analytics" value="Аналитика" />
+    <string name="loadingData" value="Загрузка данных..." />
+    <string name="applicationName" value="Менеджер устройств ONVIF" />
+  </module>
+  <module name="DeviceControlStrings" namespace="odm.controls">
+    <string name="title" value="Устройство" />
+    <string name="languageEng" value="English" />
+    <string name="languageRus" value="Русский" />
+    <string name="languagetc" value="繁中" />
+  </module>
+  <module name="SaveCancelStrings" namespace="odm.controls">
+    <string name="save" value="Сохранить" />
+    <string name="cancel" value="Отмена" />
+  </module>
+  <module name="LinkButtonsStrings" namespace="odm.controls">
+    <string name="identificationAndStatus" value="Идентификация" />
+    <string name="timesettings" value="Настройки времени" />
+    <string name="networkSettings" value="Настройки сети" />
+    <string name="digitalIO" value="Цифровые входы и выходы" />
+    <string name="maintenance" value="Обслуживание" />
+    <string name="systemLog" value="Системный журнал" />
+    <string name="xmlExplorer" value="Навигатор XML" />
+    <string name="commonEvents" value="Общие события" />
+    <string name="liveVideo" value="Живое видео" />
+    <string name="sensorSettings" value="Настройки Сенсора" />
+    <string name="events" value="События" />
+    <string name="metadata" value="Метаданные" />
+    <string name="depthCalibration" value="Калибровка перспективы" />
+    <string name="videoStreaming" value="Стриминг видео" />
+    <string name="displayAnnotation" value="Аннотация" />
+    <string name="tamperingDetectors" value="Тамперинг-детекторы" />
+    <string name="objectTracker" value="Сопровождение объектов" />
+    <string name="ruleEngine" value="Настройка правил" />
+    <string name="cantishaker" value="Стабилизатор" />
+    <string name="rotation" value="Поворот и отражение" />
+    <string name="analogueOutput" value="Аналоговый выход" />
+  </module>
+	<module name="InfoFormStrings" namespace="odm.controllers">
+		<string name="titleSave" value="Сохранение изменений..." />
+    <string name="titleInfo" value="Информация..." />
+    <string name="close" value="Закрыть" />
+    <string name="applyChangesTitle" value="Применяем ..." />
+    <string name="ifoTitle" value="Информация ..." />
+    <string name="errorTitle" value="Ошибка ..." />
+    <string name="applyChanges" value="Пожалуйста, подождите пока изменения применятся." />
+    <string name="needToReboot" value="Пожалуйста, подождите перезагрузки устройства." />
+    <string name="firmwareUpdated" value="Обновление прошивки прошло успешно. Пожалуйста, подождите перезагрузки устройства." />
+	</module>
+  <module name="EmptySelectionStrings" namespace="odm.controls">
+    <string name="title" value="Нет подключенных устройств" />
+    <string name="text" value="Пожалуйста, проверьте, что устройство подключено" />
+    <string name="textContacts" value="" />
+    <!--<string name="sNotifierImg" value="Resources\Images\BigLogo.png" />-->
+  </module>
+<!-- ENDOFREGION Common Application -->
+
+<!-- REGION Errors -->
+  <module name="ExceptionStrings" namespace="nvc">
+    <string name="sExceptionWSDiscoveryTitle" value="Ошибка при обнаружении устройства (WS-Discover)." />
+    <string name="sErrorDevInfoNull" value="Ошибка при чтении конфигурации устройства. Пожалуйста, обновите список устройств." />
+    <string name="sErrorDeviceName" value="Не задано" />
+    <!--<string name="sErrorDeviceIPAddress" value="0.0.0.0" />-->
+    <string name="sErrorDeviceFirmware" value="Не задано" />
+    <string name="sErrorSaveVideoStreaming" value="Ошибка при записи видео настроек. Пожалуйста, обновите список устройств." />
+    <string name="sErrorSaveNetworkSettings" value="Ошибка при записи сетевых настроек. Пожалуйста, обновите список устройств." />
+    <string name="sErrorSaveDeviceNameSettings" value="Ошибка при записи настроек устройства. Пожалуйста, обновите список устройств." />
+    <string name="sErrorVlc" value="Ошибка медийного потока" />
+    <string name="sErrorVlcPlayer" value="Ошибка при проигрывании видеопотока" />
+    <string name="sErrorVlcMediaUriIsEmpty" value="Пустая ссылка на видеопоток" />
+    <string name="sErrorVlcMediaUriIsBad" value="Неверная ссылка на видеопоток" />
+  </module>
+<!-- ENDOFREGION Errors -->
+
+<!-- REGION Device List -->
+  <module name="DevicesListControlStrings" namespace="odm.controls">
+    <string name="title" value="Сеть" />
+    <string name="refresh" value="Обновить" />
+    <string name="columnName" value="Имя" />
+    <string name="columnIPadress" value="Сетевой адрес" />
+    <string name="columnType" value="Прошивка" />
+  </module>
+<!-- ENDOFREGION Device List -->
+  
+<!-- REGION Device settings -->
+  <module name="PropertyIdentificationStrings" namespace="odm.controls">
+    <string name="title" value="Идентификация устройства" />
+    <string name="name" value="Название" />
+    <string name="curTime" value="Текущее время" />
+    <string name="deviceID" value="ID устройства" />
+    <string name="firmware" value="Программное обеспечение" />
+    <string name="hardware" value="Аппаратное обеспечение" />
+    <string name="version" value="Версия" />
+    <string name="ipAddress" value="Сетевой адрес" />
+    <string name="macAddress" value="MAC-адрес" />
+  </module>
+  <module name="PropertyTimeZoneStrings" namespace="odm.controls">
+    <string name="title" value="Настройки времени" />
+    <string name="currentTime" value="Текущее время" />
+    <string name="newTime" value="Новое время" />
+    <string name="timeZone" value="Временная зона:" />
+    <string name="autoAdjustString" value="Автоматически применять переход на летний-зимний режим" />
+    <string name="sinchronizeWithComp" value="Синхронизировать с компьютерным временем" />
+    <string name="date" value="Дата:" />
+    <string name="time" value="Время:" />
+    <string name="sinchronizeWithNTP" value="Синхронизировать с NTP сервером" />
+    <string name="NTPserver" value="NTP сервер:" />
+    <string name="manually" value="Установить вручную:" />
+    <string name="timeMode" value="Режим времени:" />
+    <string name="ntpServerSetupTitle" value="Установка NTP сервера" />
+    <string name="ntpServerSetupSet" value="Установить" />
+  </module>
+  <module name="PropertyNetworkSettingsStrings" namespace="odm.controls">
+    <string name="title" value="Настройки сети" />
+    <string name="dhcp" value="DHCP" />
+    <string name="ipAddr" value="IP-адрес устройства" />
+    <string name="subnetMask" value="Маска подсети" />
+    <string name="gateAddr" value="Адрес шлюза" />
+    <string name="dnsAddr" value="DNS-адрес" />
+    <string name="macAddr" value="MAC-адрес" />
+  </module>
+  <module name="PropertyDigitalIOStrings" namespace="odm.controls">
+    <string name="title" value="Цифровые входы и выходы" />
+    <string name="inputName" value="Имя" />
+    <string name="inputNormalStatus" value="Нормальное состояние" />
+    <string name="inputCurrentStatus" value="Текущее состояние" />
+    <string name="outputName" value="Имя" />
+    <string name="outputIdleStatus" value="Нормальное состояние" />
+    <string name="outputCurrentStatus" value="Текущее состояние" />
+    <string name="inputs" value="Цифровые входы" />
+    <string name="outputs" value="Цифровые выходы (реле)" />
+    <string name="eventAction" value="Действие по событию" />
+    <string name="eventSendONVIFmessage" value="Отправить сообщение ONVIF" />
+    <string name="triggerRelay" value="Включить реле" />
+    <string name="recordChannel" value="Включить запись канала" />
+    <string name="switchAnalogue" value="Включить аналоговый выход" />
+    <string name="buttonTriggerRelay" value="Переключить реле" />
+  </module>
+  <module name="PropertyMaintenanceStrings" namespace="odm.controls">
+    <string name="title" value="Обслуживание" />
+    <string name="configuration" value="Конфигурация" />
+    <string name="btnBackup" value="Сохранить" />
+    <string name="btnRestore" value="Восстановить" />
+    <string name="factoryReset" value="Сброс" />
+    <string name="btnSoftReset" value="Перезагрузить устройство" />
+    <string name="btnHardReset" value="Вернуться к заводским настройками" />
+    <string name="diagnostics" value="Диагностика и поддержка" />
+    <string name="btnDownloadDump" value="Скачать логи" />
+    <!--<string name="sPropertyMaintenanceBTNSupportLink" value="support@gtrg.ru" />-->
+    <string name="firmwareVer" value="Текущая прошивка" />
+    <string name="upgrateFirmware" value="Изменить прошивку" />
+    <string name="btnUpgrate" value="Обновить" />
+    <string name="updateCompleate" value="Обновление прошивки прошло успешно. Пожалуйста, подождите перезагрузки устройства." />
+  </module>
+  <module name="SystemLogStrings" namespace="odm.controls">
+    <string name="title" value="Системный журнал" />
+  </module>
+  <module name="XMLExplorerStrings" namespace="odm.controls">
+    <string name="title" value="Навигатор XML" />
+    <string name="save" value="Сохранить" />
+  </module>
+  <module name="CommonEventsStrings" namespace="odm.controls">
+    <string name="title" value="Общие события" />
+    <string name="ruleID" value="ID правила" />
+    <string name="eventID" value="ID события" />
+    <string name="dateTime" value="Дата/время" />
+    <string name="type" value="Тип" />
+    <string name="details" value="Детали" />
+  </module>
+<!-- ENDOFREGION Device settings -->
+
+<!-- REGION Chanels settings -->
+  <module name="PropertyLiveVideoStrings" namespace="odm.controls">
+    <string name="title" value="Живое видео" />
+  </module>
+  <module name="PropertySensorSettingsStrings" namespace="odm.controls">
+    <string name="title" value="Настройки сенсора" />
+    <string name="brightness" value="Яркость" />
+    <string name="saturation" value="Насыщенность цвета" />
+    <string name="contrast" value="Контраст" />
+    <string name="sharpness" value="Четкость" />
+    <string name="whitemode" value="Баланс белого АВТО режим" />
+    <string name="whiteBalanceCb" value="Баланс белого Cb" />
+    <string name="whiteBalanceCr" value="Баланс белого Cr" />
+    <string name="auto" value="Auto" />
+    <string name="min" value="мин" />
+    <string name="max" value="макс" />
+  </module>
+  <module name="PropertyChannelEventsStrings" namespace="odm.controls">
+    <string name="title" value="События" />
+    <string name="ruleID" value="ID правила" />
+    <string name="eventID" value="ID события" />
+    <string name="dateTime" value="Дата/время" />
+    <string name="type" value="Тип" />
+    <string name="details" value="Детали" />
+  </module>
+  <module name="PropertyDepthCalibrationStrings" namespace="odm.controls">
+    <string name="physHeightTitle" value="Настройки калибровки" />
+    <string name="physHeightSave" value="Установить" />
+    <string name="title" value="Калибровка перспективы" />
+    <string name="focalLength" value="Фокусное расстояние, мм" />
+    <string name="sensorPixel" value="Размер пикселя фотосенсора, мм" />
+    <string name="matrixFormat" value="Формат матрицы" />
+    <string name="save" value="Калибровать" />
+    <string name="cancel" value="Выход" />
+    <string name="heightMarker" value="Маркер высоты" />
+    <string name="marker2D" value="2D-маркер" />
+    <string name="width" value="Ширина" />
+    <string name="heigth" value="Высота" />
+    <string name="widthLiteral" value="ш" />
+    <string name="heigthLiteral" value="в" />
+    <string name="unknow" value="Не знаю" />
+    <string name="physHeight" value="Размер реального объекта, см" />
+  </module>
+  <module name="PropertyVideoStreamingStrings" namespace="odm.controls">
+    <string name="title" value="Стриминг видео" />
+    <string name="resolution" value="Разрешение, пиксели" />
+    <string name="frameRate" value="Частота кадров, кадров/с" />
+    <string name="encodingInterval" value="Интервал кодировки, число кадров" />
+    <string name="encoder" value="Кодер" />
+    <string name="bitrate" value="Битрейт, кбит/c" />
+    <string name="prioriy" value="Приоритет" />
+    <string name="metadata" value="Поток метаданных" />
+    <string name="channelName" value="Имя канала" />
+  </module>
+  <module name="PropertyMetadataStrings" namespace="odm.controls">
+    <string name="title" value="Metadata" />
+  </module>
+  <module name="PropertyDisplayAnnotationStrings" namespace="odm.controls">
+    <string name="title" value="Отображаемая анотация" />
+    <string name="timestamp" value="Временная метка" />
+    <string name="objects" value="Регионы движения" />
+    <string name="trajectories" value="Объекты и траектории" />
+    <string name="speed" value="Скорость" />
+    <string name="userRegion" value="Область детектирования" />
+    <string name="channelName" value="Имя канала" />
+    <string name="calibrationNet" value="Калибровачная сетка" />
+  </module>
+  <module name="PropertyTamperingDetectorsStrings" namespace="odm.controls">
+    <string name="title" value="Тамперинг-детекторы" />
+    <string name="signalLost" value="Сигнал потерян" />
+    <string name="globalChange" value="Глобальное изменение" />
+    <string name="sceneDark" value="Изображение слишком темное" />
+    <string name="sceneBright" value="Изображение слишком яркое" />
+    <string name="sceneNoisy" value="Изображение зашумлено" />
+    <string name="outFocus" value="Изображение расфокусировано" />
+    <string name="fieldObstructed" value="Препятствие в поле зрения" />
+    <string name="cameraDisplaced" value="Камера перемещена" />
+  </module>
+  <module name="PropertyObjectTrackerStrings" namespace="odm.controls">
+    <string name="title" value="Слежение за объектом" />
+    <string name="contrast" value="Чуствительность контраста" />
+    <string name="areaMin" value="Минимальная площадь объекта, м2" />
+    <string name="areaMax" value="Максимальная площадь объекта, м2" />
+    <string name="speedMax" value="Максимальная скорость, м/с" />
+    <string name="stabilization" value="Время стабилизации, мс" />
+    <string name="direction" value="Направления" />
+    <string name="all" value="Вкл" />
+    <string name="none" value="Выкл" />
+  </module>
+  <module name="PropertyRuleEngineStrings" namespace="odm.controls">
+    <string name="title" value="Настройка правил" />
+    <string name="btnAdd" value="Добавить" />
+    <string name="btnRemove" value="Удалить" />
+    <string name="name" value="Имя" />
+    <string name="groupRule" value="Инициировать тревогу при:" />
+    <string name="groupAction" value="По тревоге:" />
+    <string name="moving" value="Движение" />
+    <string name="meters" value="м" />
+    <string name="movingInDirections" value="в направлениях:" />
+    <string name="loitering" value="Праздношатание" />
+    <string name="seconds" value="с" />
+    <string name="within" value="в течение" />
+    <string name="running" value="Бежит быстрее чем" />
+    <string name="speed" value="м/с" />
+    <string name="abandoning" value="Оставлен предмет" />
+    <string name="sendOnvif" value="Послать сообщение ONVIF" />
+    <string name="setFramerate" value="Сменить частоту кадров" />
+    <string name="fps" value="fps" />
+    <string name="turnOnRelay" value="Включить реле" />
+    <string name="turnOnAnalog" value="Включить аналог. выход" />
+    <string name="record" value="Записать на диск" />
+    <string name="ptz" value="Направить PTZ-камеру" />
+  </module>
+  <module name="PropertyAntishakerStrings" namespace="odm.controls">
+    <string name="title" value="Стабилизатор" />
+  </module>
+  <module name="PropertyRotationStrings" namespace="odm.controls">
+    <string name="title" value="Вращение" />
+    <string name="rotate" value="Вращение:" />
+    <string name="rotate0" value="0'(Нет)" />
+    <string name="rotate90" value="90'" />
+    <string name="rotate180" value="180'" />
+    <string name="rotate270" value="270'" />
+    <string name="flip" value="Отражение:" />
+    <string name="flipH0" value="Нет" />
+    <string name="flipH" value="По горизонтали" />
+    <string name="flipV0" value="Нет" />
+    <string name="flipV" value="По вертикали" />
+  </module>
+  <module name="PropertyAnalogueOutputStrings" namespace="odm.controls">
+    <string name="title" value="Аналоговый выход" />
+    <string name="loop" value="Сквозное подключение" />
+    <string name="digital" value="Цифровая обработка" />
+    <string name="off" value="Выключен" />
+  </module>
+<!-- ENDOFREGION Chanels settings -->
+</localized-strings>
