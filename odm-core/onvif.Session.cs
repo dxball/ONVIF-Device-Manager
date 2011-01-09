@@ -31,8 +31,8 @@ using System.ServiceModel.Channels;
 using System.Xml;
 using System.Xml.Linq;
 
-using onvifdm.utils;
-using nvc.models;
+using odm.utils;
+using odm.models;
 
 using onvif.types;
 using onvif.services.device;
@@ -51,7 +51,7 @@ using syn = synesis.onvif.extensions;
 
 using net = global::System.Net;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 	
 	public class Session {
 		private Uri m_transportUri;
@@ -67,7 +67,7 @@ namespace nvc.onvif {
 			this.m_deviceDescription = deviceDescription;
 			this.m_transportUri = deviceDescription.uris.Where(x => x.Scheme == Uri.UriSchemeHttp).LastOrDefault();
 			if (this.m_transportUri == null) {
-				DebugHelper.Break();
+				dbg.Break();
 				throw new Exception("failed to create session");
 			}
 		}
@@ -81,28 +81,43 @@ namespace nvc.onvif {
 			if (m_context == null) {
 				if (typeof(T).IsValueType) {
 					var err = new InvalidCastException();
-					DebugHelper.Error(err);
+					dbg.Error(err);
 					throw err;
 				}
 				return default(T);
 			}
-			DebugHelper.Assert(typeof(T).IsAssignableFrom(m_context.GetType()));
+			dbg.Assert(typeof(T).IsAssignableFrom(m_context.GetType()));
 			return (T)m_context;
 		}
 		
 		static Session() {
-			var binding = new CustomBinding();
-			binding.Elements.Add(new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8));
-			binding.Elements.Add(new HttpTransportBindingElement() {
-				MaxReceivedMessageSize  = 10 * 1024 * 1024
-			});
 
+			Binding binding = null;
+
+			try {
+				binding = new CustomBinding("odm-core/onvif-sevices");
+			} catch {
+				var _binding = new CustomBinding() {
+					CloseTimeout = TimeSpan.FromMinutes(3),
+					OpenTimeout = TimeSpan.FromMinutes(3),
+					SendTimeout = TimeSpan.FromMinutes(3),				
+				};
+
+				_binding.Elements.Add(new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8));
+				_binding.Elements.Add(new HttpTransportBindingElement() {
+					MaxReceivedMessageSize = 10 * 1024 * 1024,
+				});
+				binding = _binding;
+			}
+			
+			
 			//var binding = new WSHttpBinding(SecurityMode.None) {
 			//    TextEncoding = Encoding.UTF8
 			//};
 			//binding.MaxReceivedMessageSize = 10 * 1024 * 1024;
 
 			s_deviceFactory = new ChannelFactory<Device>(binding);
+			
 			s_mediaFactory = new ChannelFactory<Media>(binding);
 			s_imagingFactory = new ChannelFactory<ImagingPort>(binding);
 			s_analyticsFactory = new ChannelFactory<AnalyticsEnginePort>(binding);
@@ -135,11 +150,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetCapabilitiesImpl(IObserver<Capabilities> observer) {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
-			DebugHelper.Assert(dev != null);
+			dbg.Assert(dev != null);
 
 			Capabilities capabilities = null;
 			yield return dev.GetCapabilities().Handle(x => capabilities = x);
-			DebugHelper.Assert(capabilities != null);
+			dbg.Assert(capabilities != null);
 
 			if (observer != null) {
 				observer.OnNext(capabilities);
@@ -153,11 +168,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetScopesImpl(IObserver<Scope[]> observer) {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
-			DebugHelper.Assert(dev != null);
+			dbg.Assert(dev != null);
 
 			Scope[] scopes = null;
 			yield return dev.GetScopes().Handle(x => scopes = x);
-			DebugHelper.Assert(scopes != null);
+			dbg.Assert(scopes != null);
 
 			if (observer != null) {
 				observer.OnNext(scopes);
@@ -171,11 +186,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetDeviceInformationImpl(IObserver<GetDeviceInformationResponse> observer) {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
-			DebugHelper.Assert(dev != null);
+			dbg.Assert(dev != null);
 
 			GetDeviceInformationResponse info = null;
 			yield return dev.GetDeviceInformation().Handle(x => info = x);
-			DebugHelper.Assert(info != null);
+			dbg.Assert(info != null);
 
 			if (observer != null) {
 				observer.OnNext(info);
@@ -189,7 +204,7 @@ namespace nvc.onvif {
 		public IEnumerable<IObservable<object>> SetScopesImpl(string[] scopes, IObserver<Unit> observer) {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
-			DebugHelper.Assert(dev != null);
+			dbg.Assert(dev != null);
 
 			yield return dev.SetScopes(scopes).Idle();
 
@@ -215,8 +230,8 @@ namespace nvc.onvif {
 				GetScopes().Handle(x => scopes = x)
 			);
 
-			DebugHelper.Assert(scopes != null);
-			DebugHelper.Assert(dev_info_response != null);
+			dbg.Assert(scopes != null);
+			dbg.Assert(dev_info_response != null);
 
 			if (observer != null) {
 				info.Manufacturer = dev_info_response.Manufacturer;
@@ -236,11 +251,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetProfilesImpl(IObserver<med::Profile[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::Profile[] profiles = null;
 			yield return media.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			if (observer != null) {
 				observer.OnNext(profiles);
@@ -254,14 +269,26 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> CreateProfileImpl(string profileName, string profileToken, IObserver<med::Profile> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::Profile profile = null;
 			yield return media.CreateProfile(profileName, profileToken).Handle(x => profile = x);
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			if (observer != null) {
 				observer.OnNext(profile);
+			}
+		}
+
+		private IEnumerable<IObservable<object>> DeleteProfileImpl(string profileToken, IObserver<Unit> observer) {
+			MediaObservable media = null;
+			yield return GetMediaClient().Handle(x => media = x);
+			dbg.Assert(media != null);
+
+			yield return media.DeleteProfile(profileToken).Idle();
+			
+			if (observer != null) {
+				observer.OnNext(new Unit());
 			}
 		}
 
@@ -269,10 +296,14 @@ namespace nvc.onvif {
 			return Observable.Iterate<med::Profile>(observer => CreateProfileImpl(profileName, profileToken, observer));
 		}
 
+		public IObservable<Unit> DeleteProfile(string profileToken) {
+			return Observable.Iterate<Unit>(observer => DeleteProfileImpl(profileToken, observer));
+		}
+
 		private IEnumerable<IObservable<object>> AddVideoSourceConfigurationImpl(string profileToken, string vscToken) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			yield return media.AddVideoSourceConfiguration(profileToken, vscToken).Idle();
 		}
@@ -298,7 +329,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetVideoSourcesImpl(IObserver<med::VideoSource[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoSource[] vsources = null;
 			yield return media.GetVideoSources().Handle(x => vsources = x);
@@ -311,11 +342,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetVideoSourceConfigurationsImpl(IObserver<med::VideoSourceConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoSourceConfiguration[] vscs = null;
 			yield return media.GetVideoSourceConfigurations().Handle(x => vscs = x);
-			DebugHelper.Assert(vscs != null);
+			dbg.Assert(vscs != null);
 
 			if (observer != null) {
 				observer.OnNext(vscs);
@@ -325,7 +356,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetCompatibleVideoSourceConfigurationsImpl(string profileToken, IObserver<med::VideoSourceConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoSourceConfiguration[] vscs = null;
 			yield return media.GetCompatibleVideoSourceConfigurations(profileToken).Handle(x => vscs = x);
@@ -335,7 +366,7 @@ namespace nvc.onvif {
 				yield return GetVideoSourceConfigurations().Handle(x => vscs = x);
 			}
 
-			DebugHelper.Assert(vscs != null);
+			dbg.Assert(vscs != null);
 
 			if (observer != null) {
 				observer.OnNext(vscs);
@@ -369,13 +400,13 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetVideoEncoderConfigurationOptionsImpl(string vecToken, string profileToken, IObserver<med::VideoEncoderConfigurationOptions> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoEncoderConfigurationOptions opts = null;
 			yield return media.GetVideoEncoderConfigurationOptions(vecToken, profileToken)
 				.Handle(x => opts = x)
 				.HandleError(err=>{
-					DebugHelper.Error(err);
+					dbg.Error(err);
 				});
 
 			if (opts != null) {
@@ -392,7 +423,7 @@ namespace nvc.onvif {
 				opts = CreateOptionsFromVecs(vecs.Where(x => x.token == vecToken).FirstOrDefault());
 				if (opts == null) {
 					var err = new Exception("specified vec does not exist");
-					DebugHelper.Error(err);
+					dbg.Error(err);
 					throw err;
 				} else {
 					if (observer != null) {
@@ -411,11 +442,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetVideoEncoderConfigurationsImpl(IObserver<med::VideoEncoderConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoEncoderConfiguration[] vecs = null;
 			yield return media.GetVideoEncoderConfigurations().Handle(x => vecs = x);
-			DebugHelper.Assert(vecs != null);
+			dbg.Assert(vecs != null);
 
 			if (observer != null) {
 				observer.OnNext(vecs);
@@ -425,7 +456,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetCompatibleVideoEncoderConfigurationsImpl(string profileToken, IObserver<med::VideoEncoderConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoEncoderConfiguration[] vecs = null;
 			yield return media.GetCompatibleVideoEncoderConfigurations(profileToken).Handle(x => vecs = x);
@@ -443,7 +474,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> AddVideoEncoderConfigurationImpl(string profileToken, string vecToken) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			yield return media.AddVideoEncoderConfiguration(profileToken, vecToken).Idle();
 		}
@@ -451,7 +482,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> SetVideoEncoderConfigurationImpl(med::VideoEncoderConfiguration vec, bool forcePersistance) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			yield return media.SetVideoEncoderConfiguration(vec, forcePersistance).Idle();
 		}
@@ -473,11 +504,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetVideoAnalyticsConfigurationsImpl(IObserver<med::VideoAnalyticsConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoAnalyticsConfiguration[] vecs = null;
 			yield return media.GetVideoAnalyticsConfigurations().Handle(x => vecs = x);
-			DebugHelper.Assert(vecs != null);
+			dbg.Assert(vecs != null);
 
 			if (observer != null) {
 				observer.OnNext(vecs);
@@ -487,11 +518,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetCompatibleVideoAnalyticsConfigurationsImpl(string profileToken, IObserver<med::VideoAnalyticsConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			med::VideoAnalyticsConfiguration[] vecs = null;
 			yield return media.GetCompatibleVideoAnalyticsConfigurations(profileToken).Handle(x => vecs = x);
-			DebugHelper.Assert(vecs != null);
+			dbg.Assert(vecs != null);
 
 			if (observer != null) {
 				observer.OnNext(vecs);
@@ -501,7 +532,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> AddVideoAnalyticsConfigurationImpl(string profileToken, string vacToken) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			yield return media.AddVideoAnalyticsConfiguration(profileToken, vacToken).Idle();
 		}
@@ -511,11 +542,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetNetworkInterfacesImpl(IObserver<tt::NetworkInterface[]> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			global::onvif.types.NetworkInterface[] nics = null;
 			yield return device.GetNetworkInterfaces().Handle(x => nics = x);
-			DebugHelper.Assert(nics != null);
+			dbg.Assert(nics != null);
 
 			if (observer != null) {
 				observer.OnNext(nics);
@@ -529,11 +560,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetDNSImpl(IObserver<DNSInformation> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			DNSInformation dns = null;
 			yield return device.GetDNS().Handle(x => dns = x);
-			DebugHelper.Assert(dns != null);
+			dbg.Assert(dns != null);
 
 			if (observer != null) {
 				observer.OnNext(dns);
@@ -548,7 +579,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> SetDNSImpl(bool fromDHCP, tt::IPAddress[] DNSManual, IObserver<Unit> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			yield return device.SetDNS(fromDHCP, null, DNSManual).Idle();
 
@@ -565,7 +596,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> SetNetworkDefaultGatewayImpl(string[] ipv4Addresses, string[] ipv6Addresses, IObserver<Unit> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			yield return device.SetNetworkDefaultGateway(ipv4Addresses, ipv6Addresses).Idle();
 
@@ -581,7 +612,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> SetNetworkInterfacesImpl(string nicToken, NetworkInterfaceSetConfiguration nicConfig, IObserver<bool> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			bool isRebootNeeded = false;
 			yield return device.SetNetworkInterfaces(nicToken, nicConfig).Handle(x => isRebootNeeded = x);
@@ -598,7 +629,7 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> SystemRebootImpl(IObserver<string> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 			string message = null;
 			yield return device.SystemReboot().Handle(x=>message = x);
 
@@ -615,11 +646,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetStreamUriImpl(med::StreamSetup streamSetup, string profileToken, IObserver<string> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			string uri = null;
 			yield return media.GetStreamUri(streamSetup, profileToken).Handle(x => uri = x.Uri);
-			DebugHelper.Assert(uri != null);
+			dbg.Assert(uri != null);
 
 			if (observer != null) {
 				observer.OnNext(uri);
@@ -633,11 +664,11 @@ namespace nvc.onvif {
 		private IEnumerable<IObservable<object>> GetNetworkDefaultGatewayImpl(IObserver<NetworkGateway> observer) {
 			DeviceObservable device = null;
 			yield return GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			NetworkGateway gateway = null;
 			yield return device.GetNetworkDefaultGateway().Handle(x => gateway = x);
-			DebugHelper.Assert(gateway != null);
+			dbg.Assert(gateway != null);
 
 			if (observer != null) {
 				observer.OnNext(gateway);
@@ -657,17 +688,17 @@ namespace nvc.onvif {
 				GetNetworkInterfaces().Handle(x => nics = x),
 				GetDNS().Handle(x => dns = x)
 			);
-			DebugHelper.Assert(nics != null);
-			DebugHelper.Assert(dns != null);
+			dbg.Assert(nics != null);
+			dbg.Assert(dns != null);
 
 			var netStat = new NetworkStatus();
 			if (dns.FromDHCP && dns.DNSFromDHCP != null && dns.DNSFromDHCP.Count() > 0) {
-				DebugHelper.Assert(!String.IsNullOrWhiteSpace(dns.DNSFromDHCP[0].IPv4Address));
+				dbg.Assert(!String.IsNullOrWhiteSpace(dns.DNSFromDHCP[0].IPv4Address));
 				netStat.dns = net::IPAddress.Parse(dns.DNSFromDHCP[0].IPv4Address);
 			} else if (!dns.FromDHCP && dns.DNSManual != null && dns.DNSManual.Count() > 0 && !String.IsNullOrWhiteSpace(dns.DNSManual[0].IPv4Address)) {
 				netStat.dns = net::IPAddress.Parse(dns.DNSManual[0].IPv4Address);
 			}
-			DebugHelper.Assert(netStat.dns != null);
+			dbg.Assert(netStat.dns != null);
 
 			var nic = nics.Where(x => x.Enabled).FirstOrDefault();
 			if (nic != null) {
@@ -678,12 +709,12 @@ namespace nvc.onvif {
 
 				if (nic_cfg.DHCP && nic_cfg.FromDHCP != null) {
 					//DebugHelper.Assert(nic_cfg.FromDHCP != null);
-					DebugHelper.Assert(nic_cfg.FromDHCP.Address != null);
-					DebugHelper.Assert(!String.IsNullOrWhiteSpace(nic_cfg.FromDHCP.Address));
+					dbg.Assert(nic_cfg.FromDHCP.Address != null);
+					dbg.Assert(!String.IsNullOrWhiteSpace(nic_cfg.FromDHCP.Address));
 					netStat.ip = net::IPAddress.Parse(nic_cfg.FromDHCP.Address);
 					netStat.subnetPrefix = nic_cfg.FromDHCP.PrefixLength;
 				} else if (!nic_cfg.DHCP && nic_cfg.Manual != null && nic_cfg.Manual.Count() > 0) {
-					DebugHelper.Assert(!String.IsNullOrWhiteSpace(nic_cfg.Manual[0].Address));
+					dbg.Assert(!String.IsNullOrWhiteSpace(nic_cfg.Manual[0].Address));
 					netStat.ip = net::IPAddress.Parse(nic_cfg.Manual[0].Address);
 					netStat.subnetPrefix = nic_cfg.Manual[0].PrefixLength;
 				}
@@ -710,9 +741,9 @@ namespace nvc.onvif {
 				GetNetworkInterfaces().Handle(x => nics = x)
 			);
 
-			DebugHelper.Assert(gateway != null);
-			DebugHelper.Assert(dns != null);
-			DebugHelper.Assert(nics != null);
+			dbg.Assert(gateway != null);
+			dbg.Assert(dns != null);
+			dbg.Assert(nics != null);
 
 			var netSettings = new NetworkSettings();
 			
@@ -817,14 +848,14 @@ namespace nvc.onvif {
 			MediaObservable media = null;
 			Capabilities caps = null;
 			yield return GetCapabilities().Handle(x => caps = x);
-			DebugHelper.Assert(caps != null);
+			dbg.Assert(caps != null);
 
 			if (caps.Media == null) {
 				throw new Exception("not supported");
 			}
 			
 			yield return GetMediaClient(new Uri(caps.Media.XAddr)).Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			if (observer != null) {
 				observer.OnNext(media);
@@ -835,14 +866,14 @@ namespace nvc.onvif {
 			ImagingObservable imaging = null;
 			Capabilities caps = null;
 			yield return GetCapabilities().Handle(x => caps = x);
-			DebugHelper.Assert(caps != null);
+			dbg.Assert(caps != null);
 
 			if (caps.Imaging == null) {
 				throw new Exception("not supported");
 			}
 
 			yield return GetImagingClient(new Uri(caps.Imaging.XAddr)).Handle(x => imaging = x);
-			DebugHelper.Assert(imaging != null);
+			dbg.Assert(imaging != null);
 
 			if (observer != null) {
 				observer.OnNext(imaging);
@@ -853,14 +884,14 @@ namespace nvc.onvif {
 			AnalyticsObservable analytics = null;
 			Capabilities caps = null;
 			yield return GetCapabilities().Handle(x => caps = x);
-			DebugHelper.Assert(caps != null);
+			dbg.Assert(caps != null);
 
 			if (caps.Analytics == null) {
 				throw new Exception("not supported");
 			}
 
 			yield return GetAnalyticsClient(new Uri(caps.Analytics.XAddr)).Handle(x => analytics = x);
-			DebugHelper.Assert(analytics != null);
+			dbg.Assert(analytics != null);
 
 			if (observer != null) {
 				observer.OnNext(analytics);
@@ -871,14 +902,14 @@ namespace nvc.onvif {
 			RuleEngineObservable RuleEngine = null;
 			Capabilities caps = null;
 			yield return GetCapabilities().Handle(x => caps = x);
-			DebugHelper.Assert(caps != null);
+			dbg.Assert(caps != null);
 
 			if (caps.Analytics == null) {
 				throw new Exception("not supported");
 			}
 
 			yield return GetRuleEngineClient(new Uri(caps.Analytics.XAddr)).Handle(x => RuleEngine = x);
-			DebugHelper.Assert(RuleEngine != null);
+			dbg.Assert(RuleEngine != null);
 
 			if (observer != null) {
 				observer.OnNext(RuleEngine);
@@ -909,6 +940,8 @@ namespace nvc.onvif {
 
 			med::VideoSourceConfiguration[] vscs = null;
 			yield return GetVideoSourceConfigurations().Handle(x => vscs = x);
+			med::Profile[] profiles = null;
+			yield return GetProfiles().Handle(x => profiles = x);
 
 			var vsc = vscs.Where(x => x.SourceToken == videoSourceToken).FirstOrDefault();
 
@@ -916,7 +949,7 @@ namespace nvc.onvif {
 				foreach (var v in vscs.Where(x => String.IsNullOrWhiteSpace(x.SourceToken))) {
 					med::VideoSourceConfigurationOptions options = null;
 					yield return media.GetVideoSourceConfigurationOptions(v.token, null).Handle(x => options = x);
-					DebugHelper.Assert(options != null);
+					dbg.Assert(options != null);
 					if (options != null && options.VideoSourceTokensAvailable.Contains(videoSourceToken)) {
 						vsc = v;
 						vsc.SourceToken = videoSourceToken;
@@ -927,17 +960,24 @@ namespace nvc.onvif {
 			}
 
 			if (vsc == null) {
-				DebugHelper.Break();
+				dbg.Break();
 				throw new Exception("video source configuration not found");
 			}
+			var profile_token = NvcHelper.GetChannelProfileToken(videoSourceToken);
+			var profile = profiles.Where(x => x.token == profile_token).FirstOrDefault();
+			if (profile == null) {
+				yield return CreateProfile(videoSourceToken, profile_token).Handle(x => profile = x);    	
+			}
 
-			med::Profile profile = null;
-			yield return CreateProfile(videoSourceToken, NvcHelper.GetChannelProfileToken(videoSourceToken)).Handle(x => profile = x);
-			yield return AddVideoSourceConfiguration(profile.token, vsc.token);
-			profile.VideoSourceConfiguration = vsc;
+			if (profile.VideoSourceConfiguration == null) {
+				yield return AddVideoSourceConfiguration(profile.token, vsc.token);
+				profile.VideoSourceConfiguration = vsc;
+			}
 
-			yield return AddDefaultVideoEncoder(profile.token).Handle(x => profile.VideoEncoderConfiguration = x);
-
+			if (profile.VideoEncoderConfiguration == null) {
+				yield return AddDefaultVideoEncoder(profile.token).Handle(x => profile.VideoEncoderConfiguration = x);
+			}
+			
 			if (observer != null) {
 				observer.OnNext(profile);
 			}
@@ -1041,11 +1081,23 @@ namespace nvc.onvif {
 				MediaObservable media = null;
 				yield return GetMediaClient().Handle(x => media = x);
 
-				med::Config defMod = vac.AnalyticsEngineConfiguration.Extension.Any
-							.Where(x => x.LocalName == "DefaultModule" && x.NamespaceURI == "http://www.onvif.org/ver10/schema")
-							.Select(x => x.Deserialize<syn::DefaultModule>())
-							.Where(x => x.type.Name == moduleName)
-							.FirstOrDefault();
+				med::Config defMod = null;
+				try {
+					defMod = vac.AnalyticsEngineConfiguration.Extension.Any
+								 .Where(x =>
+									 x.LocalName == "DefaultModule" && x.NamespaceURI == "http://www.onvif.org/ver10/schema"
+								 )
+								 .Select(x =>
+									 x.Deserialize<syn::DefaultModule>()
+								 )
+								 .Where(x =>
+									 x.type.Name == moduleName
+								 )
+								 .FirstOrDefault();
+				} catch(Exception err) {
+					dbg.Error(err);
+					throw;
+				}
 				vac.AnalyticsEngineConfiguration.AnalyticsModule = vac.AnalyticsEngineConfiguration.AnalyticsModule.Append(defMod).ToArray();
 				yield return media.SetVideoAnalyticsConfiguration(vac, true).Idle();
 				mod = defMod;
@@ -1092,7 +1144,7 @@ namespace nvc.onvif {
 
 
 		public IObservable<med::MetadataConfiguration> AddDefaultMetadata(med::Profile profile) {
-			DebugHelper.Assert(profile.VideoSourceConfiguration != null);
+			dbg.Assert(profile.VideoSourceConfiguration != null);
 			return Observable.Iterate<med::MetadataConfiguration>(observer => AddDefaultMetadataImpl(profile, observer));
 		}
 
@@ -1207,7 +1259,7 @@ namespace nvc.onvif {
 					.Subscribe(resp=>{
 
 					},err=>{
-						DebugHelper.Error(err);
+						dbg.Error(err);
 					});			
 			});
 
@@ -1217,7 +1269,7 @@ namespace nvc.onvif {
 					yield return pullMessages(new PullMessagesRequest("P3S", 5, null)).Handle(x => resp = x);
 					if (observer != null) {
 						foreach(var x in resp.NotificationMessage){
-							DebugHelper.Assert(x != null);
+							dbg.Assert(x != null);
 							var evt = new OnvifEvent(){
 								arrivalTime = resp.CurrentTime,
 								producerReference = x.ProducerReference,

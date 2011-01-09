@@ -10,10 +10,10 @@ using onvif.services.device;
 using onvif.types;
 using tt=onvif.types;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
-namespace nvc.models {
+namespace odm.models {
 	public partial class DeviceIdentificationModel : ModelBase<DeviceIdentificationModel> {
 		public DeviceIdentificationModel() {
 			
@@ -31,8 +31,8 @@ namespace nvc.models {
 				yield return device.GetSystemDateAndTime().Handle(x => time = x);
 			//);
 
-			DebugHelper.Assert(info != null);
-			DebugHelper.Assert(netstat != null);
+			dbg.Assert(info != null);
+			dbg.Assert(netstat != null);
 
 			m_name.SetBoth(info.Name);
 			NotifyPropertyChanged(x => x.Name);

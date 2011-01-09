@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Net;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
 using onvif.services.device;
 using onvif.types;
@@ -14,7 +14,7 @@ using dev = onvif.services.device;
 using tt = onvif.types;
 using net = System.Net;
 
-namespace nvc.models {
+namespace odm.models {
 	public partial class DeviceNetworkSettingsModel : ModelBase<DeviceNetworkSettingsModel> {
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
 			NetworkSettings netSettings = null;
@@ -23,8 +23,8 @@ namespace nvc.models {
 				session.GetNetworkSettings().Handle(x => netSettings = x),
 				session.GetNetworkStatus().Handle(x => netstat = x)
 			);
-			DebugHelper.Assert(netSettings != null);
-			DebugHelper.Assert(netstat != null);
+			dbg.Assert(netSettings != null);
+			dbg.Assert(netstat != null);
 
 			m_dhcp.SetBoth(netSettings.dhcp);
 			m_staticIp.SetBoth(netSettings.staticIp ?? new net::IPAddress(0));
@@ -63,7 +63,7 @@ namespace nvc.models {
 				yield return session.SetDNS(dhcp_enabled, dns_addresses)
 					.Idle()
 					.HandleError(err => {
-						DebugHelper.Error(err);
+						dbg.Error(err);
 						error = err;
 					});
 			}
@@ -76,7 +76,7 @@ namespace nvc.models {
 				yield return session.SetNetworkDefaultGateway(gateway_addresses, null)
 					.Idle()
 					.HandleError(err=>{
-						DebugHelper.Error(err);
+						dbg.Error(err);
 						error = err;
 					});
 				
@@ -90,7 +90,7 @@ namespace nvc.models {
 			if (m_staticIp.isModified || m_subnetMask.isModified || m_dhcp.isModified) {
 				tt::NetworkInterface[] nics = null;
 				yield return session.GetNetworkInterfaces().Handle(x => nics = x);
-				DebugHelper.Assert(nics != null);
+				dbg.Assert(nics != null);
 
 				var nic = nics.Where(x => x.Enabled).First();
 				
@@ -130,13 +130,10 @@ namespace nvc.models {
 				yield return session.SetNetworkInterfaces(nic.token, nic_set).Handle(x => isRebootNeeded = x);
 
 				if (isRebootNeeded) {
-					//yield return session.SystemReboot().Idle();				
+					//yield return session.SystemReboot().Idle();					
 				}
-			}
 
-			if (observer != null) {
-				observer.OnNext(this);
-			}
+			}			
 		}
 
 		private ChangeTrackingProperty<bool> m_dhcp = new ChangeTrackingProperty<bool>(false);

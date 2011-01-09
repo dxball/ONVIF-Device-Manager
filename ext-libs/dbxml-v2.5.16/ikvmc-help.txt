@@ -1,0 +1,61 @@
+usage: ikvmc [-options] <classOrJar1> ... <classOrJarN>
+
+options:
+    @<filename>                Read more options from file
+    -out:<outputfile>          Specify the output filename
+    -assembly:<name>           Specify assembly name
+    -target:exe                Build a console executable
+    -target:winexe             Build a windows executable
+    -target:library            Build a library
+    -target:module             Build a module for use by the linker
+    -platform:<string>         Limit which platforms this code can run on: x86,
+                               Itanium, x64, or anycpu. The default is anycpu.
+    -keyfile:<keyfilename>     Use keyfile to sign the assembly
+    -key:<keycontainer>        Use keycontainer to sign the assembly
+    -delaysign                 Delay-sign the assembly
+    -version:<M.m.b.r>         Assembly version
+    -fileversion:<version>     File version
+    -main:<class>              Specify the class containing the main method
+    -reference:<filespec>      Reference an assembly (short form -r:<filespec>)
+    -recurse:<filespec>        Recurse directory and include matching files
+    -nojni                     Do not generate JNI stub for native methods
+    -resource:<name>=<path>    Include file as Java resource
+    -externalresource:<name>=<path>
+                               Reference file as Java resource
+    -exclude:<filename>        A file containing a list of classes to exclude
+    -debug                     Generate debug info for the output file
+                               (Note that this also causes the compiler to
+                               generated somewhat less efficient CIL code.)
+    -srcpath:<path>            Prepend path and package name to source file
+    -apartment:sta             (default) Apply STAThreadAttribute to main
+    -apartment:mta             Apply MTAThreadAttribute to main
+    -apartment:none            Don't apply STAThreadAttribute to main
+    -noglobbing                Don't glob the arguments
+    -D<name>=<value>           Set system property (at runtime)
+    -ea[:<packagename>...|:<classname>]
+    -enableassertions[:<packagename>...|:<classname>]
+                               Set system property to enable assertions
+    -da[:<packagename>...|:<classname>]
+    -disableassertions[:<packagename>...|:<classname>]
+                               Set system property to disable assertions
+    -removeassertions          Remove all assert statements
+    -nostacktraceinfo          Don't create metadata to emit rich stack traces
+    -opt:fields                Remove unused private fields
+    -Xtrace:<string>           Displays all tracepoints with the given name
+    -Xmethodtrace:<string>     Build tracing into the specified output methods
+    -compressresources         Compress resources
+    -strictfinalfieldsemantics Don't allow final fields to be modified outside
+                               of initializer methods
+    -privatepackage:<prefix>   Mark all classes with a package name starting
+                               with <prefix> as internal to the assembly
+    -nowarn:<warning[:key]>    Suppress specified warnings
+    -warnaserror:<warning[:key]>  Treat specified warnings as errors
+    -time                      Display timing statistics
+    -classloader:<class>       Set custom class loader class for assembly
+    -sharedclassloader         All targets below this level share a common
+                               class loader
+    -baseaddress:<address>     Base address for the library to be built
+    -nopeercrossreference      Do not automatically cross reference all peers
+    -nostdlib                  Do not reference standard libraries
+    -lib:<dir>                 Additional directories to search for references
+    -noautoserialization       Disable automatic .NET serialization support

@@ -14,9 +14,9 @@ using System.Drawing.Imaging;
 using System.Concurrency;
 using System.Disposables;
 using System.Text;
-using onvifdm.utils;
+using odm.utils;
 
-namespace onvifdm.player {
+namespace odm.player {
 
 	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
 	class PlayerService : IPlayer {
@@ -26,15 +26,24 @@ namespace onvifdm.player {
 		private Action m_stopHandler = null;
 		Queue<string> m_queue = new Queue<string>();
 
+		private Action<string> m_startRecordAction = null;
+		private Action m_stopRecordAction = null;
+
 		private string m_videoBufferMapName = null;
 		private int m_videoBufferWidth;
 		private int m_videoBufferHeight;
 		private int m_videoBufferStride;
 		PixelFormat m_videoBufferPixelFormat;
 		private string m_playingUri = null;
+		IScheduler m_scheduler = null;
+
 		List<IPlayerCallbacks> m_subscribers = new List<IPlayerCallbacks>();
-		
-		public PlayerService(Action shutdownHandler) {
+
+		public PlayerService(IScheduler scheduler, Action shutdownHandler) {
+			if (scheduler == null) {
+				throw new ArgumentNullException("scheduler");
+			}
+			m_scheduler = scheduler;
 			m_shutdownHandler = shutdownHandler;
 		}
 
@@ -113,24 +122,38 @@ namespace onvifdm.player {
 				subscr.Dispose();
 			};
 
+			m_startRecordAction = filePath => {
+				if (handle != IntPtr.Zero) {
+					NativePlayer.onvifmp_start_record(handle, playingUri, filePath);
+				}
+			};
+
+			m_stopRecordAction = () => {
+				if (handle != IntPtr.Zero) {
+					NativePlayer.onvifmp_stop_record(handle, playingUri);
+				}
+			};
+			
 			m_MetadataReceivedCallback = (bufPtr, size) => {
-				var buf = new byte[size];
-				Marshal.Copy(bufPtr, buf, 0, (int)size);
 				try {
-					NotifyMetadataReceived(Encoding.UTF8.GetString(buf));
+					var buf = new byte[size];
+					Marshal.Copy(bufPtr, buf, 0, (int)size);
+					m_scheduler.Schedule(() => {
+						NotifyMetadataReceived(Encoding.UTF8.GetString(buf));
+					});
 				} catch (Exception err) {
-					Console.WriteLine("error: {0}", err);
+					log.WriteError(err);
 				}
 			};
 			
 			m_ErrorOccurredCallback = errStr => {
-				Console.WriteLine("error: {0}", errStr);
+				log.WriteEvent(errStr, "odm-player", TraceEventType.Critical);
 				subscr.Dispose();
 			};
 
-			m_LoggerCallback = (msg, src, type) =>{
-				TraceEventType evtType = ToTraceEventType(type);				
-				LogUtils.WriteEvent(msg, src, evtType);
+			m_LoggerCallback = (msg, src, type) => {
+				TraceEventType evtType = ToTraceEventType(type);
+				log.WriteEvent(msg, src, evtType);				
 			};
 
 			try{
@@ -151,7 +174,8 @@ namespace onvifdm.player {
 					m_videoBufferWidth, m_videoBufferHeight, m_videoBufferStride,
 					pf,
 					m_videoBufferMapName,
-					m_MetadataReceivedCallback
+					m_MetadataReceivedCallback,
+                    0
 				);
 				if (parseErr != 0) {
 					throw new Exception("onvifmp_start_parsing - failed");
@@ -229,7 +253,7 @@ namespace onvifdm.player {
 				try{
 					s.MetadataReceived(metadata);
 				}catch(Exception err){
-					//Console.WriteLine("error: {0}", err);
+					//swallow error
 				}
 			}
 		}
@@ -242,8 +266,8 @@ namespace onvifdm.player {
 			foreach (var s in subscribers) {
 				try {
 					s.LogMessageAcquired(logMessage);
-				} catch (Exception err) {
-					//Console.WriteLine("error: {0}", err);
+				} catch {
+					//swallow error
 				}
 			}
 		}
@@ -286,6 +310,19 @@ namespace onvifdm.player {
 			//AsyncResult ar = (AsyncResult)asyncResult;
 			//Func<string, string> func = (Func<string, string>)ar.AsyncDelegate;
 			//return func.EndInvoke(asyncResult);
+		}
+
+
+		public void StartRecord(string filePath) {
+			if (m_startRecordAction != null) {
+				m_startRecordAction(filePath);
+			}
+		}
+
+		public void StopRecord() {
+			if (m_stopHandler != null) {
+				m_stopHandler();
+			}
 		}
 	};
 

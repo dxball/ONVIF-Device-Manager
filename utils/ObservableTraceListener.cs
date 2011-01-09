@@ -23,11 +23,42 @@ using System.Threading;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.Linq;
 using System.Globalization;
 using System.Xml.Serialization;
+using System.Xml.XPath;
+using System.Xml;
 
 
-namespace onvifdm.utils {
+namespace odm.utils {
+	public class XmlSerializerNamespaceResolver : IXmlNamespaceResolver {
+		Dictionary<string, string> m_namespaces;
+		
+		public XmlSerializerNamespaceResolver(XmlSerializerNamespaces serializerNamespaces) {
+			serializerNamespaces.ToArray().ForEach(qns => {
+				if (!qns.IsEmpty) {
+					m_namespaces.Add(qns.Name, qns.Namespace);
+				}
+			});
+		}
+
+		public IDictionary<string, string> GetNamespacesInScope(XmlNamespaceScope scope) {
+			return m_namespaces;
+		}
+
+		public string LookupNamespace(string prefix) {
+			string ns;
+			m_namespaces.TryGetValue(prefix, out ns);
+			return ns;
+		}
+
+		public string LookupPrefix(string namespaceName) {
+			return m_namespaces
+				.Where(x => x.Value == namespaceName)
+				.Select(x => x.Key)
+				.FirstOrDefault();
+		}
+	}
 
 	[Serializable]
 	[XmlRoot("log-message")]
@@ -51,7 +82,9 @@ namespace onvifdm.utils {
 		[XmlIgnore]
 		public TraceEventCache eventCache;
 
-		public string EvalXPath(string xpath) {
+		public string EvalXPath(string xpath, XmlSerializerNamespaces namespaces) {
+			var nsResolver = new XmlSerializerNamespaceResolver(namespaces);
+			var expr = XPathExpression.Compile(xpath, nsResolver);
 			switch (xpath) {
 				case "/log-message/id":
 					return id.ToString(NumberFormatInfo.InvariantInfo);

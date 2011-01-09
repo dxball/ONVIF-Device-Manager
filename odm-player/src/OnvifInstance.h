@@ -15,8 +15,13 @@ public:
 public:
   Live555* StartParsing(const char *aUrl,
     int aWidth, int aHeight, int aStride, const char *aMapName,
-    OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback);
+    OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback,
+    int aSilentMode);
   void StopParsing(const char *aUrl);
+  void SetSilentMode(const char *aUrl, int aSilentMode);
+  void StartRecord(const char *aUrl, const char *aFilePath);
+  void StopRecord(const char *aUrl);
+
   void RemoveLive(const std::string& aURL);
 public:
   void RaiseError(const char *aErrorMsg);

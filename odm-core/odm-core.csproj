@@ -84,6 +84,7 @@
     <Compile Include="models\NetworkStatusExtensions.cs" />
     <Compile Include="models\ObjectTrackerModel.cs" />
     <Compile Include="models\RuleEngineModel.cs" />
+    <Compile Include="models\TamperingDetectorsModel.cs" />
     <Compile Include="models\VideoStreamingModel.cs" />
     <Compile Include="models\VideoStreamingSettings.cs" />
     <Compile Include="models\VideoStreamingSettingsExtensions.cs" />
@@ -115,9 +116,9 @@
       <Project>{B4EE4417-967D-4C03-90C5-99430B64E2D5}</Project>
       <Name>onvif.types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\utils\utils.csproj">
+    <ProjectReference Include="..\utils\odm-utils.csproj">
       <Project>{D4D3FFCE-F536-4ECA-9C36-4EE36F9AD98E}</Project>
-      <Name>utils</Name>
+      <Name>odm-utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

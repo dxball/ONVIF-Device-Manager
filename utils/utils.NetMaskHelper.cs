@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 
-namespace onvifdm.utils {
+namespace odm.utils {
 	public class NetMaskHelper {		
 		//Subnet mask
 		public static IPAddress PrefixToMask(int prefix) {
@@ -52,7 +52,7 @@ namespace onvifdm.utils {
 				mask >>= 8;
 			}
 			var ipAddr = new IPAddress(bytes);
-			DebugHelper.Assert(ipAddr.ToString() == retValue);
+			dbg.Assert(ipAddr.ToString() == retValue);
 			return ipAddr;
 		}
 		

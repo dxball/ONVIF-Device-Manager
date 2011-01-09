@@ -7,8 +7,8 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
 using onvif.services.device;
 using onvif.services.media;
@@ -17,9 +17,10 @@ using onvif.types;
 using device = global::onvif.services.device;
 using media = global::onvif.services.media;
 using tt = global::onvif.types;
+using System.Xml;
 
 
-namespace nvc.models {
+namespace odm.models {
 
 	[Serializable]
 	[XmlRoot("onvif-dump")]
@@ -90,18 +91,19 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<object>> LoadImpl(onvif.Session session, IObserver<DumpModel> observer) {
 			Dump dump =null;
 			yield return LoadDump(session).Handle(x => dump = x);
-			DebugHelper.Assert(dump != null);
+			dbg.Assert(dump != null);
 
-			var xml = new XDocument();
+			var xml = new XmlDocument();
 			
 			var ser = new XmlSerializer(typeof(Dump));
-			using (var w = xml.CreateWriter()) {
+			using (var w = xml.CreateNavigator().AppendChild()) {
 				XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-				ns.Add("onvif", @"http://www.onvif.org/ver10/schema");
+				ns.Add("tt", @"http://www.onvif.org/ver10/schema");
 				ser.Serialize(w, dump, ns);
 			}
 
-			xmlDump = XPathNavigable.Create(()=>xml.CreateNavigator());
+			//xmlDump = XPathNavigable.Create(()=>xml.CreateNavigator());
+			xmlDump = xml;
 			NotifyPropertyChanged(x => x.xmlDump);
 			
 			if (observer != null) {
@@ -110,6 +112,7 @@ namespace nvc.models {
 		}
 
 		public string name {get; private set;}		
-		public IXPathNavigable xmlDump {get;private set;}
+		//public IXPathNavigable xmlDump {get;private set;}
+		public XmlDocument xmlDump {get;private set;}
 	}
 }

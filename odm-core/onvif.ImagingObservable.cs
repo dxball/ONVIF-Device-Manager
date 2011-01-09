@@ -25,7 +25,7 @@ using System.ServiceModel;
 
 using onvif.services.imaging;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 	public class ImagingObservable:IDisposable {
 		ImagingPort m_proxy;
 
@@ -41,10 +41,11 @@ namespace nvc.onvif {
 			return asyncOp(request).Select(x => x.ImagingSettings);
 		}
 
-		public IObservable<Unit> SetImagingSettings(string videoSourceToken, ImagingSettings imagingSettings) {
+		public IObservable<Unit> SetImagingSettings(string videoSourceToken, ImagingSettings imagingSettings, bool forcePersistence = true) {
 			var request = new SetImagingSettingsRequest() {
 				ImagingSettings = imagingSettings,
-				VideoSourceToken = videoSourceToken
+				VideoSourceToken = videoSourceToken,
+				ForcePersistence = forcePersistence
 			};
 			var asyncOp = Observable.FromAsyncPattern<SetImagingSettingsRequest, SetImagingSettingsResponse>(m_proxy.BeginSetImagingSettings, m_proxy.EndSetImagingSettings);
 			return asyncOp(request).Select(x => new Unit());

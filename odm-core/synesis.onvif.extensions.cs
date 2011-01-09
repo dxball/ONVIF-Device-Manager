@@ -25,6 +25,9 @@ namespace synesis.onvif.extensions {
 		public XmlQualifiedName type;
 
 		public static implicit operator med::Config(DefaultModule defMod) {
+			if (defMod == null) {
+				return null;
+			}
 			return new med::Config() {
 				Parameters = defMod.parameters,
 				Name = defMod.name,

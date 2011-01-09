@@ -25,7 +25,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace nvc.rx {
+namespace odm.utils.rx {
 	
 	public sealed class ObserverState : AsyncStateValue {
 		private ObserverState() { }

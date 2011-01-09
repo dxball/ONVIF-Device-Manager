@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Concurrency;
 using System.Disposables;
 
-namespace nvc.rx {
+namespace odm.utils.rx {
 	class PendingScheduler:IScheduler {
 		bool m_isProcessing = false;
 		object m_gate = new object();

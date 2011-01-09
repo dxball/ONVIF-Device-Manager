@@ -22,9 +22,9 @@ using System.Text;
 using System.Diagnostics;
 using System.IO;
 
-namespace onvifdm.utils {
+namespace odm.utils {
 	
-	public class DebugHelper{
+	public class dbg{
 
 		//--------------------------------------------------
 		// public section
@@ -144,8 +144,8 @@ namespace onvifdm.utils {
 			var sf = stack.GetFrame(0);
 			AppendStackFrame(evtSb, sf);
 			src = _ResolveSourceIfNone(sf, src);
-			LogUtils.WriteEvent(evtSb.ToString(), src, TraceEventType.Critical);
-			LogUtils.Flush();
+			log.WriteEvent(evtSb.ToString(), src, TraceEventType.Critical);
+			log.Flush();
 			Break();
 		}
 
@@ -163,8 +163,8 @@ namespace onvifdm.utils {
 			var sf = stack.GetFrame(0);
 			AppendStackFrame(evtSb, sf);
 			src = _ResolveSourceIfNone(sf, src);
-			LogUtils.WriteEvent(evtSb.ToString(), src, TraceEventType.Error);
-			LogUtils.Flush();
+			log.WriteEvent(evtSb.ToString(), src, TraceEventType.Error);
+			log.Flush();
 			Break();
 		}
 
@@ -181,8 +181,8 @@ namespace onvifdm.utils {
 			var sf = stack.GetFrame(0);
 			//AppendStackFrame(evtSb, sf);
 			src = _ResolveSourceIfNone(sf, src);
-			LogUtils.WriteEvent(evtSb.ToString(), src, TraceEventType.Information);
-			LogUtils.Flush();
+			log.WriteEvent(evtSb.ToString(), src, TraceEventType.Information);
+			log.Flush();
 			//Break();
 		}
 

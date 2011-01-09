@@ -6,7 +6,7 @@ using onvif.services.device;
 using onvif.types;
 using System.Drawing;
 
-namespace nvc.models {
+namespace odm.models {
 	public abstract class ChannelDescription {
 		public abstract string Id {get;}
 		public abstract string Name {get;}

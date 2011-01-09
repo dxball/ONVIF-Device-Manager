@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace nvc {
+namespace odm.utils {
 
 	public class Buffer<T> : IEnumerable<T> {
 		protected T[] innerBuffer = null;

@@ -32,7 +32,7 @@ using System.Collections.Generic;
 //using onvifdm.utils;
 //using nvc.models;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 	public abstract class DeviceDescription {
 		public abstract string name {get;}
 		public abstract string id {get;}

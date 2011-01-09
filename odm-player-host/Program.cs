@@ -15,64 +15,13 @@ using System.Drawing.Imaging;
 using System.Runtime.Remoting.Messaging;
 using System.Disposables;
 using System.Concurrency;
-using onvifdm.utils;
+using odm.utils;
 
-namespace onvifdm.player {
+namespace odm.player {
 	
 	static class Program {
 		static string pipeUri;
 		static int parentPID;
-
-		static Dictionary<String, List<String>> ParseCommandLineArgs(String[] args) {
-		var	commandLineArgs = new Dictionary<String, List<String>>();
-			if (args.Length == 0) {
-				return commandLineArgs;
-			}
-
-			String pattern = @"^/(?<argname>[A-Za-z0-9_-]+):(?<argvalue>.+)$";
-			foreach (string x in args) {
-				Match match = Regex.Match(x, pattern);
-
-				if (!match.Success) {
-					throw new Exception("failed to parse command line");
-				}
-				String argname = match.Groups["argname"].Value.ToLower();
-				List<String> values = null;
-				if (!commandLineArgs.TryGetValue(argname, out values)) {
-					values = new List<String>();
-					commandLineArgs.Add(argname, values);
-				}
-				var s = match.Groups["argvalue"].Value;
-				values.Add(match.Groups["argvalue"].Value);
-			}
-			return commandLineArgs;
-		}
-
-		static int GetParamAsInt(Dictionary<String, List<String>> commandLineArgs, string paramName) {
-			List<string> val = null;
-			if (!commandLineArgs.TryGetValue(paramName, out val) || val==null || val.Count == 0) {
-				throw new Exception(String.Format("parameter {0} is not specified", paramName));
-			}
-			if(val.Count > 1){
-				throw new Exception(String.Format("parameter {0} is specified more than one time", paramName));
-			}
-			try {
-				return int.Parse(val.First());
-			} catch {
-				throw new Exception(String.Format("parameter {0} is not valid", paramName));
-			}		
-		}
-
-		static string GetParamAsString(Dictionary<String, List<String>> commandLineArgs, string paramName) {
-			List<string> val = null;
-			if (!commandLineArgs.TryGetValue(paramName, out val) || val == null || val.Count == 0) {
-				throw new Exception(String.Format("parameter {0} is not specified", paramName));
-			}
-			if (val.Count > 1) {
-				throw new Exception(String.Format("parameter {0} is specified more than one time", paramName));
-			}
-			return val.First();
-		}
 
 		delegate uint UnhandledExceptionHandler(IntPtr ExceptionPointers);
 		[DllImport("kernel32.dll")]
@@ -92,42 +41,42 @@ namespace onvifdm.player {
 			//    return 1;
 			//};
 			//SetUnhandledExceptionFilter(handler);
-			
-			Dictionary<string, List<string>> commandLineArgs = null;
+
+			CommandLineArgs commandLineArgs = null;
 			try {
-				commandLineArgs = ParseCommandLineArgs(args);
+				commandLineArgs = CommandLineArgs.Parse(args);
 			} catch (Exception err) {
-				LogUtils.WriteError(err.Message);
+				log.WriteError(err.Message);
 			}
 			
 			if (commandLineArgs == null || commandLineArgs.Count == 0) {
-				LogUtils.WriteError("incorrect command line syntax, should be in format: player.exe /server-pipe:<pipe-uri> /parent-pid:<parent process id>");
+				log.WriteError("incorrect command line syntax, should be in format: odm-player-host.exe /server-pipe:<pipe-uri> /parent-pid:<parent process id>");
 				return;
 			}
 
 			try {
-				pipeUri = GetParamAsString(commandLineArgs, "server-pipe");
-				parentPID = GetParamAsInt(commandLineArgs, "parent-pid");
+				pipeUri = commandLineArgs.GetParamAsString("server-pipe");
+				parentPID = commandLineArgs.GetParamAsInt("parent-pid");
 			} catch (Exception err) {
-				LogUtils.WriteInfo(err.Message);
+				log.WriteInfo(err.Message);
 				return;
 			}
 			
 			try {
-				var disp = new Dispatcher();
-				var cleanupQueue = new Queue<Action>(); 
-				var playerInstance = new PlayerService(() => {
+				var actFlow = new ActionFlow();
+				var cleanupQueue = new Queue<Action>();
+				var playerInstance = new PlayerService(new ActionFlowScheduler(actFlow), () => {
 					lock (cleanupQueue) {
 						while (cleanupQueue.Count > 0) {
 							try {
 								cleanupQueue.Dequeue()();
 							} catch(Exception err) {
 								//TODO: log error
-								LogUtils.WriteInfo("error: {0}", err.Message);
+								log.WriteInfo("error: {0}", err.Message);
 							}
 						}
 					}
-					disp.Cancel();
+					actFlow.Exit();
 				});
 				
 				// Create a ServiceHost for the CalculatorService type and provide the base address.
@@ -136,21 +85,33 @@ namespace onvifdm.player {
 					serviceHost.AddServiceEndpoint(typeof(IPlayer), binding, pipeUri);
 					lock (cleanupQueue) {
 						cleanupQueue.Enqueue(() => {
-							LogUtils.WriteInfo("stopping service....");
+							log.WriteInfo("stopping service....");
 							serviceHost.Close();
 						});
 					}
 					serviceHost.Open();
-					
-					disp.Invoke(() => {
-						LogUtils.WriteInfo("The service is ready.");						
+
+					actFlow.Invoke(() => {
+						log.WriteInfo("The service is ready.");						
 					});
+
+					//Trace.Listeners.Add(new ObservableTraceListener());
+
+					var loggerSwitch = new TraceSwitch("logger", null);
+					ObservableTraceListener
+						.GetLogMessages()
+						.Subscribe(logMsg => {
+							actFlow.Invoke(() => {
+								playerInstance.NotifyLogMessage(logMsg);								
+							});
+						});
 
 					//start watchdog timer
 					var subscr = new MutableDisposable();
 					subscr.Disposable = Observable
 						.Interval(TimeSpan.FromMilliseconds(200))
 						.Subscribe(t => {
+							//LogUtils.WriteEvent("watchdog round", null, TraceEventType.Verbose);
 							var termnate = false;
 							try{
 								termnate = Process.GetProcessById(parentPID).HasExited;
@@ -161,33 +122,35 @@ namespace onvifdm.player {
 								return;
 							}
 							subscr.Dispose();
-							disp.Invoke(() => {
+							actFlow.Invoke(() => {
+								log.WriteEvent("stopping player service....", null, TraceEventType.Verbose);
 								serviceHost.Close();
-								disp.Cancel();
+								actFlow.Exit();
 							});
 						}, err => {
-							DebugHelper.Error(err);
-							disp.Invoke(() => {
+							dbg.Error(err);
+							actFlow.Invoke(() => {
 								serviceHost.Close();
-								disp.Cancel();
+								actFlow.Exit();
 							});
 						}, () => {
-							DebugHelper.Error("unexpected completion of watchdog timer");
-							disp.Invoke(() => {
+							dbg.Error("unexpected completion of watchdog timer");
+							actFlow.Invoke(() => {
 								serviceHost.Close();
-								disp.Cancel();
+								actFlow.Exit();
 							});
 						});
-					disp.Run();
-					LogUtils.WriteInfo("shutdown....");				
+					actFlow.Run();
+					log.WriteEvent("shutdown....", null, TraceEventType.Verbose);							
 				}
 
 			} catch (Exception err) {
-				LogUtils.WriteError(err.Message);
+				log.WriteError(err.Message);
 			}
 
 		}
 		static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e){
+			log.WriteError("unhandled exception was caught");
 			Process.GetCurrentProcess().Kill();
 			//Application.EnableVisualStyles();
 			//Exception exp = e.ExceptionObject as Exception;

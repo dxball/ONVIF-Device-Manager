@@ -25,7 +25,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
 
-namespace nvc {
+namespace odm.utils {
 
 	public class AsyncStateValue {
 		public override string ToString() {

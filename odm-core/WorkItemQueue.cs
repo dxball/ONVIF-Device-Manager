@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using onvifdm.utils;
+using odm.utils;
 
-namespace nvc {
+namespace odm.utils {
 	public class WorkItemQueue {
 		
 		private Queue<Action> m_queue = new Queue<Action>();
@@ -56,7 +56,7 @@ namespace nvc {
 							try {
 								_action();
 							} catch(Exception err) {
-								DebugHelper.Error(err);
+								dbg.Error(err);
 							}
 						}
 					}

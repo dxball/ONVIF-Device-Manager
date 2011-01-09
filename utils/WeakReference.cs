@@ -24,7 +24,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 
 
-namespace onvifdm.utils {
+namespace odm.utils {
 
 	/// <summary>
 	/// Represents a weak reference, which references an object while still allowing

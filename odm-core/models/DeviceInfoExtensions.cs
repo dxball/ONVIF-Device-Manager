@@ -25,8 +25,8 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.NetworkInformation;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
 using onvif.services.device;
 using onvif.types;
@@ -35,7 +35,7 @@ using dev = onvif.services.device;
 using tt = onvif.types;
 
 
-namespace nvc.models {
+namespace odm.models {
 
 	public static class DeviceInfoExtensions {
 
@@ -54,7 +54,7 @@ namespace nvc.models {
 			Scope[] scopes = null;
 			yield return session.GetScopes().Handle(x=>scopes = x);
 
-			DebugHelper.Assert(scopes != null);
+			dbg.Assert(scopes != null);
 
 			var use_onvif_scope = scopes
 				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
@@ -79,7 +79,7 @@ namespace nvc.models {
 			var scope_prefix = NvcHelper.SynesisDeviceIdScope;
 			Scope[] scopes = null;
 			yield return session.GetScopes().Handle(x => scopes = x);
-			DebugHelper.Assert(scopes != null);
+			dbg.Assert(scopes != null);
 
 			var deviceId_scope = String.Concat(scope_prefix, Uri.EscapeDataString(deviceId));
 			var scopes_to_set = scopes

@@ -5,9 +5,8 @@ using System.Text;
 using System.Drawing;
 using System.Xml;
 
-using nvc;
-using nvc.onvif;
-using onvifdm.utils;
+using odm.utils;
+using odm.onvif;
 using onvif.services.media;
 using onvif.services.analytics;
 using med = onvif.services.media;
@@ -16,7 +15,7 @@ using rul = onvif.services.analytics;
 using tt = onvif.types;
 using System.Globalization;
 
-namespace nvc.models {
+namespace odm.models {
 	public class RuleEngineModel : ModelBase<RuleEngineModel> {
 		ChannelDescription m_channel;
 		public RuleEngineModel(ChannelDescription channel) {
@@ -25,31 +24,31 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<RuleEngineModel> observer) {
 			RuleEngineObservable ruleEngine = null;
 			yield return session.GetRuleEngineClient().Handle(x => ruleEngine = x);
-			DebugHelper.Assert(ruleEngine != null);
+			dbg.Assert(ruleEngine != null);
 
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			DeviceObservable device = null;
 			yield return session.GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 			
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			if (profile == null) {
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			VideoAnalyticsConfiguration vac = profile.VideoAnalyticsConfiguration;
 			if (vac == null) {
 				VideoAnalyticsConfiguration[] comp_vacs = null;
 				yield return session.GetCompatibleVideoAnalyticsConfigurations(profile.token).Handle(x=> comp_vacs = x);
-				DebugHelper.Assert(comp_vacs != null);
+				dbg.Assert(comp_vacs != null);
 				vac = comp_vacs.FirstOrDefault();
 				yield return session.AddVideoAnalyticsConfiguration(profile.token, vac.token).Idle();
 				profile.VideoAnalyticsConfiguration = vac;
@@ -75,7 +74,7 @@ namespace nvc.models {
 
 			
 			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
-			DebugHelper.Assert(mediaUri != null);
+			dbg.Assert(mediaUri != null);
 
 			NotifyPropertyChanged(x => x.mediaUri);
 			NotifyPropertyChanged(x => x.encoderResolution);
@@ -91,15 +90,15 @@ namespace nvc.models {
 			
 			RuleEngineObservable ruleEngine = null;
 			yield return session.GetRuleEngineClient().Handle(x => ruleEngine = x);
-			DebugHelper.Assert(ruleEngine != null);
+			dbg.Assert(ruleEngine != null);
 			
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			var vac = profile.VideoAnalyticsConfiguration;

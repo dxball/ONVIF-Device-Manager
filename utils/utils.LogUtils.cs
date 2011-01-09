@@ -22,9 +22,10 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using System.Xml.Serialization;
+using System.IO;
 
 
-namespace onvifdm.utils {
+namespace odm.utils {
 
 	public interface ILogUtils {
 		TraceListenerCollection listeners {get;}
@@ -55,15 +56,18 @@ namespace onvifdm.utils {
 			}
 		}
 		
-		public void WriteEvent(string evtMsg, string evtSrc, TraceEventType evtType) {
+		public void WriteEvent(string message, string source, TraceEventType type) {
 			var ctx = BeforeWriteEvent();
 			try {
+				if (source == null) {
+					source = s_processFileName;
+				}
 				var evtId = Interlocked.Increment(ref _evtId);
 				var evtCache = new TraceEventCache();
 				foreach (TraceListener l in listeners) {
 					lock (l) {
 						try {
-							l.TraceEvent(evtCache, evtSrc, evtType, evtId, evtMsg);
+							l.TraceEvent(evtCache, source, type, evtId, message);
 							if (Trace.AutoFlush) {
 								l.Flush();
 							}
@@ -95,6 +99,16 @@ namespace onvifdm.utils {
 		//--------------------------------------------------
 		// protected section
 		//--------------------------------------------------
+
+		protected static string s_processFileNameField = null;
+		protected static string s_processFileName {
+			get {
+				if (s_processFileNameField == null) {
+					s_processFileNameField = Path.GetFileName(Environment.GetCommandLineArgs()[0]);
+				}
+				return s_processFileNameField;
+			}
+		}
 
 		protected virtual Object BeforeWriteEvent() {
 			var oldActivityId = Trace.CorrelationManager.ActivityId;
@@ -140,20 +154,20 @@ namespace onvifdm.utils {
 		protected Guid _activityId;
 	}
 
-	public class LogUtils {
+	public class log {
 
 		//--------------------------------------------------
 		// public section
 		//--------------------------------------------------
 		
-		static LogUtils() {
+		static log() {
 			Init(new LogUtilsDefault());
 		}
 
 		[Conditional("TRACE")]
 		public static void Init(ILogUtils impl) {
 			//lock (_staticLock) {
-			LogUtils._impl = impl;
+			log._impl = impl;
 			//}
 		}
 
@@ -170,6 +184,11 @@ namespace onvifdm.utils {
 		[Conditional("TRACE")]
 		public static void WriteError(string errMsg) {
 			WriteEvent(errMsg, null, TraceEventType.Error);
+		}
+
+		[Conditional("TRACE")]
+		public static void WriteError(Exception err) {
+			WriteEvent(err.Message, null, TraceEventType.Error);
 		}
 		
 		[Conditional("TRACE")]

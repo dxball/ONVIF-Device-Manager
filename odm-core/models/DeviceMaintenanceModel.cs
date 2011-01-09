@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
 using dev = global::onvif.services.device;
 using med = global::onvif.services.media;
@@ -14,24 +14,24 @@ using onvif.services.media;
 using System.IO;
 using System.Net;
 using System.Net.Mime;
-using nvc.rx;
+using odm.utils.rx;
 using System.Threading;
 
-namespace nvc.models {
+namespace odm.models {
 
 	public class DeviceMaintenanceModel : ModelBase<DeviceMaintenanceModel> {
 		public DeviceMaintenanceModel() {
 			firmwareUpgradeSupported = false;
 		}
 
-		protected override IEnumerable<IObservable<object>> LoadImpl(onvif.Session session, IObserver<DeviceMaintenanceModel> observer) {
+		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceMaintenanceModel> observer) {
 			GetDeviceInformationResponse info = null;
 			yield return session.GetDeviceInformation().Handle(x => info = x);
-			DebugHelper.Assert(info != null);
+			dbg.Assert(info != null);
 
 			DeviceObservable device = null;
 			yield return session.GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			//StartFirmwareUpgradeResponse upgradeInfo = null;
 			//yield return device.StartFirmwareUpgrade().Handle(x => upgradeInfo = x).IgnoreError();
@@ -58,10 +58,10 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<DeviceMaintenanceModel> observer) {
 			DeviceObservable device = null;
 			yield return session.GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 			StartFirmwareUpgradeResponse upgradeInfo = null;
 			yield return device.StartFirmwareUpgrade().Handle(x => upgradeInfo = x);
-			DebugHelper.Assert(upgradeInfo != null);
+			dbg.Assert(upgradeInfo != null);
 
 			//if (upgradeInfo.UploadDelay > 0) {
 			//    yield return Observable.Delay(upgradeInfo.UploadDelay);
@@ -107,7 +107,7 @@ namespace nvc.models {
 					response.Close();
 					throw new Exception("upload failed");
 				}
-				DebugHelper.Assert(response != null);
+				dbg.Assert(response != null);
 				response.Close();
 
 			};

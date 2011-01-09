@@ -5,11 +5,11 @@ using System.Text;
 
 
 using onvif.services.media;
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 using med=onvif.services.media;
 
-namespace nvc.models {
+namespace odm.models {
 
 	public class VideoResolution {
 		public int width;
@@ -45,9 +45,7 @@ namespace nvc.models {
 			return encoding.ToString();
 		}
 	}
-
-
-
+	
 	public class VideoStreamingModel : ModelBase<VideoStreamingModel> {
 		ChannelDescription m_channel;
 		public VideoStreamingModel(ChannelDescription channel) {
@@ -106,7 +104,7 @@ namespace nvc.models {
 			Profile[] profiles = null;
 
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 
@@ -119,7 +117,7 @@ namespace nvc.models {
 				//add default video source configuration
 				VideoSourceConfiguration[] vscs = null;
 				yield return session.GetVideoSourceConfigurations().Handle(x=>vscs=x);
-				DebugHelper.Assert(vscs != null);
+				dbg.Assert(vscs != null);
 				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
 				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
 				profile.VideoSourceConfiguration = vsc;
@@ -129,21 +127,21 @@ namespace nvc.models {
 			if (vec == null) {
 				//add default video encoder
 				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
-				DebugHelper.Assert(vec != null);
+				dbg.Assert(vec != null);
 				profile.VideoEncoderConfiguration = vec;
 			}
 			
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			VideoEncoderConfiguration[] vecs = null;
 			yield return session.GetVideoEncoderConfigurations().Handle(x => vecs = x);
-			DebugHelper.Assert(vecs != null);
+			dbg.Assert(vecs != null);
 
 			VideoEncoderConfigurationOptions options = null;
 			yield return session.GetVideoEncoderConfigurationOptions().Handle(x => options = x);
-			DebugHelper.Assert(options != null);
+			dbg.Assert(options != null);
 			
 			var resolutions = new Dictionary<Tuple<int, int>, VideoResolution>();
 			var encoders = new Dictionary<VideoEncoder.Encoding, VideoEncoder>();
@@ -244,8 +242,7 @@ namespace nvc.models {
 			m_currentEncoder.SetBoth(encoders[convert_encoding(vec.Encoding)]);
 			m_channelName.SetBoth(profile.Name);
 			m_encodingInterval.SetBoth(vec.RateControl.EncodingInterval);
-
-
+			
 			if (vec.RateControl.FrameRateLimit > this.maxFrameRate) {
 				vec.RateControl.FrameRateLimit = this.maxFrameRate;
 				yield return session.SetVideoEncoderConfiguration(vec, true).Idle();
@@ -254,8 +251,7 @@ namespace nvc.models {
 				yield return session.SetVideoEncoderConfiguration(vec, true).Idle();
 			}
 			m_frameRate.SetBoth(vec.RateControl.FrameRateLimit);
-			
-			
+						
 			NotifyPropertyChanged(x => x.metadata);
 			NotifyPropertyChanged(x => x.currentResolution);
 			NotifyPropertyChanged(x => x.currentEncoder);
@@ -303,24 +299,20 @@ namespace nvc.models {
 			}
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			yield return media.DeleteProfile(NvcHelper.GetChannelProfileToken(m_channel.Id)).Idle().IgnoreError();
 
 			Profile profile = null;
 			yield return media.CreateProfile(m_channelName.current, NvcHelper.GetChannelProfileToken(m_channel.Id)).Handle(x => profile = x);
-
-			
+						
 			//Profile[] profiles = null;
 			//yield return session.GetProfiles().Handle(x => profiles = x);
 			//DebugHelper.Assert(profiles != null);
 
 			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			//DebugHelper.Assert(profile != null);
-
-			
-
-			
+						
 			//if (profile.VideoEncoderConfiguration != null) {
 			//    yield return media.RemoveVideoEncoderConfiguration(profile.token).Idle();
 			//    profile.VideoEncoderConfiguration = null;
@@ -347,7 +339,7 @@ namespace nvc.models {
 				foreach(var _vec in _vecs.OrderBy(x=>x.UseCount)){
 					VideoEncoderConfigurationOptions _vec_opt = null;
 					yield return session.GetVideoEncoderConfigurationOptions(_vec.token, null).Handle(x => _vec_opt = x);
-					DebugHelper.Assert(_vec_opt != null);
+					dbg.Assert(_vec_opt != null);
 
 					switch(currentEncoder.encoding){
 						case VideoEncoder.Encoding.H264:
@@ -476,17 +468,59 @@ namespace nvc.models {
 					profile.VideoSourceConfiguration = null;
 				}
 			}
-
-
+			
 			if (m_metadata.current) {
 				yield return session.AddDefaultMetadata(profile).Idle();
 			}
+
+			yield return SetBitrateLimit(session).Idle();
 
 			yield return Observable.Concat(LoadImpl(session, null));
 
 			if (observer != null) {
 				observer.OnNext(this);
 			}
+		}
+
+		protected IEnumerable<IObservable<Object>> SetBitrateLimitImpl(Session session, IObserver<VideoStreamingModel> observer) {
+			Profile[] profiles = null;
+
+			yield return session.GetProfiles().Handle(x => profiles = x);
+			dbg.Assert(profiles != null);
+
+			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+
+			if (profile == null) {
+				//create default profile
+				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			}
+
+			if (profile.VideoSourceConfiguration == null) {
+				//add default video source configuration
+				VideoSourceConfiguration[] vscs = null;
+				yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
+				dbg.Assert(vscs != null);
+				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+				profile.VideoSourceConfiguration = vsc;
+			}
+
+			var vec = profile.VideoEncoderConfiguration;
+			if (vec == null) {
+				//add default video encoder
+				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
+				dbg.Assert(vec != null);
+				profile.VideoEncoderConfiguration = vec;
+			}
+			vec.RateControl.BitrateLimit = bitrate;
+
+			yield return session.SetVideoEncoderConfiguration(vec, true).Idle();
+			if (observer != null) {
+				observer.OnNext(this);
+			}
+		}
+		protected IObservable<VideoStreamingModel> SetBitrateLimit(Session session) {
+			return Observable.Iterate<VideoStreamingModel>(observer => SetBitrateLimitImpl(session, observer));
 		}
 
 		public override void RevertChanges() {
@@ -579,7 +613,7 @@ namespace nvc.models {
 		public int minFrameRate { get; private set; }
 		public int maxEncodingInterval { get; private set; }
 		public int minEncodingInterval { get; private set; }
-		public int bitrate { get; private set; }
+		public int bitrate { get; set; }
 		//public int maxBitrate { get; private set; }
 		//public int minBitrate { get; private set; }
 	}

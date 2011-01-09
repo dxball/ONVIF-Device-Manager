@@ -25,11 +25,11 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.NetworkInformation;
 
-using nvc.onvif;
+using odm.onvif;
 using dev = onvif.services.device;
-using onvifdm.utils;
+using odm.utils;
 
-namespace nvc.models {
+namespace odm.models {
 	//public static class NetworkSettingsExtensions {
 		
 

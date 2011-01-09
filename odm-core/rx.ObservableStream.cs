@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.IO;
 
-namespace nvc.rx {
+namespace odm.utils.rx {
 
 	public static class ObservableStream {
 		public static IObservable<int> Read(Stream stream, byte[] buffer, int offset, int count) {

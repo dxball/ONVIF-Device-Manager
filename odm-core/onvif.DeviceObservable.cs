@@ -27,16 +27,16 @@ using System.Threading;
 using System.ServiceModel;
 
 using onvif.services.device;
-using onvifdm.utils;
+using odm.utils;
 
 using onvif.types;
 using tt=onvif.types;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 	public class  DeviceObservable:IDisposable{
 		private Device m_proxy;
 		public DeviceObservable(Device proxy) {
-			DebugHelper.Assert(proxy != null);
+			dbg.Assert(proxy != null);
 			m_proxy = proxy;
 		}
 		public Uri uri {
@@ -107,10 +107,20 @@ namespace nvc.onvif {
 			return asyncOp(request).Select(x => x.parameters.DNSInformation);	
 		}
 
+		public IObservable<Unit> SetDNS(bool fromDHCP, string[] searchDomain, IPAddress[] DNSManual) {
+			var request = new MsgSetDNSRequest();
+			request.parameters.DNSManual = DNSManual;
+			request.parameters.FromDHCP = fromDHCP;
+			request.parameters.SearchDomain = searchDomain;
+
+			var asyncOp = Observable.FromAsyncPattern<MsgSetDNSRequest, MsgSetDNSResponse>(m_proxy.BeginSetDNS, m_proxy.EndSetDNS);
+			return asyncOp(request).Select(x => new Unit());
+		}
+
 		public IObservable<SystemDateTime> GetSystemDateAndTime() {
 			var request = new MsgGetSystemDateAndTimeRequest();
 			var asyncOp = Observable.FromAsyncPattern<MsgGetSystemDateAndTimeRequest, MsgGetSystemDateAndTimeResponse>(m_proxy.BeginGetSystemDateAndTime, m_proxy.EndGetSystemDateAndTime);
-			return asyncOp(request).Select(x => x.parameters.SystemDateAndTime);	
+			return asyncOp(request).Select(x => x.parameters.SystemDateAndTime);
 		}
 
 		public IObservable<Unit> SetSystemDateAndTime(SetDateTimeType dateTimeType, bool daylightSavings, tt::TimeZone timeZone, tt::DateTime utcDateTime) {
@@ -125,14 +135,20 @@ namespace nvc.onvif {
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<Unit> SetDNS(bool fromDHCP, string[] searchDomain, IPAddress[] DNSManual) {
-			var request = new MsgSetDNSRequest();
-			request.parameters.DNSManual = DNSManual;
-			request.parameters.FromDHCP = fromDHCP;
-			request.parameters.SearchDomain = searchDomain;
-			
-			var asyncOp = Observable.FromAsyncPattern<MsgSetDNSRequest, MsgSetDNSResponse>(m_proxy.BeginSetDNS, m_proxy.EndSetDNS);
-			return asyncOp(request).Select(x => new Unit());		
+		public IObservable<NTPInformation> GetNTP() {
+			var request = new MsgGetNTPRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetNTPRequest, MsgGetNTPResponse>(m_proxy.BeginGetNTP, m_proxy.EndGetNTP);
+			return asyncOp(request).Select(x => x.parameters.NTPInformation);
+		}
+
+		public IObservable<Unit> SetNTP(bool fromDhcp,  NetworkHost[] ntpManual) {
+
+			var request = new MsgSetNTPRequest();
+			request.parameters.FromDHCP = fromDhcp;
+			request.parameters.NTPManual = ntpManual;
+
+			var asyncOp = Observable.FromAsyncPattern<MsgSetNTPRequest, MsgSetNTPResponse>(m_proxy.BeginSetNTP, m_proxy.EndSetNTP);
+			return asyncOp(request).Select(x => new Unit());
 		}
 
 		public IObservable<Unit> SetNetworkDefaultGateway(string[] ipv4Addresses, string[] ipv6Addresses) {

@@ -25,12 +25,11 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
-using onvifdm.utils;
 using System.Threading;
 using System.Concurrency;
 using System.Reflection;
 
-namespace nvc {
+namespace odm.utils {
 
 	
 	public static class BindingExtensions {
@@ -45,7 +44,7 @@ namespace nvc {
 					base.OnFormat(cevent);
 					return;
 				}
-				DebugHelper.Assert(cevent.Value.GetType() == typeof(TControlProperty));
+				dbg.Assert(cevent.Value.GetType() == typeof(TControlProperty));
 				var value = (TSourceProperty)cevent.Value;
 
 				cevent.Value = m_formater(value);
@@ -58,10 +57,10 @@ namespace nvc {
 			//where TControlProperty : TSourceProperty 
 		{
 			var data_member = dataExpr.Body as MemberExpression;
-			DebugHelper.Assert(data_member != null);
+			dbg.Assert(data_member != null);
 
 			var prop_member = propExpr.Body as MemberExpression;
-			DebugHelper.Assert(prop_member != null);
+			dbg.Assert(prop_member != null);
 			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name, false, DataSourceUpdateMode.OnPropertyChanged);
 			control.DataBindings.Add(binding);
 			return control;
@@ -73,10 +72,10 @@ namespace nvc {
 			//where TControlProperty : TSourceProperty 
 		{
 			var data_member = dataExpr.Body as MemberExpression;
-			DebugHelper.Assert(data_member != null);
+			dbg.Assert(data_member != null);
 
 			var prop_member = propExpr.Body as MemberExpression;
-			DebugHelper.Assert(prop_member != null);
+			dbg.Assert(prop_member != null);
 
 			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name);
 			binding.DataSourceUpdateMode = updateModel;
@@ -90,16 +89,16 @@ namespace nvc {
 			//where TControlProperty : TSourceProperty 
 		{
 			var data_member = dataExpr.Body as MemberExpression;
-			DebugHelper.Assert(data_member != null);
+			dbg.Assert(data_member != null);
 
 			var prop_member = propExpr.Body as MemberExpression;
-			DebugHelper.Assert(prop_member != null);
+			dbg.Assert(prop_member != null);
 
 			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name);
 			binding.DataSourceUpdateMode = DataSourceUpdateMode.Never;
 			if (formater != null) {
 				binding.Format += (sender, cevent) => {
-					DebugHelper.Assert(cevent.Value.GetType() == typeof(TSourceProperty));
+					dbg.Assert(cevent.Value.GetType() == typeof(TSourceProperty));
 					var value = (TSourceProperty)cevent.Value;
 					cevent.Value = formater(value);
 					cevent.Value = formater(value);
@@ -115,16 +114,16 @@ namespace nvc {
 			//where TControlProperty : TSourceProperty 
 		{
 			var data_member = dataExpr.Body as MemberExpression;
-			DebugHelper.Assert(data_member != null);
+			dbg.Assert(data_member != null);
 
 			var prop_member = propExpr.Body as MemberExpression;
-			DebugHelper.Assert(prop_member != null);
+			dbg.Assert(prop_member != null);
 
 			var binding = new Binding(prop_member.Member.Name, dataSource, data_member.Member.Name);
 			if (formater != null) {
 				binding.Format += (sender, cevent) => {
 
-					DebugHelper.Assert(cevent.Value.GetType() == typeof(TSourceProperty));
+					dbg.Assert(cevent.Value.GetType() == typeof(TSourceProperty));
 					var value = (TSourceProperty)cevent.Value;
 					cevent.Value = formater(value);
 				};
@@ -132,7 +131,7 @@ namespace nvc {
 			if (parser != null) {
 				binding.Parse += (sender, cevent) => {
 
-					DebugHelper.Assert(cevent.Value.GetType() == typeof(TControlProperty));
+					dbg.Assert(cevent.Value.GetType() == typeof(TControlProperty));
 					var value = (TControlProperty)cevent.Value;
 					cevent.Value = parser(value);
 				};
@@ -162,26 +161,34 @@ namespace nvc {
 
 	public class NotifyPropertyChangedBase<T> : INotifyPropertyChanged {
 		public NotifyPropertyChangedBase() {
-			DebugHelper.Assert(SynchronizationContext.Current != null);
-			if(SynchronizationContext.Current != null){
+			dbg.Assert(SynchronizationContext.Current != null);
+			m_syncCtx = SynchronizationContext.Current;
+			if (SynchronizationContext.Current != null) {
 				m_scheduler = new SynchronizationContextScheduler(SynchronizationContext.Current);
-			}else{
+			} else {
 				m_scheduler = Scheduler.Immediate;
 			}
 		}
+		private SynchronizationContext m_syncCtx = null;
 		private IScheduler m_scheduler;
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void NotifyPropertyChanged(String propertyName) {
-			m_scheduler.Schedule(() => {
+			if (m_syncCtx == SynchronizationContext.Current) {
 				if (PropertyChanged != null) {
 					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 				}
-			});
+			} else {
+				m_scheduler.Schedule(() => {
+					if (PropertyChanged != null) {
+						PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+					}
+				});
+			}
 		}
 		protected void NotifyPropertyChanged<TProperty>(Expression<Func<T, TProperty>> expression) {
 			var me = expression.Body as MemberExpression;
-			DebugHelper.Assert(me != null);
+			dbg.Assert(me != null);
 			NotifyPropertyChanged(me.Member.Name);
-		}		
+		}
 	}
 }

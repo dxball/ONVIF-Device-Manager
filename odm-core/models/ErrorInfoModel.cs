@@ -6,15 +6,15 @@ using System.Drawing;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 using System.Runtime.Serialization;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using System.Xml;
 using System.IO;
 
-namespace nvc.models {
+namespace odm.models {
 	[Serializable]
 	[XmlRoot("exception")]
 	public class ErrorInfo {
@@ -44,7 +44,7 @@ namespace nvc.models {
 	public class ErrorInfoModel  {
 		public ErrorInfoModel(Exception error) {
 			if (error == null) {
-				DebugHelper.Break();
+				dbg.Break();
 				return;
 			}
 
@@ -76,7 +76,7 @@ namespace nvc.models {
 							EnableDocumentFunction = false
 						};
 						
-						using (var xmlReader = XmlReader.Create(@"/xml2html/XmlToHtml10Basic.xslt", xmlReaderSettings)) {
+						using (var xmlReader = XmlReader.Create(@"xml2html/XmlToHtml10Basic.xslt", xmlReaderSettings)) {
 							xslt.Load(xmlReader, xsltSettings, new XmlUrlResolver());
 							xmlReader.Close();
 						}

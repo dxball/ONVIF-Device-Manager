@@ -25,10 +25,10 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.NetworkInformation;
 
-using nvc.onvif;
+using odm.onvif;
 using dev = onvif.services.device;
 
-namespace nvc.models {
+namespace odm.models {
 	public class NetworkStatus {//:NotifyPropertyChangedBase<NetworkStatus> {
 		private PhysicalAddress m_mac;
 		private IPAddress m_ip;

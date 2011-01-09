@@ -6,16 +6,15 @@ using System.Drawing;
 using System.Xml;
 using System.Globalization;
 
-using nvc;
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 using onvif.services.media;
 using onvif.services.analytics;
 using media = onvif.services.media;
 using analytics = onvif.services.analytics;
 using tt = onvif.types;
 
-namespace nvc.models {
+namespace odm.models {
 
 	public static class ConfigExtensions{
 		public static string GetSimpleItem(this media::Config config, string name) {
@@ -46,6 +45,14 @@ namespace nvc.models {
 			var str = config.GetSimpleItem(name);
 			if (str == null) {
 				return false;
+			}
+			return BoolHelper.parse(str);
+		}
+
+		public static bool? GetSimpleItemAsBoolNullable(this media::Config config, string name) {
+			var str = config.GetSimpleItem(name);
+			if (str == null) {
+				return null;
 			}
 			return BoolHelper.parse(str);
 		}
@@ -84,27 +91,27 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<ObjectTrackerModel> observer) {
 			AnalyticsObservable analytics = null;
 			yield return session.GetAnalyticsClient().Handle(x => analytics = x);
-			DebugHelper.Assert(analytics != null);		
+			dbg.Assert(analytics != null);		
 
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			if (profile == null) {
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			yield return session.AddDefaultVideoAnalytics(profile).Idle();
 			
 			media::Config module = null;
 			yield return session.GetVideoAnalyticModule(profile, "ObjectTracker").Handle(x => module = x);
-			DebugHelper.Assert(module != null);
+			dbg.Assert(module != null);
 
 			minObjectArea = module.GetSimpleItemAsFloat("min_object_area");
 			maxObjectArea = module.GetSimpleItemAsFloat("max_object_area");
@@ -134,7 +141,7 @@ namespace nvc.models {
 			streamSetup.Transport.Tunnel = null;
 
 			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
-			DebugHelper.Assert(mediaUri != null);
+			dbg.Assert(mediaUri != null);
 
 			NotifyPropertyChanged(x => x.rose_up);
 			NotifyPropertyChanged(x => x.rose_up_right);
@@ -159,11 +166,11 @@ namespace nvc.models {
 
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			var vac = profile.VideoAnalyticsConfiguration;

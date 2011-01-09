@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using nvc.onvif;
+using odm.onvif;
 using System.Collections;
 using System.Drawing;
 
-namespace nvc.models {
+namespace odm.models {
 	public class EventsDisplayModel {
 		public EventsDisplayModel(ChannelDescription channel) { }
 		public Queue<mEventDescriptor> events{get;set;}

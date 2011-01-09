@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-using onvifdm.utils;
-using nvc.onvif;
+using odm.utils;
+using odm.onvif;
 using System.Disposables;
-using nvc.rx;
+using odm.utils.rx;
 
-namespace nvc.models {
+namespace odm.models {
 	public abstract class ModelBase<T> : NotifyPropertyChangedBase<T> where T : ModelBase<T> {
 		public ModelBase(){
 			m_changeSet.isEmptyChanged.Subscribe(isEmpty => isModified = !isEmpty);
@@ -20,25 +20,25 @@ namespace nvc.models {
 		protected abstract IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<T> observer);
 		protected virtual IEnumerable<IObservable<Object>> ApplyChangesImpl(Session session, IObserver<T> observer) {
 			var err = new NotImplementedException();
-			DebugHelper.Error(err);
+			dbg.Error(err);
 			throw err;
 		}
 		
 
 		public IObservable<T> Load(Session session) {
 			this.session = session;
-			DebugHelper.Assert(SynchronizationContext.Current != null);
+			dbg.Assert(SynchronizationContext.Current != null);
 			return Observable.Iterate<T>(observer => LoadImpl(session, observer)).ObserveOn(SynchronizationContext.Current);
 		}
 
 		public virtual void RevertChanges() {
 			var err = new NotImplementedException();
-			DebugHelper.Error(err);
+			dbg.Error(err);
 			throw err;
 		}
 		
 		public IObservable<T> ApplyChanges() {
-			DebugHelper.Assert(SynchronizationContext.Current != null);
+			dbg.Assert(SynchronizationContext.Current != null);
 			return Observable.Iterate<T>(observer => ApplyChangesImpl(session, observer)).ObserveOn(SynchronizationContext.Current);
 		}
 
@@ -87,7 +87,7 @@ namespace nvc.models {
 				try {
 					m_isEmptyChanged.OnNext(false);
 				} catch (Exception err) {
-					DebugHelper.Error(err);
+					dbg.Error(err);
 					//swallow error
 				}
 			};
@@ -101,7 +101,7 @@ namespace nvc.models {
 					try {
 						m_isEmptyChanged.OnNext(true);
 					} catch (Exception err) {
-						DebugHelper.Error(err);
+						dbg.Error(err);
 						//swallow error
 					}
 				};

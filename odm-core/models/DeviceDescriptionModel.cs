@@ -23,13 +23,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
 using onvif.services.device;
 using onvif.types;
 
-namespace nvc.models {
+namespace odm.models {
 	public class DeviceDescriptionModel : ModelBase<DeviceDescriptionModel> {
 		private string m_Name = String.Empty;
 		private string m_Address = String.Empty;
@@ -47,10 +47,10 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceDescriptionModel> observer) {
 			Capabilities caps = null;
 			DeviceInfo info = null;
-			yield return Observable.Merge(
-				session.GetCapabilities().Handle(x => caps = x),
-				session.GetDeviceInfo().Handle(x => info = x)
-			).HandleError(x=>m_error = x);
+			//yield return Observable.Merge(
+				yield return session.GetCapabilities().Handle(x => caps = x);
+				yield return session.GetDeviceInfo().Handle(x => info = x);
+			//).HandleError(x=>m_error = x);
 
 			if (m_error != null) {
 				if (observer != null) {
@@ -59,8 +59,8 @@ namespace nvc.models {
 				yield break;
 			}
 
-			DebugHelper.Assert(info != null);
-			DebugHelper.Assert(caps != null);
+			dbg.Assert(info != null);
+			dbg.Assert(caps != null);
 
 			if (info != null) {
 				Name = info.Name;

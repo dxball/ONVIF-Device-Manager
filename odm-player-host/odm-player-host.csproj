@@ -78,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NativePlayer.cs" />
-    <Compile Include="Dispatcher.cs" />
     <Compile Include="PlayerService.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="Program.cs" />
@@ -135,13 +134,15 @@
       <Name>odm-player</Name>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
-    <ProjectReference Include="..\utils\utils.csproj">
+    <ProjectReference Include="..\utils\odm-utils.csproj">
       <Project>{D4D3FFCE-F536-4ECA-9C36-4EE36F9AD98E}</Project>
-      <Name>utils</Name>
+      <Name>odm-utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

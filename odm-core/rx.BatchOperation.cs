@@ -24,7 +24,7 @@ using System.Text;
 using System.Disposables;
 using System.Threading;
 
-namespace nvc {
+namespace odm.utils {
 
 	public class BatchOperation: IDisposable {
 		private object m_gate = new object();

@@ -11,9 +11,9 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.ServiceModel;
 using System.Drawing.Imaging;
-using onvifdm.utils;
+using odm.utils;
 
-namespace onvifdm.player {
+namespace odm.player {
 
 	public interface IPlayerCallbacks {
 		[OperationContract(IsOneWay=true)]
@@ -46,6 +46,12 @@ namespace onvifdm.player {
 
 		[OperationContract(IsOneWay=true)]
 		void Shutdown();
+
+		[OperationContract]
+		void StartRecord(string filePath);
+
+		[OperationContract]
+		void StopRecord();
 
 		//[OperationContract]
 		//string PullMetadata(string pullPoint);

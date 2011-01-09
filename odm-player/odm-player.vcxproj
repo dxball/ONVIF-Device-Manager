@@ -55,6 +55,7 @@
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>
       </PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,6 +86,8 @@
     <ClInclude Include="src\Live555.h" />
     <ClInclude Include="src\MetaSink.h" />
     <ClInclude Include="src\OnvifInstance.h" />
+    <ClInclude Include="src\TSWriter.h" />
+    <ClInclude Include="src\ValueSaver.h" />
     <ClInclude Include="src\VideoSink.h" />
     <ClInclude Include="src\VirtualSink.h" />
   </ItemGroup>
@@ -93,6 +96,7 @@
     <ClCompile Include="src\Live555.cpp" />
     <ClCompile Include="src\MetaSink.cpp" />
     <ClCompile Include="src\OnvifInstance.cpp" />
+    <ClCompile Include="src\TSWriter.cpp" />
     <ClCompile Include="src\VideoSink.cpp" />
     <ClCompile Include="src\VirtualSink.cpp" />
   </ItemGroup>

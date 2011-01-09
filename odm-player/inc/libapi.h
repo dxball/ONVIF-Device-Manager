@@ -29,12 +29,28 @@ typedef void (*onvifmp_meta_callback)(const unsigned char* aBuffer,
                                       unsigned int aSize);
 
 //return 0 if all ok
+//aSilentMode = 1 - silent
+//aSilentMode = 0 - noisy
 extern "C" __declspec(dllexport)
 int onvifmp_start_parsing(onvifmp aInstance, const char *aUrl,
                           int aWidth, int aHeight, int aStride, int pixFormat,
                           const char *aMapName,
-                          onvifmp_meta_callback aCallback);
+                          onvifmp_meta_callback aCallback,
+                          int aSilentMode);
+
+//aSilentMode = 1 - silent
+//aSilentMode = 0 - noisy
+//return 0 if all ok
+extern "C" __declspec(dllexport)
+int onvifmp_player_set_silent_mode(onvifmp aInstance, const char *aUrl,
+                                  int aSilentMode);
 
 //return 0 if all ok
 extern "C" __declspec(dllexport)
 int onvifmp_stop_parsing(onvifmp aInstance, const char *aUrl);
+
+extern "C" __declspec(dllexport)
+int onvifmp_start_record(onvifmp aInstance, const char *aUrl,
+                        const char *aFilePath);
+extern "C" __declspec(dllexport)
+int onvifmp_stop_record(onvifmp aInstance, const char *aUrl);

@@ -25,7 +25,7 @@ using System.ServiceModel;
 
 using onvif.services.media;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 	public class MediaObservable:IDisposable {
 		Media m_proxy;
 		public MediaObservable(Media proxy) {

@@ -14,8 +14,7 @@ using System.Drawing.Imaging;
 using System.Concurrency;
 using System.Disposables;
 
-namespace onvifdm.player {
-
+namespace odm.player {
 
 	public static class NativePlayer {
 		public const string odm_player_dll = "odm-player.dll";
@@ -28,7 +27,7 @@ namespace onvifdm.player {
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void onvifmp_meta_callback(IntPtr aBuffer, UInt32 aSize);
-
+				
 		public enum LogType : int {
 			LOG_ERROR = 0,
 			LOG_WARNING,
@@ -46,10 +45,20 @@ namespace onvifdm.player {
 		public static extern void onvifmp_close(IntPtr aInstance);
 
 		[DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int onvifmp_start_parsing(IntPtr aInstance, string aUrl, int aWidth, int aHeight, int aStride, int pixFormat, string aMapName, onvifmp_meta_callback aCallback);
+        public static extern int onvifmp_start_parsing(IntPtr aInstance, string aUrl, int aWidth, int aHeight, int aStride, int pixFormat, string aMapName, onvifmp_meta_callback aCallback, int aSilentMode);
+
+        [DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int onvifmp_player_set_silent_mode(IntPtr aInstance, string aUrl, int aSilentMode);
 
 		[DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int onvifmp_stop_parsing(IntPtr aInstance, string aUrl);
+
+		[DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int onvifmp_start_record(IntPtr aInstance, string aUrl, string aFilePath);
+
+		[DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int onvifmp_stop_record(IntPtr aInstance, string aUrl);
+
 	}
 }
 

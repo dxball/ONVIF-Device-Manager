@@ -25,10 +25,10 @@ using System.ServiceModel.Discovery;
 using System.Disposables;
 using System.Threading;
 
-using onvifdm.utils;
-using nvc.rx;
+using odm.utils;
+using odm.utils.rx;
 
-namespace nvc {	
+namespace odm.utils {	
 	public class WsDiscoveryObservable {	
 
 		protected Func<DiscoveryClient> m_getDiscoveryClient = null;
@@ -59,12 +59,12 @@ namespace nvc {
 				//dc.Open();
 				dc.FindCompleted += (sender, e) => {
 					bool completing = state.transit(ObserverState.subscribed, ObserverState.completed);
-					DebugHelper.Assert(state.isDisposed() == e.Cancelled);
+					dbg.Assert(state.isDisposed() == e.Cancelled);
 					if (!completing) {
 						return;
 					}
 
-					DebugHelper.Assert(!e.Cancelled);
+					dbg.Assert(!e.Cancelled);
 
 					if (e.Error != null) {
 						observer.OnError(e.Error);
@@ -75,18 +75,19 @@ namespace nvc {
 				};
 
 	            dc.FindProgressChanged += (sender, e) => {
-					DebugHelper.Assert(!state.isDisposed());
+					dbg.Assert(!state.isDisposed());
 					if (dic.Add(e.EndpointDiscoveryMetadata.Address.Uri.OriginalString)) {
 						observer.OnNext(e.EndpointDiscoveryMetadata);
 					} else {
-						DebugHelper.Error("duplicated ws-discovery probe match");
+						//DebugHelper.Error("duplicated ws-discovery probe match");
+						log.WriteError("duplicated ws-discovery probe match");
 					}
 			    };
 
 				dc.FindAsync(findCriteria, sync);
 				
 				return Disposable.Create(()=>{
-					DebugHelper.Assert(!state.isDisposed());
+					dbg.Assert(!state.isDisposed());
 					var disposing = state.transit(ObserverState.subscribed, ObserverState.disposed);
 					if (disposing) {
 						dc.CancelAsync(sync);
@@ -108,14 +109,14 @@ namespace nvc {
 				dc.Open();
 				
 				dc.ResolveCompleted += (sender, e) => {
-					DebugHelper.Assert(!state.isCompleted());
+					dbg.Assert(!state.isCompleted());
 					bool completing = state.transit(ObserverState.subscribed, ObserverState.completed);
-					DebugHelper.Assert(state.isDisposed() == e.Cancelled);
+					dbg.Assert(state.isDisposed() == e.Cancelled);
 					if (!completing) {
 						return;
 					}
 
-					DebugHelper.Assert(!e.Cancelled);
+					dbg.Assert(!e.Cancelled);
 
 					if (e.Error != null) {
 						observer.OnError(e.Error);
@@ -133,7 +134,7 @@ namespace nvc {
 				dc.ResolveAsync(resolveCriteria, sync);
 
 				return Disposable.Create(() => {
-					DebugHelper.Assert(!state.isDisposed());
+					dbg.Assert(!state.isDisposed());
 					var disposing = state.transit(ObserverState.subscribed, ObserverState.disposed);
 					if (disposing) {
 						dc.CancelAsync(sync);

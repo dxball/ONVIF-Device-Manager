@@ -26,18 +26,18 @@ using System.Threading;
 using System.ServiceModel;
 using System.Xml;
 using System.Windows.Threading;
-using onvifdm.utils;
+using odm.utils;
 using System.ComponentModel;
 using System.Concurrency;
 using System.Disposables;
 
 using dev=onvif.services.device;
-using nvc.models;
-using nvc.rx;
+using odm.models;
+using odm.utils.rx;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Discovery.VersionApril2005;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 
 	public class NvcHelper {
 		public const string OnvifNameScope = @"onvif://www.onvif.org/name/";
@@ -372,7 +372,7 @@ namespace nvc.onvif {
 				m_queue.Enqueue(() => {
 					if (!m_isStopped) {
 						_subscription.Disposable = base.Subscribe(observer);
-						DebugHelper.Assert(_subscription != Disposable.Empty);
+						dbg.Assert(_subscription != Disposable.Empty);
 					} else {
 						m_lastNotification.Accept(observer);
 						//_subscription.Disposable = Disposable.Empty;

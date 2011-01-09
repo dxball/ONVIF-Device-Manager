@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using nvc.onvif;
+using System.Xml;
+using System.Drawing;
 
-using nvc;
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 using onvif.services.media;
 using onvif.services.analytics;
 using media = onvif.services.media;
 using analytics = onvif.services.analytics;
 using tt = onvif.types;
-using System.Xml;
-using System.Drawing;
 
-namespace nvc.models {
+namespace odm.models {
 	public class AnnotationsModel : ModelBase<AnnotationsModel> {
 		ChannelDescription m_channel;
 		public AnnotationsModel(ChannelDescription channel) {
@@ -25,28 +23,28 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<AnnotationsModel> observer) {
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			tt::Capabilities caps = null;
 			yield return session.GetCapabilities().Handle(x => caps = x);
-			DebugHelper.Assert(caps != null);
+			dbg.Assert(caps != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			if (profile == null) {
 				//create default profile
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			if (profile.VideoSourceConfiguration == null) {
 				//add default video source configuration
 				VideoSourceConfiguration[] vscs = null;
 				yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
-				DebugHelper.Assert(vscs != null);
+				dbg.Assert(vscs != null);
 				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
 				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
 				profile.VideoSourceConfiguration = vsc;
@@ -56,7 +54,7 @@ namespace nvc.models {
 			if (vec == null) {
 				//add default video encoder
 				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
-				DebugHelper.Assert(vec != null);
+				dbg.Assert(vec != null);
 				profile.VideoEncoderConfiguration = vec;
 			}
 
@@ -67,14 +65,20 @@ namespace nvc.models {
 
 				media::Config module = null;
 				yield return session.GetVideoAnalyticModule(profile, "Display").Handle(x => module = x);
-				DebugHelper.Assert(module != null);
+				dbg.Assert(module != null);
 
 				m_timestamp.SetBoth(module.GetSimpleItemAsBool("timestamp"));
 				m_tracking.SetBoth(module.GetSimpleItemAsBool("tracking"));
 				m_movingRects.SetBoth(module.GetSimpleItemAsBool("moving_rects"));
 				m_userRegion.SetBoth(module.GetSimpleItemAsBool("user_region"));
 				m_speed.SetBoth(module.GetSimpleItemAsBool("speed"));
-				
+				m_calibrationResults.SetBoth(module.GetSimpleItemAsBool("calibration_results"));
+				m_channelName.SetBoth(module.GetSimpleItemAsBool("channel_name"));
+				m_systemInfo.SetBoth(module.GetSimpleItemAsBool("system_information"));
+
+				NotifyPropertyChanged(x => x.channelName);
+				NotifyPropertyChanged(x => x.systemInfo);
+				NotifyPropertyChanged(x => x.calibrationResults);
 				NotifyPropertyChanged(x => x.timestamp);
 				NotifyPropertyChanged(x => x.tracking);
 				NotifyPropertyChanged(x => x.movingRects);
@@ -94,7 +98,7 @@ namespace nvc.models {
 			streamSetup.Transport.Tunnel = null;
 
 			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
-			DebugHelper.Assert(mediaUri != null);
+			dbg.Assert(mediaUri != null);
 
 			NotifyPropertyChanged(x => x.encoderResolution);
 			NotifyPropertyChanged(x => x.mediaUri);
@@ -109,11 +113,11 @@ namespace nvc.models {
 
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			yield return session.AddDefaultVideoAnalytics(profile).Idle();
@@ -121,13 +125,17 @@ namespace nvc.models {
 			
 			media::Config module = null;
 			yield return session.GetVideoAnalyticModule(profile, "Display").Handle(x => module = x);
-			DebugHelper.Assert(module != null);
-			
+			dbg.Assert(module != null);
+
+			//module.SetSimpleItemAsBool("calibration_results", false);
+			module.SetSimpleItemAsBool("calibration_results", calibrationResults);
 			module.SetSimpleItemAsBool("timestamp", timestamp);
 			module.SetSimpleItemAsBool("tracking", tracking);
 			module.SetSimpleItemAsBool("moving_rects", movingRects);
 			module.SetSimpleItemAsBool("user_region", userRegion);
-			module.SetSimpleItemAsBool("speed", speed);			
+			module.SetSimpleItemAsBool("speed", speed);
+			module.SetSimpleItemAsBool("channel_name", channelName);
+			module.SetSimpleItemAsBool("system_information", systemInfo);
 
 			yield return media.SetVideoAnalyticsConfiguration(vac, true).Idle();
 
@@ -167,6 +175,39 @@ namespace nvc.models {
 			get { return m_speed.current; }
 			set { m_speed.SetCurrent(m_changeSet, value);
 				NotifyPropertyChanged(x=>x.speed);}
+		}
+
+		private ChangeTrackingProperty<bool> m_calibrationResults = new ChangeTrackingProperty<bool>(false);
+		public bool calibrationResults {
+			get {
+				return m_calibrationResults.current;
+			}
+			set {
+				m_calibrationResults.SetCurrent(m_changeSet, value);
+				NotifyPropertyChanged(x => x.calibrationResults);
+			}
+		}
+
+		private ChangeTrackingProperty<bool> m_channelName = new ChangeTrackingProperty<bool>(false);
+		public bool channelName {
+			get {
+				return m_channelName.current;
+			}
+			set {
+				m_channelName.SetCurrent(m_changeSet, value);
+				NotifyPropertyChanged(x => x.channelName);
+			}
+		}
+
+		private ChangeTrackingProperty<bool> m_systemInfo = new ChangeTrackingProperty<bool>(false);
+		public bool systemInfo {
+			get {
+				return m_systemInfo.current;
+			}
+			set {
+				m_systemInfo.SetCurrent(m_changeSet, value);
+				NotifyPropertyChanged(x => x.systemInfo);
+			}
 		}
 
 		public Size encoderResolution{get; private set;}

@@ -47,14 +47,17 @@ private:
 Live555*
 Live555::Create(OnvifInstance& aInstance, const std::string& aURL,
     int aWidth, int aHeight, int aStride, const std::string& aMapName,
-    OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback)
+    OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback,
+    int aSilentMode)
 {
-  return new Live555(aInstance, aURL, aWidth, aHeight, aStride, aMapName, pixFormat, aCallback);
+  return new Live555(aInstance, aURL, aWidth, aHeight, aStride, aMapName,
+    pixFormat, aCallback, aSilentMode);
 }
 
 Live555::Live555(OnvifInstance& aInstance, const std::string& aURL,
     int aWidth, int aHeight, int aStride, const std::string& aMapName,
-    OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback)
+    OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback,
+    int aSilentMode)
     : mInstance(aInstance)
     , mUrl(aURL)
     , mCallback(aCallback)
@@ -66,6 +69,8 @@ Live555::Live555(OnvifInstance& aInstance, const std::string& aURL,
     , mThread(NULL)
     , mEvent(INVALID_HANDLE_VALUE)
 {
+  mSilentMode.SetValue(aSilentMode);
+  mRecord.SetValue(0);
 }
 
 Live555::~Live555()
@@ -157,10 +162,20 @@ Live555::ThreadCallback(void *aArg)
     Live555 *pLive = (Live555 *)aArg;
     unsigned int buf_size = 2000 * 2000;
 
-    /*av_log_set_callback(make_function_pointer([pLive](void *aClass, int aLevel, const char *aMsg, va_list aArgs){
+    av_log_set_callback(make_function_pointer([pLive](void *aClass, int aLevel, const char *aMsg, va_list aArgs){
       char buf[255];
       const char *source = NULL;
-      vsprintf_s<255>(buf, aMsg, aArgs);
+
+#if defined(_WIN32)
+      //work around // we have %td from av_codec
+      std::string msg(aMsg);
+      size_t pos = std::string::npos;
+      while (std::string::npos != (pos = msg.find("%td")))
+        msg.replace(pos, 3, "%ld");
+      //work around // we have %td from av_codec
+#endif
+
+      vsprintf_s<255>(buf, msg.c_str(), aArgs);
       if (aClass)
       {
         AVClass* avc= aClass ? *(AVClass**)aClass : NULL;
@@ -170,7 +185,7 @@ Live555::ThreadCallback(void *aArg)
       pLive->mInstance.Log(buf, source, (AV_LOG_FATAL == aLevel || AV_LOG_ERROR == aLevel) ?
         LOG_ERROR : (AV_LOG_WARNING == aLevel ? LOG_WARNING : LOG_INFORMATION));
     }));
-*/
+
     class LiveUsageEnvironment : public BasicUsageEnvironment
     {
     public:
@@ -258,7 +273,8 @@ Live555::ThreadCallback(void *aArg)
         if(subsession->initiate(0)){
           rtspClient->setupMediaSubsession(*subsession, false, false, false);
           auto codecName = subsession->codecName();
-          if(strcmp(codecName, "META") == 0 && pLive->mCallback){
+          if(strcmp(codecName, "META") == 0 && pLive->mCallback)
+          {
             subsession->sink = MetaSink::Create(*env, buf_size, pLive->mEvent, pLive->mCallback);
             auto source = subsession->rtpSource();
             source->setPacketReorderingThresholdTime(unsigned int(1000000));
@@ -269,7 +285,8 @@ Live555::ThreadCallback(void *aArg)
             auto sink = VideoSink::Create(*env, CODEC_ID_MJPEG, buf_size,
               pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
               pLive->getPixelFormat(), pLive->mMapName.c_str(),
-              subsession->fmtp_spropparametersets());
+              subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
+              pLive->mRecord, pLive->mFilePath);
             auto source = subsession->rtpSource();
             subsession->sink = sink;
             source->setPacketReorderingThresholdTime(unsigned int(1000000));
@@ -280,7 +297,8 @@ Live555::ThreadCallback(void *aArg)
             auto sink = VideoSink::Create(*env, CODEC_ID_H264, buf_size,
               pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
               pLive->getPixelFormat(), pLive->mMapName.c_str(),
-              subsession->fmtp_spropparametersets());
+              subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
+              pLive->mRecord, pLive->mFilePath);
             auto source = subsession->rtpSource();
             subsession->sink = sink;
             source->setPacketReorderingThresholdTime(unsigned int(1000000));
@@ -291,7 +309,8 @@ Live555::ThreadCallback(void *aArg)
             auto sink = VideoSink::Create(*env, CODEC_ID_MPEG4, buf_size,
               pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
               pLive->getPixelFormat(), pLive->mMapName.c_str(),
-              subsession->fmtp_spropparametersets());
+              subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
+              pLive->mRecord, pLive->mFilePath);
             auto source = subsession->rtpSource();
             subsession->sink = sink;
             source->setPacketReorderingThresholdTime(unsigned int(1000000));
@@ -325,7 +344,5 @@ Live555::ThreadCallback(void *aArg)
   }
 }
 
-void LogCallback(void *aClass, int aLevel, const char* aMsg,
-                 va_list aVars)
-{
-}
+//TODO: Record in VirtualSink
+//TODO: Stop record when close

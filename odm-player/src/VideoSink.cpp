@@ -1,11 +1,14 @@
 
 #include "VideoSink.h"
+#include "TSWriter.h"
 
 #include "H264VideoRTPSource.hh"
 
 #include <Windows.h>
 #include <stdlib.h>
 #include <strsafe.h>
+
+#include <process.h>
 
 class FileMap
 {
@@ -37,7 +40,8 @@ private:
 VideoSink::VideoSink(UsageEnvironment& aEnv, CodecID aCodecID,
     unsigned int aBufferSize, HANDLE aEvent, int aWidth, int aHeight,
     int aStride, PixelFormat aPixFormat, const char *aMapName,
-    const char* sPropParameterSetsStr)
+    const char* sPropParameterSetsStr, IntSaver& aSilentMode,
+    IntSaver& aRecord, std::string& aFilePath)
   : VirtualSink(aEnv, aBufferSize + FF_INPUT_BUFFER_PADDING_SIZE, aEvent)
   , mAVCodec(NULL)
   , mAVCodecContext(NULL)
@@ -48,8 +52,14 @@ VideoSink::VideoSink(UsageEnvironment& aEnv, CodecID aCodecID,
   , mStride(aStride)
   , mPixFormat(aPixFormat)
   , mFileMapBuffer(NULL)
-  , mAVFrameRGB(NULL)
+  //, mAVFrameRGB(NULL)
   , mBufferPosition(0)
+  , mThread(NULL)
+  , mEvent(INVALID_HANDLE_VALUE)
+  , mSilentMode(aSilentMode)
+  , mRecord(aRecord)
+  , mFilePath(aFilePath)
+  , mWriter(nullptr)
 {
 	mAVCodec = avcodec_find_decoder(aCodecID);
 	if (!mAVCodec) {
@@ -96,25 +106,47 @@ VideoSink::VideoSink(UsageEnvironment& aEnv, CodecID aCodecID,
       mFileMapBuffer = mFileMap->ViewOfFile(numBytes);
       if (mFileMapBuffer)
       {
-        mAVFrameRGB = avcodec_alloc_frame();
+        /*mAVFrameRGB = avcodec_alloc_frame();
         if (mAVFrameRGB)
         {
           avpicture_fill((AVPicture*)mAVFrameRGB, (uint8_t*)mFileMapBuffer,
                   mPixFormat, mWidth, mHeight);
           mAVFrameRGB->linesize[0] = mStride;
-        }
+        }*/
       }
     }
   }
+  InitializeCriticalSection(&mCS);
+
+  UUID uuid;
+  UuidCreate(&uuid);
+  unsigned char *uuid_cstr = NULL;
+  UuidToStringA(&uuid, &uuid_cstr);
+  
+  mEvent = CreateEventA(NULL, TRUE, FALSE, (LPCSTR)uuid_cstr);
+  RpcStringFreeA(&uuid_cstr);
+  /*if (!mEvent)
+  {
+    return mInstance.RaiseError("Event cann't be created");
+  }*/
 }
 
 VideoSink::~VideoSink()
 {
-  if (mAVFrameRGB)
+  if (mThread)
+  {
+    SetEvent(mEvent);
+    WaitForSingleObject((HANDLE)mThread, INFINITE);
+    mThread = NULL;
+    CloseHandle(mEvent);
+    mEvent = INVALID_HANDLE_VALUE;
+  }
+  DeleteCriticalSection(&mCS);
+  /*if (mAVFrameRGB)
   {
     av_free(mAVFrameRGB);
     mAVFrameRGB = NULL;
-  }
+  }*/
   if (!mFileMap)
   {
     if (mFileMapBuffer)
@@ -143,10 +175,12 @@ VideoSink*
 VideoSink::Create(UsageEnvironment& aEnv, CodecID aCodecID,
     unsigned int aBufferSize, HANDLE aEvent, int aWidth, int aHeight,
     int aStride, PixelFormat aPixFormat, const char *aMapName,
-    const char* sPropParameterSetsStr)
+    const char* sPropParameterSetsStr, IntSaver& aSilentMode,
+    IntSaver& aRecord, std::string& aFilePath)
 {
 	return new VideoSink(aEnv, aCodecID, aBufferSize, aEvent, aWidth, aHeight,
-    aStride, aPixFormat, aMapName, sPropParameterSetsStr);
+    aStride, aPixFormat, aMapName, sPropParameterSetsStr, aSilentMode,
+    aRecord, aFilePath);
 }
 
 void
@@ -199,56 +233,98 @@ VideoSink::afterGettingFrame1(unsigned aFrameSize,
       return;
     }
     if (got_frame) {
-      auto scale_ctx = sws_getContext(
-				mAVCodecContext->coded_width, mAVCodecContext->coded_height,
-        mAVCodecContext->pix_fmt, mWidth, mHeight, mPixFormat, 
-				SWS_FAST_BILINEAR,NULL,NULL,NULL);
+      //record
+      int isRecording = 0;
+      mRecord.GetValue(isRecording);
+      if (isRecording) {
+        if (!mWriter) {
+          mWriter = new TSWriter(mFilePath,
+            mAVCodecContext->bit_rate ? mAVCodecContext->bit_rate : 400000,
+            mAVCodecContext->coded_width, mAVCodecContext->coded_height,
+            /*mAVCodecContext->time_base.den ? mAVCodecContext->time_base.den :*/ 25,
+            mAVCodecContext->pix_fmt);
+        }
+        if (mWriter->hasError()) {
+          fprintf(stderr, "Could not create writer\n");
+          delete mWriter;
+          mWriter = nullptr;
+        } else {
+          mWriter->write_picture(mAVFrame);
+        }
+      } else if (mWriter) {
+        delete mWriter;
+        mWriter = nullptr;
+      }
+      //end record
+
+      auto scale_ctx = sws_getContext(mAVCodecContext->coded_width,
+        mAVCodecContext->coded_height, mAVCodecContext->pix_fmt,
+        mWidth, mHeight, mPixFormat, SWS_FAST_BILINEAR,NULL,NULL,NULL);
       if (scale_ctx)
       {
-        printf(".");
-        sws_scale(scale_ctx, mAVFrame->data, mAVFrame->linesize, 0,
-          mAVCodecContext->coded_height, mAVFrameRGB->data,
-          mAVFrameRGB->linesize);
+        if (!mThread)
+        {
+          mThread = _beginthread(&(VideoSink::PlayerThread), 0, this);
+        }
 
-			  sws_freeContext(scale_ctx);
+        auto mAVFrameRGB = avcodec_alloc_frame();
+        int numBytes = mHeight * mStride;
+        unsigned char *buf = new unsigned char[numBytes];
+        if (mAVFrameRGB)
+        {
+          avpicture_fill((AVPicture*)mAVFrameRGB, (uint8_t*)buf,
+                  mPixFormat, mWidth, mHeight);
+          mAVFrameRGB->linesize[0] = mStride;
+
+          sws_scale(scale_ctx, mAVFrame->data, mAVFrame->linesize, 0,
+            mAVCodecContext->coded_height, mAVFrameRGB->data,
+            mAVFrameRGB->linesize);
+
+          EnterCriticalSection(&mCS);
+          mQueue.push_back(buf);
+          LeaveCriticalSection(&mCS);
+
+          av_free(mAVFrameRGB);
+        }
+
+        sws_freeContext(scale_ctx);
       }
     }
     avpkt.size -= len;
     avpkt.data += len;
   }
-	/*do{		
-		auto processed_size = avcodec_decode_video(mAVCodecContext, mAVFrame,
-      &got_frame, pBuffer, size);
-		if (processed_size < 0)
-    {
-			return;
-		}
+}
 
-    if(got_frame && mAVFrameRGB)
+static const DWORD s_BufferSizeInMillisec = 2000;
+
+void
+VideoSink::PlayerThread(void *aArg)
+{
+  VideoSink *pSink = (VideoSink *)aArg;
+  if (pSink)
+  {
+    auto bufSize = sizeof(unsigned char) * pSink->mHeight * pSink->mStride;
+    while (1)
     {
-      auto scale_ctx = sws_getContext(
-				mAVCodecContext->coded_width, mAVCodecContext->coded_height,
-        mAVCodecContext->pix_fmt, mWidth, mHeight, mPixFormat, 
-				SWS_FAST_BILINEAR,NULL,NULL,NULL);
-      if (scale_ctx)
+      DWORD sleep_i = s_BufferSizeInMillisec / (1 + pSink->mQueue.size());
+      //printf("Queue size: %ld; Wait: %ld\n", pSink->mQueue.size(), sleep_i);
+      Sleep(sleep_i);
+      DWORD res = WaitForSingleObject(pSink->mEvent, 0);
+      if (WAIT_OBJECT_0 == res) break;
+        
+      if (pSink->mQueue.size() > 0)
       {
-        sws_scale(scale_ctx, mAVFrame->data, mAVFrame->linesize, 0,
-          mAVCodecContext->coded_height, mAVFrameRGB->data,
-          mAVFrameRGB->linesize);
+        EnterCriticalSection(&pSink->mCS);
+        auto frame = pSink->mQueue.front();
 
-			  sws_freeContext(scale_ctx);
+        int silentMode = 0;
+        pSink->mSilentMode.GetValue(silentMode);
+        if (!silentMode)
+          memcpy(pSink->mFileMapBuffer, frame, bufSize);
+        delete []frame;
+        pSink->mQueue.pop_front();
+        LeaveCriticalSection(&pSink->mCS);
       }
-		}
-		
-		if(size > processed_size)
-    {
-			size -= processed_size;
-			pBuffer += processed_size;
-		}
-    else
-    {
-			size = 0;
-			pBuffer = NULL;
-		}		
-	} while(got_frame || size > 0);*/
+    }
+  }
 }

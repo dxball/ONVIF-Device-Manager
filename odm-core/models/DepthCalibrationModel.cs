@@ -6,9 +6,8 @@ using System.Drawing;
 using System.Xml;
 using System.Globalization;
 
-using nvc;
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 using onvif.services.media;
 using onvif.services.analytics;
 using media = onvif.services.media;
@@ -17,7 +16,7 @@ using tt = onvif.types;
 using System.Xml.Serialization;
 
 
-namespace nvc.models {
+namespace odm.models {
 	//[Serializable]
 	public class Marker {
 		//[Serializable]
@@ -95,21 +94,21 @@ namespace nvc.models {
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<DepthCalibrationModel> observer) {
 			AnalyticsObservable analytics = null;
 			yield return session.GetAnalyticsClient().Handle(x => analytics = x);
-			DebugHelper.Assert(analytics != null);		
+			dbg.Assert(analytics != null);		
 
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			if (profile == null) {
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			yield return session.AddDefaultVideoAnalytics(profile).Idle();
 			//yield return session.AddDefaultMetadata(profile).Idle();
@@ -122,11 +121,11 @@ namespace nvc.models {
 			//}
 			
 			VideoAnalyticsConfiguration vac = profile.VideoAnalyticsConfiguration;
-			DebugHelper.Assert(vac != null);
+			dbg.Assert(vac != null);
 
 			media::Config module = null;
 			yield return session.GetVideoAnalyticModule(profile, "SceneCalibrator").Handle(x=>module = x);
-			DebugHelper.Assert(module != null);
+			dbg.Assert(module != null);
 
 			var roi = module.Parameters.ElementItem
 				.Where(x => x.Name == "roi")
@@ -143,16 +142,20 @@ namespace nvc.models {
 			focalLength = module.GetSimpleItemAsInt("focal_length");
 			matrixFormat = module.GetSimpleItem("matrix_format");
 			photosensorPixelSize = module.GetSimpleItemAsFloat("photosensor_pixel_size");
-			use2DMarkers = module.GetSimpleItemAsBool("use_2d_markers");
+			var use_2d_markers = module.GetSimpleItemAsBoolNullable("use_2d_markers");
+			use2DMarkers = use_2d_markers.GetValueOrDefault(false);
+			is2DmarkerSupported = use_2d_markers.HasValue;
 
 			Marker m1 = new Marker();
-			m1.size = module.Parameters
-					.ElementItem
-					.Where(x => x.Name == "marker0_size")
-					.Select(x => x.Any.Deserialize<tt::Vector>())
-					.FirstOrDefault();
 			
-			if (!use2DMarkers) {				
+			
+			if (!use2DMarkers) {
+				m1.size = new tt::Vector();
+				m1.size.y = module.GetSimpleItemAsInt("marker0_physical_height");
+				m1.size.ySpecified = true;
+				
+				m1.size.x = 0;
+				m1.size.xSpecified = true;
 
 				m1.line1 = module.Parameters
 					.ElementItem
@@ -167,6 +170,12 @@ namespace nvc.models {
 					.FirstOrDefault();
 
 			} else {
+
+				m1.size = module.Parameters
+					.ElementItem
+					.Where(x => x.Name == "marker0_size")
+					.Select(x => x.Any.Deserialize<tt::Vector>())
+					.FirstOrDefault();
 
 				m1.line1 = module.Parameters
 					.ElementItem
@@ -209,7 +218,7 @@ namespace nvc.models {
 			streamSetup.Transport.Tunnel = null;
 			
 			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
-			DebugHelper.Assert(mediaUri != null);
+			dbg.Assert(mediaUri != null);
 			NotifyPropertyChanged(x => x.mediaUri);
 
 			isModified = true;
@@ -223,11 +232,11 @@ namespace nvc.models {
 
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
-			DebugHelper.Assert(media != null);
+			dbg.Assert(media != null);
 
 			Profile[] profiles = null;
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			var vac = profile.VideoAnalyticsConfiguration;
@@ -238,7 +247,7 @@ namespace nvc.models {
 
 			media::Config module = null;
 			yield return session.GetVideoAnalyticModule(profile, "SceneCalibrator").Handle(x => module = x);
-			DebugHelper.Assert(module != null);
+			dbg.Assert(module != null);
 
 			var roi = module.Parameters.ElementItem
 				.Where(x => x.Name == "roi")
@@ -259,12 +268,6 @@ namespace nvc.models {
 			module.SetSimpleItem("matrix_format", matrixFormat);
 			module.SetSimpleItemAsFloat("photosensor_pixel_size", photosensorPixelSize);
 			
-			module.Parameters
-				.ElementItem
-				.Where(x => x.Name == "marker0_size")
-				.FirstOrDefault()
-				.Any = m1.size.Serialize();
-
 			foreach (var p in m1.line1.Point) {
 				p.xSpecified = true;
 				p.ySpecified = true;
@@ -276,6 +279,8 @@ namespace nvc.models {
 			}
 
 			if (!use2DMarkers) {
+				module.SetSimpleItemAsInt("marker0_physical_height", (int)m1.size.y);
+
 				module.Parameters
 					.ElementItem
 					.Where(x => x.Name == "marker0_line0")
@@ -288,6 +293,12 @@ namespace nvc.models {
 					.FirstOrDefault()
 					.Any = m1.line2.Serialize();
 			} else {
+
+				module.Parameters
+					.ElementItem
+					.Where(x => x.Name == "marker0_size")
+					.FirstOrDefault()
+					.Any = m1.size.Serialize();
 
 				module.Parameters
 					.ElementItem
@@ -319,6 +330,8 @@ namespace nvc.models {
 		public System.Drawing.Rectangle bounds;
 		public List<Point> region { get; set; }
 		public Size encoderResolution{ get; private set; }
+
+		public bool is2DmarkerSupported { get; set; }
 
 		public string mediaUri {
 			get;

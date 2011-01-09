@@ -78,7 +78,8 @@ OnvifInstance::Log(const char *aMsg, const char *aSource, LogType aType)
 Live555*
 OnvifInstance::StartParsing(const char *aUrl,
   int aWidth, int aHeight, int aStride, const char *aMapName,
-  OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback)
+  OnvifmpPixelFormat pixFormat, onvifmp_meta_callback aCallback,
+  int aSilentMode)
 {
   std::string url(aUrl);
   std::string mapName(aMapName ? aMapName : "");
@@ -86,7 +87,8 @@ OnvifInstance::StartParsing(const char *aUrl,
     this->RaiseError("already started");
   else
   {
-    Live555 *pLive = Live555::Create(*this, url, aWidth, aHeight, aStride, mapName, pixFormat, aCallback);
+    Live555 *pLive = Live555::Create(*this, url, aWidth, aHeight, aStride,
+      mapName, pixFormat, aCallback, aSilentMode);
     if (pLive)
     {
       mPlayList[url] = pLive;
@@ -113,5 +115,35 @@ OnvifInstance::RemoveLive(const std::string& aURL)
   if (mPlayList.find(aURL) != mPlayList.end())
   {
     mPlayList.erase(aURL);
+  }
+}
+
+void
+OnvifInstance::SetSilentMode(const char *aUrl, int aSilentMode)
+{
+  std::string url(aUrl);
+  if (mPlayList.find(url) != mPlayList.end())
+  {
+    mPlayList[url]->SetSilentMode(aSilentMode);
+  }
+}
+
+void
+OnvifInstance::StartRecord(const char *aUrl, const char *aFilePath)
+{
+  std::string url(aUrl);
+  if (mPlayList.find(url) != mPlayList.end())
+  {
+    mPlayList[url]->StartRecord(aFilePath);
+  }
+}
+
+void
+OnvifInstance::StopRecord(const char *aUrl)
+{
+  std::string url(aUrl);
+  if (mPlayList.find(url) != mPlayList.end())
+  {
+    mPlayList[url]->StopRecord();
   }
 }

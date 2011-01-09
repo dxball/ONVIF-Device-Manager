@@ -30,6 +30,9 @@
     <ClCompile Include="src\VideoSink.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\TSWriter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\libapi.h">
@@ -48,6 +51,12 @@
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="src\VideoSink.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ValueSaver.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TSWriter.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>

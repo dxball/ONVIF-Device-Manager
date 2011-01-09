@@ -10,27 +10,88 @@ using onvif.services.device;
 using onvif.types;
 using tt=onvif.types;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 
-namespace nvc.models {
+namespace odm.models {
 	public partial class DateTimeSettingsModel : ModelBase<DateTimeSettingsModel> {
 		
 		public DateTimeSettingsModel() {
 			
 		}
 
+		protected string NetHostToString(NetworkHost netHost) {
+			if(netHost == null){
+				throw new ArgumentNullException("netHost"); 
+			}
+			switch (netHost.Type) {
+				case NetworkHostType.IPv4:
+					return netHost.IPv4Address;
+				case NetworkHostType.IPv6:
+					return netHost.IPv6Address;
+				case NetworkHostType.DNS:
+					return netHost.DNSname;
+			}
+			throw new ArgumentOutOfRangeException("netHost.Type");
+		}
+
+		protected NetworkHost NetHostFromString(string netHost) {
+			if (netHost == null) {
+				throw new ArgumentNullException("netHost");
+			}
+			netHost = netHost.Trim();
+
+			System.Net.IPAddress ipAddr;
+			if (System.Net.IPAddress.TryParse(netHost, out ipAddr)) {
+				if(ipAddr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork){
+					return new NetworkHost() {
+						Type = NetworkHostType.IPv4,
+						IPv4Address = netHost
+					};
+				}else if (ipAddr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) {
+					return new NetworkHost() {
+						Type = NetworkHostType.IPv6,
+						IPv4Address = netHost
+					};
+				}
+			}
+			
+			return new NetworkHost() {
+				Type = NetworkHostType.DNS,
+				IPv4Address = netHost
+			};
+			
+		}
+
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DateTimeSettingsModel> observer) {
 			DeviceObservable device = null;
 			SystemDateTime time = null;
+			NTPInformation ntpInfo = null;
 			
 			yield return session.GetDeviceClient().Handle(x => device = x);
 			yield return device.GetSystemDateAndTime().Handle(x => time = x);
-			DebugHelper.Assert(time != null);
-			DebugHelper.Assert(time.TimeZone != null);
-			DebugHelper.Assert(time.UTCDateTime != null);
-			DebugHelper.Assert(time.UTCDateTime.Date != null);
-			DebugHelper.Assert(time.UTCDateTime.Time != null);
+			dbg.Assert(time != null);
+			dbg.Assert(time.TimeZone != null);
+			dbg.Assert(time.UTCDateTime != null);
+			dbg.Assert(time.UTCDateTime.Date != null);
+			dbg.Assert(time.UTCDateTime.Time != null);
+
+			yield return device.GetNTP().Handle(x => ntpInfo = x);
+			dbg.Assert(ntpInfo != null);
+
+			if (ntpInfo.NTPManual != null) {
+				m_ntpServerManual.SetBoth(String.Join("; ", ntpInfo.NTPManual.Select(x => NetHostToString(x))));
+			} else {
+				m_ntpServerManual.SetBoth(String.Empty);
+			}
+
+			if (ntpInfo.NTPFromDHCP != null) {
+				m_ntpServerFromDhcp.SetBoth(String.Join("; ", ntpInfo.NTPFromDHCP.Select(x => NetHostToString(x))));
+			} else {
+				m_ntpServerFromDhcp.SetBoth(String.Empty);
+			}
+						
+			m_useNtpFromDhcp.SetBoth(ntpInfo.FromDHCP);
 
 			var dt = new System.DateTime(
 					time.UTCDateTime.Date.Year,
@@ -45,7 +106,11 @@ namespace nvc.models {
 			m_dateTime.SetBoth(dt);
 			m_timeZone.SetBoth(time.TimeZone.TZ);
 			m_daylightSavings.SetBoth(time.DaylightSavings);
-			
+
+			NotifyPropertyChanged(x => x.ntpServerFromDhcp);
+			NotifyPropertyChanged(x => x.ntpServerManual);
+			NotifyPropertyChanged(x => x.useNtpFromDhcp);
+
 			NotifyPropertyChanged(x => x.timeZone);
 			NotifyPropertyChanged(x => x.dateTime);
 			NotifyPropertyChanged(x => x.isModified);
@@ -87,6 +152,8 @@ namespace nvc.models {
 				yield return device.SetSystemDateAndTime(SetDateTimeType.Manual, daylightSavings, tz, utcTime).Idle();
 			}
 
+			yield return device.SetNTP(useNtpFromDhcp, ntpServerManual.Split(new char[]{';'}, StringSplitOptions.RemoveEmptyEntries).Select(x => NetHostFromString(x)).ToArray()).Idle();
+
 			yield return Observable.Concat(LoadImpl(session, observer)).Idle();
 			if (observer != null) {
 			    observer.OnNext(this);
@@ -96,6 +163,9 @@ namespace nvc.models {
 		private ChangeTrackingProperty<string> m_timeZone = new ChangeTrackingProperty<string>();
 		private ChangeTrackingProperty<System.DateTime> m_dateTime = new ChangeTrackingProperty<System.DateTime>();
 		private ChangeTrackingProperty<bool> m_daylightSavings = new ChangeTrackingProperty<bool>();
+		private ChangeTrackingProperty<string> m_ntpServerManual = new ChangeTrackingProperty<string>();
+		private ChangeTrackingProperty<string> m_ntpServerFromDhcp = new ChangeTrackingProperty<string>();
+		private ChangeTrackingProperty<bool> m_useNtpFromDhcp = new ChangeTrackingProperty<bool>();
 		
 		public string timeZone {
 			get {
@@ -134,6 +204,41 @@ namespace nvc.models {
 				}
 			}
 		}
-		
+
+		public string ntpServerManual {
+			get {
+				return m_ntpServerManual.current;
+			}
+			set {
+				if (m_ntpServerManual.current != value) {
+					m_ntpServerManual.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.ntpServerManual);
+				}
+			}
+		}
+
+		public string ntpServerFromDhcp {
+			get {
+				return m_ntpServerFromDhcp.current;
+			}
+			set {
+				if (m_ntpServerFromDhcp.current != value) {
+					m_ntpServerFromDhcp.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.ntpServerFromDhcp);
+				}
+			}
+		}
+
+		public bool useNtpFromDhcp {
+			get {
+				return m_useNtpFromDhcp.current;
+			}
+			set {
+				if (m_useNtpFromDhcp.current != value) {
+					m_useNtpFromDhcp.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.useNtpFromDhcp);
+				}
+			}
+		}
 	}
 }

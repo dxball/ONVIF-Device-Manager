@@ -12,11 +12,11 @@ using tt = onvif.types;
 using img=onvif.services.imaging;
 using med = onvif.services.media;
 
-using nvc.onvif;
-using onvifdm.utils;
+using odm.onvif;
+using odm.utils;
 using System.Drawing;
 
-namespace nvc.models {
+namespace odm.models {
 	public partial class ImagingSettingsModel : ModelBase<ImagingSettingsModel> {
 
 		ChannelDescription m_channel;
@@ -33,26 +33,26 @@ namespace nvc.models {
 			img::ImagingOptions options = null;
 			
 			yield return session.GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			if (profile == null) {
 				//create default profile
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			yield return session.GetImagingClient().Handle(x => imaging = x);
-			DebugHelper.Assert(imaging != null);
+			dbg.Assert(imaging != null);
 			
 			yield return imaging.GetImagingSettings(m_channel.Id).Handle(x => settings = x);
-			DebugHelper.Assert(settings != null);
+			dbg.Assert(settings != null);
 
 			yield return imaging.GetOptions(m_channel.Id).Handle(x => options = x);
-			DebugHelper.Assert(options != null);
+			dbg.Assert(options != null);
 
 			m_brightness.SetBoth(settings.Brightness);
 			m_brightnessMin.SetBoth(options.Brightness.Min);
@@ -105,7 +105,7 @@ namespace nvc.models {
 			streamSetup.Transport.Tunnel = null;
 
 			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
-			DebugHelper.Assert(mediaUri != null);
+			dbg.Assert(mediaUri != null);
 
 			encoderResolution = new Size() {
 				Width = profile.VideoEncoderConfiguration.Resolution.Width,
@@ -137,26 +137,26 @@ namespace nvc.models {
 			img::ImagingOptions options = null;
 
 			yield return session.GetDeviceClient().Handle(x => device = x);
-			DebugHelper.Assert(device != null);
+			dbg.Assert(device != null);
 
 			yield return session.GetProfiles().Handle(x => profiles = x);
-			DebugHelper.Assert(profiles != null);
+			dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
 			if (profile == null) {
 				//create default profile
 				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
 			}
-			DebugHelper.Assert(profile != null);
+			dbg.Assert(profile != null);
 
 			yield return session.GetImagingClient().Handle(x => imaging = x);
-			DebugHelper.Assert(imaging != null);
+			dbg.Assert(imaging != null);
 
 			yield return imaging.GetImagingSettings(m_channel.Id).Handle(x => settings = x);
-			DebugHelper.Assert(settings != null);
+			dbg.Assert(settings != null);
 
 			yield return imaging.GetOptions(m_channel.Id).Handle(x => options = x);
-			DebugHelper.Assert(options != null);
+			dbg.Assert(options != null);
 
 			settings.Brightness = brightness;
 			settings.ColorSaturation = colorSaturation;

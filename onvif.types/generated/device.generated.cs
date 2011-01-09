@@ -2512,8 +2512,8 @@ namespace onvif.services.device{
 		}
 	
 		[sys::Serializable]
-		[XmlType(Namespace="http://www.onvif.org/ver10/device/wsdl")]
-		
+		//[XmlType(Namespace="http://www.onvif.org/ver10/device/wsdl")]
+		[XmlRoot("GetCapabilitiesResponse", Namespace="http://www.onvif.org/ver10/device/wsdl")]
 		public class GetCapabilitiesResponse{
 		
 			[XmlElement]

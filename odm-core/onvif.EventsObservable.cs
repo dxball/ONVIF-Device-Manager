@@ -25,7 +25,7 @@ using System.ServiceModel;
 
 using onvif.services.analytics;
 
-namespace nvc.onvif {
+namespace odm.onvif {
 	public class EventsObservable:IDisposable {
 		AnalyticsEnginePort m_proxy;
 		public EventsObservable(AnalyticsEnginePort proxy) {
