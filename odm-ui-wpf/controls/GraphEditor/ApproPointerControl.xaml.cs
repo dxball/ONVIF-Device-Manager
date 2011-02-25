@@ -30,21 +30,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace odm
+namespace odm.ui
 {
 	/// <summary>
-	/// Interaction logic for RecorderCtrl.xaml
+	/// Interaction logic for ApproPointerControl.xaml
 	/// </summary>
-	public partial class RecorderCtrl : UserControl
+	public partial class ApproPointerControl : UserControl
 	{
-		public RecorderCtrl()
+		public ApproPointerControl()
 		{
 			this.InitializeComponent();
-		}
-
-		private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-		{
-			// TODO: Add event handler implementation here.
 		}
 	}
 }

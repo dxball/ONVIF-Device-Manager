@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +31,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace odm.controls.GraphEditor {
+namespace odm.ui.controls.GraphEditor {
 	/// <summary>
 	/// Interaction logic for marker2dEditor.xaml
 	/// </summary>
@@ -69,14 +88,59 @@ namespace odm.controls.GraphEditor {
 			get { return physicalSize; }
 			set {
 				physicalSize = value;
+				if (physicalSize.Height == 0)
+					physicalSize.Height = 1;
+				if (physicalSize.Width == 0)
+					physicalSize.Width = 1;
 				Refresh();
 			}
 		}
-		void Refresh() { 
-
+		//Check if ratio correct
+		bool IsUnCorrect(double dW, double dH) {
+			return dW < (physicalSize.Width / physicalSize.Height) * dH;
 		}
+		bool NeedCorrection() {
+			double wdth = 1;
+			double hght = 1;
+			if (!double.IsNaN(marker.Width))
+				wdth = marker.Width;
+			if (!double.IsNaN(marker.Height))
+				hght = marker.Height;
 
-		public void Init(Point p1, Point p2, Rect boundRect) {
+			bool ret = wdth < (physicalSize.Width / physicalSize.Height) * hght;
+			return ret;
+		}
+		public void Refresh() { 
+			//Get possible correct width hight
+			double phisRatio = physicalSize.Width / physicalSize.Height;
+			double desiredWidth = marker.Height * phisRatio;
+			double desiredHeight;
+			if (!NeedCorrection()) { return; }
+			if (desiredWidth > bountRct.Width) {
+				desiredWidth = bountRct.Width;
+				desiredHeight = (desiredWidth / physicalSize.Width) * physicalSize.Height;
+				EnlargeWidth(desiredWidth);
+				ReduceHeigth(desiredHeight);
+			} else {
+				EnlargeWidth(desiredWidth);
+			}
+		}
+		void ReduceHeigth(double deltah) {
+			Canvas.SetTop(marker, Canvas.GetTop(marker) + marker.Height - deltah/2);
+			marker.Height = deltah;
+
+			Canvas.SetTop(pointerUp, Canvas.GetTop(marker) - markerPointerR);
+			Canvas.SetTop(pointerDown, Canvas.GetTop(pointerUp) + marker.Height);
+		}
+		void EnlargeWidth(double deltaw) {
+			Canvas.SetLeft(marker, Canvas.GetLeft(marker) + marker.Width / 2 - deltaw / 2);
+			marker.Width = deltaw;
+
+			Canvas.SetLeft(pointerUp, Canvas.GetLeft(marker) - markerPointerR);
+			Canvas.SetLeft(pointerDown, Canvas.GetLeft(pointerUp) + marker.Width);
+		}
+		public void Init(Point p1, Point p2, Rect boundRect, Size physSize) {
+			PhysicalSize = physicalSize;
 			if (p1.Y < p2.Y) {
 				top.Y = p1.Y;
 				bottom.Y = p2.Y;
@@ -92,6 +156,15 @@ namespace odm.controls.GraphEditor {
 				bottom.X = p1.X;
 			}
 
+			if (top.X < 0) top.X = 0;
+			if (top.Y < 0) top.Y = 0;
+			if (top.X >= boundRect.Width) top.X = boundRect.Width - 1;
+			if (top.Y >= boundRect.Height) top.X = boundRect.Height - 1;
+			if (bottom.X < 0) bottom.X = 0;
+			if (bottom.Y < 0) bottom.Y = 0;
+			if (bottom.X >= boundRect.Width) bottom.X = boundRect.Width - 1;
+			if (bottom.Y >= boundRect.Height) bottom.X = boundRect.Height - 1;
+
 			bountRct = boundRect;
 
 			Canvas.SetLeft(pointerUp, top.X - markerPointerR);
@@ -104,6 +177,8 @@ namespace odm.controls.GraphEditor {
 
 			marker.Width = Math.Abs(bottom.X - top.X);
 			marker.Height = Math.Abs(bottom.Y - top.Y);
+
+			Refresh();
 		}
 
 		void marker_MouseMove(object sender, MouseEventArgs e) {
@@ -118,7 +193,6 @@ namespace odm.controls.GraphEditor {
 				if (pUl < bountRct.X || pUt < bountRct.Y || pDb > bountRct.Height + bountRct.Y || pDr > bountRct.Width + bountRct.X) {
 					return;
 				}
-
 				Canvas.SetLeft(marker, origOffsetLeft + (newPoint.X - oldPoint.X));
 				Canvas.SetTop(marker, origOffsetTop + (newPoint.Y - oldPoint.Y));
 
@@ -128,7 +202,7 @@ namespace odm.controls.GraphEditor {
 				Canvas.SetTop(pointerDown, pointerDownOffsetTop + (newPoint.Y - oldPoint.Y));
 			}
 		}
-
+		
 		void marker_MouseDown(object sender, MouseButtonEventArgs e) {
 			e.MouseDevice.Capture(marker);
 
@@ -155,13 +229,13 @@ namespace odm.controls.GraphEditor {
 				if (newPoint.Y >= bountRct.Height + bountRct.Y - markerPointerR || newPoint.X >= bountRct.Width + bountRct.X - markerPointerR)
 					return;
 
-				double heigth = Canvas.GetTop(pointerDown) - Canvas.GetTop(pointerUp);
+				double height = Canvas.GetTop(pointerDown) - Canvas.GetTop(pointerUp);
 				double width = Canvas.GetLeft(pointerDown) - Canvas.GetLeft(pointerUp);
 
-				Canvas.SetTop(pointerDown, pointerDownOffsetTop + (newPoint.Y - oldPoint.Y));
-				marker.Height = heigth;
 				Canvas.SetLeft(pointerDown, pointerDownOffsetLeft + (newPoint.X - oldPoint.X));
 				marker.Width = width;
+				Canvas.SetTop(pointerDown, pointerDownOffsetTop + (newPoint.Y - oldPoint.Y));
+				marker.Height = height;
 			}
 		}
 		void pointerDown_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -209,6 +283,7 @@ namespace odm.controls.GraphEditor {
 		}
 		void MouseUpHandler(object sender, MouseButtonEventArgs e) {
 			e.MouseDevice.Capture(null);
+			Refresh();
 		}
 	}
 }

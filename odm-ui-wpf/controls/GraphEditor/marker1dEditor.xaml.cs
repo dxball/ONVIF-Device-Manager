@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +31,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace odm.controls.GraphEditor {
+namespace odm.ui.controls.GraphEditor {
 	/// <summary>
 	/// Interaction logic for marker1dEditor.xaml
 	/// </summary>
@@ -82,7 +101,16 @@ namespace odm.controls.GraphEditor {
 				top = p2;
 				bottom = p1;
 			}
-			
+
+			if (top.X < 0) top.X = 0;
+			if (top.Y < 0) top.Y = 0;
+			if (top.X >= boundRect.Width) top.X = boundRect.Width -1;
+			if (top.Y >= boundRect.Height) top.X = boundRect.Height-1;
+			if (bottom.X < 0) bottom.X = 0;
+			if (bottom.Y < 0) bottom.Y = 0;
+			if (bottom.X >= boundRect.Width) bottom.X = boundRect.Width - 1;
+			if (bottom.Y >= boundRect.Height) bottom.X = boundRect.Height - 1;
+
 			bountRct = boundRect;
 
 			Canvas.SetLeft(pointerUp, top.X - markerPointerR);
@@ -110,7 +138,7 @@ namespace odm.controls.GraphEditor {
 				double pDr = pointerDownOffsetLeft + (newPoint.X - oldPoint.X) + markerPointerR*2;
 				double pDb = pointerDownOffsetTop + (newPoint.Y - oldPoint.Y) + markerPointerR*2;
 
-				if (pUl < bountRct.X || pUt < bountRct.Y || pDb > bountRct.Height + bountRct.Y || pDr > bountRct.Width + bountRct.X) {
+				if (pUl < bountRct.X || pUt < bountRct.Y || pDb > bountRct.Height|| pDr > bountRct.Width) {
 					return;
 				}
 
