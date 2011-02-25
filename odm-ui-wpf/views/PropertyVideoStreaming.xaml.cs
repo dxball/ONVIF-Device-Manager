@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,16 +40,17 @@ using odm.utils;
 using odm.utils.extensions;
 using System.ComponentModel;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for PropertyVideoStreaming.xaml
 	/// </summary>
 	public partial class PropertyVideoStreaming : BasePropertyControl {
-		PropertyVideoStreamingStrings _strings = new PropertyVideoStreamingStrings();
+		PropertyVideoStreamingStrings strings = new PropertyVideoStreamingStrings();
+		LinkButtonsStrings titles = new LinkButtonsStrings();
 		VideoStreamingModel model;
 
 		//Initial values
-		int _initialEncodingInteval;
+		//int _initialEncodingInteval;
 
 		public Action Save {
 			get;
@@ -51,8 +71,13 @@ namespace odm.controls {
 			InitializeComponent();
 			model = devModel;
 			
-			Loaded += PropertyVideoStreaming_Load;
-			
+			//Loaded += PropertyVideoStreaming_Load;
+			IniControls();
+			InitUrl();
+
+			BindData();
+
+			SubscribeToEvents();
 		}
 
 		public MemoryMappedFile memFile {
@@ -62,16 +87,11 @@ namespace odm.controls {
 		}
 
 		void PropertyVideoStreaming_Load(object sender, EventArgs e) {
-			IniControls();
-			InitUrl();
-
-			BindData();
-
-			SubscribeToEvents();
+			
 		}
 
 		void _cbFPS_SelectionChangeCommitted(object sender, EventArgs e) {
-			_saveCancelControl.Save.IsEnabled=true;
+			//_saveCancelControl.Save.IsEnabled=true;
 			//_saveCancelControl.EnableCancel(true);
 		}
 
@@ -131,9 +151,10 @@ namespace odm.controls {
 
 			encodingInterval.Minimum = model.encodingInterval < encoder.minEncodingInterval ? model.encodingInterval : encoder.minEncodingInterval;
 			encodingInterval.Maximum = model.encodingInterval > encoder.maxEncodingInterval ? model.encodingInterval : encoder.maxEncodingInterval;
-			encodingInterval.Value = model.encodingInterval;
+
+			encodingInterval.CreateBinding(Slider.ValueProperty, model, m=>(double)m.encodingInterval, (m, v) => {m.encodingInterval = (int)v;});
 			//encodingInterval.IsSnapToTickEnabled = true;
-			_initialEncodingInteval = model.encodingInterval;
+			//_initialEncodingInteval = model.encodingInterval;
 			//SetEncodingIntervalText();
 		}
 		//void SetEncodingIntervalText() {
@@ -155,14 +176,15 @@ namespace odm.controls {
 		void BindData() {
 			bitrate.Maximum = 100000;// devModel.maxBitrate;
 			bitrate.Minimum = 0; // devModel.minBitrate;
-			bitrate.CreateBinding(NumericUpDown.ValueProperty, model, m => (double)m.bitrate, (m, v) => {m.bitrate = (int)v;});
-
-			//try {
-				//InitFps(model.currentEncoder);
-				//InitEncodingInterval(model.currentEncoder);
-			//} catch (Exception err) {
-			//	VideoOperationError(err.Message);
-			//}
+			bitrate.CreateBinding(NumericUpDown.ValueProperty, model, m => (double)m.bitrate, (m, v) => {
+				m.bitrate = (int)v;
+			});
+			try {
+				InitFps(model.currentEncoder);
+				InitEncodingInterval(model.currentEncoder);
+			} catch (Exception err) {
+				VideoOperationError(err.Message);
+			}
 
 			encoder.Items.Clear();
 			if (model.supportedEncoders != null) {
@@ -191,35 +213,35 @@ namespace odm.controls {
 		}
 
 		void Localization() {
-			title.CreateBinding(Label.ContentProperty, _strings, x => x.title);
-			bitrateCaption.CreateBinding(Label.ContentProperty, _strings, x => x.bitrate);
-			encoderCaption.CreateBinding(Label.ContentProperty, _strings, x => x.encoder);
-			frameRateCaption.CreateBinding(Label.ContentProperty, _strings, x => x.frameRate);
-			encodingIntervalCaption.CreateBinding(Label.ContentProperty, _strings, x => x.encodingInterval);
-			priorityCaption.CreateBinding(Label.ContentProperty, _strings, x => x.prioriy);
-			resolutionCaption.CreateBinding(Label.ContentProperty, _strings, x => x.resolution);
-			channelNameCaption.CreateBinding(Label.ContentProperty, _strings, x => x.channelName);
-			metadataCaption.CreateBinding(Label.ContentProperty, _strings, x => x.metadata);
+			title.CreateBinding(ContentColumn.TitleProperty, titles, x => x.videoStreaming);
+			bitrateCaption.CreateBinding(Label.ContentProperty, strings, x => x.bitrate);
+			encoderCaption.CreateBinding(Label.ContentProperty, strings, x => x.encoder);
+			frameRateCaption.CreateBinding(Label.ContentProperty, strings, x => x.frameRate);
+			encodingIntervalCaption.CreateBinding(Label.ContentProperty, strings, x => x.encodingInterval);
+			priorityCaption.CreateBinding(Label.ContentProperty, strings, x => x.prioriy);
+			resolutionCaption.CreateBinding(Label.ContentProperty, strings, x => x.resolution);
+			channelNameCaption.CreateBinding(Label.ContentProperty, strings, x => x.channelName);
+			metadataCaption.CreateBinding(Label.ContentProperty, strings, x => x.metadata);
 		}
 		protected void IniControls() {
 			Localization();
 
-			bitrate.ValueChanged += _numtbBitrate_ValueChanged;
-			encoder.SelectionChanged += _cmbEncoder_SelectionChangeCommitted;
-			encodingInterval.ValueChanged += _trackBar_ValueChanged;
+			//bitrate.ValueChanged += _numtbBitrate_ValueChanged;
+			//encoder.SelectionChanged += _cmbEncoder_SelectionChangeCommitted;
+			//encodingInterval.ValueChanged += _trackBar_ValueChanged;
 		}
 
-		void _numtbBitrate_ValueChanged(object sender, EventArgs e) {
-			_saveCancelControl.Save.IsEnabled = true;
-		}
+		//void _numtbBitrate_ValueChanged(object sender, EventArgs e) {
+		//    _saveCancelControl.Save.IsEnabled = true;
+		//}
 
-		void _trackBar_ValueChanged(object sender, EventArgs e) {
-			//SetEncodingIntervalText();
-			if (_initialEncodingInteval != encodingInterval.Value) {
-				_saveCancelControl.Save.IsEnabled = true;
-				_saveCancelControl.Cancel.IsEnabled = true;
-			}
-		}
+		//void _trackBar_ValueChanged(object sender, EventArgs e) {
+		//    //SetEncodingIntervalText();
+		//    if (_initialEncodingInteval != encodingInterval.Value) {
+		//        _saveCancelControl.Save.IsEnabled = true;
+		//        _saveCancelControl.Cancel.IsEnabled = true;
+		//    }
+		//}
 
 		void _cmbEncoder_SelectionChangeCommitted(object sender, EventArgs e) {
 			var encInterval = (VideoEncoder)encoder.SelectedItem;
@@ -228,64 +250,64 @@ namespace odm.controls {
 		}
 
 		void _saveCancelControl_ButtonClickedCancel(object sender, EventArgs e) {
-			encodingInterval.Value = _initialEncodingInteval;
+			//encodingInterval.Value = _initialEncodingInteval;
 			Cancel();
 		}
 
 		void _saveCancelControl_ButtonClickedSave(object sender, EventArgs e) {
-			model.encodingInterval = (int)encodingInterval.Value;
+			///model.encodingInterval = (int)encodingInterval.Value;
 			Save();
 		}
 
 	}
-	public class EncoderView {
-		public EncoderView(odm.models.VideoEncoder.Encoding enc) {
-			_encoder = new VideoEncoder(enc);
-		}
-		odm.models.VideoEncoder _encoder;
-		public odm.models.VideoEncoder GetVideoEncoder() {
-			return _encoder;
-		}
-		public void SetVideoEncoder(odm.models.VideoEncoder value) {
-			_encoder = value;
-		}
-		public override string ToString() {
-			return _encoder.encoding.ToString();
-		}
-	}
-	public class ResolutionView {
-		public override bool Equals(object obj) {
-			if (obj.GetType() == typeof(ResolutionView))
-				return ((ResolutionView)obj).ToString() == this.ToString();
-			else
-				return false;
-		}
-		public override int GetHashCode() {
-			return Resolution.width + Resolution.height;
-		}
-		public ResolutionView(VideoResolution resol) {
-			Resolution = resol;
-		}
-		public VideoResolution Resolution {
-			get;
-			set;
-		}
-		public override string ToString() {
-			return Resolution.ToString();
-		}
-	}
-	public class FPSview {
-		public FPSview(int missFrame, int name) {
-			MissingFrames = missFrame;
-			Text = name.ToString();
-		}
-		public int MissingFrames {
-			get;
-			private set;
-		}
-		public string Text {
-			get;
-			set;
-		}
-	}
+	//public class EncoderView {
+	//    public EncoderView(odm.models.VideoEncoder.Encoding enc) {
+	//        _encoder = new VideoEncoder(enc);
+	//    }
+	//    odm.models.VideoEncoder _encoder;
+	//    public odm.models.VideoEncoder GetVideoEncoder() {
+	//        return _encoder;
+	//    }
+	//    public void SetVideoEncoder(odm.models.VideoEncoder value) {
+	//        _encoder = value;
+	//    }
+	//    public override string ToString() {
+	//        return _encoder.encoding.ToString();
+	//    }
+	//}
+	//public class ResolutionView {
+	//    public override bool Equals(object obj) {
+	//        if (obj.GetType() == typeof(ResolutionView))
+	//            return ((ResolutionView)obj).ToString() == this.ToString();
+	//        else
+	//            return false;
+	//    }
+	//    public override int GetHashCode() {
+	//        return Resolution.width + Resolution.height;
+	//    }
+	//    public ResolutionView(VideoResolution resol) {
+	//        Resolution = resol;
+	//    }
+	//    public VideoResolution Resolution {
+	//        get;
+	//        set;
+	//    }
+	//    public override string ToString() {
+	//        return Resolution.ToString();
+	//    }
+	//}
+	//public class FPSview {
+	//    public FPSview(int missFrame, int name) {
+	//        MissingFrames = missFrame;
+	//        Text = name.ToString();
+	//    }
+	//    public int MissingFrames {
+	//        get;
+	//        private set;
+	//    }
+	//    public string Text {
+	//        get;
+	//        set;
+	//    }
+	//}
 }

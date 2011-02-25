@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +35,7 @@ using System.IO.MemoryMappedFiles;
 using odm.models;
 using odm.utils.extensions;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for PropertyDisplayAnnotation.xaml
 	/// </summary>
@@ -47,7 +66,6 @@ namespace odm.controls {
 			cbCalibrationNet.CreateBinding(CheckBox.IsCheckedProperty, _devModel, x => x.calibrationResults, (m, v) => {
 				m.calibrationResults = ((bool?)v).Value;
 			});
-			//cbChannelName.CreateBinding(CheckBox.IsCheckedProperty, _devModel, x => x. , (m, v) => { });
 			cbMovingRects.CreateBinding(CheckBox.IsCheckedProperty, _devModel, x => x.movingRects, (m, v) => { 
 				m.movingRects = ((bool?)v).Value;
 			});
@@ -63,7 +81,12 @@ namespace odm.controls {
 			cbTrajectories.CreateBinding(CheckBox.IsCheckedProperty, _devModel, x => x.tracking, (m, v) => {
 				m.tracking = ((bool?)v).Value;
 			});
-
+			cbChannelName.CreateBinding(CheckBox.IsCheckedProperty, _devModel, x => x.channelName, (m, v) => {
+				m.channelName = ((bool?)v).Value;
+			});
+			cbSysInfo.CreateBinding(CheckBox.IsCheckedProperty, _devModel, x => x.systemInfo, (m, v) => {
+				m.systemInfo = ((bool?)v).Value;
+			});
 			//_saveCancelControl.Cancel.CreateBinding(Button.IsEnabledProperty, _devModel, x => x.isModified);
 			_saveCancelControl.Cancel.IsEnabled = false;
 			_saveCancelControl.Save.CreateBinding(Button.IsEnabledProperty, _devModel, x => x.isModified);
@@ -80,8 +103,9 @@ namespace odm.controls {
 			if (Save != null)
 				Save();			
 		}
+		LinkButtonsStrings titles = new LinkButtonsStrings();
 		void Localization() {
-			title.CreateBinding(Title.ContentProperty, PropertyDisplayAnnotationStrings.Instance, x => x.title);
+			title.CreateBinding(ContentColumn.TitleProperty, titles, x => x.displayAnnotation);
 			lblCalibrationNet.CreateBinding(Label.ContentProperty, PropertyDisplayAnnotationStrings.Instance, x => x.calibrationNet);
 			lblChannelName.CreateBinding(Label.ContentProperty, PropertyDisplayAnnotationStrings.Instance, x => x.channelName);
 			lblMovingRects.CreateBinding(Label.ContentProperty, PropertyDisplayAnnotationStrings.Instance, x => x.objects);

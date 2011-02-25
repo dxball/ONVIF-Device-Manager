@@ -1,12 +1,32 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using odm.controls;
+using odm.ui.controls;
 using odm.models;
 using odm.utils;
 using System.Linq.Expressions;
 using odm.utils.controlsUIProvider;
+using odm.ui.controlsUIProvider;
 
 namespace odm.controlsUIProvider {
     public class WPFUIProvider: IUIProvider{
@@ -48,6 +68,7 @@ namespace odm.controlsUIProvider {
 			ReleaseMaintenanceProvider();
 			ReleaseNetworkSettingsProvider();
 			ReleaseObjectTrakkerProvider();
+			ReleaseApproMotionDetectorProvider();
 			ReleaseRotationProvider();
 			ReleaseRuleEngineProvider();
 			ReleaseTamperingDetectorsProvider();
@@ -57,6 +78,25 @@ namespace odm.controlsUIProvider {
 			ReleaseSystemLogProvider();
 			ReleaseImagingSettingsProvider();
 			ReleaseXMLExplorerProvider();
+			ReleaseProfileEditorProvider();
+		}
+
+		ProfileEditorProvider _profEditor;
+		public IProfileEditorProvider GetProfileEditorProvider(){
+			return ProfileEditorProvider;
+		}
+		public ProfileEditorProvider ProfileEditorProvider{
+			get{
+				if(_profEditor == null)
+					_profEditor = new ProfileEditorProvider();
+				return _profEditor;
+			}
+		}
+		public void ReleaseProfileEditorProvider(){
+			if (_profEditor != null) {
+				_profEditor.ReleaseUI();
+				_profEditor = null;
+			}
 		}
 
 		XMLExploereProvider _xmlExpl;
@@ -70,7 +110,12 @@ namespace odm.controlsUIProvider {
 				return _xmlExpl;
 			}
 		}
-		public void ReleaseXMLExplorerProvider() { }
+		public void ReleaseXMLExplorerProvider() { 
+			if (_xmlExpl != null) {
+				_xmlExpl.ReleaseUI();
+				_xmlExpl = null;
+			}
+		}
 
 		ImagingSettingsProvider _imgSett;
 		public IImagingSettingsProvider GetImagingSettingsProvider() {
@@ -395,7 +440,25 @@ namespace odm.controlsUIProvider {
 				_objectTrakkerProvider = null;
 			}
 		}
-		
+
+		ApproMotionDetectorProvider _approMotionDetectorProvider;
+		public IApproMotionDetectorProvider GetApproMotionDetectorProvider() {
+			return ApproMotionDetectorProvider;
+		}
+		public ApproMotionDetectorProvider ApproMotionDetectorProvider {
+			get {
+				if (_approMotionDetectorProvider == null)
+					_approMotionDetectorProvider = new ApproMotionDetectorProvider();
+				return _approMotionDetectorProvider;
+			}
+		}
+		public void ReleaseApproMotionDetectorProvider() {
+			if (_approMotionDetectorProvider != null) {
+				_approMotionDetectorProvider.ReleaseUI();
+				_approMotionDetectorProvider = null;
+			}
+		}
+
 		RotationProvider _rotationProvider;
 		public IRotationProvider GetRotationProvider() {
 			return RotationProvider;

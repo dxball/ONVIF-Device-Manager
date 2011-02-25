@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace odm.Properties {
+namespace odm.ui.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -116,6 +116,30 @@ namespace odm.Properties {
             }
             set {
                 this["MainWindowHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RecordingPath {
+            get {
+                return ((string)(this["RecordingPath"]));
+            }
+            set {
+                this["RecordingPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseDefaultRecordingPath {
+            get {
+                return ((bool)(this["UseDefaultRecordingPath"]));
+            }
+            set {
+                this["UseDefaultRecordingPath"] = value;
             }
         }
     }

@@ -5,10 +5,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component\themes/aero.normalcolor.xaml" />
                 <ResourceDictionary Source="CommonStyle.xaml"/>
                 <ResourceDictionary Source="TimePickerStyle.xaml"/>
                 <ResourceDictionary Source="GraphEditorResource.xaml"/>
+				<ResourceDictionary Source="themes/origin/theme.xaml"/>
+                <ResourceDictionary Source="controls/GraphEditor/ApproStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

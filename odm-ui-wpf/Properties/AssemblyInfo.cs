@@ -11,9 +11,9 @@ using System.Windows.Markup;
 [assembly: AssemblyTitle("odm")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Sysnesis")]
+[assembly: AssemblyCompany("Synesis")]
 [assembly: AssemblyProduct("odm")]
-[assembly: AssemblyCopyright("Copyright © Sysnesis 2010")]
+[assembly: AssemblyCopyright("Copyright © Sysnesis 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,5 @@ using System.Windows.Markup;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.3.2456")]
-[assembly: AssemblyFileVersion("0.3.2456")]
+[assembly: AssemblyVersion("0.3.2915")]
+[assembly: AssemblyFileVersion("0.3.2915")]

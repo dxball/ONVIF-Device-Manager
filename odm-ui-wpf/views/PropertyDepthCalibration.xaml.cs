@@ -1,4 +1,24 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +36,7 @@ using System.IO.MemoryMappedFiles;
 
 using odm.utils.extensions;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for PropertyDepthCalibration.xaml
 	/// </summary>
@@ -28,12 +48,14 @@ namespace odm.controls {
 			_memFile = memFile;
 			_videoPlayer.memFile = memFile;
 
-			title.CreateBinding(Label.ContentProperty, PropertyDepthCalibrationStrings.Instance, x => x.title);
+			title.CreateBinding(ContentColumn.TitleProperty, titles, x => x.depthCalibration);
+			button.CreateBinding(Button.ContentProperty, PropertyDepthCalibrationStrings.Instance, x => x.clibrate);
 
 			InitControls();
 
 			button.Click += new RoutedEventHandler(button_Click);
 		}
+		LinkButtonsStrings titles = new LinkButtonsStrings();
 		DepthCalibrationModel _devModel;
 		MemoryMappedFile _memFile;
 		public Action Save;
@@ -44,13 +66,14 @@ namespace odm.controls {
 			_videoPlayer.InitPlayback(ret);
 		}
 		void ExitCalibration() {
-			dcSta.ReleaseAll();
 			if (dcSta != null) {
 				dcSta.Close();
 			}
+			InitControls();
 		}
 		PropertyDepthCalibrationSTA dcSta;
 		void button_Click(object sender, RoutedEventArgs e) {
+			_videoPlayer.ReleaseAll();
 			dcSta = new PropertyDepthCalibrationSTA(_devModel, _memFile, ExitCalibration) {
 				Save = Save,
 				Cancel = Cancel

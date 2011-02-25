@@ -1,0 +1,79 @@
+﻿<ResourceDictionary 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:l="clr-namespace:odm.ui.controls"
+	xmlns:ui="clr-namespace:odm.ui">
+
+	<Style TargetType="{x:Type ui:MainWindow}">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="WindowStyle" Value="None"/>
+		<Setter Property="ResizeMode" Value="CanResize"/>
+		<Setter Property="AllowsTransparency" Value="True"/>
+
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ui:MainWindow}">
+					<DockPanel Margin="5">
+						<Grid DockPanel.Dock="Top">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="6"/>
+								<ColumnDefinition/>
+								<ColumnDefinition Width="6"/>
+							</Grid.ColumnDefinitions>
+							<Border l:CustomWindow.IsTopLeftResizer="true" Grid.Column="0" Height="6" Background="#FF03223E" CornerRadius="10,0,0,0" Opacity="0.5" Cursor="SizeNWSE" />
+							<Border l:CustomWindow.IsTopResizer="true" Grid.Column="1" Height="6" Background="#FF03223E" Opacity="0.5" Cursor="SizeNS" />
+							<Border l:CustomWindow.IsTopRightResizer="true" Grid.Column="2" Height="6" Background="#FF03223E" CornerRadius="0,10,0,0" Opacity="0.5" Cursor="SizeNESW" />
+						</Grid>
+						<Grid DockPanel.Dock="Bottom">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="6"/>
+								<ColumnDefinition/>
+								<ColumnDefinition Width="6"/>
+							</Grid.ColumnDefinitions>
+
+							<Border l:CustomWindow.IsBottomLeftResizer="true" Grid.Column="0" Height="6" Background="#FF03223E" CornerRadius="0,0,0,10" Opacity="0.5" Cursor="SizeNESW" />
+							<Border l:CustomWindow.IsBottomResizer="true" Grid.Column="1" Height="6" HorizontalAlignment="Stretch" Background="#FF03223E" Opacity="0.5" Cursor="SizeNS" />
+							<Border l:CustomWindow.IsBottomRightResizer="true" Grid.Column="2" Height="6" Background="#FF03223E" CornerRadius="0,0,10,0" Opacity="0.5" Cursor="SizeNWSE" />
+						</Grid>
+
+						<Border l:CustomWindow.IsLeftResizer="true" DockPanel.Dock="Left" Width="6" Background="#FF03223E" Opacity="0.5" Cursor="SizeWE" />
+						<Border l:CustomWindow.IsRightResizer="true" DockPanel.Dock="Right" Width="6" Background="#FF03223E" Opacity="0.5" Cursor="SizeWE" />
+
+						<DockPanel Margin="0" Background="{DynamicResource MainBrush}">
+                            <Grid DockPanel.Dock="Top" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50*"/>
+                                    <ColumnDefinition Width="50*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid VerticalAlignment="Top" Height="32" Grid.Column="0">
+                                    <Path Name="titlePointer" l:CustomWindow.IsNonClient="true"  Data="F1 M9.20313,25.4479 L55.166474,25.439305 C55.382787,24.894586 56.288271,23.812015 57.760173,22.789885 58.542351,22.246719 60.385583,21.719043 61.4948,21.4063 L9.20313,21.4479 9.20313,25.4479 z" Stretch="Fill" StrokeThickness="4" StrokeLineJoin="Round" Stroke="#11A2CEDE" Cursor="Hand">
+                                        <Path.Fill>
+                                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                                <GradientStop Color="#7F6093C0" Offset="0.506"/>
+                                                <GradientStop Color="#CC03223E" Offset="1"/>
+                                                <GradientStop Color="#CB03223E"/>
+                                            </LinearGradientBrush>
+                                        </Path.Fill>
+                                    </Path>
+                                    <Grid VerticalAlignment="Center" Margin="8,8,8,8">
+                                        <TextBlock Name="wndTitleShadow" Margin="2,2"  l:CustomWindow.IsNonClient="true" Text="Title" VerticalAlignment="Top" Foreground="Black" FontWeight="Bold" FontSize="13.333" Cursor="Hand"/>
+                                        <TextBlock Name="wndTitle"  l:CustomWindow.IsNonClient="true" Text="Title" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" FontSize="13.333" Cursor="Hand"/>
+                                    </Grid>
+                                </Grid>
+                                <ContentPresenter VerticalAlignment="Center" ContentSource="ToolBar" Grid.Column="1"/>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" x:Name="wndControl" HorizontalAlignment="Right">
+                                    <Button Name="min" Command="{x:Static l:CustomWindow.MinimizeCommand}" Margin="2,0,0,0" Style="{DynamicResource minimize}" Width="24" Height="24" Cursor="Hand"/>
+                                    <Button Name="max" Command="{x:Static l:CustomWindow.MaximizeCommand}" Margin="2,0,0,0" Style="{DynamicResource maximize}" Width="24" Height="24" Cursor="Hand"/>
+                                    <Button Name="close" Command="{x:Static l:CustomWindow.CloseCommand}" Style="{DynamicResource closeWindow}" Width="24" Height="24" Margin="2" Cursor="Hand" />
+                                </StackPanel>
+                            </Grid>
+							<ContentPresenter/>
+						</DockPanel>
+					</DockPanel>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>

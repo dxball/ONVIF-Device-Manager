@@ -26,7 +26,7 @@ namespace odm.player {
 		private Action m_stopHandler = null;
 		Queue<string> m_queue = new Queue<string>();
 
-		private Action<string> m_startRecordAction = null;
+		private Action<string, int> m_startRecordAction = null;
 		private Action m_stopRecordAction = null;
 
 		private string m_videoBufferMapName = null;
@@ -122,9 +122,9 @@ namespace odm.player {
 				subscr.Dispose();
 			};
 
-			m_startRecordAction = filePath => {
+			m_startRecordAction = (filePath, frameRate) => {
 				if (handle != IntPtr.Zero) {
-					NativePlayer.onvifmp_start_record(handle, playingUri, filePath);
+					NativePlayer.onvifmp_start_record(handle, playingUri, filePath, frameRate);
 				}
 			};
 
@@ -181,6 +181,7 @@ namespace odm.player {
 					throw new Exception("onvifmp_start_parsing - failed");
 				}
 			}catch(Exception err){
+				dbg.Error(err);
 				subscr.Dispose();
 				throw;
 			}
@@ -205,8 +206,7 @@ namespace odm.player {
 					isPlaying = false;
 				}
 				throw new FaultException(err.Message);
-			}
-			
+			}			
 		}
 
 		public void Stop() {
@@ -253,6 +253,7 @@ namespace odm.player {
 				try{
 					s.MetadataReceived(metadata);
 				}catch(Exception err){
+					dbg.Error(err);
 					//swallow error
 				}
 			}
@@ -313,16 +314,81 @@ namespace odm.player {
 		}
 
 
-		public void StartRecord(string filePath) {
+		public void StartRecord(string filePath, int frameRate) {
 			if (m_startRecordAction != null) {
-				m_startRecordAction(filePath);
+				m_startRecordAction(filePath, frameRate);
 			}
 		}
 
 		public void StopRecord() {
-			if (m_stopHandler != null) {
-				m_stopHandler();
+			if (m_stopRecordAction != null) {
+				m_stopRecordAction();
 			}
+		}
+
+		public IAsyncResult BeginStartRecord(string filePath, int frameRate, AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndStartRecord(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginStopRecord(AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndStopRecord(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+
+		public IAsyncResult BeginSetVideoBuffer(string mapName, int width, int height, int stride, PixelFormat pixelFormat, AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndSetVideoBuffer(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginSubscribe(AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndSubscribe(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginUnsubscribe(AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndUnsubscribe(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginPlay(string uri, AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndPlay(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginStop(AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndStop(IAsyncResult result) {
+			throw new NotImplementedException();
+		}
+
+		public IAsyncResult BeginShutdown(AsyncCallback callback, object asyncState) {
+			throw new NotImplementedException();
+		}
+
+		public void EndShutdown(IAsyncResult result) {
+			throw new NotImplementedException();
 		}
 	};
 

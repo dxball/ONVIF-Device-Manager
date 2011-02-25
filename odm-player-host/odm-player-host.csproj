@@ -55,16 +55,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.CoreEx">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.CoreEx.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.CoreEx.dll</HintPath>
     </Reference>
     <Reference Include="System.Interactive">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Interactive.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Interactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq.Async">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Linq.Async.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Linq.Async.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Reactive.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />

@@ -27,7 +27,7 @@ namespace odm.player {
 		[DllImport("kernel32.dll")]
 		static extern UnhandledExceptionHandler SetUnhandledExceptionFilter(UnhandledExceptionHandler lpTopLevelExceptionFilter);
 
-		static UnhandledExceptionHandler handler = null;
+		//static UnhandledExceptionHandler handler = null;
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>

@@ -24,7 +24,7 @@ using System.Text;
 
 using odm.utils;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public class ListItem {
 		public static ListItem<T> Wrap<T>(T obj, Func<T, string> display) where T : class {
 			return new ListItem<T>(obj, display);

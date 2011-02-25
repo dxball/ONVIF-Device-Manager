@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +30,9 @@ using odm.models;
 using odm.utils;
 using odm.utils.extensions;
 using odm.utils.controlsUIProvider;
-using odm.controls;
+using odm.ui.controls;
 using odm.controllers;
+using onvif;
 
 namespace odm.controlsUIProvider {
 	public class MainFrameProvider : BaseUIProvider, IMainFrameProvider {
@@ -47,12 +67,12 @@ namespace odm.controlsUIProvider {
 		}
 
 		//Init all controlls ant put on temp LoadingProperty Page
-		public void InitView(DeviceCapabilityModel devModel, Action<ChannelDescription> ChanelSelected, ImageSource devImg) {
+		public void InitView(DeviceCapabilityModel devModel, ImageSource devImg) {
 			ClearDeviceLoadingControl();
 			CreatePropertyPanel();
 
 			CreateDeviceControl(devModel, devImg);
-			FillChannelsControl(devModel, ChanelSelected);
+			//FillChannelsControl(devModel, ChanelSelected);
 		}
 		//Clete information control "Device Loading"
 		public void DeviceLoadingControl() {
@@ -102,12 +122,19 @@ namespace odm.controlsUIProvider {
 				_propertyPanel.Content = userControl;
 			}
 		}
+		public void CloseInfoControl() {
+			if (lastControl != null) {
+				_propertyPanel.Content = lastControl;
+				
+			}
+		}
 		public void AddInfoControl(UserControl userControl) {
 			//if (_propertyPanel != null && _propertyPanel.Children.Count >0) {
 				//lastControl = (UserControl)_propertyPanel.Children[0];
 				//_propertyPanel.Children.Clear();
 				//_propertyPanel.Children.Add(userControl);
-				lastControl = (UserControl)_propertyPanel.Content;
+				if(_propertyPanel.Content.GetType() != typeof(InfoPageNotification))
+					lastControl = (UserControl)_propertyPanel.Content;
 				_propertyPanel.Content = userControl;
 			//}
 		}
@@ -182,11 +209,13 @@ namespace odm.controlsUIProvider {
 			_mainFrameControl._propertyContainer.Content = null;//.Children.Clear();
 			_mainFrameControl._stackPanel.Children.Clear();
 		}
-		
-		public void SetChannelImage(System.Drawing.Bitmap CurrentImage, string SourceToken) {
+
+		public void SetChannelImage(System.Drawing.Bitmap CurrentImage, VideoSourceToken SourceToken) {
 			_chanCtrlList.ForEach(ctrl => {
-				if (ctrl._devChannel.Id == SourceToken)
+                if (ctrl._devChannel != null){
+				if (ctrl._devChannel.sourceToken == SourceToken)
 					ctrl.SetChannelImage(CurrentImage);
+                }
 			});
 		}
 
@@ -197,19 +226,29 @@ namespace odm.controlsUIProvider {
 			_devicePanel.Children.Add(_devCtrl);
 		}
 
-		public void FillChannelsControl(DeviceCapabilityModel devModel, Action<ChannelDescription> chanSelect) {
-			foreach (var chan in devModel.Channels) {
-				CreateChannelControl(chan, chanSelect);
-			}
+		public void AddChannelControl(VideoSourceToken chantoken, Action<ChannelModel> chanSelect) {
+			CreateChannelControl(chantoken, chanSelect);
 		}
-		public void SetChannelName(ChannelDescription chan, string name) {
+		public void InitChannelControl(ChannelModel chan) {
+			_chanCtrlList.ForEach(x => {
+				if (x._chanhelToken == chan.sourceToken)
+					x.InitControls(chan);
+			});
+		}
+
+		//public void FillChannelsControl(DeviceCapabilityModel devModel, Action<ChannelModel> chanSelect) {
+		//    foreach (var chan in WorkflowController.Instance.GetMainFrameController().channelsList) {
+		//        CreateChannelControl(chan, chanSelect);
+		//    }
+		//}
+		public void SetChannelName(ChannelModel chan, string name) {
 			_chanCtrlList.ForEach(x => {
 				if (x._devChannel == chan)
 					x.SetChannelName(name);
 				});
 		}
-		protected void CreateChannelControl(ChannelDescription channel, Action<ChannelDescription> chanSelect) {
-			var devchannelcontrol = new DeviceChannelControl(channel);
+		protected void CreateChannelControl(VideoSourceToken chantoken, Action<ChannelModel> chanSelect) {
+			var devchannelcontrol = new DeviceChannelControl(chantoken);
 			//devchannelcontrol.SettingsFrame = _propertyPanel;
 
 			devchannelcontrol.ChannelSelected = chanSelect;
@@ -258,8 +297,8 @@ namespace odm.controlsUIProvider {
 				case LinkButtonsDeviceID.SystemLog:
 					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.systemLog);
 					break;
-				case LinkButtonsDeviceID.XMLExplorer:
-					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.xmlExplorer);
+				case LinkButtonsDeviceID.OnvifExplorer:
+					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.onvifExplorer);
 					break;
 				case LinkButtonsDeviceID.Network:
 					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.networkSettings);
@@ -271,9 +310,14 @@ namespace odm.controlsUIProvider {
 					lbtn.NameLable.Content = "Unknown";
 					break;
 			}
-			_devCtrl.AddLinkButton(lbtn);
+
+			try {
+				_devCtrl.AddLinkButton(lbtn);
+			} catch (Exception err) {
+				dbg.Error(err);
+			}
 		}
-		public void AddChannelLinkButton(Action click, ChannelDescription channel, bool IsCheckable, 
+		public void AddChannelLinkButton(Action click, ChannelModel channel, bool IsCheckable, 
 											bool IsChecked, bool Enabled, LinkButtonsChannelID linkID, 
 											Action<bool, Action> chBoxSwitched) {
 			var lbtn = new LinkCheckButton() { Click = click, SelectionChanged = onSelection,
@@ -284,6 +328,9 @@ namespace odm.controlsUIProvider {
 			};
 
 			switch (linkID) {
+				case LinkButtonsChannelID.ProfileEditor:
+					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.profileEditor);
+					break;
 				case LinkButtonsChannelID.AnalogueOut:
 					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.analogueOutput);
 					break;
@@ -318,6 +365,9 @@ namespace odm.controlsUIProvider {
 					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.tamperingDetectors);
 					break;
 				case LinkButtonsChannelID.Tracker:
+					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.objectTracker);
+					break;
+				case LinkButtonsChannelID.ApproMotionDetector:
 					lbtn.NameLable.CreateBinding(TextButton.ContentProperty, _buttonStrings, x => x.objectTracker);
 					break;
 				case LinkButtonsChannelID.VideoStreaming:

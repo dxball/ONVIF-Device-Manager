@@ -12,6 +12,10 @@ namespace onvif.types {
 	using System.Xml.Schema;
 	using System.ComponentModel;
 
+
+
+
+
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
 	[System.SerializableAttribute()]
@@ -15369,59 +15373,16 @@ namespace onvif.types {
 		}
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public partial class SystemLog : System.ComponentModel.INotifyPropertyChanged {
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	public partial class SystemLog {
 
-		private AttachmentData binaryField;
+		[XmlElement(DataType = "base64Binary")]
+		public byte[] Binary;
 
-		private string stringField;
-
-		public AttachmentData Binary {
-			get {
-				return this.binaryField;
-			}
-			set {
-				if ((this.binaryField != null)) {
-					if ((binaryField.Equals(value) != true)) {
-						this.binaryField = value;
-						this.OnPropertyChanged("Binary");
-					}
-				} else {
-					this.binaryField = value;
-					this.OnPropertyChanged("Binary");
-				}
-			}
-		}
-
-		public string String {
-			get {
-				return this.stringField;
-			}
-			set {
-				if ((this.stringField != null)) {
-					if ((stringField.Equals(value) != true)) {
-						this.stringField = value;
-						this.OnPropertyChanged("String");
-					}
-				} else {
-					this.stringField = value;
-					this.OnPropertyChanged("String");
-				}
-			}
-		}
-
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-		public virtual void OnPropertyChanged(string propertyName) {
-			System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-			if ((handler != null)) {
-				handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-			}
-		}
+		[XmlElement]
+		public string String;
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
@@ -15612,116 +15573,28 @@ namespace onvif.types {
 		}
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public partial class BinaryData : System.ComponentModel.INotifyPropertyChanged {
+	[Serializable()]
+	[XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	public partial class BinaryData{
 
-		private byte[] dataField;
+		[XmlElement(DataType = "base64Binary")]
+		public byte[] Data;
 
-		private string contentTypeField;
-
-		[System.Xml.Serialization.XmlElementAttribute(DataType = "base64Binary")]
-		public byte[] Data {
-			get {
-				return this.dataField;
-			}
-			set {
-				if ((this.dataField != null)) {
-					if ((dataField.Equals(value) != true)) {
-						this.dataField = value;
-						this.OnPropertyChanged("Data");
-					}
-				} else {
-					this.dataField = value;
-					this.OnPropertyChanged("Data");
-				}
-			}
-		}
-
-		[System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/2005/05/xmlmime")]
-		public string contentType {
-			get {
-				return this.contentTypeField;
-			}
-			set {
-				if ((this.contentTypeField != null)) {
-					if ((contentTypeField.Equals(value) != true)) {
-						this.contentTypeField = value;
-						this.OnPropertyChanged("contentType");
-					}
-				} else {
-					this.contentTypeField = value;
-					this.OnPropertyChanged("contentType");
-				}
-			}
-		}
-
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-		public virtual void OnPropertyChanged(string propertyName) {
-			System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-			if ((handler != null)) {
-				handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-			}
-		}
+		[XmlAttribute(Form = XmlSchemaForm.Qualified, Namespace = "http://www.w3.org/2005/05/xmlmime")]
+		public string contentType;
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public partial class BackupFile : System.ComponentModel.INotifyPropertyChanged {
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	public partial class BackupFile {
 
-		private string nameField;
+		[XmlElement]
+		public string Name;
 
-		private AttachmentData dataField;
-
-		public string Name {
-			get {
-				return this.nameField;
-			}
-			set {
-				if ((this.nameField != null)) {
-					if ((nameField.Equals(value) != true)) {
-						this.nameField = value;
-						this.OnPropertyChanged("Name");
-					}
-				} else {
-					this.nameField = value;
-					this.OnPropertyChanged("Name");
-				}
-			}
-		}
-
-		public AttachmentData Data {
-			get {
-				return this.dataField;
-			}
-			set {
-				if ((this.dataField != null)) {
-					if ((dataField.Equals(value) != true)) {
-						this.dataField = value;
-						this.OnPropertyChanged("Data");
-					}
-				} else {
-					this.dataField = value;
-					this.OnPropertyChanged("Data");
-				}
-			}
-		}
-
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-		public virtual void OnPropertyChanged(string propertyName) {
-			System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-			if ((handler != null)) {
-				handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-			}
-		}
+		[XmlElement(DataType = "base64Binary")]
+		public byte[] Data;
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
@@ -16462,61 +16335,17 @@ namespace onvif.types {
 		}
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public partial class Certificate : System.ComponentModel.INotifyPropertyChanged {
+	[Serializable()]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	public partial class Certificate{
 
-		private string certificateIDField;
+		[XmlElement("CertificateID", DataType = "token")]
+		public string certificateID;
 
-		private BinaryData certificate1Field;
+		[XmlElement("Certificate")]
+		public BinaryData certificate;
 
-		[System.Xml.Serialization.XmlElementAttribute(DataType = "token")]
-		public string CertificateID {
-			get {
-				return this.certificateIDField;
-			}
-			set {
-				if ((this.certificateIDField != null)) {
-					if ((certificateIDField.Equals(value) != true)) {
-						this.certificateIDField = value;
-						this.OnPropertyChanged("CertificateID");
-					}
-				} else {
-					this.certificateIDField = value;
-					this.OnPropertyChanged("CertificateID");
-				}
-			}
-		}
-
-		[System.Xml.Serialization.XmlElementAttribute("Certificate")]
-		public BinaryData Certificate1 {
-			get {
-				return this.certificate1Field;
-			}
-			set {
-				if ((this.certificate1Field != null)) {
-					if ((certificate1Field.Equals(value) != true)) {
-						this.certificate1Field = value;
-						this.OnPropertyChanged("Certificate1");
-					}
-				} else {
-					this.certificate1Field = value;
-					this.OnPropertyChanged("Certificate1");
-				}
-			}
-		}
-
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-		public virtual void OnPropertyChanged(string propertyName) {
-			System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-			if ((handler != null)) {
-				handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-			}
-		}
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]

@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +36,7 @@ using odm.models;
 using odm.utils;
 using odm.utils.extensions;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for PropertyImagingSettings.xaml
 	/// </summary>
@@ -29,12 +48,9 @@ namespace odm.controls {
 			Localization();
 			BindData();
 		}
-		public MemoryMappedFile memFile {
-			set {
-				_videoPlayer.memFile = value;
-			}
-		}
+		
 		PropertySensorSettingsStrings strings = new PropertySensorSettingsStrings();
+		LinkButtonsStrings titles = new LinkButtonsStrings();
 		ImagingSettingsModel _devModel;
 		public Action Save { get; set; }
 		public Action Cancel { get; set; }
@@ -42,11 +58,13 @@ namespace odm.controls {
 			_videoPlayer.ReleaseAll();
 			base.ReleaseAll();
 		}
-
-		void InitControls() {
+		public void InitPlayBack(MemoryMappedFile mem) {
+			_videoPlayer.memFile = mem;
 			Rect ret = new Rect(0, 0, _devModel.encoderResolution.Width, _devModel.encoderResolution.Height);
 			_videoPlayer.InitPlayback(ret);
 
+		}
+		void InitControls() {
 			saveCancelControl.Save.Click += new RoutedEventHandler(Save_Click);
 			saveCancelControl.Cancel.Click += new RoutedEventHandler(Cancel_Click);
 		}
@@ -61,29 +79,29 @@ namespace odm.controls {
 				Save();
 		}
 		void Localization() {
-			title.CreateBinding(Title.ContentProperty, strings, x => x.title);
-			slBrightness.lable.CreateBinding(Label.ContentProperty, strings, x=>x.brightness);
-			slCb.lable.CreateBinding(Label.ContentProperty, strings, x => x.whiteBalanceCb);
-			slContrast.lable.CreateBinding(Label.ContentProperty, strings, x => x.contrast);
-			slCr.lable.CreateBinding(Label.ContentProperty, strings, x => x.whiteBalanceCr);
-			slSaturation.lable.CreateBinding(Label.ContentProperty, strings, x => x.saturation);
-			slSharpness.lable.CreateBinding(Label.ContentProperty, strings, x => x.sharpness);
-			tbAutoWhite.CreateBinding(Label.ContentProperty, strings, x => x.whitemode);
+			title.CreateBinding(ContentColumn.TitleProperty, titles, x => x.sensorSettings);
+			brightnessCaption.CreateBinding(Label.ContentProperty, strings, x=>x.brightness);
+			cbCaption.CreateBinding(Label.ContentProperty, strings, x => x.whiteBalanceCb);
+			contrastCaption.CreateBinding(Label.ContentProperty, strings, x => x.contrast);
+			crCaption.CreateBinding(Label.ContentProperty, strings, x => x.whiteBalanceCr);
+			saturationCaption.CreateBinding(Label.ContentProperty, strings, x => x.saturation);
+			sharpnessCaption.CreateBinding(Label.ContentProperty, strings, x => x.sharpness);
+			autoWhiteCaption.CreateBinding(Label.ContentProperty, strings, x => x.whitemode);
 		}
 		void BindData() {
 			try {
-				slBrightness.slider.Minimum = _devModel.brightnessMin;
-				slBrightness.slider.Maximum = _devModel.brightnessMax;
-				slBrightness.slider.CreateBinding(Slider.ValueProperty, _devModel, x=>x.brightness, (m,v)=>{
+				slBrightness.Minimum = _devModel.brightnessMin;
+				slBrightness.Maximum = _devModel.brightnessMax;
+				slBrightness.CreateBinding(Slider.ValueProperty, _devModel, x=>x.brightness, (m,v)=>{
 					m.brightness = (float)v;
 				});
 			}catch(Exception err){
 				dbg.Info(err.Message);
 			}
 			try{
-				slContrast.slider.Minimum = _devModel.contrastMin;
-				slContrast.slider.Maximum = _devModel.contrastMax;
-				slContrast.slider.CreateBinding(Slider.ValueProperty, _devModel, x => x.contrast, (m, v) => {
+				slContrast.Minimum = _devModel.contrastMin;
+				slContrast.Maximum = _devModel.contrastMax;
+				slContrast.CreateBinding(Slider.ValueProperty, _devModel, x => x.contrast, (m, v) => {
 					m.contrast = (float)v;
 				});
 			} catch (Exception err) {
@@ -91,18 +109,18 @@ namespace odm.controls {
 				slContrast.IsEnabled = false;
 			}
 			try{
-				slSaturation.slider.Minimum = _devModel.colorSaturationMin;
-				slSaturation.slider.Maximum = _devModel.colorSaturationMax;
-				slSaturation.slider.CreateBinding(Slider.ValueProperty, _devModel, x => x.colorSaturation, (m, v) => {
+				slSaturation.Minimum = _devModel.colorSaturationMin;
+				slSaturation.Maximum = _devModel.colorSaturationMax;
+				slSaturation.CreateBinding(Slider.ValueProperty, _devModel, x => x.colorSaturation, (m, v) => {
 					m.colorSaturation = (float)v;
 				});
 			} catch (Exception err) {
 				dbg.Info(err.Message);
 			}
 			try{
-				slSharpness.slider.Minimum = _devModel.sharpnessMin;
-				slSharpness.slider.Maximum = _devModel.sharpnessMax;
-				slSharpness.slider.CreateBinding(Slider.ValueProperty, _devModel, x => x.sharpness, (m, v) => {
+				slSharpness.Minimum = _devModel.sharpnessMin;
+				slSharpness.Maximum = _devModel.sharpnessMax;
+				slSharpness.CreateBinding(Slider.ValueProperty, _devModel, x => x.sharpness, (m, v) => {
 					m.sharpness = (float)v;
 				});
 			} catch (Exception err) {
@@ -144,9 +162,9 @@ namespace odm.controls {
 
 			try {
 				if (!float.IsNaN(_devModel.whiteBalanceOptions.YbGain.Max) && !float.IsNaN(_devModel.whiteBalanceOptions.YbGain.Min)) {
-					slCb.slider.Maximum = _devModel.whiteBalanceOptions.YbGain.Max;
-					slCb.slider.Minimum = _devModel.whiteBalanceOptions.YbGain.Min;
-					slCb.slider.CreateBinding(Slider.ValueProperty, _devModel.whiteBalance, x => x.CbGain, (m, v) => {
+					slCb.Maximum = _devModel.whiteBalanceOptions.YbGain.Max;
+					slCb.Minimum = _devModel.whiteBalanceOptions.YbGain.Min;
+					slCb.CreateBinding(Slider.ValueProperty, _devModel.whiteBalance, x => x.CbGain, (m, v) => {
 						m.CbGain = (float)v;
 					});
 				} else {
@@ -157,9 +175,9 @@ namespace odm.controls {
 			}
 			try {
 				if (!float.IsNaN(_devModel.whiteBalanceOptions.YrGain.Max) && !float.IsNaN(_devModel.whiteBalanceOptions.YrGain.Min)) {
-					slCr.slider.Maximum = _devModel.whiteBalanceOptions.YrGain.Max;
-					slCr.slider.Minimum = _devModel.whiteBalanceOptions.YrGain.Min;
-					slCb.slider.CreateBinding(Slider.ValueProperty, _devModel.whiteBalance, x => x.CrGain, (m, v) => {
+					slCr.Maximum = _devModel.whiteBalanceOptions.YrGain.Max;
+					slCr.Minimum = _devModel.whiteBalanceOptions.YrGain.Min;
+					slCb.CreateBinding(Slider.ValueProperty, _devModel.whiteBalance, x => x.CrGain, (m, v) => {
 						m.CrGain = (float)v;
 					});
 				} else {

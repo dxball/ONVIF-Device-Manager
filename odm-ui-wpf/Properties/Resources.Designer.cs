@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace odm.Properties {
+namespace odm.ui.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace odm.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("odm.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("odm.ui.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -92,13 +92,6 @@ namespace odm.Properties {
             get {
                 object obj = ResourceManager.GetObject("mc", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Icon Onvif_DM {
-            get {
-                object obj = ResourceManager.GetObject("Onvif_DM", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         

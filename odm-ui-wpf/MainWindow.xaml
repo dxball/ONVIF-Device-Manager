@@ -1,46 +1,47 @@
-﻿<Window x:Class="odm.MainWindow"
+﻿<my:CustomWindow 
+	x:Class="odm.ui.MainWindow" x:Name="self"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:my="clr-namespace:odm.controls"
-	xmlns:prop="clr-namespace:odm.Properties"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	xmlns:my="clr-namespace:odm.ui.controls"
+	xmlns:prop="clr-namespace:odm.ui.Properties"
+    xmlns:ui="clr-namespace:odm.ui"
 	Title="MainWindow" 
 	Width="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowWidth, Mode=TwoWay}"
 	Height="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowHeight, Mode=TwoWay}"
     WindowState="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowState, Mode=TwoWay}"
-	Icon="/odm;component/Images/Onvif-DM.ico" 
-	VisualTextRenderingMode="ClearType">
-
-	<Window.CommandBindings>
+	Icon="{StaticResource ResourceKey='images.odm_icon'}" 
+	VisualTextRenderingMode="Aliased"
+	TextOptions.TextRenderingMode="Aliased"
+	TextOptions.TextFormattingMode="Display"
+	SnapsToDevicePixels="True">
+    <Window.CommandBindings>
 		<CommandBinding Command="Help" Executed="CmdHelpHandler"/>
 	</Window.CommandBindings>
-	
-	<Window.InputBindings>
+    
+    <Window.InputBindings>
 		<KeyBinding Command="Help" Key="H" Modifiers="Ctrl"/>
 	</Window.InputBindings>
-	
-	<!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">-->
-		<DockPanel Margin="6">
-		
-			<StackPanel Name="toolbar" Margin="0,0,0,6" Height="24" DockPanel.Dock="Top" Orientation="Horizontal" FlowDirection="RightToLeft">
-				<Button ToolTip="About" Command="Help"  Padding="0" Margin="0,0,6,0" VerticalAlignment="Stretch" MinWidth="24" HorizontalAlignment="Right" FlowDirection="LeftToRight">
-					<Image Source="/odm;component/Resources/about.png"/>
-				</Button>
-				<ComboBox ToolTip="select language" SelectionChanged="cbLocale_SelectionChanged" VerticalAlignment="Stretch"  HorizontalAlignment="Right" Margin="0,0,6,0" Name="cbLocale" Width="81" Style="{StaticResource FlatComboBoxStyle}" FlowDirection="LeftToRight"/>
-			</StackPanel>
-			<!--<DockPanel>
-				<Frame Name="frame1" DockPanel.Dock="Left" VerticalAlignment="Stretch" Margin="0,0,6,0" Padding="0" Width="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowLeftPanelSize}"/>
-				<ContentControl Name="_mainFramePanel" Margin="0" />
-			</DockPanel>-->
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Name="col" Width="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowLeftPanelSize, Mode=TwoWay}" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-			<GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch"  Grid.Column="1" Margin="0" Width="3" ShowsPreview="False" ResizeDirection="Columns" BorderThickness="1" />
-			<Frame Name="frame1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Margin="0,0,3,0" Padding="0" />
-				<ContentControl Grid.Column="2" Name="_mainFramePanel" Margin="3,0,0,0" />			
-			</Grid>
-		</DockPanel>
-	<!--</ScrollViewer>-->
-</Window>
+    <ui:MainWindow.ToolBar>
+        <StackPanel Orientation="Horizontal">
+			<ComboBox x:Name="themeSelector" SelectedValue="{Binding currentTheme, ElementName=self}" >
+				<sys:String>origin-theme</sys:String>
+				<sys:String>swamp-theme</sys:String>				
+			</ComboBox>
+            <Button DockPanel.Dock="Left" VerticalAlignment="Center" ToolTip="About" Command="Help" Height="24" Width="18"  Padding="0" Margin="36,0,6,0" MinWidth="24" HorizontalAlignment="Right" FlowDirection="LeftToRight">
+                <Image Margin="2"  Source="/odm;component/Resources/about.png"/>
+            </Button>
+            <ComboBox DockPanel.Dock="Left" VerticalAlignment="Center" ToolTip="select language" SelectionChanged="cbLocale_SelectionChanged" Margin="0,0,6,0" x:Name="cbLocale" FlowDirection="LeftToRight"/>
+            <!--<Button DockPanel.Dock="Left" VerticalAlignment="Center" Content="Collect memmory" Margin="0,0,6,0" Click="button1_Click" Visibility="Hidden"  />-->
+        </StackPanel>
+    </ui:MainWindow.ToolBar>
+    <Grid Name="mainGrid">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition MinWidth="200" Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<!--<GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.Column="1" Margin="0" Width="3" ShowsPreview="False" ResizeDirection="Columns" BorderThickness="1" Background="#00F0F0F0"/>-->
+		<ContentControl Name="frame1" Grid.Column="0" Margin="0,0,3,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Left"/>
+		<ContentControl Name="_mainFramePanel" Grid.Column="1"  Margin="3,0,0,0" />
+	</Grid>
+</my:CustomWindow>

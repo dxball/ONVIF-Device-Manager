@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,69 +30,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for PropertyDepthCalibrationSTAcontrol.xaml
 	/// </summary>
-	public partial class PropertyDepthCalibrationSTAcontrol : CustomDialogWindow {
-		public PropertyDepthCalibrationSTAcontrol(Action exit, Action calibrate) {
+	public partial class PropertyDepthCalibrationSTAcontrol : UserControl {
+		public PropertyDepthCalibrationSTAcontrol() {//Action exit, Action calibrate
 			InitializeComponent();
-			Calibrate = calibrate;
-			Exit = exit;
-			_saveCancelControl.Cancel.Click += new RoutedEventHandler(Cancel_Click);
-			_saveCancelControl.Save.Click += new RoutedEventHandler(Save_Click);
+		}
+		private void UserControl_Loaded(object sender, RoutedEventArgs e) {
 
-			Closed += new EventHandler(PropertyDepthCalibrationSTAcontrol_Closed);
-		}
-
-		void PropertyDepthCalibrationSTAcontrol_Closed(object sender, EventArgs e) {
-			if (Exit != null)
-				Exit();
-		}
-
-		public Action Exit;
-		public Action Calibrate;
-
-		public MarkerPhysSize MarkerSize {
-			get {
-				return markerPhysSize;
-			}
-		}
-
-		public SaveCancelControl SaveCancel {
-			get {
-				return _saveCancelControl;
-			}
-		}
-		public EditComboBox EditMatrix {
-			get {
-				return editMatrixFormat;
-			}
-		}
-		public EditTextBox EditFocalL {
-			get {
-				return editFocalLength;
-			}
-		}
-		public RadioButton rb2D {
-			get {
-				return rb2d;
-			}
-		}
-		public RadioButton rb1D {
-			get {
-				return rb1d;
-			}
-		}
-
-		void Save_Click(object sender, RoutedEventArgs e) {
-			if (Calibrate != null)
-				Calibrate();
-		}
-
-		void Cancel_Click(object sender, RoutedEventArgs e) {
-			if (Exit != null)
-				Exit();
 		}
 	}
 }

@@ -1,22 +1,46 @@
-﻿<Local:BasePropertyControl x:Class="odm.controls.PropertyImagingSettings"
-             xmlns:Local="clr-namespace:odm.controls"
+﻿<Local:BasePropertyControl x:Class="odm.ui.controls.PropertyImagingSettings"
+             xmlns:Local="clr-namespace:odm.ui.controls"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <Local:Title x:Name="title" VerticalAlignment="Top" />
-        <Local:VideoPlayer Margin="0,24,0,244" x:Name="_videoPlayer" />
-        <Local:EditSlider Margin="0,0,0,215" x:Name="slBrightness" Height="23" VerticalAlignment="Bottom" />
-        <Local:EditSlider Margin="0,0,0,186" x:Name="slSaturation" VerticalAlignment="Bottom" />
-        <Local:EditSlider Margin="0,0,0,157" x:Name="slContrast" VerticalAlignment="Bottom" />
-        <Local:EditSlider Margin="0,0,0,128" x:Name="slSharpness" VerticalAlignment="Bottom" />
-        <Local:EditSlider Margin="0,0,0,69" x:Name="slCb" VerticalAlignment="Bottom" />
-        <Local:EditSlider Margin="0,0,0,40" x:Name="slCr" VerticalAlignment="Bottom" />
-        <Local:EditLable HorizontalAlignment="Left" Margin="0,0,0,98" x:Name="tbAutoWhite" VerticalAlignment="Bottom" Height="24" Width="156" />
-        <CheckBox Height="16" HorizontalAlignment="Left" Margin="162,0,0,102" Name="chbAuto" VerticalAlignment="Bottom" />
-        <Local:SaveCancelControl HorizontalAlignment="Left" Margin="0,0,0,8" x:Name="saveCancelControl" Width="203" Height="23" VerticalAlignment="Bottom" />
-    </Grid>
+    <Local:ContentColumn x:Name="title" Background="{DynamicResource ResourceKey=PropertyBrush}">
+        <Local:ContentColumn.Footer>
+            <Local:SaveCancelControl x:Name="saveCancelControl" />
+        </Local:ContentColumn.Footer>
+        <DockPanel VerticalAlignment="Top">
+            <Grid DockPanel.Dock="Bottom" Margin="6,0,6,6" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="256*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Name="brightnessCaption" Grid.Column="0" Grid.Row="0"/>
+                <Slider Name="slBrightness" Grid.Column="1" Grid.Row="0"/>
+                <Label Name="saturationCaption" Grid.Column="0" Grid.Row="1"/>
+                <Slider Name="slSaturation" Grid.Column="1" Grid.Row="1"/>
+                <Label Name="contrastCaption" Grid.Column="0" Grid.Row="2"/>
+                <Slider Name="slContrast" Grid.Column="1" Grid.Row="2"/>
+                <Label Name="sharpnessCaption" Grid.Column="0" Grid.Row="3"/>
+                <Slider Name="slSharpness" Grid.Column="1" Grid.Row="3"/>
+                <Label Name="autoWhiteCaption" Grid.Column="0" Grid.Row="4"/>
+                <CheckBox Name="chbAuto" VerticalAlignment="Center"  Grid.Column="1" Grid.Row="4"/>
+                <Label Name="cbCaption" Grid.Column="0" Grid.Row="5"/>
+                <Slider Name="slCb" Grid.Column="1" Grid.Row="5"/>
+                <Label Name="crCaption" Grid.Column="0" Grid.Row="6"/>
+                <Slider Name="slCr" Grid.Column="1" Grid.Row="6"/>
+            </Grid>
+            <Local:VideoPlayer Margin="6,6,6,6" x:Name="_videoPlayer" />
+        </DockPanel>
+    </Local:ContentColumn>
 </Local:BasePropertyControl>

@@ -54,7 +54,7 @@ namespace odm.player {
 		public static extern int onvifmp_stop_parsing(IntPtr aInstance, string aUrl);
 
 		[DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int onvifmp_start_record(IntPtr aInstance, string aUrl, string aFilePath);
+		public static extern int onvifmp_start_record(IntPtr aInstance, string aUrl, string aFilePath, int frameRate);
 
 		[DllImport(odm_player_dll, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int onvifmp_stop_record(IntPtr aInstance, string aUrl);
