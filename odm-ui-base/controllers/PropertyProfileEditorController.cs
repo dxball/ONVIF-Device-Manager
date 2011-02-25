@@ -50,8 +50,9 @@ namespace odm.controllers {
 		}
 		
 		public void CreateNewProfile() {
-			string uniqueString = Guid.NewGuid().ToString();
-			_createProfileSubscription = CurrentSession.CreateDefaultProfile(CurrentChannel.sourceToken.value + DateTime.Now.Year + DateTime.Now.DayOfYear + DateTime.Now.Hour+ DateTime.Now.Minute + DateTime.Now.Second, new ProfileToken(uniqueString), CurrentChannel.sourceToken)
+			var profToken =  new ProfileToken(Convert.ToBase64String(Guid.NewGuid().ToByteArray()));
+			var profName = String.Concat(CurrentChannel.sourceToken.value,"-",DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss"));	
+			_createProfileSubscription = CurrentSession.CreateDefaultProfile(profName,profToken, CurrentChannel.sourceToken)
 				.ObserveOn(SynchronizationContext.Current)
 				.Subscribe(argprof => {
 					UIProvider.Instance.GetProfileEditorProvider().AddProfile(argprof);

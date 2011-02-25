@@ -41,6 +41,7 @@ using onvif;
 namespace odm.onvif {
 
 	public class NvcHelper {
+		public const string DefaultProfileName = @"odm-default-profile-{0}";
 		public const string OnvifNameScope = @"onvif://www.onvif.org/name/";
 		public const string OnvifLocationScope = @"onvif://www.onvif.org/location/";
 		public const string SynesisNameScope = @"http://synesis.ru/name/";
@@ -95,7 +96,9 @@ namespace odm.onvif {
 		}
 
 		public static ProfileToken GetChannelProfileToken(VideoSourceToken videoSourceToken) {
-			return new ProfileToken(String.Concat(SynesisProfileScope, videoSourceToken.value));
+			//var ch = Convert.ToBase64String(Encoding.UTF8.GetBytes(videoSourceToken.value));
+			var ch = videoSourceToken.value;
+			return new ProfileToken(String.Format(DefaultProfileName, ch));
 		}
 	}
 	

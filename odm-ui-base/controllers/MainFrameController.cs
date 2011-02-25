@@ -409,7 +409,8 @@ namespace odm.controllers {
 						var result = prof.Where(res => res.VideoSourceConfiguration.SourceToken == vidSource)
 							.FirstOrDefault(pr => pr.token == NvcHelper.GetChannelProfileToken(vidSource));
 						if (result == null) {
-							_createProfileSubscriptions.Add(CurrentSession.CreateDefaultProfile(vidSource.value, NvcHelper.GetChannelProfileToken(vidSource), vidSource)
+							var profToken = NvcHelper.GetChannelProfileToken(vidSource);
+							_createProfileSubscriptions.Add(CurrentSession.CreateDefaultProfile(profToken.value, profToken, vidSource)
 								.ObserveOn(SynchronizationContext.Current)
 								.Subscribe(argprof => {
 									LoadChannelModel(argprof.token);
