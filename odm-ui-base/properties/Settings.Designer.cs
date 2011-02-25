@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace odm.utils.properties {
+namespace odm.ui.properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

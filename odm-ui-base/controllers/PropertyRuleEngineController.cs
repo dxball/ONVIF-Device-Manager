@@ -32,8 +32,8 @@ namespace odm.controllers {
 		IDisposable _subscription;
 
 		protected override void LoadControl() {
-			_devModel = new RuleEngineModel(CurrentChannel);
-			_subscription = _devModel.Load(CurrentSession)
+			_devModel = new RuleEngineModel(CurrentChannel.profileToken);
+			_subscription = _devModel.Load(CurrentSession).ObserveOn(SynchronizationContext.Current)
 				.Subscribe(arg => {
 					var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
 					UIProvider.Instance.GetRuleEngineProvider().InitView(_devModel, dprocinfo, ApplyChanges, CancelChanges);
@@ -56,11 +56,10 @@ namespace odm.controllers {
 		}
 
 		protected override void ApplyChanges() {
-			UIProvider.Instance.ReleaseRuleEngineProvider();
 			_devModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
 				.Subscribe(devMod => {
-					var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
-					UIProvider.Instance.GetRuleEngineProvider().InitView(_devModel, dprocinfo, ApplyChanges, CancelChanges);
+					//var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
+					//UIProvider.Instance.GetRuleEngineProvider().InitView(_devModel, dprocinfo, ApplyChanges, CancelChanges);
 				}, err => {
 					ApplyError(err);
 				}, () => {

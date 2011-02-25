@@ -32,7 +32,7 @@ namespace odm.controllers {
 		IDisposable _subscription;
 
 		protected override void LoadControl() {
-			_devModel = new DepthCalibrationModel(CurrentChannel);
+			_devModel = new DepthCalibrationModel(CurrentChannel.profileToken);
 			_subscription = _devModel.Load(CurrentSession)
 				.Subscribe(arg => {
 					_devModel = arg;
@@ -53,8 +53,8 @@ namespace odm.controllers {
 			_devModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
 				.Subscribe(devMod => {
 					_devModel = devMod;
-					var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
-					UIProvider.Instance.GetDepthCalibrationProvider().InitView(_devModel,dprocinfo, ApplyChanges, CancelChanges);
+					//var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
+					//UIProvider.Instance.GetDepthCalibrationProvider().InitView(_devModel,dprocinfo, ApplyChanges, CancelChanges);
 				}, err => {
 					ApplyError(err);
 				}, () => {

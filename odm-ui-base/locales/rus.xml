@@ -2,7 +2,7 @@
 <localized-strings lang-iso3="rus">
 
 <!-- REGION Common Application -->
-  <module name="CommonApplicationStrings" namespace="nvc">
+  <module name="CommonApplicationStrings" namespace="odm.ui.controls">
     <string name="On" value="Включено" />
     <string name="Off" value="Выключено" />
     <string name="Yes" value="Да" />
@@ -12,24 +12,24 @@
     <string name="loadingData" value="Загрузка данных..." />
     <string name="applicationName" value="Менеджер устройств ONVIF" />
   </module>
-  <module name="DeviceControlStrings" namespace="odm.controls">
+  <module name="DeviceControlStrings" namespace="odm.ui.controls">
     <string name="title" value="Устройство" />
     <string name="languageEng" value="English" />
     <string name="languageRus" value="Русский" />
     <string name="languagetc" value="繁中" />
   </module>
-  <module name="SaveCancelStrings" namespace="odm.controls">
+  <module name="SaveCancelStrings" namespace="odm.ui.controls">
     <string name="save" value="Сохранить" />
     <string name="cancel" value="Отмена" />
   </module>
-  <module name="LinkButtonsStrings" namespace="odm.controls">
+  <module name="LinkButtonsStrings" namespace="odm.ui.controls">
     <string name="identificationAndStatus" value="Идентификация" />
     <string name="timesettings" value="Настройки времени" />
     <string name="networkSettings" value="Настройки сети" />
     <string name="digitalIO" value="Цифровые входы и выходы" />
     <string name="maintenance" value="Обслуживание" />
     <string name="systemLog" value="Системный журнал" />
-    <string name="xmlExplorer" value="Навигатор XML" />
+    <string name="onvifExplorer" value="Обозреватель ONVIF" />
     <string name="commonEvents" value="Общие события" />
     <string name="liveVideo" value="Живое видео" />
     <string name="sensorSettings" value="Настройки Сенсора" />
@@ -44,6 +44,7 @@
     <string name="cantishaker" value="Стабилизатор" />
     <string name="rotation" value="Поворот и отражение" />
     <string name="analogueOutput" value="Аналоговый выход" />
+    <string name="profileEditor" value="Профили" />
   </module>
 	<module name="InfoFormStrings" namespace="odm.controllers">
 		<string name="titleSave" value="Сохранение изменений..." />
@@ -56,7 +57,7 @@
     <string name="needToReboot" value="Пожалуйста, подождите перезагрузки устройства." />
     <string name="firmwareUpdated" value="Обновление прошивки прошло успешно. Пожалуйста, подождите перезагрузки устройства." />
 	</module>
-  <module name="EmptySelectionStrings" namespace="odm.controls">
+  <module name="EmptySelectionStrings" namespace="odm.ui.controls">
     <string name="title" value="Нет подключенных устройств" />
     <string name="text" value="Пожалуйста, проверьте, что устройство подключено" />
     <string name="textContacts" value="" />
@@ -82,7 +83,7 @@
 <!-- ENDOFREGION Errors -->
 
 <!-- REGION Device List -->
-  <module name="DevicesListControlStrings" namespace="odm.controls">
+  <module name="DevicesListControlStrings" namespace="odm.ui.controls">
     <string name="title" value="Сеть" />
     <string name="refresh" value="Обновить" />
     <string name="columnName" value="Имя" />
@@ -92,9 +93,14 @@
 <!-- ENDOFREGION Device List -->
   
 <!-- REGION Device settings -->
-  <module name="PropertyIdentificationStrings" namespace="odm.controls">
+  <module name="PropertyXMLExplorerStrings" namespace="odm.ui.controls">
+    <string name="title" value="Навигатор XML" />
+    <string name="save" value="Сохранить" />
+  </module>
+  <module name="PropertyIdentificationStrings" namespace="odm.ui.controls">
     <string name="title" value="Идентификация устройства" />
     <string name="name" value="Название" />
+    <string name="location" value="Местоположение" />
     <string name="curTime" value="Текущее время" />
     <string name="deviceID" value="ID устройства" />
     <string name="firmware" value="Программное обеспечение" />
@@ -103,7 +109,7 @@
     <string name="ipAddress" value="Сетевой адрес" />
     <string name="macAddress" value="MAC-адрес" />
   </module>
-  <module name="PropertyTimeZoneStrings" namespace="odm.controls">
+  <module name="PropertyTimeZoneStrings" namespace="odm.ui.controls">
     <string name="title" value="Настройки времени" />
     <string name="currentTime" value="Текущее время" />
     <string name="newTime" value="Новое время" />
@@ -118,8 +124,9 @@
     <string name="timeMode" value="Режим времени:" />
     <string name="ntpServerSetupTitle" value="Установка NTP сервера" />
     <string name="ntpServerSetupSet" value="Установить" />
+    <string name="warning" value="Внимание: временная зона устройства отличается от временной зоны компьютера" />
   </module>
-  <module name="PropertyNetworkSettingsStrings" namespace="odm.controls">
+  <module name="PropertyNetworkSettingsStrings" namespace="odm.ui.controls">
     <string name="title" value="Настройки сети" />
     <string name="dhcp" value="DHCP" />
     <string name="ipAddr" value="IP-адрес устройства" />
@@ -128,7 +135,7 @@
     <string name="dnsAddr" value="DNS-адрес" />
     <string name="macAddr" value="MAC-адрес" />
   </module>
-  <module name="PropertyDigitalIOStrings" namespace="odm.controls">
+  <module name="PropertyDigitalIOStrings" namespace="odm.ui.controls">
     <string name="title" value="Цифровые входы и выходы" />
     <string name="inputName" value="Имя" />
     <string name="inputNormalStatus" value="Нормальное состояние" />
@@ -145,7 +152,7 @@
     <string name="switchAnalogue" value="Включить аналоговый выход" />
     <string name="buttonTriggerRelay" value="Переключить реле" />
   </module>
-  <module name="PropertyMaintenanceStrings" namespace="odm.controls">
+  <module name="PropertyMaintenanceStrings" namespace="odm.ui.controls">
     <string name="title" value="Обслуживание" />
     <string name="configuration" value="Конфигурация" />
     <string name="btnBackup" value="Сохранить" />
@@ -160,15 +167,13 @@
     <string name="upgrateFirmware" value="Изменить прошивку" />
     <string name="btnUpgrate" value="Обновить" />
     <string name="updateCompleate" value="Обновление прошивки прошло успешно. Пожалуйста, подождите перезагрузки устройства." />
+    <string name="backupCompleate" value="Сохранение прошло успешно" />
+    <string name="restoreCompleate" value="Восстановление прошло успешно. Пожалуйста, подождите перезагрузки устройства." />
   </module>
-  <module name="SystemLogStrings" namespace="odm.controls">
+  <module name="SystemLogStrings" namespace="odm.ui.controls">
     <string name="title" value="Системный журнал" />
   </module>
-  <module name="XMLExplorerStrings" namespace="odm.controls">
-    <string name="title" value="Навигатор XML" />
-    <string name="save" value="Сохранить" />
-  </module>
-  <module name="CommonEventsStrings" namespace="odm.controls">
+  <module name="CommonEventsStrings" namespace="odm.ui.controls">
     <string name="title" value="Общие события" />
     <string name="ruleID" value="ID правила" />
     <string name="eventID" value="ID события" />
@@ -179,10 +184,18 @@
 <!-- ENDOFREGION Device settings -->
 
 <!-- REGION Chanels settings -->
-  <module name="PropertyLiveVideoStrings" namespace="odm.controls">
-    <string name="title" value="Живое видео" />
+  <module name="PropertyProfileEditorStrings" namespace="odm.ui.controls">
+    <string name="title" value="Редактор профилей" />
+    <string name="newProf" value="Создать" />
+    <string name="rename" value="Переименовать" />
+    <string name="delete" value="Удалить" />
+    <string name="select" value="Применить" />
   </module>
-  <module name="PropertySensorSettingsStrings" namespace="odm.controls">
+  <module name="PropertyLiveVideoStrings" namespace="odm.ui.controls">
+    <string name="title" value="Живое видео" />
+    <string name="folder" value="Выбрать" />
+  </module>
+  <module name="PropertySensorSettingsStrings" namespace="odm.ui.controls">
     <string name="title" value="Настройки сенсора" />
     <string name="brightness" value="Яркость" />
     <string name="saturation" value="Насыщенность цвета" />
@@ -195,7 +208,7 @@
     <string name="min" value="мин" />
     <string name="max" value="макс" />
   </module>
-  <module name="PropertyChannelEventsStrings" namespace="odm.controls">
+  <module name="PropertyChannelEventsStrings" namespace="odm.ui.controls">
     <string name="title" value="События" />
     <string name="ruleID" value="ID правила" />
     <string name="eventID" value="ID события" />
@@ -203,7 +216,7 @@
     <string name="type" value="Тип" />
     <string name="details" value="Детали" />
   </module>
-  <module name="PropertyDepthCalibrationStrings" namespace="odm.controls">
+  <module name="PropertyDepthCalibrationStrings" namespace="odm.ui.controls">
     <string name="physHeightTitle" value="Настройки калибровки" />
     <string name="physHeightSave" value="Установить" />
     <string name="title" value="Калибровка перспективы" />
@@ -219,9 +232,10 @@
     <string name="widthLiteral" value="ш" />
     <string name="heigthLiteral" value="в" />
     <string name="unknow" value="Не знаю" />
+    <string name="clibrate" value="Калибровать" />
     <string name="physHeight" value="Размер реального объекта, см" />
   </module>
-  <module name="PropertyVideoStreamingStrings" namespace="odm.controls">
+  <module name="PropertyVideoStreamingStrings" namespace="odm.ui.controls">
     <string name="title" value="Стриминг видео" />
     <string name="resolution" value="Разрешение, пиксели" />
     <string name="frameRate" value="Частота кадров, кадров/с" />
@@ -232,10 +246,11 @@
     <string name="metadata" value="Поток метаданных" />
     <string name="channelName" value="Имя канала" />
   </module>
-  <module name="PropertyMetadataStrings" namespace="odm.controls">
+  <module name="PropertyMetadataStrings" namespace="odm.ui.controls">
     <string name="title" value="Metadata" />
+    <string name="empty" value="Нет доступных метаданных" />
   </module>
-  <module name="PropertyDisplayAnnotationStrings" namespace="odm.controls">
+  <module name="PropertyDisplayAnnotationStrings" namespace="odm.ui.controls">
     <string name="title" value="Отображаемая анотация" />
     <string name="timestamp" value="Временная метка" />
     <string name="objects" value="Регионы движения" />
@@ -243,9 +258,10 @@
     <string name="speed" value="Скорость" />
     <string name="userRegion" value="Область детектирования" />
     <string name="channelName" value="Имя канала" />
+    <string name="sysInfo" value="Системная информация" />
     <string name="calibrationNet" value="Калибровачная сетка" />
   </module>
-  <module name="PropertyTamperingDetectorsStrings" namespace="odm.controls">
+  <module name="PropertyTamperingDetectorsStrings" namespace="odm.ui.controls">
     <string name="title" value="Тамперинг-детекторы" />
     <string name="signalLost" value="Сигнал потерян" />
     <string name="globalChange" value="Глобальное изменение" />
@@ -256,18 +272,20 @@
     <string name="fieldObstructed" value="Препятствие в поле зрения" />
     <string name="cameraDisplaced" value="Камера перемещена" />
   </module>
-  <module name="PropertyObjectTrackerStrings" namespace="odm.controls">
+  <module name="PropertyObjectTrackerStrings" namespace="odm.ui.controls">
     <string name="title" value="Слежение за объектом" />
     <string name="contrast" value="Чуствительность контраста" />
     <string name="areaMin" value="Минимальная площадь объекта, м2" />
     <string name="areaMax" value="Максимальная площадь объекта, м2" />
     <string name="speedMax" value="Максимальная скорость, м/с" />
     <string name="stabilization" value="Время стабилизации, мс" />
+    <string name="displacement" value="Чуствительность смещения" />
     <string name="direction" value="Направления" />
     <string name="all" value="Вкл" />
     <string name="none" value="Выкл" />
+    <string name="sensitivity" value="Чуствительность" />
   </module>
-  <module name="PropertyRuleEngineStrings" namespace="odm.controls">
+  <module name="PropertyRuleEngineStrings" namespace="odm.ui.controls">
     <string name="title" value="Настройка правил" />
     <string name="btnAdd" value="Добавить" />
     <string name="btnRemove" value="Удалить" />
@@ -291,10 +309,10 @@
     <string name="record" value="Записать на диск" />
     <string name="ptz" value="Направить PTZ-камеру" />
   </module>
-  <module name="PropertyAntishakerStrings" namespace="odm.controls">
+  <module name="PropertyAntishakerStrings" namespace="odm.ui.controls">
     <string name="title" value="Стабилизатор" />
   </module>
-  <module name="PropertyRotationStrings" namespace="odm.controls">
+  <module name="PropertyRotationStrings" namespace="odm.ui.controls">
     <string name="title" value="Вращение" />
     <string name="rotate" value="Вращение:" />
     <string name="rotate0" value="0'(Нет)" />
@@ -307,7 +325,7 @@
     <string name="flipV0" value="Нет" />
     <string name="flipV" value="По вертикали" />
   </module>
-  <module name="PropertyAnalogueOutputStrings" namespace="odm.controls">
+  <module name="PropertyAnalogueOutputStrings" namespace="odm.ui.controls">
     <string name="title" value="Аналоговый выход" />
     <string name="loop" value="Сквозное подключение" />
     <string name="digital" value="Цифровая обработка" />

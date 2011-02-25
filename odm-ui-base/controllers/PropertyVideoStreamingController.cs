@@ -34,7 +34,7 @@ namespace odm.controllers {
 		IDisposable _subscription;
 
 		protected override void LoadControl() {
-			_devModel = new VideoStreamingModel(CurrentChannel);
+			_devModel = new VideoStreamingModel(CurrentChannel.profileToken);
 			_subscription = _devModel.Load(CurrentSession).Subscribe(arg => {
 				var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
 				UIProvider.Instance.GetVideoStreamingProvider().InitView(_devModel, dprocinfo, ApplyChanges, CancelChanges);
@@ -59,14 +59,17 @@ namespace odm.controllers {
 			OnApply(InfoFormStrings.Instance.applyChanges);
 		}
 		protected override void ApplyError(Exception err) {
-			base.ApplyError(err);
-
-			WorkflowController.Instance.GetMainFrameController().ReloadModel();
+			UIProvider.Instance.GetMainWindowProvider().EnableControls();
+			UIProvider.Instance.GetInfoFormProvider().DisplayErrorForm(err, ReturnToMainFrame);
+		}
+		protected override void ReturnToMainFrame() {
+			base.ReturnToMainFrame();
+			WorkflowController.Instance.GetMainFrameController().ReloadModel(CurrentChannel);
 		}
 		protected override void ApplyCompleate() {
 			base.ApplyCompleate();
 
-			WorkflowController.Instance.GetMainFrameController().ReloadModel();
+			WorkflowController.Instance.GetMainFrameController().ReloadModel(CurrentChannel);
 
 			//WorkflowController.Instance.GetMainFrameController().RefershLikButtonsEnabledState(CurrentChannel);
 

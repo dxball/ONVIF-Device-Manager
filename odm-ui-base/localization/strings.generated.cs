@@ -14,14 +14,14 @@ using System.ComponentModel;
 using odm.localization;
 
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class CommonApplicationStrings: LocalizedStringsBase<CommonApplicationStrings>{
 		
 
 
 		private const string s_On = @"On";
 		private string m_On=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='On']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='On']/@value")]
 		public string On {
 			get { 
 				if( m_On == null){
@@ -41,7 +41,7 @@ namespace odm.controls {
 
 		private const string s_Off = @"Off";
 		private string m_Off=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='Off']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='Off']/@value")]
 		public string Off {
 			get { 
 				if( m_Off == null){
@@ -61,7 +61,7 @@ namespace odm.controls {
 
 		private const string s_Yes = @"Yes";
 		private string m_Yes=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='Yes']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='Yes']/@value")]
 		public string Yes {
 			get { 
 				if( m_Yes == null){
@@ -81,7 +81,7 @@ namespace odm.controls {
 
 		private const string s_No = @"No";
 		private string m_No=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='No']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='No']/@value")]
 		public string No {
 			get { 
 				if( m_No == null){
@@ -101,7 +101,7 @@ namespace odm.controls {
 
 		private const string s_streaming = @"Streaming";
 		private string m_streaming=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='streaming']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='streaming']/@value")]
 		public string streaming {
 			get { 
 				if( m_streaming == null){
@@ -121,7 +121,7 @@ namespace odm.controls {
 
 		private const string s_analytics = @"Analytics";
 		private string m_analytics=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='analytics']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='analytics']/@value")]
 		public string analytics {
 			get { 
 				if( m_analytics == null){
@@ -141,7 +141,7 @@ namespace odm.controls {
 
 		private const string s_loadingData = @"Loading data ...";
 		private string m_loadingData=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='loadingData']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='loadingData']/@value")]
 		public string loadingData {
 			get { 
 				if( m_loadingData == null){
@@ -161,7 +161,7 @@ namespace odm.controls {
 
 		private const string s_applicationName = @"ONVIF Device Manager";
 		private string m_applicationName=null;
-		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.controls']/descendant::string[@name='applicationName']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='applicationName']/@value")]
 		public string applicationName {
 			get { 
 				if( m_applicationName == null){
@@ -182,14 +182,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class DeviceControlStrings: LocalizedStringsBase<DeviceControlStrings>{
 		
 
 
 		private const string s_title = @"Device configuration";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -209,7 +209,7 @@ namespace odm.controls {
 
 		private const string s_languageEng = @"English";
 		private string m_languageEng=null;
-		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.controls']/descendant::string[@name='languageEng']/@value")]
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='languageEng']/@value")]
 		public string languageEng {
 			get { 
 				if( m_languageEng == null){
@@ -229,7 +229,7 @@ namespace odm.controls {
 
 		private const string s_languageRus = @"Русский";
 		private string m_languageRus=null;
-		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.controls']/descendant::string[@name='languageRus']/@value")]
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='languageRus']/@value")]
 		public string languageRus {
 			get { 
 				if( m_languageRus == null){
@@ -249,7 +249,7 @@ namespace odm.controls {
 
 		private const string s_languagetc = @"繁中";
 		private string m_languagetc=null;
-		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.controls']/descendant::string[@name='languagetc']/@value")]
+		[XPath(@"/localized-strings/module[@name='DeviceControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='languagetc']/@value")]
 		public string languagetc {
 			get { 
 				if( m_languagetc == null){
@@ -270,14 +270,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class SaveCancelStrings: LocalizedStringsBase<SaveCancelStrings>{
 		
 
 
 		private const string s_save = @"Save";
 		private string m_save=null;
-		[XPath(@"/localized-strings/module[@name='SaveCancelStrings' and @namespace='odm.controls']/descendant::string[@name='save']/@value")]
+		[XPath(@"/localized-strings/module[@name='SaveCancelStrings' and @namespace='odm.ui.controls']/descendant::string[@name='save']/@value")]
 		public string save {
 			get { 
 				if( m_save == null){
@@ -297,7 +297,7 @@ namespace odm.controls {
 
 		private const string s_cancel = @"Cancel";
 		private string m_cancel=null;
-		[XPath(@"/localized-strings/module[@name='SaveCancelStrings' and @namespace='odm.controls']/descendant::string[@name='cancel']/@value")]
+		[XPath(@"/localized-strings/module[@name='SaveCancelStrings' and @namespace='odm.ui.controls']/descendant::string[@name='cancel']/@value")]
 		public string cancel {
 			get { 
 				if( m_cancel == null){
@@ -318,14 +318,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class LinkButtonsStrings: LocalizedStringsBase<LinkButtonsStrings>{
 		
 
 
 		private const string s_identificationAndStatus = @"Identification";
 		private string m_identificationAndStatus=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='identificationAndStatus']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='identificationAndStatus']/@value")]
 		public string identificationAndStatus {
 			get { 
 				if( m_identificationAndStatus == null){
@@ -345,7 +345,7 @@ namespace odm.controls {
 
 		private const string s_timesettings = @"Time settings";
 		private string m_timesettings=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='timesettings']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='timesettings']/@value")]
 		public string timesettings {
 			get { 
 				if( m_timesettings == null){
@@ -365,7 +365,7 @@ namespace odm.controls {
 
 		private const string s_networkSettings = @"Network settings";
 		private string m_networkSettings=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='networkSettings']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='networkSettings']/@value")]
 		public string networkSettings {
 			get { 
 				if( m_networkSettings == null){
@@ -385,7 +385,7 @@ namespace odm.controls {
 
 		private const string s_digitalIO = @"Digital IO";
 		private string m_digitalIO=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='digitalIO']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='digitalIO']/@value")]
 		public string digitalIO {
 			get { 
 				if( m_digitalIO == null){
@@ -405,7 +405,7 @@ namespace odm.controls {
 
 		private const string s_maintenance = @"Maintenance";
 		private string m_maintenance=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='maintenance']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='maintenance']/@value")]
 		public string maintenance {
 			get { 
 				if( m_maintenance == null){
@@ -425,7 +425,7 @@ namespace odm.controls {
 
 		private const string s_systemLog = @"System log";
 		private string m_systemLog=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='systemLog']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='systemLog']/@value")]
 		public string systemLog {
 			get { 
 				if( m_systemLog == null){
@@ -443,20 +443,20 @@ namespace odm.controls {
 	
 
 
-		private const string s_xmlExplorer = @"XML explorer";
-		private string m_xmlExplorer=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='xmlExplorer']/@value")]
-		public string xmlExplorer {
+		private const string s_onvifExplorer = @"ONVIF explorer";
+		private string m_onvifExplorer=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='onvifExplorer']/@value")]
+		public string onvifExplorer {
 			get { 
-				if( m_xmlExplorer == null){
-					return s_xmlExplorer;
+				if( m_onvifExplorer == null){
+					return s_onvifExplorer;
 				}
-				return m_xmlExplorer; 
+				return m_onvifExplorer; 
 			}
 			set { 
-				if( value != m_xmlExplorer){
-					m_xmlExplorer = value;
-					NotifyPropertyChanged("xmlExplorer");
+				if( value != m_onvifExplorer){
+					m_onvifExplorer = value;
+					NotifyPropertyChanged("onvifExplorer");
 				}
 			}  
 		}
@@ -465,7 +465,7 @@ namespace odm.controls {
 
 		private const string s_commonEvents = @"Common events";
 		private string m_commonEvents=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='commonEvents']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='commonEvents']/@value")]
 		public string commonEvents {
 			get { 
 				if( m_commonEvents == null){
@@ -485,7 +485,7 @@ namespace odm.controls {
 
 		private const string s_liveVideo = @"Live video";
 		private string m_liveVideo=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='liveVideo']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='liveVideo']/@value")]
 		public string liveVideo {
 			get { 
 				if( m_liveVideo == null){
@@ -505,7 +505,7 @@ namespace odm.controls {
 
 		private const string s_sensorSettings = @"Sensor settings";
 		private string m_sensorSettings=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='sensorSettings']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sensorSettings']/@value")]
 		public string sensorSettings {
 			get { 
 				if( m_sensorSettings == null){
@@ -525,7 +525,7 @@ namespace odm.controls {
 
 		private const string s_events = @"Events";
 		private string m_events=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='events']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='events']/@value")]
 		public string events {
 			get { 
 				if( m_events == null){
@@ -545,7 +545,7 @@ namespace odm.controls {
 
 		private const string s_metadata = @"Metadata";
 		private string m_metadata=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='metadata']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='metadata']/@value")]
 		public string metadata {
 			get { 
 				if( m_metadata == null){
@@ -565,7 +565,7 @@ namespace odm.controls {
 
 		private const string s_depthCalibration = @"Depth calibration";
 		private string m_depthCalibration=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='depthCalibration']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='depthCalibration']/@value")]
 		public string depthCalibration {
 			get { 
 				if( m_depthCalibration == null){
@@ -585,7 +585,7 @@ namespace odm.controls {
 
 		private const string s_videoStreaming = @"Video streaming";
 		private string m_videoStreaming=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='videoStreaming']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='videoStreaming']/@value")]
 		public string videoStreaming {
 			get { 
 				if( m_videoStreaming == null){
@@ -605,7 +605,7 @@ namespace odm.controls {
 
 		private const string s_displayAnnotation = @"Display  annotation";
 		private string m_displayAnnotation=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='displayAnnotation']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='displayAnnotation']/@value")]
 		public string displayAnnotation {
 			get { 
 				if( m_displayAnnotation == null){
@@ -625,7 +625,7 @@ namespace odm.controls {
 
 		private const string s_tamperingDetectors = @"Tampering detectors";
 		private string m_tamperingDetectors=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='tamperingDetectors']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='tamperingDetectors']/@value")]
 		public string tamperingDetectors {
 			get { 
 				if( m_tamperingDetectors == null){
@@ -645,7 +645,7 @@ namespace odm.controls {
 
 		private const string s_objectTracker = @"Object tracker";
 		private string m_objectTracker=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='objectTracker']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='objectTracker']/@value")]
 		public string objectTracker {
 			get { 
 				if( m_objectTracker == null){
@@ -665,7 +665,7 @@ namespace odm.controls {
 
 		private const string s_ruleEngine = @"Rule engine";
 		private string m_ruleEngine=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='ruleEngine']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ruleEngine']/@value")]
 		public string ruleEngine {
 			get { 
 				if( m_ruleEngine == null){
@@ -685,7 +685,7 @@ namespace odm.controls {
 
 		private const string s_cantishaker = @"Antishaker";
 		private string m_cantishaker=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='cantishaker']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='cantishaker']/@value")]
 		public string cantishaker {
 			get { 
 				if( m_cantishaker == null){
@@ -705,7 +705,7 @@ namespace odm.controls {
 
 		private const string s_rotation = @"Rotation";
 		private string m_rotation=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='rotation']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rotation']/@value")]
 		public string rotation {
 			get { 
 				if( m_rotation == null){
@@ -725,7 +725,7 @@ namespace odm.controls {
 
 		private const string s_analogueOutput = @"Analogue output";
 		private string m_analogueOutput=null;
-		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.controls']/descendant::string[@name='analogueOutput']/@value")]
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='analogueOutput']/@value")]
 		public string analogueOutput {
 			get { 
 				if( m_analogueOutput == null){
@@ -737,6 +737,26 @@ namespace odm.controls {
 				if( value != m_analogueOutput){
 					m_analogueOutput = value;
 					NotifyPropertyChanged("analogueOutput");
+				}
+			}  
+		}
+	
+
+
+		private const string s_profileEditor = @"Profiles";
+		private string m_profileEditor=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='profileEditor']/@value")]
+		public string profileEditor {
+			get { 
+				if( m_profileEditor == null){
+					return s_profileEditor;
+				}
+				return m_profileEditor; 
+			}
+			set { 
+				if( value != m_profileEditor){
+					m_profileEditor = value;
+					NotifyPropertyChanged("profileEditor");
 				}
 			}  
 		}
@@ -934,14 +954,14 @@ namespace odm.controllers {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class EmptySelectionStrings: LocalizedStringsBase<EmptySelectionStrings>{
 		
 
 
 		private const string s_title = @"No connected devices.";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='EmptySelectionStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='EmptySelectionStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -961,7 +981,7 @@ namespace odm.controls {
 
 		private const string s_text = @"Please check the device is properly connected, or contact support.";
 		private string m_text=null;
-		[XPath(@"/localized-strings/module[@name='EmptySelectionStrings' and @namespace='odm.controls']/descendant::string[@name='text']/@value")]
+		[XPath(@"/localized-strings/module[@name='EmptySelectionStrings' and @namespace='odm.ui.controls']/descendant::string[@name='text']/@value")]
 		public string text {
 			get { 
 				if( m_text == null){
@@ -981,7 +1001,7 @@ namespace odm.controls {
 
 		private const string s_textContacts = @"";
 		private string m_textContacts=null;
-		[XPath(@"/localized-strings/module[@name='EmptySelectionStrings' and @namespace='odm.controls']/descendant::string[@name='textContacts']/@value")]
+		[XPath(@"/localized-strings/module[@name='EmptySelectionStrings' and @namespace='odm.ui.controls']/descendant::string[@name='textContacts']/@value")]
 		public string textContacts {
 			get { 
 				if( m_textContacts == null){
@@ -2150,14 +2170,14 @@ namespace odm {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class DevicesListControlStrings: LocalizedStringsBase<DevicesListControlStrings>{
 		
 
 
 		private const string s_title = @"Network";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -2177,7 +2197,7 @@ namespace odm.controls {
 
 		private const string s_refresh = @"Refresh";
 		private string m_refresh=null;
-		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.controls']/descendant::string[@name='refresh']/@value")]
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='refresh']/@value")]
 		public string refresh {
 			get { 
 				if( m_refresh == null){
@@ -2197,7 +2217,7 @@ namespace odm.controls {
 
 		private const string s_columnName = @"Name";
 		private string m_columnName=null;
-		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.controls']/descendant::string[@name='columnName']/@value")]
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='columnName']/@value")]
 		public string columnName {
 			get { 
 				if( m_columnName == null){
@@ -2217,7 +2237,7 @@ namespace odm.controls {
 
 		private const string s_columnIPadress = @"IP Adress";
 		private string m_columnIPadress=null;
-		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.controls']/descendant::string[@name='columnIPadress']/@value")]
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='columnIPadress']/@value")]
 		public string columnIPadress {
 			get { 
 				if( m_columnIPadress == null){
@@ -2237,7 +2257,7 @@ namespace odm.controls {
 
 		private const string s_columnType = @"Firmware";
 		private string m_columnType=null;
-		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.controls']/descendant::string[@name='columnType']/@value")]
+		[XPath(@"/localized-strings/module[@name='DevicesListControlStrings' and @namespace='odm.ui.controls']/descendant::string[@name='columnType']/@value")]
 		public string columnType {
 			get { 
 				if( m_columnType == null){
@@ -2258,14 +2278,62 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
+	public partial class PropertyOnvifExplorerStrings: LocalizedStringsBase<PropertyOnvifExplorerStrings>{
+		
+
+
+		private const string s_title = @"Onvif explorer";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='PropertyOnvifExplorerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_save = @"Save";
+		private string m_save=null;
+		[XPath(@"/localized-strings/module[@name='PropertyOnvifExplorerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='save']/@value")]
+		public string save {
+			get { 
+				if( m_save == null){
+					return s_save;
+				}
+				return m_save; 
+			}
+			set { 
+				if( value != m_save){
+					m_save = value;
+					NotifyPropertyChanged("save");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui.controls {
 	public partial class PropertyIdentificationStrings: LocalizedStringsBase<PropertyIdentificationStrings>{
 		
 
 
 		private const string s_title = @"Identification";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -2285,7 +2353,7 @@ namespace odm.controls {
 
 		private const string s_name = @"Name";
 		private string m_name=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='name']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='name']/@value")]
 		public string name {
 			get { 
 				if( m_name == null){
@@ -2303,9 +2371,29 @@ namespace odm.controls {
 	
 
 
+		private const string s_location = @"Location";
+		private string m_location=null;
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='location']/@value")]
+		public string location {
+			get { 
+				if( m_location == null){
+					return s_location;
+				}
+				return m_location; 
+			}
+			set { 
+				if( value != m_location){
+					m_location = value;
+					NotifyPropertyChanged("location");
+				}
+			}  
+		}
+	
+
+
 		private const string s_curTime = @"Current time";
 		private string m_curTime=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='curTime']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='curTime']/@value")]
 		public string curTime {
 			get { 
 				if( m_curTime == null){
@@ -2325,7 +2413,7 @@ namespace odm.controls {
 
 		private const string s_deviceID = @"Device ID";
 		private string m_deviceID=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='deviceID']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='deviceID']/@value")]
 		public string deviceID {
 			get { 
 				if( m_deviceID == null){
@@ -2345,7 +2433,7 @@ namespace odm.controls {
 
 		private const string s_firmware = @"Firmware";
 		private string m_firmware=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='firmware']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='firmware']/@value")]
 		public string firmware {
 			get { 
 				if( m_firmware == null){
@@ -2365,7 +2453,7 @@ namespace odm.controls {
 
 		private const string s_hardware = @"Hardware";
 		private string m_hardware=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='hardware']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='hardware']/@value")]
 		public string hardware {
 			get { 
 				if( m_hardware == null){
@@ -2385,7 +2473,7 @@ namespace odm.controls {
 
 		private const string s_version = @"Version";
 		private string m_version=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='version']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='version']/@value")]
 		public string version {
 			get { 
 				if( m_version == null){
@@ -2405,7 +2493,7 @@ namespace odm.controls {
 
 		private const string s_ipAddress = @"IP address";
 		private string m_ipAddress=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='ipAddress']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ipAddress']/@value")]
 		public string ipAddress {
 			get { 
 				if( m_ipAddress == null){
@@ -2425,7 +2513,7 @@ namespace odm.controls {
 
 		private const string s_macAddress = @"MAC address";
 		private string m_macAddress=null;
-		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.controls']/descendant::string[@name='macAddress']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='macAddress']/@value")]
 		public string macAddress {
 			get { 
 				if( m_macAddress == null){
@@ -2446,14 +2534,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyTimeZoneStrings: LocalizedStringsBase<PropertyTimeZoneStrings>{
 		
 
 
 		private const string s_title = @"Time settings";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -2473,7 +2561,7 @@ namespace odm.controls {
 
 		private const string s_currentTime = @"Current time";
 		private string m_currentTime=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='currentTime']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='currentTime']/@value")]
 		public string currentTime {
 			get { 
 				if( m_currentTime == null){
@@ -2493,7 +2581,7 @@ namespace odm.controls {
 
 		private const string s_newTime = @"New time";
 		private string m_newTime=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='newTime']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='newTime']/@value")]
 		public string newTime {
 			get { 
 				if( m_newTime == null){
@@ -2513,7 +2601,7 @@ namespace odm.controls {
 
 		private const string s_timeZone = @"Time zone:";
 		private string m_timeZone=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='timeZone']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='timeZone']/@value")]
 		public string timeZone {
 			get { 
 				if( m_timeZone == null){
@@ -2533,7 +2621,7 @@ namespace odm.controls {
 
 		private const string s_autoAdjustString = @"Autometically adjust for daylight saving time changes.";
 		private string m_autoAdjustString=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='autoAdjustString']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='autoAdjustString']/@value")]
 		public string autoAdjustString {
 			get { 
 				if( m_autoAdjustString == null){
@@ -2553,7 +2641,7 @@ namespace odm.controls {
 
 		private const string s_sinchronizeWithComp = @"Synchronize with computer time";
 		private string m_sinchronizeWithComp=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='sinchronizeWithComp']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sinchronizeWithComp']/@value")]
 		public string sinchronizeWithComp {
 			get { 
 				if( m_sinchronizeWithComp == null){
@@ -2573,7 +2661,7 @@ namespace odm.controls {
 
 		private const string s_date = @"Date:";
 		private string m_date=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='date']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='date']/@value")]
 		public string date {
 			get { 
 				if( m_date == null){
@@ -2593,7 +2681,7 @@ namespace odm.controls {
 
 		private const string s_time = @"Time:";
 		private string m_time=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='time']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='time']/@value")]
 		public string time {
 			get { 
 				if( m_time == null){
@@ -2613,7 +2701,7 @@ namespace odm.controls {
 
 		private const string s_sinchronizeWithNTP = @"Synchronize with NTP server";
 		private string m_sinchronizeWithNTP=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='sinchronizeWithNTP']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sinchronizeWithNTP']/@value")]
 		public string sinchronizeWithNTP {
 			get { 
 				if( m_sinchronizeWithNTP == null){
@@ -2633,7 +2721,7 @@ namespace odm.controls {
 
 		private const string s_NTPserver = @"NTP server:";
 		private string m_NTPserver=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='NTPserver']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='NTPserver']/@value")]
 		public string NTPserver {
 			get { 
 				if( m_NTPserver == null){
@@ -2653,7 +2741,7 @@ namespace odm.controls {
 
 		private const string s_manually = @"Set manually:";
 		private string m_manually=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='manually']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='manually']/@value")]
 		public string manually {
 			get { 
 				if( m_manually == null){
@@ -2673,7 +2761,7 @@ namespace odm.controls {
 
 		private const string s_timeMode = @"Time mode:";
 		private string m_timeMode=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='timeMode']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='timeMode']/@value")]
 		public string timeMode {
 			get { 
 				if( m_timeMode == null){
@@ -2693,7 +2781,7 @@ namespace odm.controls {
 
 		private const string s_ntpServerSetupTitle = @"NTP server setup";
 		private string m_ntpServerSetupTitle=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='ntpServerSetupTitle']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ntpServerSetupTitle']/@value")]
 		public string ntpServerSetupTitle {
 			get { 
 				if( m_ntpServerSetupTitle == null){
@@ -2713,7 +2801,7 @@ namespace odm.controls {
 
 		private const string s_ntpServerSetupSet = @"Set";
 		private string m_ntpServerSetupSet=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.controls']/descendant::string[@name='ntpServerSetupSet']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ntpServerSetupSet']/@value")]
 		public string ntpServerSetupSet {
 			get { 
 				if( m_ntpServerSetupSet == null){
@@ -2729,19 +2817,39 @@ namespace odm.controls {
 			}  
 		}
 	
+
+
+		private const string s_warning = @"Warning: the time zone of the device is not the same as the time zone of the PC";
+		private string m_warning=null;
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='warning']/@value")]
+		public string warning {
+			get { 
+				if( m_warning == null){
+					return s_warning;
+				}
+				return m_warning; 
+			}
+			set { 
+				if( value != m_warning){
+					m_warning = value;
+					NotifyPropertyChanged("warning");
+				}
+			}  
+		}
+	
 	}
 
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyNetworkSettingsStrings: LocalizedStringsBase<PropertyNetworkSettingsStrings>{
 		
 
 
 		private const string s_title = @"Network settings";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -2761,7 +2869,7 @@ namespace odm.controls {
 
 		private const string s_dhcp = @"DHCP";
 		private string m_dhcp=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='dhcp']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='dhcp']/@value")]
 		public string dhcp {
 			get { 
 				if( m_dhcp == null){
@@ -2781,7 +2889,7 @@ namespace odm.controls {
 
 		private const string s_ipAddr = @"Device IP address ";
 		private string m_ipAddr=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='ipAddr']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ipAddr']/@value")]
 		public string ipAddr {
 			get { 
 				if( m_ipAddr == null){
@@ -2801,7 +2909,7 @@ namespace odm.controls {
 
 		private const string s_subnetMask = @"Subnet mask";
 		private string m_subnetMask=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='subnetMask']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='subnetMask']/@value")]
 		public string subnetMask {
 			get { 
 				if( m_subnetMask == null){
@@ -2821,7 +2929,7 @@ namespace odm.controls {
 
 		private const string s_gateAddr = @"Gateway address";
 		private string m_gateAddr=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='gateAddr']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='gateAddr']/@value")]
 		public string gateAddr {
 			get { 
 				if( m_gateAddr == null){
@@ -2841,7 +2949,7 @@ namespace odm.controls {
 
 		private const string s_dnsAddr = @"DNS address";
 		private string m_dnsAddr=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='dnsAddr']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='dnsAddr']/@value")]
 		public string dnsAddr {
 			get { 
 				if( m_dnsAddr == null){
@@ -2861,7 +2969,7 @@ namespace odm.controls {
 
 		private const string s_macAddr = @"MAC address";
 		private string m_macAddr=null;
-		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='macAddr']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyNetworkSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='macAddr']/@value")]
 		public string macAddr {
 			get { 
 				if( m_macAddr == null){
@@ -2882,14 +2990,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyDigitalIOStrings: LocalizedStringsBase<PropertyDigitalIOStrings>{
 		
 
 
 		private const string s_title = @"Digital IO";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -2909,7 +3017,7 @@ namespace odm.controls {
 
 		private const string s_inputName = @"Name";
 		private string m_inputName=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='inputName']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='inputName']/@value")]
 		public string inputName {
 			get { 
 				if( m_inputName == null){
@@ -2929,7 +3037,7 @@ namespace odm.controls {
 
 		private const string s_inputNormalStatus = @"Normal status";
 		private string m_inputNormalStatus=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='inputNormalStatus']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='inputNormalStatus']/@value")]
 		public string inputNormalStatus {
 			get { 
 				if( m_inputNormalStatus == null){
@@ -2949,7 +3057,7 @@ namespace odm.controls {
 
 		private const string s_inputCurrentStatus = @"Current status";
 		private string m_inputCurrentStatus=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='inputCurrentStatus']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='inputCurrentStatus']/@value")]
 		public string inputCurrentStatus {
 			get { 
 				if( m_inputCurrentStatus == null){
@@ -2969,7 +3077,7 @@ namespace odm.controls {
 
 		private const string s_outputName = @"Name";
 		private string m_outputName=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='outputName']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='outputName']/@value")]
 		public string outputName {
 			get { 
 				if( m_outputName == null){
@@ -2989,7 +3097,7 @@ namespace odm.controls {
 
 		private const string s_outputIdleStatus = @"Idle status";
 		private string m_outputIdleStatus=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='outputIdleStatus']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='outputIdleStatus']/@value")]
 		public string outputIdleStatus {
 			get { 
 				if( m_outputIdleStatus == null){
@@ -3009,7 +3117,7 @@ namespace odm.controls {
 
 		private const string s_outputCurrentStatus = @"Current status";
 		private string m_outputCurrentStatus=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='outputCurrentStatus']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='outputCurrentStatus']/@value")]
 		public string outputCurrentStatus {
 			get { 
 				if( m_outputCurrentStatus == null){
@@ -3029,7 +3137,7 @@ namespace odm.controls {
 
 		private const string s_inputs = @"Digital inputs";
 		private string m_inputs=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='inputs']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='inputs']/@value")]
 		public string inputs {
 			get { 
 				if( m_inputs == null){
@@ -3049,7 +3157,7 @@ namespace odm.controls {
 
 		private const string s_outputs = @"Digital outputs (relays)";
 		private string m_outputs=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='outputs']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='outputs']/@value")]
 		public string outputs {
 			get { 
 				if( m_outputs == null){
@@ -3069,7 +3177,7 @@ namespace odm.controls {
 
 		private const string s_eventAction = @"Event action";
 		private string m_eventAction=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='eventAction']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='eventAction']/@value")]
 		public string eventAction {
 			get { 
 				if( m_eventAction == null){
@@ -3089,7 +3197,7 @@ namespace odm.controls {
 
 		private const string s_eventSendONVIFmessage = @"Send ONVIF message";
 		private string m_eventSendONVIFmessage=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='eventSendONVIFmessage']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='eventSendONVIFmessage']/@value")]
 		public string eventSendONVIFmessage {
 			get { 
 				if( m_eventSendONVIFmessage == null){
@@ -3109,7 +3217,7 @@ namespace odm.controls {
 
 		private const string s_triggerRelay = @"Trigger relay";
 		private string m_triggerRelay=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='triggerRelay']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='triggerRelay']/@value")]
 		public string triggerRelay {
 			get { 
 				if( m_triggerRelay == null){
@@ -3129,7 +3237,7 @@ namespace odm.controls {
 
 		private const string s_recordChannel = @"Record channel";
 		private string m_recordChannel=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='recordChannel']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='recordChannel']/@value")]
 		public string recordChannel {
 			get { 
 				if( m_recordChannel == null){
@@ -3149,7 +3257,7 @@ namespace odm.controls {
 
 		private const string s_switchAnalogue = @"Switch analogue video on";
 		private string m_switchAnalogue=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='switchAnalogue']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='switchAnalogue']/@value")]
 		public string switchAnalogue {
 			get { 
 				if( m_switchAnalogue == null){
@@ -3169,7 +3277,7 @@ namespace odm.controls {
 
 		private const string s_buttonTriggerRelay = @"Trigger relay";
 		private string m_buttonTriggerRelay=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.controls']/descendant::string[@name='buttonTriggerRelay']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDigitalIOStrings' and @namespace='odm.ui.controls']/descendant::string[@name='buttonTriggerRelay']/@value")]
 		public string buttonTriggerRelay {
 			get { 
 				if( m_buttonTriggerRelay == null){
@@ -3190,14 +3298,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyMaintenanceStrings: LocalizedStringsBase<PropertyMaintenanceStrings>{
 		
 
 
 		private const string s_title = @"Maintenance";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -3217,7 +3325,7 @@ namespace odm.controls {
 
 		private const string s_configuration = @"Configuration";
 		private string m_configuration=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='configuration']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='configuration']/@value")]
 		public string configuration {
 			get { 
 				if( m_configuration == null){
@@ -3237,7 +3345,7 @@ namespace odm.controls {
 
 		private const string s_btnBackup = @"Backup";
 		private string m_btnBackup=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='btnBackup']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnBackup']/@value")]
 		public string btnBackup {
 			get { 
 				if( m_btnBackup == null){
@@ -3257,7 +3365,7 @@ namespace odm.controls {
 
 		private const string s_btnRestore = @"Restore";
 		private string m_btnRestore=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='btnRestore']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnRestore']/@value")]
 		public string btnRestore {
 			get { 
 				if( m_btnRestore == null){
@@ -3277,7 +3385,7 @@ namespace odm.controls {
 
 		private const string s_factoryReset = @"Factory reset";
 		private string m_factoryReset=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='factoryReset']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='factoryReset']/@value")]
 		public string factoryReset {
 			get { 
 				if( m_factoryReset == null){
@@ -3297,7 +3405,7 @@ namespace odm.controls {
 
 		private const string s_btnSoftReset = @"Soft reset";
 		private string m_btnSoftReset=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='btnSoftReset']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnSoftReset']/@value")]
 		public string btnSoftReset {
 			get { 
 				if( m_btnSoftReset == null){
@@ -3317,7 +3425,7 @@ namespace odm.controls {
 
 		private const string s_btnHardReset = @"Hard reset";
 		private string m_btnHardReset=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='btnHardReset']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnHardReset']/@value")]
 		public string btnHardReset {
 			get { 
 				if( m_btnHardReset == null){
@@ -3337,7 +3445,7 @@ namespace odm.controls {
 
 		private const string s_diagnostics = @"Diagnostics and support";
 		private string m_diagnostics=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='diagnostics']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='diagnostics']/@value")]
 		public string diagnostics {
 			get { 
 				if( m_diagnostics == null){
@@ -3357,7 +3465,7 @@ namespace odm.controls {
 
 		private const string s_btnDownloadDump = @"Download Dump";
 		private string m_btnDownloadDump=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='btnDownloadDump']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnDownloadDump']/@value")]
 		public string btnDownloadDump {
 			get { 
 				if( m_btnDownloadDump == null){
@@ -3377,7 +3485,7 @@ namespace odm.controls {
 
 		private const string s_firmwareVer = @"Current firmware version";
 		private string m_firmwareVer=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='firmwareVer']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='firmwareVer']/@value")]
 		public string firmwareVer {
 			get { 
 				if( m_firmwareVer == null){
@@ -3397,7 +3505,7 @@ namespace odm.controls {
 
 		private const string s_upgrateFirmware = @"Upgrade firmware";
 		private string m_upgrateFirmware=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='upgrateFirmware']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='upgrateFirmware']/@value")]
 		public string upgrateFirmware {
 			get { 
 				if( m_upgrateFirmware == null){
@@ -3417,7 +3525,7 @@ namespace odm.controls {
 
 		private const string s_btnUpgrate = @"Upgrade";
 		private string m_btnUpgrate=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='btnUpgrate']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnUpgrate']/@value")]
 		public string btnUpgrate {
 			get { 
 				if( m_btnUpgrate == null){
@@ -3437,7 +3545,7 @@ namespace odm.controls {
 
 		private const string s_updateCompleate = @"Firmware update is complete. Please wait for your device to reboot. ";
 		private string m_updateCompleate=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.controls']/descendant::string[@name='updateCompleate']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='updateCompleate']/@value")]
 		public string updateCompleate {
 			get { 
 				if( m_updateCompleate == null){
@@ -3453,19 +3561,59 @@ namespace odm.controls {
 			}  
 		}
 	
+
+
+		private const string s_backupCompleate = @"Backup is complete.";
+		private string m_backupCompleate=null;
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='backupCompleate']/@value")]
+		public string backupCompleate {
+			get { 
+				if( m_backupCompleate == null){
+					return s_backupCompleate;
+				}
+				return m_backupCompleate; 
+			}
+			set { 
+				if( value != m_backupCompleate){
+					m_backupCompleate = value;
+					NotifyPropertyChanged("backupCompleate");
+				}
+			}  
+		}
+	
+
+
+		private const string s_restoreCompleate = @"Restore is complete. Please wait for your device to reboot. ";
+		private string m_restoreCompleate=null;
+		[XPath(@"/localized-strings/module[@name='PropertyMaintenanceStrings' and @namespace='odm.ui.controls']/descendant::string[@name='restoreCompleate']/@value")]
+		public string restoreCompleate {
+			get { 
+				if( m_restoreCompleate == null){
+					return s_restoreCompleate;
+				}
+				return m_restoreCompleate; 
+			}
+			set { 
+				if( value != m_restoreCompleate){
+					m_restoreCompleate = value;
+					NotifyPropertyChanged("restoreCompleate");
+				}
+			}  
+		}
+	
 	}
 
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class SystemLogStrings: LocalizedStringsBase<SystemLogStrings>{
 		
 
 
 		private const string s_title = @"System log";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='SystemLogStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='SystemLogStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -3486,62 +3634,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
-	public partial class XMLExplorerStrings: LocalizedStringsBase<XMLExplorerStrings>{
-		
-
-
-		private const string s_title = @"XML explorer";
-		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='XMLExplorerStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
-		public string title {
-			get { 
-				if( m_title == null){
-					return s_title;
-				}
-				return m_title; 
-			}
-			set { 
-				if( value != m_title){
-					m_title = value;
-					NotifyPropertyChanged("title");
-				}
-			}  
-		}
-	
-
-
-		private const string s_save = @"Save";
-		private string m_save=null;
-		[XPath(@"/localized-strings/module[@name='XMLExplorerStrings' and @namespace='odm.controls']/descendant::string[@name='save']/@value")]
-		public string save {
-			get { 
-				if( m_save == null){
-					return s_save;
-				}
-				return m_save; 
-			}
-			set { 
-				if( value != m_save){
-					m_save = value;
-					NotifyPropertyChanged("save");
-				}
-			}  
-		}
-	
-	}
-
-}
-	
-
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class CommonEventsStrings: LocalizedStringsBase<CommonEventsStrings>{
 		
 
 
 		private const string s_title = @"Common events";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -3561,7 +3661,7 @@ namespace odm.controls {
 
 		private const string s_ruleID = @"Rule ID";
 		private string m_ruleID=null;
-		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.controls']/descendant::string[@name='ruleID']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ruleID']/@value")]
 		public string ruleID {
 			get { 
 				if( m_ruleID == null){
@@ -3581,7 +3681,7 @@ namespace odm.controls {
 
 		private const string s_eventID = @"Event ID";
 		private string m_eventID=null;
-		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.controls']/descendant::string[@name='eventID']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='eventID']/@value")]
 		public string eventID {
 			get { 
 				if( m_eventID == null){
@@ -3601,7 +3701,7 @@ namespace odm.controls {
 
 		private const string s_dateTime = @"Date/Time";
 		private string m_dateTime=null;
-		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.controls']/descendant::string[@name='dateTime']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='dateTime']/@value")]
 		public string dateTime {
 			get { 
 				if( m_dateTime == null){
@@ -3621,7 +3721,7 @@ namespace odm.controls {
 
 		private const string s_type = @"Type";
 		private string m_type=null;
-		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.controls']/descendant::string[@name='type']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='type']/@value")]
 		public string type {
 			get { 
 				if( m_type == null){
@@ -3641,7 +3741,7 @@ namespace odm.controls {
 
 		private const string s_details = @"Details";
 		private string m_details=null;
-		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.controls']/descendant::string[@name='details']/@value")]
+		[XPath(@"/localized-strings/module[@name='CommonEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='details']/@value")]
 		public string details {
 			get { 
 				if( m_details == null){
@@ -3662,14 +3762,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
-	public partial class PropertyLiveVideoStrings: LocalizedStringsBase<PropertyLiveVideoStrings>{
+namespace odm.ui.controls {
+	public partial class PropertyProfileEditorStrings: LocalizedStringsBase<PropertyProfileEditorStrings>{
 		
 
 
-		private const string s_title = @"Live video";
+		private const string s_title = @"Profiles";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyLiveVideoStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyProfileEditorStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -3685,19 +3785,147 @@ namespace odm.controls {
 			}  
 		}
 	
+
+
+		private const string s_newProf = @"New";
+		private string m_newProf=null;
+		[XPath(@"/localized-strings/module[@name='PropertyProfileEditorStrings' and @namespace='odm.ui.controls']/descendant::string[@name='newProf']/@value")]
+		public string newProf {
+			get { 
+				if( m_newProf == null){
+					return s_newProf;
+				}
+				return m_newProf; 
+			}
+			set { 
+				if( value != m_newProf){
+					m_newProf = value;
+					NotifyPropertyChanged("newProf");
+				}
+			}  
+		}
+	
+
+
+		private const string s_rename = @"Rename";
+		private string m_rename=null;
+		[XPath(@"/localized-strings/module[@name='PropertyProfileEditorStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rename']/@value")]
+		public string rename {
+			get { 
+				if( m_rename == null){
+					return s_rename;
+				}
+				return m_rename; 
+			}
+			set { 
+				if( value != m_rename){
+					m_rename = value;
+					NotifyPropertyChanged("rename");
+				}
+			}  
+		}
+	
+
+
+		private const string s_delete = @"Delete";
+		private string m_delete=null;
+		[XPath(@"/localized-strings/module[@name='PropertyProfileEditorStrings' and @namespace='odm.ui.controls']/descendant::string[@name='delete']/@value")]
+		public string delete {
+			get { 
+				if( m_delete == null){
+					return s_delete;
+				}
+				return m_delete; 
+			}
+			set { 
+				if( value != m_delete){
+					m_delete = value;
+					NotifyPropertyChanged("delete");
+				}
+			}  
+		}
+	
+
+
+		private const string s_select = @"Apply";
+		private string m_select=null;
+		[XPath(@"/localized-strings/module[@name='PropertyProfileEditorStrings' and @namespace='odm.ui.controls']/descendant::string[@name='select']/@value")]
+		public string select {
+			get { 
+				if( m_select == null){
+					return s_select;
+				}
+				return m_select; 
+			}
+			set { 
+				if( value != m_select){
+					m_select = value;
+					NotifyPropertyChanged("select");
+				}
+			}  
+		}
+	
 	}
 
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
+	public partial class PropertyLiveVideoStrings: LocalizedStringsBase<PropertyLiveVideoStrings>{
+		
+
+
+		private const string s_title = @"Live video";
+		private string m_title=null;
+		[XPath(@"/localized-strings/module[@name='PropertyLiveVideoStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
+		public string title {
+			get { 
+				if( m_title == null){
+					return s_title;
+				}
+				return m_title; 
+			}
+			set { 
+				if( value != m_title){
+					m_title = value;
+					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_folder = @"Select";
+		private string m_folder=null;
+		[XPath(@"/localized-strings/module[@name='PropertyLiveVideoStrings' and @namespace='odm.ui.controls']/descendant::string[@name='folder']/@value")]
+		public string folder {
+			get { 
+				if( m_folder == null){
+					return s_folder;
+				}
+				return m_folder; 
+			}
+			set { 
+				if( value != m_folder){
+					m_folder = value;
+					NotifyPropertyChanged("folder");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui.controls {
 	public partial class PropertySensorSettingsStrings: LocalizedStringsBase<PropertySensorSettingsStrings>{
 		
 
 
 		private const string s_title = @"Sensor settings";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -3717,7 +3945,7 @@ namespace odm.controls {
 
 		private const string s_brightness = @"Brightness";
 		private string m_brightness=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='brightness']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='brightness']/@value")]
 		public string brightness {
 			get { 
 				if( m_brightness == null){
@@ -3737,7 +3965,7 @@ namespace odm.controls {
 
 		private const string s_saturation = @"Color saturation";
 		private string m_saturation=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='saturation']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='saturation']/@value")]
 		public string saturation {
 			get { 
 				if( m_saturation == null){
@@ -3757,7 +3985,7 @@ namespace odm.controls {
 
 		private const string s_contrast = @"Contrast";
 		private string m_contrast=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='contrast']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='contrast']/@value")]
 		public string contrast {
 			get { 
 				if( m_contrast == null){
@@ -3777,7 +4005,7 @@ namespace odm.controls {
 
 		private const string s_sharpness = @"Sharpness";
 		private string m_sharpness=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='sharpness']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sharpness']/@value")]
 		public string sharpness {
 			get { 
 				if( m_sharpness == null){
@@ -3797,7 +4025,7 @@ namespace odm.controls {
 
 		private const string s_whitemode = @"White balance AUTO mode";
 		private string m_whitemode=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='whitemode']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='whitemode']/@value")]
 		public string whitemode {
 			get { 
 				if( m_whitemode == null){
@@ -3817,7 +4045,7 @@ namespace odm.controls {
 
 		private const string s_whiteBalanceCb = @"White balance Cb";
 		private string m_whiteBalanceCb=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='whiteBalanceCb']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='whiteBalanceCb']/@value")]
 		public string whiteBalanceCb {
 			get { 
 				if( m_whiteBalanceCb == null){
@@ -3837,7 +4065,7 @@ namespace odm.controls {
 
 		private const string s_whiteBalanceCr = @"White balance Cr";
 		private string m_whiteBalanceCr=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='whiteBalanceCr']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='whiteBalanceCr']/@value")]
 		public string whiteBalanceCr {
 			get { 
 				if( m_whiteBalanceCr == null){
@@ -3857,7 +4085,7 @@ namespace odm.controls {
 
 		private const string s_auto = @"Auto";
 		private string m_auto=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='auto']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='auto']/@value")]
 		public string auto {
 			get { 
 				if( m_auto == null){
@@ -3877,7 +4105,7 @@ namespace odm.controls {
 
 		private const string s_min = @"min";
 		private string m_min=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='min']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='min']/@value")]
 		public string min {
 			get { 
 				if( m_min == null){
@@ -3897,7 +4125,7 @@ namespace odm.controls {
 
 		private const string s_max = @"max";
 		private string m_max=null;
-		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.controls']/descendant::string[@name='max']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertySensorSettingsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='max']/@value")]
 		public string max {
 			get { 
 				if( m_max == null){
@@ -3918,14 +4146,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyChannelEventsStrings: LocalizedStringsBase<PropertyChannelEventsStrings>{
 		
 
 
 		private const string s_title = @"Events";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -3945,7 +4173,7 @@ namespace odm.controls {
 
 		private const string s_ruleID = @"Rule ID";
 		private string m_ruleID=null;
-		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.controls']/descendant::string[@name='ruleID']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ruleID']/@value")]
 		public string ruleID {
 			get { 
 				if( m_ruleID == null){
@@ -3965,7 +4193,7 @@ namespace odm.controls {
 
 		private const string s_eventID = @"Event ID";
 		private string m_eventID=null;
-		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.controls']/descendant::string[@name='eventID']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='eventID']/@value")]
 		public string eventID {
 			get { 
 				if( m_eventID == null){
@@ -3985,7 +4213,7 @@ namespace odm.controls {
 
 		private const string s_dateTime = @"Date/Time";
 		private string m_dateTime=null;
-		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.controls']/descendant::string[@name='dateTime']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='dateTime']/@value")]
 		public string dateTime {
 			get { 
 				if( m_dateTime == null){
@@ -4005,7 +4233,7 @@ namespace odm.controls {
 
 		private const string s_type = @"Type";
 		private string m_type=null;
-		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.controls']/descendant::string[@name='type']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='type']/@value")]
 		public string type {
 			get { 
 				if( m_type == null){
@@ -4025,7 +4253,7 @@ namespace odm.controls {
 
 		private const string s_details = @"Details";
 		private string m_details=null;
-		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.controls']/descendant::string[@name='details']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyChannelEventsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='details']/@value")]
 		public string details {
 			get { 
 				if( m_details == null){
@@ -4046,14 +4274,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyDepthCalibrationStrings: LocalizedStringsBase<PropertyDepthCalibrationStrings>{
 		
 
 
 		private const string s_physHeightTitle = @"Calibration settings";
 		private string m_physHeightTitle=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='physHeightTitle']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='physHeightTitle']/@value")]
 		public string physHeightTitle {
 			get { 
 				if( m_physHeightTitle == null){
@@ -4073,7 +4301,7 @@ namespace odm.controls {
 
 		private const string s_physHeightSave = @"Set";
 		private string m_physHeightSave=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='physHeightSave']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='physHeightSave']/@value")]
 		public string physHeightSave {
 			get { 
 				if( m_physHeightSave == null){
@@ -4093,7 +4321,7 @@ namespace odm.controls {
 
 		private const string s_title = @"Depth calibration";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -4113,7 +4341,7 @@ namespace odm.controls {
 
 		private const string s_focalLength = @"Focal length, mm";
 		private string m_focalLength=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='focalLength']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='focalLength']/@value")]
 		public string focalLength {
 			get { 
 				if( m_focalLength == null){
@@ -4133,7 +4361,7 @@ namespace odm.controls {
 
 		private const string s_sensorPixel = @"Photosensor pixel size, m*";
 		private string m_sensorPixel=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='sensorPixel']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sensorPixel']/@value")]
 		public string sensorPixel {
 			get { 
 				if( m_sensorPixel == null){
@@ -4153,7 +4381,7 @@ namespace odm.controls {
 
 		private const string s_matrixFormat = @"Matrix format";
 		private string m_matrixFormat=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='matrixFormat']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='matrixFormat']/@value")]
 		public string matrixFormat {
 			get { 
 				if( m_matrixFormat == null){
@@ -4173,7 +4401,7 @@ namespace odm.controls {
 
 		private const string s_save = @"Calibrate";
 		private string m_save=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='save']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='save']/@value")]
 		public string save {
 			get { 
 				if( m_save == null){
@@ -4193,7 +4421,7 @@ namespace odm.controls {
 
 		private const string s_cancel = @"Exit";
 		private string m_cancel=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='cancel']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='cancel']/@value")]
 		public string cancel {
 			get { 
 				if( m_cancel == null){
@@ -4213,7 +4441,7 @@ namespace odm.controls {
 
 		private const string s_heightMarker = @"Height marker";
 		private string m_heightMarker=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='heightMarker']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='heightMarker']/@value")]
 		public string heightMarker {
 			get { 
 				if( m_heightMarker == null){
@@ -4233,7 +4461,7 @@ namespace odm.controls {
 
 		private const string s_marker2D = @"2D-marker";
 		private string m_marker2D=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='marker2D']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='marker2D']/@value")]
 		public string marker2D {
 			get { 
 				if( m_marker2D == null){
@@ -4253,7 +4481,7 @@ namespace odm.controls {
 
 		private const string s_width = @"Width";
 		private string m_width=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='width']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='width']/@value")]
 		public string width {
 			get { 
 				if( m_width == null){
@@ -4273,7 +4501,7 @@ namespace odm.controls {
 
 		private const string s_heigth = @"Heigth";
 		private string m_heigth=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='heigth']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='heigth']/@value")]
 		public string heigth {
 			get { 
 				if( m_heigth == null){
@@ -4293,7 +4521,7 @@ namespace odm.controls {
 
 		private const string s_widthLiteral = @"w";
 		private string m_widthLiteral=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='widthLiteral']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='widthLiteral']/@value")]
 		public string widthLiteral {
 			get { 
 				if( m_widthLiteral == null){
@@ -4313,7 +4541,7 @@ namespace odm.controls {
 
 		private const string s_heigthLiteral = @"h";
 		private string m_heigthLiteral=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='heigthLiteral']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='heigthLiteral']/@value")]
 		public string heigthLiteral {
 			get { 
 				if( m_heigthLiteral == null){
@@ -4333,7 +4561,7 @@ namespace odm.controls {
 
 		private const string s_unknow = @"I don't know";
 		private string m_unknow=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='unknow']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='unknow']/@value")]
 		public string unknow {
 			get { 
 				if( m_unknow == null){
@@ -4351,9 +4579,29 @@ namespace odm.controls {
 	
 
 
+		private const string s_clibrate = @"Calibrate";
+		private string m_clibrate=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='clibrate']/@value")]
+		public string clibrate {
+			get { 
+				if( m_clibrate == null){
+					return s_clibrate;
+				}
+				return m_clibrate; 
+			}
+			set { 
+				if( value != m_clibrate){
+					m_clibrate = value;
+					NotifyPropertyChanged("clibrate");
+				}
+			}  
+		}
+	
+
+
 		private const string s_physHeight = @"Real perspector size, cm";
 		private string m_physHeight=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.controls']/descendant::string[@name='physHeight']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='physHeight']/@value")]
 		public string physHeight {
 			get { 
 				if( m_physHeight == null){
@@ -4374,14 +4622,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyVideoStreamingStrings: LocalizedStringsBase<PropertyVideoStreamingStrings>{
 		
 
 
 		private const string s_title = @"Video streaming";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -4401,7 +4649,7 @@ namespace odm.controls {
 
 		private const string s_resolution = @"Resolution, pixels";
 		private string m_resolution=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='resolution']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='resolution']/@value")]
 		public string resolution {
 			get { 
 				if( m_resolution == null){
@@ -4421,7 +4669,7 @@ namespace odm.controls {
 
 		private const string s_frameRate = @"Frame rate, fps";
 		private string m_frameRate=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='frameRate']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='frameRate']/@value")]
 		public string frameRate {
 			get { 
 				if( m_frameRate == null){
@@ -4441,7 +4689,7 @@ namespace odm.controls {
 
 		private const string s_encodingInterval = @"Encoding interval";
 		private string m_encodingInterval=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='encodingInterval']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='encodingInterval']/@value")]
 		public string encodingInterval {
 			get { 
 				if( m_encodingInterval == null){
@@ -4461,7 +4709,7 @@ namespace odm.controls {
 
 		private const string s_encoder = @"Encoder";
 		private string m_encoder=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='encoder']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='encoder']/@value")]
 		public string encoder {
 			get { 
 				if( m_encoder == null){
@@ -4481,7 +4729,7 @@ namespace odm.controls {
 
 		private const string s_bitrate = @"Target bitrate, kbps";
 		private string m_bitrate=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='bitrate']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='bitrate']/@value")]
 		public string bitrate {
 			get { 
 				if( m_bitrate == null){
@@ -4501,7 +4749,7 @@ namespace odm.controls {
 
 		private const string s_prioriy = @"Priority";
 		private string m_prioriy=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='prioriy']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='prioriy']/@value")]
 		public string prioriy {
 			get { 
 				if( m_prioriy == null){
@@ -4521,7 +4769,7 @@ namespace odm.controls {
 
 		private const string s_metadata = @"Metadata stream On/Off";
 		private string m_metadata=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='metadata']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='metadata']/@value")]
 		public string metadata {
 			get { 
 				if( m_metadata == null){
@@ -4541,7 +4789,7 @@ namespace odm.controls {
 
 		private const string s_channelName = @"Channel name";
 		private string m_channelName=null;
-		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.controls']/descendant::string[@name='channelName']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyVideoStreamingStrings' and @namespace='odm.ui.controls']/descendant::string[@name='channelName']/@value")]
 		public string channelName {
 			get { 
 				if( m_channelName == null){
@@ -4562,14 +4810,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyMetadataStrings: LocalizedStringsBase<PropertyMetadataStrings>{
 		
 
 
 		private const string s_title = @"Metadata";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyMetadataStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyMetadataStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -4585,19 +4833,39 @@ namespace odm.controls {
 			}  
 		}
 	
+
+
+		private const string s_empty = @"No metadata available";
+		private string m_empty=null;
+		[XPath(@"/localized-strings/module[@name='PropertyMetadataStrings' and @namespace='odm.ui.controls']/descendant::string[@name='empty']/@value")]
+		public string empty {
+			get { 
+				if( m_empty == null){
+					return s_empty;
+				}
+				return m_empty; 
+			}
+			set { 
+				if( value != m_empty){
+					m_empty = value;
+					NotifyPropertyChanged("empty");
+				}
+			}  
+		}
+	
 	}
 
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyDisplayAnnotationStrings: LocalizedStringsBase<PropertyDisplayAnnotationStrings>{
 		
 
 
 		private const string s_title = @"Display annotation";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -4617,7 +4885,7 @@ namespace odm.controls {
 
 		private const string s_timestamp = @"Timestamp";
 		private string m_timestamp=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='timestamp']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='timestamp']/@value")]
 		public string timestamp {
 			get { 
 				if( m_timestamp == null){
@@ -4637,7 +4905,7 @@ namespace odm.controls {
 
 		private const string s_objects = @"Moving rects";
 		private string m_objects=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='objects']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='objects']/@value")]
 		public string objects {
 			get { 
 				if( m_objects == null){
@@ -4657,7 +4925,7 @@ namespace odm.controls {
 
 		private const string s_trajectories = @"Objects and trajectories";
 		private string m_trajectories=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='trajectories']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='trajectories']/@value")]
 		public string trajectories {
 			get { 
 				if( m_trajectories == null){
@@ -4677,7 +4945,7 @@ namespace odm.controls {
 
 		private const string s_speed = @"Speed";
 		private string m_speed=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='speed']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='speed']/@value")]
 		public string speed {
 			get { 
 				if( m_speed == null){
@@ -4697,7 +4965,7 @@ namespace odm.controls {
 
 		private const string s_userRegion = @"Region of interest";
 		private string m_userRegion=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='userRegion']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='userRegion']/@value")]
 		public string userRegion {
 			get { 
 				if( m_userRegion == null){
@@ -4717,7 +4985,7 @@ namespace odm.controls {
 
 		private const string s_channelName = @"Channel name";
 		private string m_channelName=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='channelName']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='channelName']/@value")]
 		public string channelName {
 			get { 
 				if( m_channelName == null){
@@ -4735,9 +5003,29 @@ namespace odm.controls {
 	
 
 
+		private const string s_sysInfo = @"System Info";
+		private string m_sysInfo=null;
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sysInfo']/@value")]
+		public string sysInfo {
+			get { 
+				if( m_sysInfo == null){
+					return s_sysInfo;
+				}
+				return m_sysInfo; 
+			}
+			set { 
+				if( value != m_sysInfo){
+					m_sysInfo = value;
+					NotifyPropertyChanged("sysInfo");
+				}
+			}  
+		}
+	
+
+
 		private const string s_calibrationNet = @"Calibration Net";
 		private string m_calibrationNet=null;
-		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.controls']/descendant::string[@name='calibrationNet']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyDisplayAnnotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='calibrationNet']/@value")]
 		public string calibrationNet {
 			get { 
 				if( m_calibrationNet == null){
@@ -4758,14 +5046,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyTamperingDetectorsStrings: LocalizedStringsBase<PropertyTamperingDetectorsStrings>{
 		
 
 
 		private const string s_title = @"Tampering detectors";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -4785,7 +5073,7 @@ namespace odm.controls {
 
 		private const string s_signalLost = @"Signal lost";
 		private string m_signalLost=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='signalLost']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='signalLost']/@value")]
 		public string signalLost {
 			get { 
 				if( m_signalLost == null){
@@ -4805,7 +5093,7 @@ namespace odm.controls {
 
 		private const string s_globalChange = @"Global change";
 		private string m_globalChange=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='globalChange']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='globalChange']/@value")]
 		public string globalChange {
 			get { 
 				if( m_globalChange == null){
@@ -4825,7 +5113,7 @@ namespace odm.controls {
 
 		private const string s_sceneDark = @"Scene too dark";
 		private string m_sceneDark=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='sceneDark']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sceneDark']/@value")]
 		public string sceneDark {
 			get { 
 				if( m_sceneDark == null){
@@ -4845,7 +5133,7 @@ namespace odm.controls {
 
 		private const string s_sceneBright = @"Scene too bright";
 		private string m_sceneBright=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='sceneBright']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sceneBright']/@value")]
 		public string sceneBright {
 			get { 
 				if( m_sceneBright == null){
@@ -4865,7 +5153,7 @@ namespace odm.controls {
 
 		private const string s_sceneNoisy = @"Scene too noisy";
 		private string m_sceneNoisy=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='sceneNoisy']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sceneNoisy']/@value")]
 		public string sceneNoisy {
 			get { 
 				if( m_sceneNoisy == null){
@@ -4885,7 +5173,7 @@ namespace odm.controls {
 
 		private const string s_outFocus = @"Out of focus";
 		private string m_outFocus=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='outFocus']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='outFocus']/@value")]
 		public string outFocus {
 			get { 
 				if( m_outFocus == null){
@@ -4905,7 +5193,7 @@ namespace odm.controls {
 
 		private const string s_fieldObstructed = @"Field of view obstructed";
 		private string m_fieldObstructed=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='fieldObstructed']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='fieldObstructed']/@value")]
 		public string fieldObstructed {
 			get { 
 				if( m_fieldObstructed == null){
@@ -4925,7 +5213,7 @@ namespace odm.controls {
 
 		private const string s_cameraDisplaced = @"Camera displaced";
 		private string m_cameraDisplaced=null;
-		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.controls']/descendant::string[@name='cameraDisplaced']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='cameraDisplaced']/@value")]
 		public string cameraDisplaced {
 			get { 
 				if( m_cameraDisplaced == null){
@@ -4946,14 +5234,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyObjectTrackerStrings: LocalizedStringsBase<PropertyObjectTrackerStrings>{
 		
 
 
 		private const string s_title = @"Object tracker";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -4973,7 +5261,7 @@ namespace odm.controls {
 
 		private const string s_contrast = @"Contrast sensitivity";
 		private string m_contrast=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='contrast']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='contrast']/@value")]
 		public string contrast {
 			get { 
 				if( m_contrast == null){
@@ -4993,7 +5281,7 @@ namespace odm.controls {
 
 		private const string s_areaMin = @"Object area min, m*m";
 		private string m_areaMin=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='areaMin']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='areaMin']/@value")]
 		public string areaMin {
 			get { 
 				if( m_areaMin == null){
@@ -5013,7 +5301,7 @@ namespace odm.controls {
 
 		private const string s_areaMax = @"Object area max, m*m";
 		private string m_areaMax=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='areaMax']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='areaMax']/@value")]
 		public string areaMax {
 			get { 
 				if( m_areaMax == null){
@@ -5033,7 +5321,7 @@ namespace odm.controls {
 
 		private const string s_speedMax = @"Speed max, m/s";
 		private string m_speedMax=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='speedMax']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='speedMax']/@value")]
 		public string speedMax {
 			get { 
 				if( m_speedMax == null){
@@ -5053,7 +5341,7 @@ namespace odm.controls {
 
 		private const string s_stabilization = @"Stabilization time, ms";
 		private string m_stabilization=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='stabilization']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='stabilization']/@value")]
 		public string stabilization {
 			get { 
 				if( m_stabilization == null){
@@ -5071,9 +5359,29 @@ namespace odm.controls {
 	
 
 
+		private const string s_displacement = @"Displacement sensitivity";
+		private string m_displacement=null;
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='displacement']/@value")]
+		public string displacement {
+			get { 
+				if( m_displacement == null){
+					return s_displacement;
+				}
+				return m_displacement; 
+			}
+			set { 
+				if( value != m_displacement){
+					m_displacement = value;
+					NotifyPropertyChanged("displacement");
+				}
+			}  
+		}
+	
+
+
 		private const string s_direction = @"Direction";
 		private string m_direction=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='direction']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='direction']/@value")]
 		public string direction {
 			get { 
 				if( m_direction == null){
@@ -5093,7 +5401,7 @@ namespace odm.controls {
 
 		private const string s_all = @"All";
 		private string m_all=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='all']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='all']/@value")]
 		public string all {
 			get { 
 				if( m_all == null){
@@ -5113,7 +5421,7 @@ namespace odm.controls {
 
 		private const string s_none = @"None";
 		private string m_none=null;
-		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.controls']/descendant::string[@name='none']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='none']/@value")]
 		public string none {
 			get { 
 				if( m_none == null){
@@ -5129,19 +5437,39 @@ namespace odm.controls {
 			}  
 		}
 	
+
+
+		private const string s_sensitivity = @"Sensitivity";
+		private string m_sensitivity=null;
+		[XPath(@"/localized-strings/module[@name='PropertyObjectTrackerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sensitivity']/@value")]
+		public string sensitivity {
+			get { 
+				if( m_sensitivity == null){
+					return s_sensitivity;
+				}
+				return m_sensitivity; 
+			}
+			set { 
+				if( value != m_sensitivity){
+					m_sensitivity = value;
+					NotifyPropertyChanged("sensitivity");
+				}
+			}  
+		}
+	
 	}
 
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyRuleEngineStrings: LocalizedStringsBase<PropertyRuleEngineStrings>{
 		
 
 
 		private const string s_title = @"Rule engine";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -5161,7 +5489,7 @@ namespace odm.controls {
 
 		private const string s_btnAdd = @"Add";
 		private string m_btnAdd=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='btnAdd']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnAdd']/@value")]
 		public string btnAdd {
 			get { 
 				if( m_btnAdd == null){
@@ -5181,7 +5509,7 @@ namespace odm.controls {
 
 		private const string s_btnRemove = @"Remove";
 		private string m_btnRemove=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='btnRemove']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='btnRemove']/@value")]
 		public string btnRemove {
 			get { 
 				if( m_btnRemove == null){
@@ -5201,7 +5529,7 @@ namespace odm.controls {
 
 		private const string s_name = @"Name";
 		private string m_name=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='name']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='name']/@value")]
 		public string name {
 			get { 
 				if( m_name == null){
@@ -5221,7 +5549,7 @@ namespace odm.controls {
 
 		private const string s_groupRule = @"Generate alarm when:";
 		private string m_groupRule=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='groupRule']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='groupRule']/@value")]
 		public string groupRule {
 			get { 
 				if( m_groupRule == null){
@@ -5241,7 +5569,7 @@ namespace odm.controls {
 
 		private const string s_groupAction = @"Upon alarm:";
 		private string m_groupAction=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='groupAction']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='groupAction']/@value")]
 		public string groupAction {
 			get { 
 				if( m_groupAction == null){
@@ -5261,7 +5589,7 @@ namespace odm.controls {
 
 		private const string s_moving = @"Moving";
 		private string m_moving=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='moving']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='moving']/@value")]
 		public string moving {
 			get { 
 				if( m_moving == null){
@@ -5281,7 +5609,7 @@ namespace odm.controls {
 
 		private const string s_meters = @"m";
 		private string m_meters=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='meters']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='meters']/@value")]
 		public string meters {
 			get { 
 				if( m_meters == null){
@@ -5301,7 +5629,7 @@ namespace odm.controls {
 
 		private const string s_movingInDirections = @"in directions:";
 		private string m_movingInDirections=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='movingInDirections']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='movingInDirections']/@value")]
 		public string movingInDirections {
 			get { 
 				if( m_movingInDirections == null){
@@ -5321,7 +5649,7 @@ namespace odm.controls {
 
 		private const string s_loitering = @"Loitering";
 		private string m_loitering=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='loitering']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='loitering']/@value")]
 		public string loitering {
 			get { 
 				if( m_loitering == null){
@@ -5341,7 +5669,7 @@ namespace odm.controls {
 
 		private const string s_seconds = @"s";
 		private string m_seconds=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='seconds']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='seconds']/@value")]
 		public string seconds {
 			get { 
 				if( m_seconds == null){
@@ -5361,7 +5689,7 @@ namespace odm.controls {
 
 		private const string s_within = @"within";
 		private string m_within=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='within']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='within']/@value")]
 		public string within {
 			get { 
 				if( m_within == null){
@@ -5381,7 +5709,7 @@ namespace odm.controls {
 
 		private const string s_running = @"Running faster then";
 		private string m_running=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='running']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='running']/@value")]
 		public string running {
 			get { 
 				if( m_running == null){
@@ -5401,7 +5729,7 @@ namespace odm.controls {
 
 		private const string s_speed = @"m/s";
 		private string m_speed=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='speed']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='speed']/@value")]
 		public string speed {
 			get { 
 				if( m_speed == null){
@@ -5421,7 +5749,7 @@ namespace odm.controls {
 
 		private const string s_abandoning = @"Abandoning item";
 		private string m_abandoning=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='abandoning']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='abandoning']/@value")]
 		public string abandoning {
 			get { 
 				if( m_abandoning == null){
@@ -5441,7 +5769,7 @@ namespace odm.controls {
 
 		private const string s_sendOnvif = @"Send ONVIF message";
 		private string m_sendOnvif=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='sendOnvif']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='sendOnvif']/@value")]
 		public string sendOnvif {
 			get { 
 				if( m_sendOnvif == null){
@@ -5461,7 +5789,7 @@ namespace odm.controls {
 
 		private const string s_setFramerate = @"Set Framerate to";
 		private string m_setFramerate=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='setFramerate']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='setFramerate']/@value")]
 		public string setFramerate {
 			get { 
 				if( m_setFramerate == null){
@@ -5481,7 +5809,7 @@ namespace odm.controls {
 
 		private const string s_fps = @"fps";
 		private string m_fps=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='fps']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='fps']/@value")]
 		public string fps {
 			get { 
 				if( m_fps == null){
@@ -5501,7 +5829,7 @@ namespace odm.controls {
 
 		private const string s_turnOnRelay = @"Turn on";
 		private string m_turnOnRelay=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='turnOnRelay']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='turnOnRelay']/@value")]
 		public string turnOnRelay {
 			get { 
 				if( m_turnOnRelay == null){
@@ -5521,7 +5849,7 @@ namespace odm.controls {
 
 		private const string s_turnOnAnalog = @"Turn on analogue output";
 		private string m_turnOnAnalog=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='turnOnAnalog']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='turnOnAnalog']/@value")]
 		public string turnOnAnalog {
 			get { 
 				if( m_turnOnAnalog == null){
@@ -5541,7 +5869,7 @@ namespace odm.controls {
 
 		private const string s_record = @"Record to local or network drive";
 		private string m_record=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='record']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='record']/@value")]
 		public string record {
 			get { 
 				if( m_record == null){
@@ -5561,7 +5889,7 @@ namespace odm.controls {
 
 		private const string s_ptz = @"Target PTZ-camera";
 		private string m_ptz=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.controls']/descendant::string[@name='ptz']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='ptz']/@value")]
 		public string ptz {
 			get { 
 				if( m_ptz == null){
@@ -5582,14 +5910,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyAntishakerStrings: LocalizedStringsBase<PropertyAntishakerStrings>{
 		
 
 
 		private const string s_title = @"Antishaker";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyAntishakerStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyAntishakerStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -5610,14 +5938,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyRotationStrings: LocalizedStringsBase<PropertyRotationStrings>{
 		
 
 
 		private const string s_title = @"Rotation";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -5637,7 +5965,7 @@ namespace odm.controls {
 
 		private const string s_rotate = @"Rotation:";
 		private string m_rotate=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='rotate']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rotate']/@value")]
 		public string rotate {
 			get { 
 				if( m_rotate == null){
@@ -5657,7 +5985,7 @@ namespace odm.controls {
 
 		private const string s_rotate0 = @"0'(None)";
 		private string m_rotate0=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='rotate0']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rotate0']/@value")]
 		public string rotate0 {
 			get { 
 				if( m_rotate0 == null){
@@ -5677,7 +6005,7 @@ namespace odm.controls {
 
 		private const string s_rotate90 = @"90'";
 		private string m_rotate90=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='rotate90']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rotate90']/@value")]
 		public string rotate90 {
 			get { 
 				if( m_rotate90 == null){
@@ -5697,7 +6025,7 @@ namespace odm.controls {
 
 		private const string s_rotate180 = @"180'";
 		private string m_rotate180=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='rotate180']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rotate180']/@value")]
 		public string rotate180 {
 			get { 
 				if( m_rotate180 == null){
@@ -5717,7 +6045,7 @@ namespace odm.controls {
 
 		private const string s_rotate270 = @"270'";
 		private string m_rotate270=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='rotate270']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='rotate270']/@value")]
 		public string rotate270 {
 			get { 
 				if( m_rotate270 == null){
@@ -5737,7 +6065,7 @@ namespace odm.controls {
 
 		private const string s_flip = @"Flip:";
 		private string m_flip=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='flip']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='flip']/@value")]
 		public string flip {
 			get { 
 				if( m_flip == null){
@@ -5757,7 +6085,7 @@ namespace odm.controls {
 
 		private const string s_flipH0 = @"None";
 		private string m_flipH0=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='flipH0']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='flipH0']/@value")]
 		public string flipH0 {
 			get { 
 				if( m_flipH0 == null){
@@ -5777,7 +6105,7 @@ namespace odm.controls {
 
 		private const string s_flipH = @"Horizontal";
 		private string m_flipH=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='flipH']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='flipH']/@value")]
 		public string flipH {
 			get { 
 				if( m_flipH == null){
@@ -5797,7 +6125,7 @@ namespace odm.controls {
 
 		private const string s_flipV0 = @"None";
 		private string m_flipV0=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='flipV0']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='flipV0']/@value")]
 		public string flipV0 {
 			get { 
 				if( m_flipV0 == null){
@@ -5817,7 +6145,7 @@ namespace odm.controls {
 
 		private const string s_flipV = @"Vertical";
 		private string m_flipV=null;
-		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.controls']/descendant::string[@name='flipV']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyRotationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='flipV']/@value")]
 		public string flipV {
 			get { 
 				if( m_flipV == null){
@@ -5838,14 +6166,14 @@ namespace odm.controls {
 }
 	
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	public partial class PropertyAnalogueOutputStrings: LocalizedStringsBase<PropertyAnalogueOutputStrings>{
 		
 
 
 		private const string s_title = @"Analogue output";
 		private string m_title=null;
-		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.controls']/descendant::string[@name='title']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.ui.controls']/descendant::string[@name='title']/@value")]
 		public string title {
 			get { 
 				if( m_title == null){
@@ -5865,7 +6193,7 @@ namespace odm.controls {
 
 		private const string s_loop = @"Loop-through";
 		private string m_loop=null;
-		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.controls']/descendant::string[@name='loop']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.ui.controls']/descendant::string[@name='loop']/@value")]
 		public string loop {
 			get { 
 				if( m_loop == null){
@@ -5885,7 +6213,7 @@ namespace odm.controls {
 
 		private const string s_digital = @"Digital processing";
 		private string m_digital=null;
-		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.controls']/descendant::string[@name='digital']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.ui.controls']/descendant::string[@name='digital']/@value")]
 		public string digital {
 			get { 
 				if( m_digital == null){
@@ -5905,7 +6233,7 @@ namespace odm.controls {
 
 		private const string s_off = @"Off";
 		private string m_off=null;
-		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.controls']/descendant::string[@name='off']/@value")]
+		[XPath(@"/localized-strings/module[@name='PropertyAnalogueOutputStrings' and @namespace='odm.ui.controls']/descendant::string[@name='off']/@value")]
 		public string off {
 			get { 
 				if( m_off == null){

@@ -40,7 +40,7 @@ namespace odm.controllers
 		public string DeviceId { get; set; }
 		public LinkButtonsChannelID LastSelectedChannelLink { get; set; }
 		public LinkButtonsDeviceID LastSelectedDeviceLink { get; set; }
-		public ChannelDescription Channel { get; set; }
+		public ChannelModel Channel { get; set; }
 	}
 
     public class WorkflowController
@@ -54,6 +54,8 @@ namespace odm.controllers
 
 			if (Directory.Exists("meta"))
 				Directory.GetFiles(@"meta\", "*.meta").ForEach(x=>File.Delete(x));
+
+			SystemPath = Directory.GetCurrentDirectory();
 		}
         public static WorkflowController Instance
         {
@@ -68,6 +70,8 @@ namespace odm.controllers
             }
         } 
         #endregion
+
+		public string SystemPath { get; set; }
 
 		//Release all UI controllers
 		public void KillEveryBody() {
@@ -88,10 +92,10 @@ namespace odm.controllers
 				_devicesCookie.Add(devSt);
 			}
 		}
-		public void LinkChannelClicked(string DevID, LinkButtonsChannelID linkId, ChannelDescription Channel) {
+		public void LinkChannelClicked(string DevID, LinkButtonsChannelID linkId, ChannelModel Channel) {
 			var devSt = _devicesCookie.Find(x => x.DeviceId == DevID);
 			if (devSt == null)
-				devSt = new DeviceState() { DeviceId = DevID};
+				devSt = new DeviceState() { DeviceId = DevID };
 			devSt.Channel = Channel;
 			devSt.LastSelectedChannelLink = linkId;
 			devSt.LastSelectedDeviceLink = LinkButtonsDeviceID.NONE;
@@ -128,6 +132,7 @@ namespace odm.controllers
 			ReleaseTemperingController();
 			ReleaseDepthCalibrationController();
 			ReleaseObjectTrackerController();
+			ReleaseApproMotionDetectorController();
 			ReleaseEventController();
 			ReleaseRuleEngineController();
 			ReleaseAntishakerController();
@@ -135,12 +140,26 @@ namespace odm.controllers
 			ReleaseSystemLogController();
 			ReleaseImagingSettingsController();
 			ReleaseXMLExplorerController();
+			ReleaseProfileEditorController();
 		}
 		public void ReleaseControllers()
         {
 			ReleasePropertyControllers();
 			ReleaseMainFrameController();
         }
+
+		PropertyProfileEditorController _profileEditorController;
+		public PropertyProfileEditorController GetPropProfileEditorController() {
+			if (_profileEditorController == null)
+				_profileEditorController = new PropertyProfileEditorController();
+			return _profileEditorController;
+		}
+		public void ReleaseProfileEditorController() {
+			if (_profileEditorController != null) {
+				_profileEditorController.ReleaseAll();
+				_profileEditorController = null;
+			}
+		}
 
 		PropertyXMLExplorerController _xmlExplorerController;
 		public PropertyXMLExplorerController GetPropXmlExplorerController() {
@@ -441,6 +460,18 @@ namespace odm.controllers
 			if (_propObjectTrackerController != null) {
 				_propObjectTrackerController.ReleaseAll();
 				_propObjectTrackerController = null;
+			}
+		}
+		PropertyApproMotionDetectorController _propApproMotionDetectorController;
+		public PropertyApproMotionDetectorController GetPropApproMotionDetectorController() {
+			if (_propApproMotionDetectorController == null)
+				_propApproMotionDetectorController = new PropertyApproMotionDetectorController();
+			return _propApproMotionDetectorController;
+		}
+		public void ReleaseApproMotionDetectorController() {
+			if (_propApproMotionDetectorController != null) {
+				_propApproMotionDetectorController.ReleaseAll();
+				_propApproMotionDetectorController = null;
 			}
 		}		
         #endregion

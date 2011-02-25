@@ -46,7 +46,6 @@ namespace odm.controllers {
 			_devModel.RevertChanges();
 		}
 		protected override void ApplyChanges() {
-			UIProvider.Instance.ReleaseNetworkSettingsProvider();
 			_devModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
 				.Subscribe(devMod => {
 					UIProvider.Instance.GetNetworkSettingsProvider().InitView(_devModel, ApplyChanges, CancelChanges);

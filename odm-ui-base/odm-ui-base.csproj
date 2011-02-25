@@ -9,8 +9,8 @@
     <ProjectGuid>{762D85D9-AA95-494A-BF94-7BEF3392A60E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>odm.utils</RootNamespace>
-    <AssemblyName>onvifdm</AssemblyName>
+    <RootNamespace>odm.ui</RootNamespace>
+    <AssemblyName>odm-ui-base</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -67,16 +67,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.CoreEx">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.CoreEx.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.CoreEx.dll</HintPath>
     </Reference>
     <Reference Include="System.Interactive">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Interactive.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Interactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq.Async">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Linq.Async.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Linq.Async.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Reactive.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -99,7 +99,9 @@
     <Compile Include="controllers\InformationController.cs" />
     <Compile Include="controllers\LinkCheckButtonController.cs" />
     <Compile Include="controllers\PropertyAntishakerController.cs" />
+    <Compile Include="controllers\PropertyApproMotionDetectorController.cs" />
     <Compile Include="controllers\PropertyMetadataController.cs" />
+    <Compile Include="controllers\PropertyProfileEditorController.cs" />
     <Compile Include="controllers\PropertySystemLogController.cs" />
     <Compile Include="controllers\PropertyTimeSettingsController.cs" />
     <Compile Include="controllers\PropertyImagingSettingsController.cs" />
@@ -249,10 +251,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ext-libs\XmlExplorer.Controls\XmlExplorer.Controls.csproj">
-      <Project>{BF406750-6711-4034-A05A-46F8F8026CC4}</Project>
-      <Name>XmlExplorer.Controls</Name>
-    </ProjectReference>
     <ProjectReference Include="..\odm-core\odm-core.csproj">
       <Project>{1594296D-114A-4772-A5EA-4EFA85BF040A}</Project>
       <Name>odm-core</Name>

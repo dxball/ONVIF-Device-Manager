@@ -35,11 +35,12 @@ namespace odm {
 		DigitalIO,
 		Maintenance,
 		SystemLog,
-		XMLExplorer,
+		OnvifExplorer,
 		CommonEvents
 	};
 	public enum LinkButtonsChannelID {
 		NONE,
+		ProfileEditor,
 		LiveVideo,
 		ImagingSettings,
 		Events,
@@ -51,6 +52,7 @@ namespace odm {
 		Annotation,
 		TamperingDetectors,
 		Tracker,
+		ApproMotionDetector,
 		Rule,
 		Antishaker
 	};

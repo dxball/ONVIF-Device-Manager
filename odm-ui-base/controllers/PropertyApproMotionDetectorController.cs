@@ -21,40 +21,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using odm.utils.entities;
 using odm.models;
 using odm.onvif;
 using System.Threading;
-using odm.utils;
 using odm.utils.controlsUIProvider;
 
 namespace odm.controllers {
-	public class PropertyIdentificationController : BasePropertyController {
-		DeviceIdentificationModel _devModel;
+	public class PropertyApproMotionDetectorController : BasePropertyController {
+		ApproMotionDetectorModel _devModel;
 		IDisposable _subscription;
-		
+
 		protected override void LoadControl() {
-			_devModel = new DeviceIdentificationModel();
+			_devModel = new ApproMotionDetectorModel(CurrentChannel.profileToken);
 			_subscription = _devModel.Load(CurrentSession)
 				.Subscribe(arg => {
-					UIProvider.Instance.GetIdentificationProvider().InitView(_devModel, ApplyChanges, CancelChanges);
+					var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
+					UIProvider.Instance.GetApproMotionDetectorProvider().InitView(_devModel, dprocinfo, ApplyChanges, CancelChanges);
 				}, err => {
 					OnCriticalError(err);
 				});
 		}
 
-		public override void ReleaseAll() {
-			UIProvider.Instance.ReleaseIdentificationProvider();
-			if (_subscription != null) _subscription.Dispose();
-		}
 		protected override void CancelChanges() {
 			_devModel.RevertChanges();
 		}
 		protected override void ApplyChanges() {
+
 			_devModel.ApplyChanges().ObserveOn(SynchronizationContext.Current)
 				.Subscribe(devMod => {
 					_devModel = devMod;
-					UIProvider.Instance.GetIdentificationProvider().InitView(_devModel, ApplyChanges, CancelChanges);
+					//var dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
+					//UIProvider.Instance.GetObjectTrakkerProvider().InitView(_devModel, dprocinfo, ApplyChanges, CancelChanges);
 				}, err => {
 					ApplyError(err);
 				}, () => {
@@ -62,5 +59,10 @@ namespace odm.controllers {
 				});
 			OnApply(InfoFormStrings.Instance.applyChanges);
 		}
+		public override void ReleaseAll() {
+			UIProvider.Instance.ReleaseApproMotionDetectorProvider();
+			if (_subscription != null) _subscription.Dispose();
+		}
+
 	}
 }

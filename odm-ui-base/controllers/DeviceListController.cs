@@ -78,7 +78,7 @@ namespace odm.controllers {
 
 						DeviceDescriptionModel devModel = new DeviceDescriptionModel(devDescr);
 						try {
-							var session = Session.Create(devDescr);
+							var session = new Session(devDescr);//Session.Create(devDescr);
 							Guid guid = Guid.NewGuid();
 							session.SetContext<Guid>(guid);
 							devModel.Load(session).Subscribe(dModel => {
@@ -113,7 +113,6 @@ namespace odm.controllers {
 			//infoform.SetEttorXML(err);
 			//infoform.ShowCloseButton(null);
 			//infoform.ShowDialog(_devLsrCtrl);
-
 		}
 
 		void UnsubscribeFromWSDiscovery() {
@@ -135,7 +134,7 @@ namespace odm.controllers {
 		}
 
 		void SetStatusText(DeviceDescriptionModel devModel) {
-			string text1 = devModel.Name + "/" + devModel.Address + "/" + devModel.Firmware;
+			string text1 = devModel.name + "/" + devModel.address + "/" + devModel.firmware;
 			UIProvider.Instance.GetMainWindowProvider().SetStatusBarText1(text1);
 		}
 
@@ -145,22 +144,8 @@ namespace odm.controllers {
 			WSDiscoveryStartup();
 		}
 
-		XmlExplorer.Controls.TabbedXmlExplorerWindow _dumpWnd;
 		DeviceDescriptionModel _currentSelection;
 		public void CreateDumpViewer() {
-			if (_dumpWnd == null || _dumpWnd.IsDisposed)
-				_dumpWnd = new XmlExplorer.Controls.TabbedXmlExplorerWindow();
-			_dumpWnd.Show();
-			DumpModel onvifDump = new DumpModel();
-			if (_currentSelection != null) {
-				onvifDump.Load(_currentSelection.session).Subscribe(arg => {
-
-					_dumpWnd.Open(arg.xmlDump.CreateNavigator(), arg.name);
-
-				}, err => {
-				});
-
-			}
 		}
 	}
 }

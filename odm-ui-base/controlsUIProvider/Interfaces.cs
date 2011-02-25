@@ -1,10 +1,31 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using odm.models;
 using odm.controllers;
 using System.Windows.Media;
+using onvif.services.media;
+using onvif;
 
 namespace odm.utils.controlsUIProvider {
 	public interface IAnalogueOutProvider {
@@ -12,7 +33,7 @@ namespace odm.utils.controlsUIProvider {
 		void ReleaseUI();
 	}
 	public interface IAntishakerProvider {
-		void InitView(LiveVideoModel devModel, DataProcessInfo datProcInfo, Action ApplyChanges, Action CancelChanges);
+		void InitView(AntishakerModel devModel, DataProcessInfo datProcInfo, Action ApplyChanges, Action CancelChanges);
 		void ReleaseUI();
 	}
 	public interface ICommonEventsProvider {
@@ -29,8 +50,8 @@ namespace odm.utils.controlsUIProvider {
 		void CreateDeviceListControl(Action<DeviceDescriptionModel> itemSelected, Action refreshDevicesList, Action CreateD);
 		void FillDeviceList();
 		void RefreshDevicesList();
-		void RemoveDeviceDescription(DeviceDescriptionModel devModel);
-		void AddDeviceDescription(DeviceDescriptionModel devModel);
+		void RemoveDeviceDescription(IDeviceDescriptionModel devModel);
+		void AddDeviceDescription(IDeviceDescriptionModel devModel);
 		void ReleaseUI();
 	}
 	public interface IDigitalIOProvider {
@@ -42,7 +63,7 @@ namespace odm.utils.controlsUIProvider {
 		void ReleaseUI();
 	}
 	public interface IEventsProvider {
-		void InitView(List<EventDescriptor> eventList, ChannelDescription chan);
+		void InitView(List<EventDescriptor> eventList, ChannelModel chan);
 		void AddEvent(EventDescriptor evDescr);
 		void RemoveEvent(EventDescriptor evDescr);
 		void ReleaseUI();
@@ -65,12 +86,14 @@ namespace odm.utils.controlsUIProvider {
 		void ReleaseUI();
 	}
 	public interface ILiveVideoProvider {
-		void InitView(LiveVideoModel devModel, DataProcessInfo datProcInfo, Action StartRecording, Action StopRecording);
+		void InitView(LiveVideoModel devModel, DataProcessInfo datProcInfo, Action<string>SetRecordingPath, Action StartRecording, Action StopRecording);
 		void ReleaseUI();
 	}
 	public interface IMainFrameProvider {
 		void ReturnToMainFrame();
-		void InitView(DeviceCapabilityModel devModel, Action<ChannelDescription> ChanelSelected, ImageSource devImg);
+		void InitView(DeviceCapabilityModel devModel, ImageSource devImg);
+		void AddChannelControl(VideoSourceToken chan, Action<ChannelModel> chanSelect);
+		void InitChannelControl(ChannelModel chan);
 		void DeviceLoadingControl();
 		void HidePropertyContainer();
 		void ShowPropertyContainer();
@@ -79,20 +102,20 @@ namespace odm.utils.controlsUIProvider {
 		void ClearPropertyContainer();
 		void ClearUI();
 		void ReleaseAll();
-		void SetChannelImage(System.Drawing.Bitmap CurrentImage, string SourceToken);
+		void SetChannelImage(System.Drawing.Bitmap CurrentImage, VideoSourceToken SourceToken);
 		void CreateDeviceControl(DeviceCapabilityModel devModel, ImageSource devImg);
-		void FillChannelsControl(DeviceCapabilityModel devModel, Action<ChannelDescription> chanSelect);
-		void SetChannelName(ChannelDescription chan, string name);
+		//void FillChannelsControl(DeviceCapabilityModel devModel, Action<ChannelModel> chanSelect);
+		void SetChannelName(ChannelModel chan, string name);
 		void ReleaseUI();
 		void SetLinkSelection();
 		void ReleaseLinkSelection();
 		void AddDeviceLinkButton(Action click, bool IsChackable, bool Enabled, LinkButtonsDeviceID linkID);
-		void AddChannelLinkButton(Action click, ChannelDescription channel, bool IsChackable,
+		void AddChannelLinkButton(Action click, ChannelModel channel, bool IsChackable,
 											bool IsChecked, bool Enabled, LinkButtonsChannelID linkID,
 											Action<bool, Action> chBoxSwitched);
 	}
 	public interface IMaintenanceProvider {
-		void InitView(DeviceMaintenanceModel devModel, Action<string> UpgradeFirmware, Action SoftReset);
+		void InitView(MaintenanceModel devModel, Action<string> UpgradeFirmware, Action SoftReset, Action<string> backup, Action<string> restore);
 		void ReleaseUI();
 	}
 	public interface IMainWindowProvider {
@@ -119,6 +142,10 @@ namespace odm.utils.controlsUIProvider {
 		void InitView(ObjectTrackerModel devModel, DataProcessInfo datProcInfo, Action ApplyChanges, Action CancelChanges); 
 		void ReleaseUI();
 	}
+	public interface IApproMotionDetectorProvider {
+		void InitView(ApproMotionDetectorModel devModel, DataProcessInfo datProcInfo, Action ApplyChanges, Action CancelChanges);
+		void ReleaseUI();
+	}
 	public interface IRotationProvider {
 		void InitView(AnnotationsModel devModel, DataProcessInfo datProcInfo);
 		void ReleaseUI();
@@ -128,11 +155,11 @@ namespace odm.utils.controlsUIProvider {
 		void ReleaseUI();
 	}
 	public interface ISystemLogProvider {
-		void InitView();
+		void InitView(SystemLogModel model);
 		void ReleaseUI();
 	}
 	public interface ITamperingDetectorsProvider {
-		void InitView(AnnotationsModel devModel, DataProcessInfo datProcInfo, Action ApplyChanges, Action CancelChanges);
+		void InitView(TamperingDetectorsModel devModel, DataProcessInfo datProcInfo, Action ApplyChanges, Action CancelChanges);
 		void ReleaseUI();
 	}
 	public interface ITimeSettingsProvider {
@@ -148,9 +175,17 @@ namespace odm.utils.controlsUIProvider {
 		void InitView(DumpModel devModel);
 		void ReleaseUI();
 	}
+	public interface IProfileEditorProvider {
+		void InitView(List<Profile> plst, ProfileToken profileToken, Action createNew, Action<Profile> renameProfile, Action<Profile> selectProfile, Action<Profile> deleteProfile);
+		void AddProfile(Profile prof);
+		void DeleteProfile(Profile prof);
+		void ReleaseUI();
+	}
 	public interface IUIProvider {
 		void ReleaseAll();
 		void ReleaseMainFrameContainer();
+		IProfileEditorProvider GetProfileEditorProvider();
+		void ReleaseProfileEditorProvider();
 		IXMLExplorerProvider GetXMLExplorerProvider();
 		void ReleaseXMLExplorerProvider();
 		IImagingSettingsProvider GetImagingSettingsProvider();
@@ -189,6 +224,8 @@ namespace odm.utils.controlsUIProvider {
 		void ReleaseNetworkSettingsProvider();
 		IObjectTrakkerProvider GetObjectTrakkerProvider();
 		void ReleaseObjectTrakkerProvider();
+		IApproMotionDetectorProvider GetApproMotionDetectorProvider();
+		void ReleaseApproMotionDetectorProvider();
 		IRotationProvider GetRotationProvider();
 		void ReleaseRotationProvider();
 		IRuleEngineProvider GetRuleEngineProvider();

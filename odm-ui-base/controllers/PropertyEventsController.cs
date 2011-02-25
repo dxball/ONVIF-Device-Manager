@@ -29,18 +29,18 @@ using odm.utils.controlsUIProvider;
 namespace odm.controllers {
 	public class PropertyEventsController : BasePropertyController {
 		public void EventHandler(EventDescriptor evDescr){
-			if (CurrentChannel.Id == evDescr.ChannelID)
+			if (CurrentChannel.sourceToken == evDescr.ChannelID)
 				UIProvider.Instance.GetEventsProvider().AddEvent(evDescr);
 		}
 		public void RemoveEvent(EventDescriptor evDescr) {
-			if (CurrentChannel.Id == evDescr.ChannelID)
+			if (CurrentChannel.sourceToken == evDescr.ChannelID)
 				UIProvider.Instance.GetEventsProvider().RemoveEvent(evDescr);
 		}
 
-		public override void CreateController(Session session, ChannelDescription chan) {
+		public override void CreateController(Session session, ChannelModel chan) {
 			CurrentChannel = chan;
 
-			var eventList = WorkflowController.Instance.GetMainFrameController().GetEventList(CurrentChannel.Id);
+			var eventList = WorkflowController.Instance.GetMainFrameController().GetEventList(CurrentChannel.sourceToken);
 			UIProvider.Instance.GetEventsProvider().InitView(eventList, CurrentChannel);
 
 			WorkflowController.Instance.GetMainFrameController().EventAction = EventHandler;

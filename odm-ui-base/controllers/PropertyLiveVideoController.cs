@@ -26,6 +26,8 @@ using odm.onvif;
 using odm.models;
 using odm.utils;
 using odm.utils.controlsUIProvider;
+using System.Threading;
+using System.IO;
 
 namespace odm.controllers {
 	public class PropertyLiveVideoController : BasePropertyController{
@@ -34,42 +36,47 @@ namespace odm.controllers {
 		DataProcessInfo dprocinfo;
 		bool isRecording;
 		protected override void LoadControl() {
-			_devModel = new LiveVideoModel(CurrentChannel);
+			_devModel = new LiveVideoModel(CurrentChannel.profileToken);
 			_subscription = _devModel.Load(CurrentSession).Subscribe(arg => {
 				dprocinfo = WorkflowController.Instance.GetMainFrameController().GetProcessByChannel(CurrentChannel);
-				UIProvider.Instance.GetLiveVideoProvider().InitView(_devModel, dprocinfo, StartRecording, StopRecording);
+				UIProvider.Instance.GetLiveVideoProvider().InitView(_devModel, dprocinfo, SetRecordingFolder, StartRecording, StopRecording);
 			}, err => {
 				OnCriticalError(err);
 			});
 		}
-
+		public void SetRecordingFolder(string path) {
+			savingPath = path;
+		}
+		string savingPath = "";
 		public void StartRecording() {
 			//[CHANNEL_NAME]_YY-MM-DD_HH'MM'SS.TS
-			string path = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
-			if (!System.IO.Directory.Exists(path)) {
-				dbg.Error("Directory "+ path+" does not exists");
-				return;
-			}
+			string path = savingPath;
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
+
 			if (dprocinfo == null || dprocinfo.iPlayer == null) {
 				dbg.Error("iPlayer == null");
 				return;
 			}
 			var time = DateTime.Now;
-			path += @"\" + CurrentChannel.Name + "_" + time.Year + "-" + time.Month + "-" + time.Day + "_" + time.Hour + "'" + time.Minute + "'" + time.Second + ".TS";
+			path += @"\" + CurrentChannel.name + "_" + time.Year + "-" + time.Month + "-" + time.Day + "_" + time.Hour + "'" + time.Minute + "'" + time.Second + ".TS";
 			try {
-				dprocinfo.iPlayer.StartRecord(path);
-				isRecording = true;
+				
+				dprocinfo.iPlayer.StartRecord(path, 30).ObserveOn(SynchronizationContext.Current).Subscribe(x=>{
+					isRecording = true;
+				});
 			} catch (Exception err) {
 				dbg.Error(err);
 
 			}
 		}
-
+		
 		public void StopRecording() {
 			if (isRecording) {
 				try {
-					dprocinfo.iPlayer.StopRecord();
-					isRecording = false;
+					dprocinfo.iPlayer.StopRecord().ObserveOn(SynchronizationContext.Current).Subscribe(x => {
+						isRecording = false;
+					});
 				} catch (Exception err) {
 					dbg.Error(err);
 				}
