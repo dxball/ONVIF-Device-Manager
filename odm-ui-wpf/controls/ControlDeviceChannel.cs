@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,22 +30,31 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using odm.utils.extensions;
-
 namespace odm.ui.controls {
 	/// <summary>
-	/// Interaction logic for LoadingPropertyPage.xaml
+	/// Interaction logic for HeaderedColumn.xaml
 	/// </summary>
-	public partial class LoadingPropertyPage : BasePropertyControl {
-		public LoadingPropertyPage() {
-			InitializeComponent();
-
-			Localization();
+	public partial class ControlDeviceChannel : ContentControl {
+		public static DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(ControlDeviceChannel));
+		public static DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(FrameworkElement), typeof(ControlDeviceChannel));
+		public ControlDeviceChannel() {
+			//this.InitializeComponent();
 		}
-		CommonApplicationStrings _strings = new CommonApplicationStrings();
-
-		void Localization() {
-			column.CreateBinding(ContentColumn.TitleProperty, _strings, x => x.loadingData);
+		public string Title {
+			get {
+				return (string)GetValue(TitleProperty);
+			}
+			set {
+				SetValue(TitleProperty, value);
+			}
+		}
+		public FrameworkElement Header {
+			get {
+				return (FrameworkElement)GetValue(HeaderProperty);
+			}
+			set {
+				SetValue(HeaderProperty, value);
+			}
 		}
 	}
 }

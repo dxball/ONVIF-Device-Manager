@@ -1,4 +1,23 @@
-﻿using System;
+﻿#region License and Terms
+//----------------------------------------------------------------------------------------------------------------
+// Copyright (C) 2010 Synesis LLC and/or its subsidiaries. All rights reserved.
+//
+// Commercial Usage
+// Licensees  holding  valid ONVIF  Device  Manager  Commercial  licenses may use this file in accordance with the
+// ONVIF  Device  Manager Commercial License Agreement provided with the Software or, alternatively, in accordance
+// with the terms contained in a written agreement between you and Synesis LLC.
+//
+// GNU General Public License Usage
+// Alternatively, this file may be used under the terms of the GNU General Public License version 3.0 as published
+// by  the Free Software Foundation and appearing in the file LICENSE.GPL included in the  packaging of this file.
+// Please review the following information to ensure the GNU General Public License version 3.0 
+// requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+// 
+// If you have questions regarding the use of this file, please contact Synesis LLC at onvifdm@synesis.ru.
+//----------------------------------------------------------------------------------------------------------------
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +35,7 @@ using odm.utils;
 using System.Globalization;
 using System.Diagnostics;
 
-namespace odm.controls {
+namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for VideoPlayer.xaml
 	/// </summary>
@@ -25,10 +44,13 @@ namespace odm.controls {
 			InitializeComponent();
 		}
 		public void ReleaseAll() {
-			if (_ftimer != null)
+			if (_ftimer != null) {
+				_ftimer.Stop();
 				_ftimer.Dispose();
+			}
 			_ftimer = null;
 		}
+
 		public void InitPlayback(Rect res) {
 			//Start Playback
 			try {
@@ -90,9 +112,13 @@ namespace odm.controls {
 					int buffSize = (int)size.Width * (int)size.Height * 4;
 					int stride = (int)size.Width * 4;
 
-					wrBmp.Lock();
-					wrBmp.WritePixels(new Int32Rect(0, 0, (int)size.Width, (int)size.Height), ptr, buffSize, stride, 0, 0);
-					wrBmp.Unlock();
+					try {
+						wrBmp.Lock();
+						wrBmp.WritePixels(new Int32Rect(0, 0, (int)size.Width, (int)size.Height), ptr, buffSize, stride, 0, 0);
+						wrBmp.Unlock();
+					} catch (Exception err) {
+						dbg.Error(err);
+					}
 
 
 					textBlock1.Text = fps.ToString();

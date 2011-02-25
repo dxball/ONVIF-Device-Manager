@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="odm.controls.SavingSettingsControl"
+﻿<UserControl x:Class="odm.ui.controls.SavingSettingsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

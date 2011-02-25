@@ -31,22 +31,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using odm.utils.extensions;
-
 namespace odm.ui.controls {
 	/// <summary>
-	/// Interaction logic for LoadingPropertyPage.xaml
+	/// Interaction logic for wndClose.xaml
 	/// </summary>
-	public partial class LoadingPropertyPage : BasePropertyControl {
-		public LoadingPropertyPage() {
+	public partial class wndClose : UserControl {
+		public wndClose() {
 			InitializeComponent();
-
-			Localization();
-		}
-		CommonApplicationStrings _strings = new CommonApplicationStrings();
-
-		void Localization() {
-			column.CreateBinding(ContentColumn.TitleProperty, _strings, x => x.loadingData);
 		}
 	}
 }

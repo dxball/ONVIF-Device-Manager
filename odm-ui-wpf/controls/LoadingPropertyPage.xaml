@@ -1,13 +1,14 @@
-﻿<Local:BasePropertyControl x:Class="odm.controls.LoadingPropertyPage"
-                           xmlns:Local="clr-namespace:odm.controls"
+﻿<Local:BasePropertyControl x:Class="odm.ui.controls.LoadingPropertyPage"
+                           xmlns:Local="clr-namespace:odm.ui.controls"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="108" d:DesignWidth="300" xmlns:my="clr-namespace:odm.controls">
-    <Grid>
-        <my:Title x:Name="title" VerticalAlignment="Top" />
-        <ProgressBar Height="10" Margin="12,75,12,0" Name="progressBar1" VerticalAlignment="Top" IsIndeterminate="True" />
-    </Grid>
+             d:DesignHeight="128" d:DesignWidth="300" xmlns:my="clr-namespace:odm.ui.controls">
+    <Local:ContentColumn x:Name="column" Background="{DynamicResource ResourceKey=PropertyBrush}">
+        <Grid MinWidth="250">
+            <ProgressBar Height="15" Margin="12,50,12,16" Name="progressBar1" VerticalAlignment="Top" IsIndeterminate="True" />
+        </Grid>
+    </Local:ContentColumn>
 </Local:BasePropertyControl>

@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="odm.ui.controls.wndClose"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <StackPanel Orientation="Horizontal">
+        <Button Name="min" Margin="2,0,0,0" Style="{DynamicResource minimize}" Width="24" Height="24" Cursor="Hand"/>
+        <Button Name="max"  Margin="2,0,0,0" Style="{DynamicResource maximize}" Width="24" Height="24" Cursor="Hand"/>
+        <Button Name="close" Style="{DynamicResource closeWindow}" Width="24" Height="24" Margin="2" Cursor="Hand" />
+    </StackPanel>
+</UserControl>
