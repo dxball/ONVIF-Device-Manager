@@ -59,7 +59,6 @@ VideoSink::VideoSink(UsageEnvironment& aEnv, CodecID aCodecID,
   , mSilentMode(aSilentMode)
   , mRecord(aRecord)
   , mFilePath(aFilePath)
-  , mWriter(nullptr)
 {
 	mAVCodec = avcodec_find_decoder(aCodecID);
 	if (!mAVCodec) {
@@ -97,23 +96,13 @@ VideoSink::VideoSink(UsageEnvironment& aEnv, CodecID aCodecID,
 	if (!mAVFrame){
 	  throw "failed to allocate frame\n";
   }
-  int numBytes = mHeight * mStride;//avpicture_get_size(PIX_FMT_RGB32, mWidth, mHeight);
+  int numBytes = mHeight * mStride;
   if (numBytes > 0)
   {
     mFileMap = new FileMap(aMapName);
     if (mFileMap)
     {
       mFileMapBuffer = mFileMap->ViewOfFile(numBytes);
-      if (mFileMapBuffer)
-      {
-        /*mAVFrameRGB = avcodec_alloc_frame();
-        if (mAVFrameRGB)
-        {
-          avpicture_fill((AVPicture*)mAVFrameRGB, (uint8_t*)mFileMapBuffer,
-                  mPixFormat, mWidth, mHeight);
-          mAVFrameRGB->linesize[0] = mStride;
-        }*/
-      }
     }
   }
   InitializeCriticalSection(&mCS);
@@ -125,10 +114,6 @@ VideoSink::VideoSink(UsageEnvironment& aEnv, CodecID aCodecID,
   
   mEvent = CreateEventA(NULL, TRUE, FALSE, (LPCSTR)uuid_cstr);
   RpcStringFreeA(&uuid_cstr);
-  /*if (!mEvent)
-  {
-    return mInstance.RaiseError("Event cann't be created");
-  }*/
 }
 
 VideoSink::~VideoSink()
@@ -142,11 +127,6 @@ VideoSink::~VideoSink()
     mEvent = INVALID_HANDLE_VALUE;
   }
   DeleteCriticalSection(&mCS);
-  /*if (mAVFrameRGB)
-  {
-    av_free(mAVFrameRGB);
-    mAVFrameRGB = NULL;
-  }*/
   if (!mFileMap)
   {
     if (mFileMapBuffer)
@@ -226,36 +206,13 @@ VideoSink::afterGettingFrame1(unsigned aFrameSize,
   AVPacket avpkt;
   avpkt.data = pBuffer;
   avpkt.size = size;
-  while (avpkt.size > 0) {
+  while (avpkt.size > sizeof(startCode4)) {
     auto len = avcodec_decode_video2(mAVCodecContext, mAVFrame, &got_frame, &avpkt);
     if (len < 0) {
       fprintf(stderr, "Error while decoding frame %d\n");
       return;
     }
     if (got_frame) {
-      //record
-      int isRecording = 0;
-      mRecord.GetValue(isRecording);
-      if (isRecording) {
-        if (!mWriter) {
-          mWriter = new TSWriter(mFilePath,
-            mAVCodecContext->bit_rate ? mAVCodecContext->bit_rate : 400000,
-            mAVCodecContext->coded_width, mAVCodecContext->coded_height,
-            /*mAVCodecContext->time_base.den ? mAVCodecContext->time_base.den :*/ 25,
-            mAVCodecContext->pix_fmt);
-        }
-        if (mWriter->hasError()) {
-          fprintf(stderr, "Could not create writer\n");
-          delete mWriter;
-          mWriter = nullptr;
-        } else {
-          mWriter->write_picture(mAVFrame);
-        }
-      } else if (mWriter) {
-        delete mWriter;
-        mWriter = nullptr;
-      }
-      //end record
 
       auto scale_ctx = sws_getContext(mAVCodecContext->coded_width,
         mAVCodecContext->coded_height, mAVCodecContext->pix_fmt,
@@ -296,6 +253,16 @@ VideoSink::afterGettingFrame1(unsigned aFrameSize,
 }
 
 static const DWORD s_BufferSizeInMillisec = 2000;
+struct SRecordData {
+  std::string mFilePath;
+
+  int mWidth;
+  int mHeight;
+  PixelFormat mPixFmt;
+
+  HANDLE mEvent;
+  uint8_t *mBuffer;
+};
 
 void
 VideoSink::PlayerThread(void *aArg)
@@ -304,27 +271,102 @@ VideoSink::PlayerThread(void *aArg)
   if (pSink)
   {
     auto bufSize = sizeof(unsigned char) * pSink->mHeight * pSink->mStride;
+    SRecordData recData;
+    recData.mHeight = pSink->mHeight;
+    recData.mWidth = pSink->mWidth;
+    recData.mPixFmt = pSink->mPixFormat;
+    recData.mBuffer = new uint8_t[bufSize];
+
+    uintptr_t thread = NULL;
     while (1)
     {
-      DWORD sleep_i = s_BufferSizeInMillisec / (1 + pSink->mQueue.size());
-      //printf("Queue size: %ld; Wait: %ld\n", pSink->mQueue.size(), sleep_i);
+      unsigned int queueSize = 0;
+      EnterCriticalSection(&pSink->mCS);
+      queueSize = pSink->mQueue.size();
+      LeaveCriticalSection(&pSink->mCS);
+
+      DWORD sleep_i = s_BufferSizeInMillisec / (1 + queueSize);
       Sleep(sleep_i);
+
       DWORD res = WaitForSingleObject(pSink->mEvent, 0);
       if (WAIT_OBJECT_0 == res) break;
         
-      if (pSink->mQueue.size() > 0)
+      if (queueSize > 0)
       {
         EnterCriticalSection(&pSink->mCS);
         auto frame = pSink->mQueue.front();
+        pSink->mQueue.pop_front();
+        LeaveCriticalSection(&pSink->mCS);
+
+        //record
+        int isRecording = 0;
+        pSink->mRecord.GetValue(isRecording);
+        if (isRecording) {
+          recData.mFilePath = pSink->mFilePath;
+          if (recData.mBuffer)
+            memcpy(recData.mBuffer, frame, bufSize);
+          if (!thread) {
+            //create event
+            UUID uuid;
+            UuidCreate(&uuid);
+            unsigned char *uuid_cstr = NULL;
+            UuidToStringA(&uuid, &uuid_cstr);
+            recData.mEvent = CreateEventA(NULL, TRUE, FALSE, (LPCSTR)uuid_cstr);
+            RpcStringFreeA(&uuid_cstr);
+            //create thread
+            thread = _beginthread(&(VideoSink::RecorderThread), 0, &recData);
+          }
+        } else if (thread) {
+          SetEvent(recData.mEvent);
+          WaitForSingleObject((HANDLE)thread, INFINITE);
+          thread = NULL;
+          CloseHandle(recData.mEvent);
+          recData.mEvent = INVALID_HANDLE_VALUE;
+        }
+        //end record
 
         int silentMode = 0;
         pSink->mSilentMode.GetValue(silentMode);
         if (!silentMode)
           memcpy(pSink->mFileMapBuffer, frame, bufSize);
         delete []frame;
-        pSink->mQueue.pop_front();
-        LeaveCriticalSection(&pSink->mCS);
       }
+    }
+    if (thread) {
+      SetEvent(recData.mEvent);
+      WaitForSingleObject((HANDLE)thread, INFINITE);
+      thread = NULL;
+      CloseHandle(recData.mEvent);
+      recData.mEvent = INVALID_HANDLE_VALUE;
+    }
+  }
+}
+  
+void
+VideoSink::RecorderThread(void *aArg) {
+  SRecordData *pSink = (SRecordData *)aArg;
+  if (pSink)
+  {
+    TSWriter writer(pSink->mFilePath, 400000,
+            pSink->mWidth, pSink->mHeight, 25,
+            pSink->mPixFmt);
+    auto frame = avcodec_alloc_frame();
+    avpicture_fill((AVPicture *)frame, pSink->mBuffer,
+                      pSink->mPixFmt, pSink->mWidth, pSink->mHeight);
+    DWORD sleep_i = writer.getTicksPerFrame()/*1000 / 25*/;
+    while (1)
+    {
+      DWORD res = WaitForSingleObject(pSink->mEvent, 0);
+      if (WAIT_OBJECT_0 == res) break;
+      if (writer.hasError()) {
+        fprintf(stderr, "Could not create writer\n");
+        fprintf(stderr, writer.getError().c_str());
+        fprintf(stderr, pSink->mFilePath.c_str());
+        break;
+      } else {
+        writer.write_picture(frame);
+      }
+      Sleep(sleep_i);
     }
   }
 }

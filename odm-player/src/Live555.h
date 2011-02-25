@@ -34,7 +34,6 @@ public:
   }
   void StopRecord() {
     mRecord.SetValue(0);
-    mFilePath = nullptr;
   }
 private:
   Live555(OnvifInstance& aInstance, const std::string& aURL,

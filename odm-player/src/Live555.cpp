@@ -154,193 +154,199 @@ template<class F> class lambda_wrapper {
 
 template<class F> F* lambda_wrapper<F>::func_ = 0;
 
+#include <iostream>
 void
 Live555::ThreadCallback(void *aArg)
 {
-  if (aArg)
-  {
-    Live555 *pLive = (Live555 *)aArg;
-    unsigned int buf_size = 2000 * 2000;
-
-    av_log_set_callback(make_function_pointer([pLive](void *aClass, int aLevel, const char *aMsg, va_list aArgs){
-      char buf[255];
-      const char *source = NULL;
-
-#if defined(_WIN32)
-      //work around // we have %td from av_codec
-      std::string msg(aMsg);
-      size_t pos = std::string::npos;
-      while (std::string::npos != (pos = msg.find("%td")))
-        msg.replace(pos, 3, "%ld");
-      //work around // we have %td from av_codec
-#endif
-
-      vsprintf_s<255>(buf, msg.c_str(), aArgs);
-      if (aClass)
-      {
-        AVClass* avc= aClass ? *(AVClass**)aClass : NULL;
-        if (avc)
-          source = avc->item_name(aClass);
-      }
-      pLive->mInstance.Log(buf, source, (AV_LOG_FATAL == aLevel || AV_LOG_ERROR == aLevel) ?
-        LOG_ERROR : (AV_LOG_WARNING == aLevel ? LOG_WARNING : LOG_INFORMATION));
-    }));
-
-    class LiveUsageEnvironment : public BasicUsageEnvironment
+  try {
+    if (aArg)
     {
-    public:
-      static LiveUsageEnvironment * Create(OnvifInstance& aInstance, TaskScheduler& aScheduler)
-      {
-        return new LiveUsageEnvironment(aInstance, aScheduler);
-      }
+      Live555 *pLive = (Live555 *)aArg;
+      unsigned int buf_size = 2000 * 2000;
+      avcodec_register_all();
+      av_register_all();
 
-      virtual void setResultMsg(MsgString msg)
-      {
-        BasicUsageEnvironment::setResultMsg(msg);
-        mInstance.Log(getResultMsg(), "live555", LOG_INFORMATION);
-      }
-      virtual void setResultMsg(MsgString msg1, MsgString msg2)
-      {
-        BasicUsageEnvironment::setResultMsg(msg1, msg2);
-        mInstance.Log(getResultMsg(), "live555", LOG_INFORMATION);
-      }
-      virtual void setResultMsg(MsgString msg1, MsgString msg2, MsgString msg3)
-      {
-        BasicUsageEnvironment::setResultMsg(msg1, msg2, msg3);
-        mInstance.Log(getResultMsg(), "live555", LOG_INFORMATION);
-      }
-      virtual void setResultErrMsg(MsgString msg, int err = 0)
-      {
-        BasicUsageEnvironment::setResultErrMsg(msg, err);
-        mInstance.Log(getResultMsg(), "live555", LOG_ERROR);
-      }
+      av_log_set_callback(make_function_pointer([pLive](void *aClass, int aLevel, const char *aMsg, va_list aArgs){
+        char buf[255];
+        const char *source = NULL;
 
-      // 'console' output:
-      virtual UsageEnvironment& operator<<(char const* str)
-      {
-        char buf[1024];
-        sprintf_s<1024>(buf, "%s", str);
-        mInstance.Log(buf, "live555", LOG_INFORMATION);
-        return *this;
-      }
-      virtual UsageEnvironment& operator<<(int i)
-      {
-        char buf[1024];
-        sprintf_s<1024>(buf, "%d", i);
-        mInstance.Log(buf, "live555", LOG_INFORMATION);
-        return *this;
-      }
-      virtual UsageEnvironment& operator<<(unsigned u)
-      {
-        char buf[1024];
-        sprintf_s<1024>(buf, "%u", u);
-        mInstance.Log(buf, "live555", LOG_INFORMATION);
-        return *this;
-      }
-      virtual UsageEnvironment& operator<<(double d)
-      {
-        char buf[1024];
-        sprintf_s<1024>(buf, "%f", d);
-        mInstance.Log(buf, "live555", LOG_INFORMATION);
-        return *this;
-      }
-      virtual UsageEnvironment& operator<<(void* p)
-      {
-        char buf[1024];
-        sprintf_s<1024>(buf, "%p", p);
-        mInstance.Log(buf, "live555", LOG_INFORMATION);
-        return *this;
-      }
-    protected:
-      LiveUsageEnvironment(OnvifInstance& aInstance, TaskScheduler& aScheduler)
-        : BasicUsageEnvironment(aScheduler)
-        , mInstance(aInstance) { }
-      virtual ~LiveUsageEnvironment() {}
-    private:
-      OnvifInstance& mInstance;
-    };
+  #if defined(_WIN32)
+        //work around // we have %td from av_codec
+        std::string msg(aMsg);
+        size_t pos = std::string::npos;
+        while (std::string::npos != (pos = msg.find("%td")))
+          msg.replace(pos, 3, "%ld");
+        //work around // we have %td from av_codec
+  #endif
 
-    auto scheduler = LiveTaskScheduler::Create(pLive->mEvent);	
-    auto env = LiveUsageEnvironment::Create(pLive->mInstance, *scheduler);
-    auto rtspClient = RTSPClient::createNew(*env, 1);
-    auto sdp = rtspClient->describeURL(pLive->mUrl.c_str());
-    auto session = MediaSession::createNew(*env, sdp);
-
-    if(NULL != session){
-      MediaSubsessionIterator itor(*session);
-      auto subsession = itor.next();
-      while(NULL != subsession) {
-        if(subsession->initiate(0)){
-          rtspClient->setupMediaSubsession(*subsession, false, false, false);
-          auto codecName = subsession->codecName();
-          if(strcmp(codecName, "META") == 0 && pLive->mCallback)
-          {
-            subsession->sink = MetaSink::Create(*env, buf_size, pLive->mEvent, pLive->mCallback);
-            auto source = subsession->rtpSource();
-            source->setPacketReorderingThresholdTime(unsigned int(1000000));
-            subsession->sink->startPlaying(*source,0,0);
-          }
-          else if( strcmp(codecName, "JPEG") == 0 && !pLive->mMapName.empty())
-          {
-            auto sink = VideoSink::Create(*env, CODEC_ID_MJPEG, buf_size,
-              pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
-              pLive->getPixelFormat(), pLive->mMapName.c_str(),
-              subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
-              pLive->mRecord, pLive->mFilePath);
-            auto source = subsession->rtpSource();
-            subsession->sink = sink;
-            source->setPacketReorderingThresholdTime(unsigned int(1000000));
-            sink->startPlaying(*source,0,0);
-          }
-          else if( strcmp(codecName, "H264") == 0 && !pLive->mMapName.empty())
-          {
-            auto sink = VideoSink::Create(*env, CODEC_ID_H264, buf_size,
-              pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
-              pLive->getPixelFormat(), pLive->mMapName.c_str(),
-              subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
-              pLive->mRecord, pLive->mFilePath);
-            auto source = subsession->rtpSource();
-            subsession->sink = sink;
-            source->setPacketReorderingThresholdTime(unsigned int(1000000));
-            sink->startPlaying(*source,0,0);
-          }
-          else if( strcmp(codecName, "MPEG4") == 0 && !pLive->mMapName.empty())
-          {
-            auto sink = VideoSink::Create(*env, CODEC_ID_MPEG4, buf_size,
-              pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
-              pLive->getPixelFormat(), pLive->mMapName.c_str(),
-              subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
-              pLive->mRecord, pLive->mFilePath);
-            auto source = subsession->rtpSource();
-            subsession->sink = sink;
-            source->setPacketReorderingThresholdTime(unsigned int(1000000));
-            sink->startPlaying(*source,0,0);
-          }
-        }
-        subsession = itor.next();
-      }
-      rtspClient->playMediaSession(*session);
-      env->taskScheduler().doEventLoop();
-    }
-
-    if(NULL != session){
-      MediaSubsessionIterator itor(*session);
-      auto subsession = itor.next();
-      while(NULL != subsession) {
-        if (subsession->sink)
+        vsprintf_s<255>(buf, msg.c_str(), aArgs);
+        if (aClass)
         {
-          subsession->sink->stopPlaying();
-          MediaSink::close(subsession->sink);
+          AVClass* avc= aClass ? *(AVClass**)aClass : NULL;
+          if (avc)
+            source = avc->item_name(aClass);
         }
-        subsession = itor.next();
+        pLive->mInstance.Log(buf, source, (AV_LOG_FATAL == aLevel || AV_LOG_ERROR == aLevel) ?
+          LOG_ERROR : (AV_LOG_WARNING == aLevel ? LOG_WARNING : LOG_INFORMATION));
+      }));
+
+      class LiveUsageEnvironment : public BasicUsageEnvironment
+      {
+      public:
+        static LiveUsageEnvironment * Create(OnvifInstance& aInstance, TaskScheduler& aScheduler)
+        {
+          return new LiveUsageEnvironment(aInstance, aScheduler);
+        }
+
+        virtual void setResultMsg(MsgString msg)
+        {
+          BasicUsageEnvironment::setResultMsg(msg);
+          mInstance.Log(getResultMsg(), "live555", LOG_INFORMATION);
+        }
+        virtual void setResultMsg(MsgString msg1, MsgString msg2)
+        {
+          BasicUsageEnvironment::setResultMsg(msg1, msg2);
+          mInstance.Log(getResultMsg(), "live555", LOG_INFORMATION);
+        }
+        virtual void setResultMsg(MsgString msg1, MsgString msg2, MsgString msg3)
+        {
+          BasicUsageEnvironment::setResultMsg(msg1, msg2, msg3);
+          mInstance.Log(getResultMsg(), "live555", LOG_INFORMATION);
+        }
+        virtual void setResultErrMsg(MsgString msg, int err = 0)
+        {
+          BasicUsageEnvironment::setResultErrMsg(msg, err);
+          mInstance.Log(getResultMsg(), "live555", LOG_ERROR);
+        }
+
+        // 'console' output:
+        virtual UsageEnvironment& operator<<(char const* str)
+        {
+          char buf[1024];
+          sprintf_s<1024>(buf, "%s", str);
+          mInstance.Log(buf, "live555", LOG_INFORMATION);
+          return *this;
+        }
+        virtual UsageEnvironment& operator<<(int i)
+        {
+          char buf[1024];
+          sprintf_s<1024>(buf, "%d", i);
+          mInstance.Log(buf, "live555", LOG_INFORMATION);
+          return *this;
+        }
+        virtual UsageEnvironment& operator<<(unsigned u)
+        {
+          char buf[1024];
+          sprintf_s<1024>(buf, "%u", u);
+          mInstance.Log(buf, "live555", LOG_INFORMATION);
+          return *this;
+        }
+        virtual UsageEnvironment& operator<<(double d)
+        {
+          char buf[1024];
+          sprintf_s<1024>(buf, "%f", d);
+          mInstance.Log(buf, "live555", LOG_INFORMATION);
+          return *this;
+        }
+        virtual UsageEnvironment& operator<<(void* p)
+        {
+          char buf[1024];
+          sprintf_s<1024>(buf, "%p", p);
+          mInstance.Log(buf, "live555", LOG_INFORMATION);
+          return *this;
+        }
+      protected:
+        LiveUsageEnvironment(OnvifInstance& aInstance, TaskScheduler& aScheduler)
+          : BasicUsageEnvironment(aScheduler)
+          , mInstance(aInstance) { }
+        virtual ~LiveUsageEnvironment() {}
+      private:
+        OnvifInstance& mInstance;
+      };
+
+      auto scheduler = LiveTaskScheduler::Create(pLive->mEvent);	
+      auto env = LiveUsageEnvironment::Create(pLive->mInstance, *scheduler);
+      auto rtspClient = RTSPClient::createNew(*env, 1);
+      auto sdp = rtspClient->describeURL(pLive->mUrl.c_str());
+      auto session = MediaSession::createNew(*env, sdp);
+
+      if(NULL != session){
+        MediaSubsessionIterator itor(*session);
+        auto subsession = itor.next();
+        while(NULL != subsession) {
+          if(subsession->initiate(0)){
+            rtspClient->setupMediaSubsession(*subsession, false, false, false);
+            auto codecName = subsession->codecName();
+            if(strcmp(codecName, "META") == 0 && pLive->mCallback)
+            {
+              subsession->sink = MetaSink::Create(*env, buf_size, pLive->mEvent, pLive->mCallback);
+              auto source = subsession->rtpSource();
+              source->setPacketReorderingThresholdTime(unsigned int(1000000));
+              subsession->sink->startPlaying(*source,0,0);
+            }
+            else if( strcmp(codecName, "JPEG") == 0 && !pLive->mMapName.empty())
+            {
+              auto sink = VideoSink::Create(*env, CODEC_ID_MJPEG, buf_size,
+                pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
+                pLive->getPixelFormat(), pLive->mMapName.c_str(),
+                subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
+                pLive->mRecord, pLive->mFilePath);
+              auto source = subsession->rtpSource();
+              subsession->sink = sink;
+              source->setPacketReorderingThresholdTime(unsigned int(1000000));
+              sink->startPlaying(*source,0,0);
+            }
+            else if( strcmp(codecName, "H264") == 0 && !pLive->mMapName.empty())
+            {
+              auto sink = VideoSink::Create(*env, CODEC_ID_H264, buf_size,
+                pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
+                pLive->getPixelFormat(), pLive->mMapName.c_str(),
+                subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
+                pLive->mRecord, pLive->mFilePath);
+              auto source = subsession->rtpSource();
+              subsession->sink = sink;
+              source->setPacketReorderingThresholdTime(unsigned int(1000000));
+              sink->startPlaying(*source,0,0);
+            }
+            else if((!strcmp(codecName, "MPEG4") || !strcmp(codecName, "MP4V-ES")) && !pLive->mMapName.empty())
+            {
+              auto sink = VideoSink::Create(*env, CODEC_ID_MPEG4, buf_size,
+                pLive->mEvent, pLive->mWidth, pLive->mHeight, pLive->mStride,
+                pLive->getPixelFormat(), pLive->mMapName.c_str(),
+                subsession->fmtp_spropparametersets(), pLive->mSilentMode, 
+                pLive->mRecord, pLive->mFilePath);
+              auto source = subsession->rtpSource();
+              subsession->sink = sink;
+              source->setPacketReorderingThresholdTime(unsigned int(1000000));
+              sink->startPlaying(*source,0,0);
+            }
+          }
+          subsession = itor.next();
+        }
+        rtspClient->playMediaSession(*session);
+        env->taskScheduler().doEventLoop();
       }
-      rtspClient->teardownMediaSession(*session);
-      MediaSession::close(session);
+
+      if(NULL != session){
+        MediaSubsessionIterator itor(*session);
+        auto subsession = itor.next();
+        while(NULL != subsession) {
+          if (subsession->sink)
+          {
+            subsession->sink->stopPlaying();
+            MediaSink::close(subsession->sink);
+          }
+          subsession = itor.next();
+        }
+        rtspClient->teardownMediaSession(*session);
+        MediaSession::close(session);
+      }
+      RTSPClient::close(rtspClient);
+      env->reclaim();
+      delete scheduler;
+      pLive->Cancel(TRUE);
     }
-    RTSPClient::close(rtspClient);
-    env->reclaim();
-    delete scheduler;
-    pLive->Cancel(TRUE);
+  } catch (...) {
   }
 }
 

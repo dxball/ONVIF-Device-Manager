@@ -25,6 +25,9 @@ public:
     }
     return -1.00;
   }
+  int getTicksPerFrame() {
+    return mVideoStream->codec->ticks_per_frame;
+  }
 private:
   AVStream* setup_video_stream();
   bool open_video();
@@ -41,6 +44,8 @@ private:
   AVOutputFormat *mOutFormat;
   AVFormatContext *mFormatCtx;
   AVStream *mVideoStream;
+
+  static const PixelFormat s_CodecPixFormat;
 
   struct PictureData {
     uint8_t *mOutBuf;

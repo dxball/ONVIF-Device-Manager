@@ -1,6 +1,8 @@
 
 #include "TSWriter.h"
 
+const PixelFormat TSWriter::s_CodecPixFormat = PIX_FMT_YUV420P;
+
 TSWriter::TSWriter(const std::string& aFilePath, int aBitRate, int aWidth,
     int aHeight, int aFrameRate, PixelFormat aPixFmt)
   : mHasError(false)
@@ -22,6 +24,7 @@ TSWriter::TSWriter(const std::string& aFilePath, int aBitRate, int aWidth,
       mFormatCtx = avformat_alloc_context();
       if (!mFormatCtx) mHasError = true, mErrorMsg = "Error alloc format context";
       else {
+        //if (mOutFormat->video_codec != CODEC_ID_H264) mOutFormat->video_codec = CODEC_ID_H264;
         mFormatCtx->oformat = mOutFormat;
         sprintf_s(mFormatCtx->filename, sizeof(mFormatCtx->filename), "%s", mFilePath.c_str());
         if (mOutFormat->video_codec == CODEC_ID_NONE) mHasError = true, mErrorMsg = "Unknown codec";
@@ -55,7 +58,7 @@ TSWriter::~TSWriter() {
     av_write_trailer(mFormatCtx);
     if (mVideoStream) close_video();
 
-    for(unsigned int i = 0; i < mFormatCtx->nb_streams; i++) {
+    for(int i = 0; i < mFormatCtx->nb_streams; i++) {
         av_freep(&mFormatCtx->streams[i]->codec);
         av_freep(&mFormatCtx->streams[i]);
     }
@@ -74,20 +77,87 @@ TSWriter::setup_video_stream() {
   if (mFormatCtx && mOutFormat) {
     AVStream *stream = av_new_stream(mFormatCtx, 0);
     if (stream) {
-      auto codec = stream->codec;
-      codec->codec_id = mOutFormat->video_codec;
-      codec->codec_type = CODEC_TYPE_VIDEO;
+      auto c = stream->codec;
+      c->codec_id = mOutFormat->video_codec;//CODEC_ID_H264;
+      c->codec_type = AVMEDIA_TYPE_VIDEO;
 
-      //setup
-      codec->bit_rate = mBitRate;
-      codec->width = mWidth;
-      codec->height = mHeight;
-      codec->time_base.den = mFrameRate;
-      codec->time_base.num = 1;
-      codec->gop_size = 12;
-      codec->pix_fmt = mPixFmt;
+      /* put sample parameters */
+      c->bit_rate = avpicture_get_size(s_CodecPixFormat, mWidth, mHeight) * mFrameRate/*mBitRate*/;
+      /* resolution must be a multiple of two */
+      c->width = mWidth;
+      c->height = mHeight;
+      /* time base: this is the fundamental unit of time (in seconds) in terms
+         of which frame timestamps are represented. for fixed-fps content,
+         timebase should be 1/framerate and timestamp increments should be
+         identically 1. */
+      c->time_base.den = mFrameRate;
+      c->time_base.num = 1;
+      c->gop_size = 12; /* emit one intra frame every twelve frames at most */
+      c->pix_fmt = s_CodecPixFormat;
+      if (c->codec_id == CODEC_ID_MPEG2VIDEO) {
+          /* just for testing, we also add B frames */
+          c->max_b_frames = 2;
+      }
+      if (c->codec_id == CODEC_ID_MPEG1VIDEO){
+          /* Needed to avoid using macroblocks in which some coeffs overflow.
+             This does not happen with normal video, it just happens here as
+             the motion of the chroma plane does not match the luma plane. */
+          c->mb_decision=2;
+      }
+      if (c->codec_id == CODEC_ID_H264) {
+        /*
+        //fast presence
+        coder=1
+flags=+loop
+cmp=+chroma
+partitions=+parti8x8+parti4x4+partp8x8+partb8x8
+me_method=hex
+subq=6
+me_range=16
+g=250
+keyint_min=25
+sc_threshold=40
+i_qfactor=0.71
+b_strategy=1
+qcomp=0.6
+qmin=10
+qmax=51
+qdiff=4
+bf=3
+refs=2
+directpred=1
+trellis=1
+flags2=+bpyramid+mixed_refs+wpred+dct8x8+fastpskip
+wpredp=2
+rc_lookahead=30
+        */
+        c->coder_type = FF_CODER_TYPE_AC;
+        c->flags = CODEC_FLAG_LOOP_FILTER;
+        c->me_cmp = FF_CMP_CHROMA;
+        c->partitions = X264_PART_I8X8 | X264_PART_I4X4 | X264_PART_P8X8 | X264_PART_B8X8;
+        c->me_method = 7; //(hex);
+        c->me_subpel_quality = 6;
+        c->me_range = 16;
+        c->gop_size = 250;
+        c->keyint_min = 25;
+        c->scenechange_threshold = 40;
+        c->i_quant_factor = 0.71;
+        c->b_frame_strategy = 1;
+        c->qcompress = 0.6;
+        c->qmin = 10;
+        c->qmax = 51;
+        c->max_qdiff = 4;
+        c->bframebias = 3;
+        c->refs = 2;
+        c->directpred = 1;
+        c->trellis = 0;
+        c->flags2 = CODEC_FLAG2_BPYRAMID | CODEC_FLAG2_MIXED_REFS | CODEC_FLAG2_WPRED | CODEC_FLAG2_8X8DCT | CODEC_FLAG2_FASTPSKIP;
+        c->weighted_p_pred = 2;
+        c->rc_lookahead = 30;
+      }
+      // some formats want stream headers to be separate
       if(mFormatCtx->oformat->flags & AVFMT_GLOBALHEADER)
-          codec->flags |= CODEC_FLAG_GLOBAL_HEADER;
+          c->flags |= CODEC_FLAG_GLOBAL_HEADER;
       //end setup
       return stream;
     }
@@ -107,13 +177,13 @@ TSWriter::open_video() {
         }
         mData.mOutBuf = nullptr;
         if (!(mFormatCtx->oformat->flags & AVFMT_RAWPICTURE)) {
-          mData.mOutBufSize = 200000;
+          mData.mOutBufSize = avpicture_get_size(s_CodecPixFormat, mWidth, mHeight);
           mData.mOutBuf = (uint8_t*)av_malloc(mData.mOutBufSize);
           if (!mData.mOutBuf) return false;
         }
         mData.mTmpPicture = nullptr;
         if (codecContext->pix_fmt != mPixFmt) {
-          mData.mTmpPicture = alloc_picture(mPixFmt, codecContext->width, codecContext->height);
+          mData.mTmpPicture = alloc_picture(s_CodecPixFormat, codecContext->width, codecContext->height);
           if (!mData.mTmpPicture) return false;
         }
         return true;
@@ -177,6 +247,7 @@ TSWriter::write_picture(AVFrame *aPicture) {
                         0, codecContext->height, mData.mTmpPicture->data, mData.mTmpPicture->linesize);
           sws_freeContext(scaleContext);
           picture = mData.mTmpPicture;
+          picture->pts = aPicture->pts;
         }
       }
       int ret = -1;
@@ -194,7 +265,11 @@ TSWriter::write_picture(AVFrame *aPicture) {
         ret = av_interleaved_write_frame(mFormatCtx, &pkt);
       } else {
         /* encode the image */
-        int out_size = avcodec_encode_video(codecContext, mData.mOutBuf, mData.mOutBufSize, picture);
+        int out_size = 0;
+        try {
+          out_size = avcodec_encode_video(codecContext, mData.mOutBuf, mData.mOutBufSize, picture);
+        } catch(...) {
+        }
         /* if zero size, it means the image was buffered */
         if (out_size > 0) {
           AVPacket pkt;
@@ -202,21 +277,25 @@ TSWriter::write_picture(AVFrame *aPicture) {
 
           if (codecContext->coded_frame->pts != AV_NOPTS_VALUE)
             pkt.pts= av_rescale_q(codecContext->coded_frame->pts, codecContext->time_base, mVideoStream->time_base);
+          /*else if (picture->pts != AV_NOPTS_VALUE)
+            pkt.pts = picture->pts;
+          else
+            pkt.pts = aPicture->pts;*/
           if(codecContext->coded_frame->key_frame)
               pkt.flags |= PKT_FLAG_KEY;
           pkt.stream_index= mVideoStream->index;
           pkt.data= mData.mOutBuf;
           pkt.size= out_size;
-
-          /* write the compressed frame in the media file */
+          //pkt.dts = AV_NOPTS_VALUE;//mVideoStream->last_IP_pts;
+          //
           ret = av_interleaved_write_frame(mFormatCtx, &pkt);
         } else {
           ret = 0;
         }
       }
       if (ret != 0) {
-        mHasError = true;
-        mErrorMsg = "Error while writing video frame\n";
+        //std::cout << "!!!!!!!!!Error write frame!!!!!!!!!!" << std::endl;
+        return false;
       }
     }
   }

@@ -29,5 +29,6 @@ public:
 private:
   onvifmp_error_handler mErrorHandler;
   onvifmp_log_handler mLogHandler;
-  std::map<std::string, Live555*> mPlayList;
+  
+  Live555 *mPlayer;
 };

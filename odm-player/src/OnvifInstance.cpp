@@ -47,6 +47,7 @@ OnvifInstance::OnvifInstance(onvifmp_error_handler aErrorHandler,
                              onvifmp_log_handler aLogHandler)
   : mErrorHandler(aErrorHandler)
   , mLogHandler(aLogHandler)
+  , mPlayer(nullptr)
 {
   ErrorHandlerSaver::Instance().AddErrorHandler(mErrorHandler);
   SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)ErrorHandlerSaver::UnhandledExceptionRaiser);
@@ -54,8 +55,7 @@ OnvifInstance::OnvifInstance(onvifmp_error_handler aErrorHandler,
 
 OnvifInstance::~OnvifInstance()
 {
-  for (auto i = mPlayList.begin(); i != mPlayList.end(); ++ i)
-    if ((*i).second) (*i).second->Cancel();
+  if (mPlayer) mPlayer->Cancel();
   ErrorHandlerSaver::Instance().RemoveErrorHandler(mErrorHandler);
 }
 
@@ -83,7 +83,7 @@ OnvifInstance::StartParsing(const char *aUrl,
 {
   std::string url(aUrl);
   std::string mapName(aMapName ? aMapName : "");
-  if (mPlayList.find(url) != mPlayList.end())
+  if (mPlayer)
     this->RaiseError("already started");
   else
   {
@@ -91,7 +91,7 @@ OnvifInstance::StartParsing(const char *aUrl,
       mapName, pixFormat, aCallback, aSilentMode);
     if (pLive)
     {
-      mPlayList[url] = pLive;
+      mPlayer = pLive;
       pLive->Run();
     }
     return pLive;
@@ -102,48 +102,29 @@ OnvifInstance::StartParsing(const char *aUrl,
 void
 OnvifInstance::StopParsing(const char *aUrl)
 {
-  std::string url(aUrl);
-  if (mPlayList.find(url) != mPlayList.end())
-  {
-    mPlayList[url]->Cancel();
-  }
+  if (mPlayer) mPlayer->Cancel();
 }
 
 void
 OnvifInstance::RemoveLive(const std::string& aURL)
 {
-  if (mPlayList.find(aURL) != mPlayList.end())
-  {
-    mPlayList.erase(aURL);
-  }
+  if (mPlayer) mPlayer = nullptr;
 }
 
 void
 OnvifInstance::SetSilentMode(const char *aUrl, int aSilentMode)
 {
-  std::string url(aUrl);
-  if (mPlayList.find(url) != mPlayList.end())
-  {
-    mPlayList[url]->SetSilentMode(aSilentMode);
-  }
+  if (mPlayer) mPlayer->SetSilentMode(aSilentMode);
 }
 
 void
 OnvifInstance::StartRecord(const char *aUrl, const char *aFilePath)
 {
-  std::string url(aUrl);
-  if (mPlayList.find(url) != mPlayList.end())
-  {
-    mPlayList[url]->StartRecord(aFilePath);
-  }
+  if (mPlayer) mPlayer->StartRecord(aFilePath);
 }
 
 void
 OnvifInstance::StopRecord(const char *aUrl)
 {
-  std::string url(aUrl);
-  if (mPlayList.find(url) != mPlayList.end())
-  {
-    mPlayList[url]->StopRecord();
-  }
+  if (mPlayer) mPlayer->StopRecord();
 }

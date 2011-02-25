@@ -48,17 +48,15 @@ protected:
   int mStride;
   PixelFormat mPixFormat;
   LPTSTR mFileMapBuffer;
-  //AVFrame *mAVFrameRGB;
   unsigned int mBufferPosition;
   uintptr_t mThread;
-  //std::deque<AVFrame*> mQueue;
   std::deque<unsigned char*> mQueue;
   CRITICAL_SECTION mCS;
   HANDLE mEvent;
 
   IntSaver& mSilentMode;
-
+  
+  static void RecorderThread(void *aArg);
   IntSaver& mRecord;
   std::string& mFilePath;
-  TSWriter *mWriter;
 };
