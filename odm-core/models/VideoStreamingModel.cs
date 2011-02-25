@@ -8,6 +8,7 @@ using onvif.services.media;
 using odm.onvif;
 using odm.utils;
 using med=onvif.services.media;
+using onvif;
 
 namespace odm.models {
 
@@ -47,9 +48,14 @@ namespace odm.models {
 	}
 	
 	public class VideoStreamingModel : ModelBase<VideoStreamingModel> {
-		ChannelDescription m_channel;
-		public VideoStreamingModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public VideoStreamingModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		VideoSourceToken m_videoSourceToken;
+		public VideoStreamingModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
 
 		private static VideoEncoder CreateVideoEncoder(VideoEncoderConfigurationOptions options, VideoEncoding encoding) {
@@ -106,22 +112,25 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    //create default profile
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
+			dbg.Assert(profile != null);
+			dbg.Assert(profile.VideoSourceConfiguration != null);
+			m_videoSourceToken = profile.VideoSourceConfiguration.SourceToken;
 
-			if (profile == null) {
-				//create default profile
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
-
-			if (profile.VideoSourceConfiguration == null) {
-				//add default video source configuration
-				VideoSourceConfiguration[] vscs = null;
-				yield return session.GetVideoSourceConfigurations().Handle(x=>vscs=x);
-				dbg.Assert(vscs != null);
-				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
-				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
-				profile.VideoSourceConfiguration = vsc;
-			}
+			//if (profile.VideoSourceConfiguration == null) {
+			//    //add default video source configuration
+			//    VideoSourceConfiguration[] vscs = null;
+			//    yield return session.GetVideoSourceConfigurations().Handle(x=>vscs=x);
+			//    dbg.Assert(vscs != null);
+			//    var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+			//    yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+			//    profile.VideoSourceConfiguration = vsc;
+			//}
 			
 			var vec = profile.VideoEncoderConfiguration;
 			if (vec == null) {
@@ -229,7 +238,6 @@ namespace odm.models {
 				throw new Exception("unknown encoding");
 			};
 
-			this.bitrate = vec.RateControl.BitrateLimit;
 			this.maxFrameRate = encoders.Values.Max(x => x.maxFrameRate);
 			this.minFrameRate = encoders.Values.Min(x => x.minFrameRate);
 			this.maxEncodingInterval = encoders.Values.Max(x => x.maxEncodingInterval);
@@ -242,6 +250,7 @@ namespace odm.models {
 			m_currentEncoder.SetBoth(encoders[convert_encoding(vec.Encoding)]);
 			m_channelName.SetBoth(profile.Name);
 			m_encodingInterval.SetBoth(vec.RateControl.EncodingInterval);
+			m_bitrate.SetBoth(vec.RateControl.BitrateLimit);
 			
 			if (vec.RateControl.FrameRateLimit > this.maxFrameRate) {
 				vec.RateControl.FrameRateLimit = this.maxFrameRate;
@@ -301,10 +310,12 @@ namespace odm.models {
 			yield return session.GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
 
-			yield return media.DeleteProfile(NvcHelper.GetChannelProfileToken(m_channel.Id)).Idle().IgnoreError();
+			//yield return media.DeleteProfile(NvcHelper.GetChannelProfileToken(m_channel.Id)).Idle().IgnoreError();
+			yield return media.DeleteProfile(m_profileToken).Idle().IgnoreError();
 
 			Profile profile = null;
-			yield return media.CreateProfile(m_channelName.current, NvcHelper.GetChannelProfileToken(m_channel.Id)).Handle(x => profile = x);
+			//yield return media.CreateProfile(m_channelName.current, NvcHelper.GetChannelProfileToken(m_channel.Id)).Handle(x => profile = x);
+			yield return media.CreateProfile(m_channelName.current, m_profileToken).Handle(x => profile = x);
 						
 			//Profile[] profiles = null;
 			//yield return session.GetProfiles().Handle(x => profiles = x);
@@ -331,7 +342,8 @@ namespace odm.models {
 			VideoSourceConfiguration[] vscs = null;
 			yield return session.GetCompatibleVideoSourceConfigurations(profile.token).Handle(x => vscs = x);
 			//var vsc = vscs.Where(x=>x.SourceToken == m_channel.Id).OrderByDescending(x => new Tuple<int, int>(x.Bounds.width, x.Bounds.height)).FirstOrDefault();
-			foreach (var _vsc in vscs.Where(x => x.SourceToken == m_channel.Id).OrderBy(x => x.UseCount)) {
+			//foreach (var _vsc in vscs.Where(x => x.SourceToken == m_channel.Id).OrderBy(x => x.UseCount)) {
+			foreach (var _vsc in vscs.Where(x => x.SourceToken == m_videoSourceToken).OrderBy(x => x.UseCount)) {
 				yield return session.AddVideoSourceConfiguration(profile.token, _vsc.token);
 				profile.VideoSourceConfiguration = _vsc;
 				VideoEncoderConfiguration[] _vecs = null;
@@ -468,6 +480,10 @@ namespace odm.models {
 					profile.VideoSourceConfiguration = null;
 				}
 			}
+
+            if (profile.VideoEncoderConfiguration == null){
+                throw new Exception("failed to set video encoder");
+            }
 			
 			if (m_metadata.current) {
 				yield return session.AddDefaultMetadata(profile).Idle();
@@ -488,22 +504,25 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 
-			if (profile == null) {
-				//create default profile
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//if (profile == null) {
+			//    //create default profile
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			dbg.Assert(profile != null);
 
-			if (profile.VideoSourceConfiguration == null) {
-				//add default video source configuration
-				VideoSourceConfiguration[] vscs = null;
-				yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
-				dbg.Assert(vscs != null);
-				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
-				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
-				profile.VideoSourceConfiguration = vsc;
-			}
+			//if (profile.VideoSourceConfiguration == null) {
+			//    //add default video source configuration
+			//    VideoSourceConfiguration[] vscs = null;
+			//    yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
+			//    dbg.Assert(vscs != null);
+			//    var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+			//    yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+			//    profile.VideoSourceConfiguration = vsc;
+			//}
+			dbg.Assert(profile.VideoSourceConfiguration != null);
 
 			var vec = profile.VideoEncoderConfiguration;
 			if (vec == null) {
@@ -524,17 +543,24 @@ namespace odm.models {
 		}
 
 		public override void RevertChanges() {
-			m_currentResolution.Revert();
+			m_bitrate.Revert();
+			m_channelName.Revert();
 			m_currentEncoder.Revert();
+			m_currentResolution.Revert();
+			m_encodingInterval.Revert();
+			m_frameRate.Revert();
+			m_metadata.Revert();
+
+			NotifyPropertyChanged(x => x.bitrate);
+			NotifyPropertyChanged(x => x.channelName);
+			NotifyPropertyChanged(x => x.currentEncoder);
+			NotifyPropertyChanged(x => x.currentResolution);
+			NotifyPropertyChanged(x => x.encodingInterval);
+			NotifyPropertyChanged(x => x.frameRate);
+			NotifyPropertyChanged(x => x.metadata);
 		}
 
-		private ChangeTrackingProperty<String> m_channelName = new ChangeTrackingProperty<String>();
-		private ChangeTrackingProperty<VideoEncoder> m_currentEncoder = new ChangeTrackingProperty<VideoEncoder>();
-		private ChangeTrackingProperty<VideoResolution> m_currentResolution = new ChangeTrackingProperty<VideoResolution>();
-		private ChangeTrackingProperty<int> m_frameRate = new ChangeTrackingProperty<int>();
-		private ChangeTrackingProperty<int> m_encodingInterval = new ChangeTrackingProperty<int>();
-		
-
+	
 		private ChangeTrackingProperty<bool> m_metadata = new ChangeTrackingProperty<bool>();
 		public bool metadata {
 			get {
@@ -549,6 +575,8 @@ namespace odm.models {
 		}
 		public string mediaUri { get; private set; }
 		public IEnumerable<VideoResolution> supportedResolutions { get; private set; }
+
+		private ChangeTrackingProperty<VideoResolution> m_currentResolution = new ChangeTrackingProperty<VideoResolution>();
 		public VideoResolution currentResolution {
 			get {
 				return m_currentResolution.current;
@@ -562,6 +590,8 @@ namespace odm.models {
 		}
 
 		public IEnumerable<VideoEncoder> supportedEncoders { get; private set; }
+
+		private ChangeTrackingProperty<VideoEncoder> m_currentEncoder = new ChangeTrackingProperty<VideoEncoder>();
 		public VideoEncoder currentEncoder {
 			get {
 				return m_currentEncoder.current;
@@ -573,6 +603,8 @@ namespace odm.models {
 				}
 			}
 		}
+
+		private ChangeTrackingProperty<int> m_frameRate = new ChangeTrackingProperty<int>();
 		public int frameRate {
 			get {
 				return m_frameRate.current;
@@ -584,7 +616,8 @@ namespace odm.models {
 				}
 			}
 		}
-		
+
+		private ChangeTrackingProperty<int> m_encodingInterval = new ChangeTrackingProperty<int>();
 		public int encodingInterval {
 			get {
 				return m_encodingInterval.current;
@@ -597,6 +630,7 @@ namespace odm.models {
 			}
 		}
 
+		private ChangeTrackingProperty<String> m_channelName = new ChangeTrackingProperty<String>();
 		public string channelName {
 			get {
 				return m_channelName.current;
@@ -613,7 +647,20 @@ namespace odm.models {
 		public int minFrameRate { get; private set; }
 		public int maxEncodingInterval { get; private set; }
 		public int minEncodingInterval { get; private set; }
-		public int bitrate { get; set; }
+
+		private ChangeTrackingProperty<int> m_bitrate = new ChangeTrackingProperty<int>();
+		public int bitrate {
+			get {
+				return m_bitrate.current;
+			}
+			set {
+				if (m_bitrate.current != value) {
+					m_bitrate.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.bitrate);
+				}
+			}
+		}
+
 		//public int maxBitrate { get; private set; }
 		//public int minBitrate { get; private set; }
 	}

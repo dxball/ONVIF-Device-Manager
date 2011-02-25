@@ -12,14 +12,20 @@ using onvif.services.analytics;
 using media = onvif.services.media;
 using analytics = onvif.services.analytics;
 using tt = onvif.types;
+using onvif;
 
 namespace odm.models {
 	public class AnnotationsModel : ModelBase<AnnotationsModel> {
-		ChannelDescription m_channel;
-		public AnnotationsModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public AnnotationsModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		public AnnotationsModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
-
+		
+		
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<AnnotationsModel> observer) {
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
@@ -33,22 +39,23 @@ namespace odm.models {
 			yield return session.GetCapabilities().Handle(x => caps = x);
 			dbg.Assert(caps != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				//create default profile
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    //create default profile
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
-			if (profile.VideoSourceConfiguration == null) {
-				//add default video source configuration
-				VideoSourceConfiguration[] vscs = null;
-				yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
-				dbg.Assert(vscs != null);
-				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
-				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
-				profile.VideoSourceConfiguration = vsc;
-			}
+			//if (profile.VideoSourceConfiguration == null) {
+			//    //add default video source configuration
+			//    VideoSourceConfiguration[] vscs = null;
+			//    yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
+			//    dbg.Assert(vscs != null);
+			//    var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+			//    yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+			//    profile.VideoSourceConfiguration = vsc;
+			//}
 
 			var vec = profile.VideoEncoderConfiguration;
 			if (vec == null) {
@@ -119,7 +126,8 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			yield return session.AddDefaultVideoAnalytics(profile).Idle();
 			var vac = profile.VideoAnalyticsConfiguration;
 			

@@ -12,8 +12,9 @@ using onvif.services.media;
 using onvif.services.analytics;
 using media = onvif.services.media;
 using analytics = onvif.services.analytics;
-using tt = onvif.types;
+using tt = global::onvif.types;
 using System.Xml.Serialization;
+using onvif;
 
 
 namespace odm.models {
@@ -86,9 +87,13 @@ namespace odm.models {
 	}
 
 	public partial class DepthCalibrationModel : ModelBase<DepthCalibrationModel> {
-		ChannelDescription m_channel;
-		public DepthCalibrationModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public DepthCalibrationModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		public DepthCalibrationModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
 
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<DepthCalibrationModel> observer) {
@@ -104,10 +109,11 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
 			yield return session.AddDefaultVideoAnalytics(profile).Idle();
@@ -139,7 +145,7 @@ namespace odm.models {
 				region = null;
 			}
 
-			focalLength = module.GetSimpleItemAsInt("focal_length");
+			m_focalLength.SetBoth(module.GetSimpleItemAsInt("focal_length"));
 			matrixFormat = module.GetSimpleItem("matrix_format");
 			photosensorPixelSize = module.GetSimpleItemAsFloat("photosensor_pixel_size");
 			var use_2d_markers = module.GetSimpleItemAsBoolNullable("use_2d_markers");
@@ -238,7 +244,8 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			var vac = profile.VideoAnalyticsConfiguration;
 			if (vac == null) {
 				yield return session.AddDefaultVideoAnalytics(profile).Handle(x=> vac=x);
@@ -322,7 +329,19 @@ namespace odm.models {
 
 		}
 
-		public int focalLength { get; set; }
+		private ChangeTrackingProperty<int> m_focalLength = new ChangeTrackingProperty<int>();
+		public int focalLength {
+			get {
+				return m_focalLength.current;
+			}
+			set {
+				if (m_focalLength.current != value) {
+					m_focalLength.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.focalLength);
+				}
+			}
+		}
+		
 		public string matrixFormat { get; set; }
 		public float photosensorPixelSize { get; set; }
 		public Marker[] markers { get; set; }

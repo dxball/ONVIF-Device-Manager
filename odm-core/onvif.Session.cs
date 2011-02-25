@@ -50,18 +50,21 @@ using tt = global::onvif.types;
 using syn = synesis.onvif.extensions;
 
 using net = global::System.Net;
+using odm.utils.rx;
+using onvif;
 
 namespace odm.onvif {
 	
 	public class Session {
 		private Uri m_transportUri;
 		private DeviceDescription m_deviceDescription;
-		private static ChannelFactory<Device> s_deviceFactory = null;
-		private static ChannelFactory<Media> s_mediaFactory = null;
-		private static ChannelFactory<ImagingPort> s_imagingFactory = null;
-		private static ChannelFactory<AnalyticsEnginePort> s_analyticsFactory = null;
-		private static ChannelFactory<RuleEnginePort> s_ruleEngineFactory = null;
-		//private static ChannelFactory<> s_eventsFactory = null;
+		public static ChannelFactory<Device> s_deviceFactory = null;
+		public static ChannelFactory<Device> s_deviceMtomFactory = null;
+		public static ChannelFactory<Media> s_mediaFactory = null;
+		public static ChannelFactory<ImagingPort> s_imagingFactory = null;
+		public static ChannelFactory<AnalyticsEnginePort> s_analyticsFactory = null;
+		public static ChannelFactory<RuleEnginePort> s_ruleEngineFactory = null;
+		//public static ChannelFactory<> s_eventsFactory = null;
 
 		public Session(DeviceDescription deviceDescription) {
 			this.m_deviceDescription = deviceDescription;
@@ -70,6 +73,17 @@ namespace odm.onvif {
 				dbg.Break();
 				throw new Exception("failed to create session");
 			}
+		}
+
+		public Session(Uri uri) {
+			if (uri == null) {
+				throw new ArgumentNullException("uri");
+			}
+			this.m_deviceDescription = null;
+			this.m_transportUri = uri;
+		}
+
+		public Session(string uri):this(new Uri(uri)) {			
 		}
 		protected object m_context;
 		
@@ -90,34 +104,42 @@ namespace odm.onvif {
 			return (T)m_context;
 		}
 		
-		static Session() {
+		static Binding CreateBinding(bool mtomEncoding = false){
+	
+			//var binding = new WSHttpBinding(SecurityMode.None) {
+			//    TextEncoding = Encoding.UTF8,
+			//    MaxReceivedMessageSize = 10 * 1024 * 1024,
+			//};
 
-			Binding binding = null;
+			var binding = new CustomBinding() {
+				CloseTimeout = TimeSpan.FromMinutes(3),
+				OpenTimeout = TimeSpan.FromMinutes(3),
+				SendTimeout = TimeSpan.FromMinutes(3),
+			};
 
-			try {
-				binding = new CustomBinding("odm-core/onvif-sevices");
-			} catch {
-				var _binding = new CustomBinding() {
-					CloseTimeout = TimeSpan.FromMinutes(3),
-					OpenTimeout = TimeSpan.FromMinutes(3),
-					SendTimeout = TimeSpan.FromMinutes(3),				
-				};
-
-				_binding.Elements.Add(new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8));
-				_binding.Elements.Add(new HttpTransportBindingElement() {
-					MaxReceivedMessageSize = 10 * 1024 * 1024,
-				});
-				binding = _binding;
+			if (mtomEncoding) {
+				var encoding = new MtomMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8);
+				encoding.ReaderQuotas.MaxStringContentLength = 10 * 1024 * 1024;
+				binding.Elements.Add(encoding);
+			} else {
+				var encoding = new TextMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8);
+				encoding.ReaderQuotas.MaxStringContentLength = 10 * 1024 * 1024;
+				binding.Elements.Add(encoding);
 			}
 			
-			
-			//var binding = new WSHttpBinding(SecurityMode.None) {
-			//    TextEncoding = Encoding.UTF8
-			//};
-			//binding.MaxReceivedMessageSize = 10 * 1024 * 1024;
+			binding.Elements.Add(new HttpTransportBindingElement() {
+				MaxReceivedMessageSize = 10 * 1024 * 1024,
+			});
 
-			s_deviceFactory = new ChannelFactory<Device>(binding);
+			return binding;
+		}
+
+		static Session() {
+
+			Binding binding = CreateBinding();
 			
+			s_deviceFactory = new ChannelFactory<Device>(binding);
+			s_deviceMtomFactory = new ChannelFactory<Device>(CreateBinding(true));
 			s_mediaFactory = new ChannelFactory<Media>(binding);
 			s_imagingFactory = new ChannelFactory<ImagingPort>(binding);
 			s_analyticsFactory = new ChannelFactory<AnalyticsEnginePort>(binding);
@@ -127,15 +149,18 @@ namespace odm.onvif {
 			//});
 		}
 		
-		public static Session Create(DeviceDescription deviceDescription) {
-			return new Session(deviceDescription);
-		}
+		//public static Session Create(DeviceDescription deviceDescription) {
+		//    return new Session(deviceDescription);
+		//}
 
-		public static Session Create(Uri uri) {
-			var session = new Session(null);
-			session.m_transportUri = uri;
-			return session;
-		}
+		//public static Session Create(Uri uri) {
+		//    var session = new Session(null);
+		//    session.m_transportUri = uri;
+		//    return session;
+		//}
+		//public static Session Create(string uri) {
+		//    return Create(new Uri(uri));
+		//}
 				
 		public IObservable<DeviceDescription> GetDeviceDescription() {
 			if (m_deviceDescription == null) {
@@ -147,15 +172,88 @@ namespace odm.onvif {
 			return Observable.Return(m_deviceDescription);
 		}
 
+		private IEnumerable<IObservable<object>> GetSystemBackupImpl(IObserver<BackupFile[]> observer) {
+			DeviceObservable dev = null;
+			yield return GetDeviceMtomClient().Handle(x => dev = x);
+			dbg.Assert(dev != null);
+
+			BackupFile[] backupFiles = null;
+			yield return dev.GetSystemBackup().Handle(x => backupFiles = x);
+			dbg.Assert(backupFiles != null);
+
+			if (observer != null) {
+				observer.OnNext(backupFiles);
+			}
+		}
+
+		public IObservable<BackupFile[]> GetSystemBackup() {
+			return Observable.Iterate<BackupFile[]>(observer => GetSystemBackupImpl(observer));
+		}
+		
+		private IEnumerable<IObservable<object>> RestoreSystemImpl(BackupFile[] backupFiles, IObserver<Unit> observer) {
+			DeviceObservable dev = null;
+			yield return GetDeviceMtomClient().Handle(x => dev = x);
+			dbg.Assert(dev != null);
+
+			yield return dev.RestoreSystem(backupFiles).Idle();
+			dbg.Assert(backupFiles != null);
+
+			if (observer != null) {
+				observer.OnNext(new Unit());
+			}
+		}
+
+		public IObservable<Unit> RestoreSystem(BackupFile[] backupFiles) {
+			return Observable.Iterate<Unit>(observer => RestoreSystemImpl(backupFiles, observer));
+		}
+
+		private class Cache{
+			public AsyncState<ObserverState> capabilitiesState = ObserverState.Create(ObserverState.delayed);
+			public AsyncSubject<Capabilities> capabilities = null;
+
+			public AsyncState<ObserverState> deviceInformationState = ObserverState.Create(ObserverState.delayed);
+			public AsyncSubject<GetDeviceInformationResponse> deviceInformation = null;
+
+			public AsyncState<ObserverState> scopesState = ObserverState.Create(ObserverState.delayed);
+			public AsyncSubject<Scope[]> scopes = null;
+		}
+
+		private Cache m_cache = new Cache();
+		private bool m_useCahce = true;
+
 		private IEnumerable<IObservable<object>> GetCapabilitiesImpl(IObserver<Capabilities> observer) {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
 			dbg.Assert(dev != null);
-
 			Capabilities capabilities = null;
-			yield return dev.GetCapabilities().Handle(x => capabilities = x);
-			dbg.Assert(capabilities != null);
+			if (!m_useCahce) {				
+				yield return dev.GetCapabilities().Handle(x => capabilities = x);
+				dbg.Assert(capabilities != null);
+				if (observer != null) {
+					observer.OnNext(capabilities);
+				}
+				yield break;
+			}
 
+			if (m_cache.capabilitiesState.transit(ObserverState.delayed, ObserverState.subscribed)) {
+				var subj = new AsyncSubject<Capabilities>();
+				dev.GetCapabilities().Subscribe(
+					subj.OnNext, 
+					err => {
+						//m_cache.capabilitiesState.transit(ObserverState.failed);
+						subj.OnError(err);
+					},
+					() => {
+						//m_cache.capabilitiesState.transit(ObserverState.completed);
+						subj.OnCompleted();
+					}
+				);
+				m_cache.capabilities = subj;
+			}
+
+			yield return m_cache.capabilities.Handle(x => capabilities = x);
+			dbg.Assert(capabilities != null);
+			
 			if (observer != null) {
 				observer.OnNext(capabilities);
 			}
@@ -169,9 +267,35 @@ namespace odm.onvif {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
 			dbg.Assert(dev != null);
-
 			Scope[] scopes = null;
-			yield return dev.GetScopes().Handle(x => scopes = x);
+
+			if (!m_useCahce) {
+				yield return dev.GetScopes().Handle(x => scopes = x);
+				dbg.Assert(scopes != null);
+
+				if (observer != null) {
+					observer.OnNext(scopes);
+				}
+				yield break;
+			}
+
+			if (m_cache.scopesState.transit(ObserverState.delayed, ObserverState.subscribed)) {
+				var subj = new AsyncSubject<Scope[]>();
+				dev.GetScopes().Subscribe(
+					subj.OnNext,
+					err => {
+						//m_cache.capabilitiesState.transit(ObserverState.failed);
+						subj.OnError(err);
+					},
+					() => {
+						//m_cache.capabilitiesState.transit(ObserverState.completed);
+						subj.OnCompleted();
+					}
+				);
+				m_cache.scopes = subj;
+			}
+
+			yield return m_cache.scopes.Handle(x => scopes = x);
 			dbg.Assert(scopes != null);
 
 			if (observer != null) {
@@ -187,9 +311,37 @@ namespace odm.onvif {
 			DeviceObservable dev = null;
 			yield return GetDeviceClient().Handle(x => dev = x);
 			dbg.Assert(dev != null);
-
 			GetDeviceInformationResponse info = null;
-			yield return dev.GetDeviceInformation().Handle(x => info = x);
+
+
+			if (!m_useCahce) {
+				yield return dev.GetDeviceInformation().Handle(x => info = x);
+				dbg.Assert(info != null);
+
+				if (observer != null) {
+					observer.OnNext(info);
+				}
+				yield break;
+			}
+
+			if (m_cache.deviceInformationState.transit(ObserverState.delayed, ObserverState.subscribed)) {
+				var subj = new AsyncSubject<GetDeviceInformationResponse>();
+
+				dev.GetDeviceInformation().Subscribe(
+					subj.OnNext,
+					err => {
+						//m_cache.deviceInformationState.transit(ObserverState.failed);
+						subj.OnError(err);
+					},
+					() => {
+						//m_cache.deviceInformationState.transit(ObserverState.completed);
+						subj.OnCompleted();
+					}
+				);
+				m_cache.deviceInformation = subj;
+			}
+
+			yield return m_cache.deviceInformation.Handle(x => info = x);
 			dbg.Assert(info != null);
 
 			if (observer != null) {
@@ -207,6 +359,8 @@ namespace odm.onvif {
 			dbg.Assert(dev != null);
 
 			yield return dev.SetScopes(scopes).Idle();
+
+			m_cache.scopesState.transit(ObserverState.delayed);
 
 			if (observer != null) {
 				observer.OnNext(new Unit());
@@ -233,13 +387,15 @@ namespace odm.onvif {
 			dbg.Assert(scopes != null);
 			dbg.Assert(dev_info_response != null);
 
-			if (observer != null) {
-				info.Manufacturer = dev_info_response.Manufacturer;
-				info.Model = dev_info_response.Model;
-				info.FirmwareVersion = dev_info_response.FirmwareVersion;
-				info.SerialNumber = dev_info_response.SerialNumber;
-				info.HardwareId = dev_info_response.HardwareId;
-				info.Name = NvcHelper.GetName(scopes.Select(y => y.ScopeItem));
+			info.Manufacturer = dev_info_response.Manufacturer;
+			info.Model = dev_info_response.Model;
+			info.FirmwareVersion = dev_info_response.FirmwareVersion;
+			info.SerialNumber = dev_info_response.SerialNumber;
+			info.HardwareId = dev_info_response.HardwareId;
+			info.Name = NvcHelper.GetName(scopes.Select(y => y.ScopeItem));
+			info.Location = NvcHelper.GetLocation(scopes.Select(y => y.ScopeItem));
+
+			if (observer != null) {				
 				observer.OnNext(info);
 			}
 		}
@@ -266,7 +422,7 @@ namespace odm.onvif {
 			return Observable.Iterate<med::Profile[]>(observer => GetProfilesImpl(observer));
 		}
 
-		private IEnumerable<IObservable<object>> CreateProfileImpl(string profileName, string profileToken, IObserver<med::Profile> observer) {
+		private IEnumerable<IObservable<object>> CreateProfileImpl(string profileName, ProfileToken profileToken, IObserver<med::Profile> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -280,7 +436,49 @@ namespace odm.onvif {
 			}
 		}
 
-		private IEnumerable<IObservable<object>> DeleteProfileImpl(string profileToken, IObserver<Unit> observer) {
+		private IEnumerable<IObservable<object>> CreateDefaultProfileImpl(string profileName, ProfileToken profileToken, VideoSourceToken videoSourceToken, IObserver<med::Profile> observer) {
+			MediaObservable media = null;
+			yield return GetMediaClient().Handle(x => media = x);
+
+			med::Profile profile = null;
+			yield return CreateProfile(profileName, profileToken).Handle(x => profile = x);
+			
+			med::VideoSourceConfiguration[] vscs = null;
+			yield return GetVideoSourceConfigurations().Handle(x => vscs = x);
+			dbg.Assert(vscs != null);
+			
+			var vsc = vscs.Where(x => x.SourceToken == videoSourceToken).FirstOrDefault();
+
+			if (vsc == null) {
+				foreach (var v in vscs.Where(x => String.IsNullOrWhiteSpace(x.SourceToken.value))) {
+					med::VideoSourceConfigurationOptions options = null;
+					yield return media.GetVideoSourceConfigurationOptions(v.token, null).Handle(x => options = x);
+					dbg.Assert(options != null);
+					if (options != null && options.VideoSourceTokensAvailable.Contains(videoSourceToken)) {
+						vsc = v;
+						vsc.SourceToken = videoSourceToken;
+						yield return media.SetVideoSourceConfiguration(vsc, true).Idle();
+						break;
+					}
+				}
+			}
+
+			if (vsc == null) {
+				dbg.Break();
+				throw new Exception("video source configuration not found");
+			}
+			
+			yield return AddVideoSourceConfiguration(profile.token, vsc.token);
+			profile.VideoSourceConfiguration = vsc;
+			
+			yield return AddDefaultVideoEncoder(profile.token).Handle(x => profile.VideoEncoderConfiguration = x);
+			
+			if (observer != null) {
+				observer.OnNext(profile);
+			}
+		}
+
+		private IEnumerable<IObservable<object>> DeleteProfileImpl(ProfileToken profileToken, IObserver<Unit> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -292,15 +490,19 @@ namespace odm.onvif {
 			}
 		}
 
-		public IObservable<med::Profile> CreateProfile(string profileName, string profileToken) {
+		public IObservable<med::Profile> CreateProfile(string profileName, ProfileToken profileToken) {
 			return Observable.Iterate<med::Profile>(observer => CreateProfileImpl(profileName, profileToken, observer));
 		}
 
-		public IObservable<Unit> DeleteProfile(string profileToken) {
+		public IObservable<med::Profile> CreateDefaultProfile(string profileName, ProfileToken profileToken, VideoSourceToken videoSourceToken) {
+			return Observable.Iterate<med::Profile>(observer => CreateDefaultProfileImpl(profileName, profileToken, videoSourceToken, observer));
+		}
+
+		public IObservable<Unit> DeleteProfile(ProfileToken profileToken) {
 			return Observable.Iterate<Unit>(observer => DeleteProfileImpl(profileToken, observer));
 		}
 
-		private IEnumerable<IObservable<object>> AddVideoSourceConfigurationImpl(string profileToken, string vscToken) {
+		private IEnumerable<IObservable<object>> AddVideoSourceConfigurationImpl(ProfileToken profileToken, VideoSourceConfigurationToken vscToken) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -308,7 +510,7 @@ namespace odm.onvif {
 			yield return media.AddVideoSourceConfiguration(profileToken, vscToken).Idle();
 		}
 
-		public IObservable<med::Profile> AddVideoSourceConfiguration(string profileToken, string vscToken) {
+		public IObservable<med::Profile> AddVideoSourceConfiguration(ProfileToken profileToken, VideoSourceConfigurationToken vscToken) {
 			return Observable.Iterate<med::Profile>(observer => AddVideoSourceConfigurationImpl(profileToken, vscToken));
 		}
 		
@@ -318,7 +520,7 @@ namespace odm.onvif {
 			return Observable.Iterate<med::VideoSource[]>(observer => GetVideoSourcesImpl(observer));
 		}
 
-		public IObservable<med::VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(string profileToken) {
+		public IObservable<med::VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(ProfileToken profileToken) {
 			return Observable.Iterate<med::VideoSourceConfiguration[]>(observer => GetCompatibleVideoSourceConfigurationsImpl(profileToken, observer));
 		}
 
@@ -353,7 +555,7 @@ namespace odm.onvif {
 			}
 		}
 
-		private IEnumerable<IObservable<object>> GetCompatibleVideoSourceConfigurationsImpl(string profileToken, IObserver<med::VideoSourceConfiguration[]> observer) {
+		private IEnumerable<IObservable<object>> GetCompatibleVideoSourceConfigurationsImpl(ProfileToken profileToken, IObserver<med::VideoSourceConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -381,11 +583,11 @@ namespace odm.onvif {
 			return Observable.Iterate<med::VideoEncoderConfiguration[]>(observer => GetVideoEncoderConfigurationsImpl(observer));
 		}
 
-		public IObservable<med::VideoEncoderConfiguration[]> GetCompatibleVideoEncoderConfigurations(string profileToken) {
+		public IObservable<med::VideoEncoderConfiguration[]> GetCompatibleVideoEncoderConfigurations(ProfileToken profileToken) {
 			return Observable.Iterate<med::VideoEncoderConfiguration[]>(observer => GetCompatibleVideoEncoderConfigurationsImpl(profileToken, observer));
 		}
 
-		public IObservable<Unit> AddVideoEncoderConfiguration(string profileToken, string vecToken) {
+		public IObservable<Unit> AddVideoEncoderConfiguration(ProfileToken profileToken, VideoEncoderConfigurationToken vecToken) {
 			return Observable.Iterate<Unit>(observer => AddVideoEncoderConfigurationImpl(profileToken, vecToken));
 		}
 
@@ -393,11 +595,11 @@ namespace odm.onvif {
 			return Observable.Iterate<Unit>(observer => SetVideoEncoderConfigurationImpl(vec, forcePersistance));
 		}
 
-		public IObservable<med::VideoEncoderConfigurationOptions> GetVideoEncoderConfigurationOptions(string vecToken = null, string profileToken = null) {
+		public IObservable<med::VideoEncoderConfigurationOptions> GetVideoEncoderConfigurationOptions(VideoEncoderConfigurationToken vecToken = null, ProfileToken profileToken = null) {
 			return Observable.Iterate<med::VideoEncoderConfigurationOptions>(observer => GetVideoEncoderConfigurationOptionsImpl(vecToken, profileToken, observer));
 		}
 
-		private IEnumerable<IObservable<object>> GetVideoEncoderConfigurationOptionsImpl(string vecToken, string profileToken, IObserver<med::VideoEncoderConfigurationOptions> observer) {
+		private IEnumerable<IObservable<object>> GetVideoEncoderConfigurationOptionsImpl(VideoEncoderConfigurationToken vecToken, ProfileToken profileToken, IObserver<med::VideoEncoderConfigurationOptions> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -453,7 +655,7 @@ namespace odm.onvif {
 			}
 		}
 
-		private IEnumerable<IObservable<object>> GetCompatibleVideoEncoderConfigurationsImpl(string profileToken, IObserver<med::VideoEncoderConfiguration[]> observer) {
+		private IEnumerable<IObservable<object>> GetCompatibleVideoEncoderConfigurationsImpl(ProfileToken profileToken, IObserver<med::VideoEncoderConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -471,7 +673,7 @@ namespace odm.onvif {
 			}
 		}
 
-		private IEnumerable<IObservable<object>> AddVideoEncoderConfigurationImpl(string profileToken, string vecToken) {
+		private IEnumerable<IObservable<object>> AddVideoEncoderConfigurationImpl(ProfileToken profileToken, VideoEncoderConfigurationToken vecToken) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -493,11 +695,11 @@ namespace odm.onvif {
 			return Observable.Iterate<med::VideoAnalyticsConfiguration[]>(observer => GetVideoAnalyticsConfigurationsImpl(observer));
 		}
 
-		public IObservable<med::VideoAnalyticsConfiguration[]> GetCompatibleVideoAnalyticsConfigurations(string profileToken) {
+		public IObservable<med::VideoAnalyticsConfiguration[]> GetCompatibleVideoAnalyticsConfigurations(ProfileToken profileToken) {
 			return Observable.Iterate<med::VideoAnalyticsConfiguration[]>(observer => GetCompatibleVideoAnalyticsConfigurationsImpl(profileToken, observer));
 		}
 
-		public IObservable<med::Profile> AddVideoAnalyticsConfiguration(string profileToken, string vacToken) {
+		public IObservable<med::Profile> AddVideoAnalyticsConfiguration(ProfileToken profileToken, VideoAnalyticsConfigurationToken vacToken) {
 			return Observable.Iterate<med::Profile>(observer => AddVideoAnalyticsConfigurationImpl(profileToken, vacToken));
 		}
 
@@ -515,7 +717,7 @@ namespace odm.onvif {
 			}
 		}
 
-		private IEnumerable<IObservable<object>> GetCompatibleVideoAnalyticsConfigurationsImpl(string profileToken, IObserver<med::VideoAnalyticsConfiguration[]> observer) {
+		private IEnumerable<IObservable<object>> GetCompatibleVideoAnalyticsConfigurationsImpl(ProfileToken profileToken, IObserver<med::VideoAnalyticsConfiguration[]> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -529,7 +731,7 @@ namespace odm.onvif {
 			}
 		}
 
-		private IEnumerable<IObservable<object>> AddVideoAnalyticsConfigurationImpl(string profileToken, string vacToken) {
+		private IEnumerable<IObservable<object>> AddVideoAnalyticsConfigurationImpl(ProfileToken profileToken, VideoAnalyticsConfigurationToken vacToken) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -643,7 +845,7 @@ namespace odm.onvif {
 		}
 
 
-		private IEnumerable<IObservable<object>> GetStreamUriImpl(med::StreamSetup streamSetup, string profileToken, IObserver<string> observer) {
+		private IEnumerable<IObservable<object>> GetStreamUriImpl(med::StreamSetup streamSetup, ProfileToken profileToken, IObserver<string> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			dbg.Assert(media != null);
@@ -657,7 +859,7 @@ namespace odm.onvif {
 			}
 		}
 
-		public IObservable<string> GetStreamUri(med::StreamSetup streamSetup, string profileToken) {
+		public IObservable<string> GetStreamUri(med::StreamSetup streamSetup, ProfileToken profileToken) {
 			return Observable.Iterate<string>(observer => GetStreamUriImpl(streamSetup, profileToken, observer));
 		}
 
@@ -729,64 +931,70 @@ namespace odm.onvif {
 			return Observable.Iterate<NetworkStatus>(observer => GetNetworkStatusImpl(observer));
 		}
 
-		private IEnumerable<IObservable<object>> GetNetworkSettingsImpl(IObserver<NetworkSettings> observer) {
+		//private IEnumerable<IObservable<object>> GetNetworkSettingsImpl(IObserver<NetworkSettings> observer) {
 
-			NetworkGateway gateway = null;
-			DNSInformation dns = null;
-			tt::NetworkInterface[] nics = null;
+		//    NetworkGateway gateway = null;
+		//    DNSInformation dns = null;
+		//    tt::NetworkInterface[] nics = null;
 
-			yield return Observable.Merge(
-				GetNetworkDefaultGateway().Handle(x => gateway = x).IgnoreError(),
-				GetDNS().Handle(x => dns = x).IgnoreError(),
-				GetNetworkInterfaces().Handle(x => nics = x)
-			);
+		//    yield return Observable.Merge(
+		//        GetNetworkDefaultGateway().Handle(x => gateway = x).IgnoreError(),
+		//        GetDNS().Handle(x => dns = x).IgnoreError(),
+		//        GetNetworkInterfaces().Handle(x => nics = x)
+		//    );
 
-			dbg.Assert(gateway != null);
-			dbg.Assert(dns != null);
-			dbg.Assert(nics != null);
+		//    dbg.Assert(gateway != null);
+		//    dbg.Assert(dns != null);
+		//    dbg.Assert(nics != null);
 
-			var netSettings = new NetworkSettings();
+		//    var netSettings = new NetworkSettings();
 			
-			if (gateway!=null && gateway.IPv4Address != null && gateway.IPv4Address.Count() > 0) {
-				net::IPAddress defaultGateway = net::IPAddress.None;
-				net::IPAddress.TryParse(gateway.IPv4Address[0], out defaultGateway);
-				netSettings.defaultGateway = defaultGateway;
-			}
+		//    if (gateway!=null && gateway.IPv4Address != null && gateway.IPv4Address.Count() > 0) {
+		//        net::IPAddress defaultGateway = net::IPAddress.None;
+		//        net::IPAddress.TryParse(gateway.IPv4Address[0], out defaultGateway);
+		//        netSettings.defaultGateway = defaultGateway;
+		//    }
 
-			if (dns!=null && dns.DNSManual != null && dns.DNSManual.Count() > 0 && !String.IsNullOrWhiteSpace(dns.DNSManual[0].IPv4Address)) {
-				netSettings.staticDns = net::IPAddress.Parse(dns.DNSManual[0].IPv4Address);
-			} else if (dns!=null && dns.DNSFromDHCP != null && dns.DNSFromDHCP.Count() > 0) {
-				netSettings.staticDns = net::IPAddress.Parse(dns.DNSFromDHCP[0].IPv4Address);
-			}
+		//    if (dns!=null && dns.DNSManual != null && dns.DNSManual.Count() > 0 && !String.IsNullOrWhiteSpace(dns.DNSManual[0].IPv4Address)) {
+		//        netSettings.staticDns = net::IPAddress.Parse(dns.DNSManual[0].IPv4Address);
+		//    } else if (dns!=null && dns.DNSFromDHCP != null && dns.DNSFromDHCP.Count() > 0) {
+		//        netSettings.staticDns = net::IPAddress.Parse(dns.DNSFromDHCP[0].IPv4Address);
+		//    }
 
-			var nic = nics.Where(x => x.Enabled).FirstOrDefault();
-			if (nic != null) {
-				var nic_cfg = nic.IPv4.Config;
-				//networkSettngs.m_token = t[0].token;
-				//networkSettngs.m_mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':','-'));
-				netSettings.dhcp = nic.IPv4.Config.DHCP;
+		//    var nic = nics.Where(x => x.Enabled).FirstOrDefault();
+		//    if (nic != null) {
+		//        var nic_cfg = nic.IPv4.Config;
+		//        //networkSettngs.m_token = t[0].token;
+		//        //networkSettngs.m_mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':','-'));
+		//        netSettings.dhcp = nic.IPv4.Config.DHCP;
 
-				if (nic_cfg.Manual.Count() > 0) {
-					netSettings.staticIp = net::IPAddress.Parse(nic_cfg.Manual[0].Address);
-					netSettings.subnetPrefix = nic_cfg.Manual[0].PrefixLength;
-				} else if (nic_cfg.FromDHCP != null) {
-					netSettings.staticIp = net::IPAddress.Parse(nic_cfg.FromDHCP.Address);
-					netSettings.subnetPrefix = nic_cfg.FromDHCP.PrefixLength;
-				}
-			}
+		//        if (nic_cfg.Manual.Count() > 0) {
+		//            netSettings.staticIp = net::IPAddress.Parse(nic_cfg.Manual[0].Address);
+		//            netSettings.subnetPrefix = nic_cfg.Manual[0].PrefixLength;
+		//        } else if (nic_cfg.FromDHCP != null) {
+		//            netSettings.staticIp = net::IPAddress.Parse(nic_cfg.FromDHCP.Address);
+		//            netSettings.subnetPrefix = nic_cfg.FromDHCP.PrefixLength;
+		//        }
+		//    }
 			
-			if (observer != null) {
-				observer.OnNext(netSettings);
-			}
-		}
+		//    if (observer != null) {
+		//        observer.OnNext(netSettings);
+		//    }
+		//}
 
-		public IObservable<NetworkSettings> GetNetworkSettings() {
-			return Observable.Iterate<NetworkSettings>(observer => GetNetworkSettingsImpl(observer));
-		}
+		//public IObservable<NetworkSettings> GetNetworkSettings() {
+		//    return Observable.Iterate<NetworkSettings>(observer => GetNetworkSettingsImpl(observer));
+		//}
 
 		public static IObservable<DeviceObservable> GetDeviceClient(Uri uri) {
 			var endpointAddr = new EndpointAddress(uri);
 			var proxy = s_deviceFactory.CreateChannel(endpointAddr);
+			return Observable.Return(new DeviceObservable(proxy));
+		}
+
+		public static IObservable<DeviceObservable> GetDeviceMtomClient(Uri uri) {
+			var endpointAddr = new EndpointAddress(uri);
+			var proxy = s_deviceMtomFactory.CreateChannel(endpointAddr);
 			return Observable.Return(new DeviceObservable(proxy));
 		}
 
@@ -822,6 +1030,9 @@ namespace odm.onvif {
 
 		public IObservable<DeviceObservable> GetDeviceClient() {
 			return GetDeviceClient(m_transportUri);
+		}
+		public IObservable<DeviceObservable> GetDeviceMtomClient() {
+			return GetDeviceMtomClient(m_transportUri);
 		}
 		
 		public IObservable<MediaObservable> GetMediaClient() {
@@ -934,60 +1145,9 @@ namespace odm.onvif {
 		//    }
 		//}
 
-		private IEnumerable<IObservable<object>> CreateDefaultProfileImpl(string videoSourceToken, IObserver<med::Profile> observer) {
-			MediaObservable media = null;
-			yield return GetMediaClient().Handle(x => media = x);
 
-			med::VideoSourceConfiguration[] vscs = null;
-			yield return GetVideoSourceConfigurations().Handle(x => vscs = x);
-			med::Profile[] profiles = null;
-			yield return GetProfiles().Handle(x => profiles = x);
 
-			var vsc = vscs.Where(x => x.SourceToken == videoSourceToken).FirstOrDefault();
-
-			if (vsc == null) {
-				foreach (var v in vscs.Where(x => String.IsNullOrWhiteSpace(x.SourceToken))) {
-					med::VideoSourceConfigurationOptions options = null;
-					yield return media.GetVideoSourceConfigurationOptions(v.token, null).Handle(x => options = x);
-					dbg.Assert(options != null);
-					if (options != null && options.VideoSourceTokensAvailable.Contains(videoSourceToken)) {
-						vsc = v;
-						vsc.SourceToken = videoSourceToken;
-						yield return media.SetVideoSourceConfiguration(vsc, true).Idle();
-						break;
-					}
-				}				
-			}
-
-			if (vsc == null) {
-				dbg.Break();
-				throw new Exception("video source configuration not found");
-			}
-			var profile_token = NvcHelper.GetChannelProfileToken(videoSourceToken);
-			var profile = profiles.Where(x => x.token == profile_token).FirstOrDefault();
-			if (profile == null) {
-				yield return CreateProfile(videoSourceToken, profile_token).Handle(x => profile = x);    	
-			}
-
-			if (profile.VideoSourceConfiguration == null) {
-				yield return AddVideoSourceConfiguration(profile.token, vsc.token);
-				profile.VideoSourceConfiguration = vsc;
-			}
-
-			if (profile.VideoEncoderConfiguration == null) {
-				yield return AddDefaultVideoEncoder(profile.token).Handle(x => profile.VideoEncoderConfiguration = x);
-			}
-			
-			if (observer != null) {
-				observer.OnNext(profile);
-			}
-		}
-
-		public IObservable<med::Profile> CreateDefaultProfile(string videoSourceToken) {
-			return Observable.Iterate<med::Profile>(observer => CreateDefaultProfileImpl(videoSourceToken, observer));
-		}
-
-		private IEnumerable<IObservable<object>> AddDefaultVideoEncoderImpl(string profileToken, IObserver<med::VideoEncoderConfiguration> observer) {
+		private IEnumerable<IObservable<object>> AddDefaultVideoEncoderImpl(ProfileToken profileToken, IObserver<med::VideoEncoderConfiguration> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 
@@ -1013,7 +1173,7 @@ namespace odm.onvif {
 			}
 		}
 
-		public IObservable<med::VideoEncoderConfiguration> AddDefaultVideoEncoder(string profileToken) {
+		public IObservable<med::VideoEncoderConfiguration> AddDefaultVideoEncoder(ProfileToken profileToken) {
 			return Observable.Iterate<med::VideoEncoderConfiguration>(observer => AddDefaultVideoEncoderImpl(profileToken, observer));
 		}
 
@@ -1286,10 +1446,10 @@ namespace odm.onvif {
 
 
 
-		public IObservable<med::MediaUri> GetSnapshotUri(string profileToken) {
+		public IObservable<med::MediaUri> GetSnapshotUri(ProfileToken profileToken) {
 			return Observable.Iterate<med::MediaUri>(observer => GetSnapshotUriImpl(profileToken, observer));
 		}
-		private IEnumerable<IObservable<object>> GetSnapshotUriImpl(string profileToken, IObserver<med::MediaUri> observer) {
+		private IEnumerable<IObservable<object>> GetSnapshotUriImpl(ProfileToken profileToken, IObserver<med::MediaUri> observer) {
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 			med::MediaUri uri = null;
@@ -1338,11 +1498,11 @@ namespace odm.onvif {
 		}
 
 
-		public IObservable<Image> GetSnapshot(string profileToken) {
+		public IObservable<Image> GetSnapshot(ProfileToken profileToken) {
 			return Observable.Iterate<Image>(observer => GetSnapshotImpl(profileToken, observer));
 		}
 
-		private IEnumerable<IObservable<object>> GetSnapshotImpl(string profileToken, IObserver<Image> observer) {
+		private IEnumerable<IObservable<object>> GetSnapshotImpl(ProfileToken profileToken, IObserver<Image> observer) {
 			
 			med::MediaUri mediaLink = null;
 			yield return GetSnapshotUri(profileToken).Handle(x => mediaLink = x);

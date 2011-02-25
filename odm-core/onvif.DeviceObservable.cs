@@ -30,7 +30,7 @@ using onvif.services.device;
 using odm.utils;
 
 using onvif.types;
-using tt=onvif.types;
+using tt=global::onvif.types;
 
 namespace odm.onvif {
 	public class  DeviceObservable:IDisposable{
@@ -184,6 +184,32 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => x.parameters.User);
 		}
 
+		public IObservable<Unit> CreateUsers(User[] users) {
+			var request = new MsgCreateUsersRequest();
+			request.parameters.User = users;
+			var asyncOp = Observable.FromAsyncPattern<MsgCreateUsersRequest, MsgCreateUsersResponse>(m_proxy.BeginCreateUsers, m_proxy.EndCreateUsers);
+			return asyncOp(request).Select(x => new Unit());
+		}
+
+		public IObservable<SystemLog> GetSystemLog() {
+			var request = new MsgGetSystemLogRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetSystemLogRequest, MsgGetSystemLogResponse>(m_proxy.BeginGetSystemLog, m_proxy.EndGetSystemLog);
+			return asyncOp(request).Select(x => x.parameters.SystemLog);
+		}
+
+		public IObservable<BackupFile[]> GetSystemBackup() {
+			var request = new MsgGetSystemBackupRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetSystemBackupRequest, MsgGetSystemBackupResponse>(m_proxy.BeginGetSystemBackup, m_proxy.EndGetSystemBackup);
+			return asyncOp(request).Select(x => x.parameters.BackupFiles);
+		}
+
+		public IObservable<Unit> RestoreSystem(BackupFile[] backupFiles) {
+			var request = new MsgRestoreSystemRequest();
+			request.parameters.BackupFiles = backupFiles;
+			var asyncOp = Observable.FromAsyncPattern<MsgRestoreSystemRequest, MsgRestoreSystemResponse>(m_proxy.BeginRestoreSystem, m_proxy.EndRestoreSystem);
+			return asyncOp(request).Select(x => new Unit());
+		}
+
 		//security
 
 		public IObservable<bool> GetClientCertificateMode() {
@@ -199,6 +225,34 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => new Unit());
 		}
 
+		public IObservable<Certificate[]> GetCertificates() {
+			var request = new MsgGetCertificatesRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetCertificatesRequest, MsgGetCertificatesResponse>(m_proxy.BeginGetCertificates, m_proxy.EndGetCertificates);
+			return asyncOp(request).Select(x => x.parameters.NvtCertificate);
+		}
+
+		public IObservable<Certificate> CreateCertificate(string certificateId, string subject, System.DateTime validNotBefore, System.DateTime validNotAfter) {
+			var request = new MsgCreateCertificateRequest();
+			request.parameters.CertificateID = certificateId;
+			request.parameters.Subject = subject;
+			request.parameters.ValidNotBefore = validNotBefore;
+			request.parameters.ValidNotAfter = validNotAfter;
+			var asyncOp = Observable.FromAsyncPattern<MsgCreateCertificateRequest, MsgCreateCertificateResponse>(m_proxy.BeginCreateCertificate, m_proxy.EndCreateCertificate);
+			return asyncOp(request).Select(x => x.parameters.NvtCertificate);
+		}
+
+		public IObservable<CertificateStatus[]> GetCertificatesStatus() {
+			var request = new MsgGetCertificatesStatusRequest();
+			var asyncOp = Observable.FromAsyncPattern<MsgGetCertificatesStatusRequest, MsgGetCertificatesStatusResponse>(m_proxy.BeginGetCertificatesStatus, m_proxy.EndGetCertificatesStatus);
+			return asyncOp(request).Select(x => x.parameters.CertificateStatus);
+		}
+
+		public IObservable<Unit> SetCertificatesStatus(CertificateStatus[] certificateStatuses) {
+			var request = new MsgSetCertificatesStatusRequest();
+			request.parameters.CertificateStatus = certificateStatuses;
+			var asyncOp = Observable.FromAsyncPattern<MsgSetCertificatesStatusRequest, MsgSetCertificatesStatusResponse>(m_proxy.BeginSetCertificatesStatus, m_proxy.EndSetCertificatesStatus);
+			return asyncOp(request).Select(x => new Unit());
+		}
 
 		public void Dispose() {
 		   //m_proxy.Close();

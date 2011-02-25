@@ -23,18 +23,23 @@ namespace odm.models {
 			NetworkStatus netstat = null;
 			DeviceObservable device = null;
 			SystemDateTime time = null;
+			Scope[] scopes = null;
 			
 			yield return session.GetDeviceClient().Handle(x => device = x);
-			//yield return Observable.Merge(
-				yield return session.GetDeviceInfo().Handle(x => info = x);
-				yield return session.GetNetworkStatus().Handle(x => netstat = x);
-				yield return device.GetSystemDateAndTime().Handle(x => time = x);
-			//);
-
+			yield return Observable.Merge(
+				session.GetDeviceInfo().Handle(x => info = x),
+				session.GetNetworkStatus().Handle(x => netstat = x),
+				device.GetSystemDateAndTime().Handle(x => time = x),
+				session.GetScopes().Handle(x => scopes = x)
+			);
+			
 			dbg.Assert(info != null);
 			dbg.Assert(netstat != null);
 
 			m_name.SetBoth(info.Name);
+			m_location.SetBoth(NvcHelper.GetLocation(scopes.Select(x=>x.ScopeItem)));
+			
+			NotifyPropertyChanged(x => x.location);
 			NotifyPropertyChanged(x => x.Name);
 			
 			HardwareVer = info.HardwareId;
@@ -65,6 +70,9 @@ namespace odm.models {
 			DeviceObservable device = null;
 			SystemDateTime time = null;
 
+			if (m_location.isModified) {
+				yield return session.SetLocation(m_location.current).Idle();
+			}
 			
 			if (m_name.isModified) {
 				yield return session.SetName(m_name.current).Idle();
@@ -95,6 +103,7 @@ namespace odm.models {
 
 
 		private ChangeTrackingProperty<string> m_name = new ChangeTrackingProperty<string>();
+		private ChangeTrackingProperty<string> m_location = new ChangeTrackingProperty<string>();
 		private ChangeTrackingProperty<System.DateTime> m_dateTime = new ChangeTrackingProperty<System.DateTime>();
 		
 		private string m_HardwareVer;
@@ -113,6 +122,18 @@ namespace odm.models {
 				if (m_name.current != value) {
 					m_name.SetCurrent(m_changeSet, value);
 					NotifyPropertyChanged(x => x.Name);
+				}
+			}
+		}
+		public string location {
+			get {
+
+				return m_location.current;
+			}
+			set {
+				if (m_location.current != value) {
+					m_location.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.location);
 				}
 			}
 		}

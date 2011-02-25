@@ -46,8 +46,8 @@ namespace odm.models {
 			get;
 			private set;
 		}
-		private bool m_isModified = false;
 
+		private bool m_isModified = false;
 		public bool isModified {
 			get {
 				return m_isModified;
@@ -59,8 +59,8 @@ namespace odm.models {
 				}
 			}
 		}
-
 	}
+
 	public class ChangeSet {
 		//int m_refCount = 0;
 		LinkedList<ChangeTrackingProperty> m_props= new LinkedList<ChangeTrackingProperty>();

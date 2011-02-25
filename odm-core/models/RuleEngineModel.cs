@@ -11,16 +11,22 @@ using onvif.services.media;
 using onvif.services.analytics;
 using med = onvif.services.media;
 //using analytics = onvif.services.analytics;
-using rul = onvif.services.analytics;
-using tt = onvif.types;
+using rul = global::onvif.services.analytics;
+using tt = global::onvif.types;
 using System.Globalization;
+using onvif;
 
 namespace odm.models {
 	public class RuleEngineModel : ModelBase<RuleEngineModel> {
-		ChannelDescription m_channel;
-		public RuleEngineModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public RuleEngineModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		public RuleEngineModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
+
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<RuleEngineModel> observer) {
 			RuleEngineObservable ruleEngine = null;
 			yield return session.GetRuleEngineClient().Handle(x => ruleEngine = x);
@@ -38,10 +44,11 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
 			VideoAnalyticsConfiguration vac = profile.VideoAnalyticsConfiguration;
@@ -100,7 +107,8 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			var vac = profile.VideoAnalyticsConfiguration;
 			if (vac == null) {
 				VideoAnalyticsConfiguration[] vacs = null;

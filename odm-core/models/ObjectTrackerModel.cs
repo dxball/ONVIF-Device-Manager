@@ -10,9 +10,10 @@ using odm.onvif;
 using odm.utils;
 using onvif.services.media;
 using onvif.services.analytics;
-using media = onvif.services.media;
-using analytics = onvif.services.analytics;
-using tt = onvif.types;
+using media = global::onvif.services.media;
+using analytics = global::onvif.services.analytics;
+using tt = global::onvif.types;
+using onvif;
 
 namespace odm.models {
 
@@ -58,7 +59,13 @@ namespace odm.models {
 		}
 
 		public static void SetSimpleItem(this media::Config config, string name, string value) {
-			var item = config.Parameters.SimpleItem.FirstOrDefault(x=>x.Name == name);
+			if (config.Parameters == null) {
+				config.Parameters = new media::ItemList();
+			}
+			if (config.Parameters.SimpleItem == null) {
+				config.Parameters.SimpleItem = new media::ItemListSimpleItem[] { };
+			}
+			var item = config.Parameters.SimpleItem.FirstOrDefault(x => x.Name == name);
 			if (item == null) {
 				item = new media::ItemListSimpleItem() {
 					Name = name
@@ -83,9 +90,13 @@ namespace odm.models {
 	}
 
 	public partial class ObjectTrackerModel : ModelBase<ObjectTrackerModel> {
-		ChannelDescription m_channel;
-		public ObjectTrackerModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public ObjectTrackerModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		public ObjectTrackerModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
 
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<ObjectTrackerModel> observer) {
@@ -101,10 +112,11 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
 			yield return session.AddDefaultVideoAnalytics(profile).Idle();
@@ -113,21 +125,25 @@ namespace odm.models {
 			yield return session.GetVideoAnalyticModule(profile, "ObjectTracker").Handle(x => module = x);
 			dbg.Assert(module != null);
 
-			minObjectArea = module.GetSimpleItemAsFloat("min_object_area");
-			maxObjectArea = module.GetSimpleItemAsFloat("max_object_area");
-			maxObjectSpeed = module.GetSimpleItemAsInt("max_object_speed");
-			contrastSensitivity = module.GetSimpleItemAsInt("contrast_sensivity");
-			displacementSensitivity = module.GetSimpleItemAsInt("displacement_sensivity");
-			stabilizationTime = module.GetSimpleItemAsInt("stabilization_time");
+			media::Config sceneModule = null;
+			yield return session.GetVideoAnalyticModule(profile, "SceneCalibrator").Handle(x => sceneModule = x);
+			dbg.Assert(sceneModule != null);
 
-			rose_up = module.GetSimpleItemAsInt("rose_up");
-			rose_up_right = module.GetSimpleItemAsInt("rose_up_right");
-			rose_right = module.GetSimpleItemAsInt("rose_right");
-			rose_down_right = module.GetSimpleItemAsInt("rose_down_right");
-			rose_down = module.GetSimpleItemAsInt("rose_down");
-			rose_down_left = module.GetSimpleItemAsInt("rose_down_left");
-			rose_left = module.GetSimpleItemAsInt("rose_left");
-			rose_up_left = module.GetSimpleItemAsInt("rose_up_left");
+			m_minObjectArea.SetBoth(module.GetSimpleItemAsFloat("min_object_area"));
+			m_maxObjectArea.SetBoth(module.GetSimpleItemAsFloat("max_object_area"));
+			m_maxObjectSpeed.SetBoth(module.GetSimpleItemAsInt("max_object_speed"));
+			m_contrastSensitivity.SetBoth(module.GetSimpleItemAsInt("contrast_sensivity"));
+			m_displacementSensitivity.SetBoth(module.GetSimpleItemAsInt("displacement_sensivity"));
+			m_stabilizationTime.SetBoth(module.GetSimpleItemAsInt("stabilization_time"));
+
+			m_rose_up.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_up"));
+			m_rose_up_right.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_up_right"));
+			m_rose_right.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_right"));
+			m_rose_down_right.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_down_right"));
+			m_rose_down.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_down"));
+			m_rose_down_left.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_down_left"));
+			m_rose_left.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_left"));
+			m_rose_up_left.SetBoth(sceneModule.GetSimpleItemAsFloat("rose_up_left"));
 
 			encoderResolution = new Size() {
 				Width = profile.VideoEncoderConfiguration.Resolution.Width,
@@ -143,6 +159,13 @@ namespace odm.models {
 			yield return session.GetStreamUri(streamSetup, profile.token).Handle(x => mediaUri = x);
 			dbg.Assert(mediaUri != null);
 
+			NotifyPropertyChanged(x => x.minObjectArea);
+			NotifyPropertyChanged(x => x.maxObjectArea);
+			NotifyPropertyChanged(x => x.maxObjectSpeed);
+			NotifyPropertyChanged(x => x.contrastSensitivity);
+			NotifyPropertyChanged(x => x.displacementSensitivity);
+			NotifyPropertyChanged(x => x.stabilizationTime);
+
 			NotifyPropertyChanged(x => x.rose_up);
 			NotifyPropertyChanged(x => x.rose_up_right);
 			NotifyPropertyChanged(x => x.rose_right);
@@ -154,8 +177,6 @@ namespace odm.models {
 			NotifyPropertyChanged(x => x.encoderResolution);
 			NotifyPropertyChanged(x => x.mediaUri);
 			NotifyPropertyChanged(x => x.isModified);
-
-			isModified = true;
 
 			if (observer != null) {
 				observer.OnNext(this);
@@ -172,7 +193,10 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
+			dbg.Assert(profile != null);
+
 			var vac = profile.VideoAnalyticsConfiguration;
 			if (vac == null) {
 				VideoAnalyticsConfiguration[] vacs =null;
@@ -184,6 +208,11 @@ namespace odm.models {
 			
 			media::Config module = null;
 			yield return session.GetVideoAnalyticModule(profile, "ObjectTracker").Handle(x => module = x);
+			dbg.Assert(module != null);
+
+			media::Config sceneModule = null;
+			yield return session.GetVideoAnalyticModule(profile, "SceneCalibrator").Handle(x => sceneModule = x);
+			dbg.Assert(sceneModule != null);
 
 			module.SetSimpleItemAsFloat("min_object_area", minObjectArea);
 			module.SetSimpleItemAsFloat("max_object_area", maxObjectArea);
@@ -193,21 +222,54 @@ namespace odm.models {
 			module.SetSimpleItemAsInt("displacement_sensivity", displacementSensitivity);
 			module.SetSimpleItemAsFloat("stabilization_time", stabilizationTime);
 
-			module.SetSimpleItemAsFloat("rose_up", rose_up);
-			module.SetSimpleItemAsFloat("rose_up_right", rose_up_right);
-			module.SetSimpleItemAsFloat("rose_right", rose_right);
-			module.SetSimpleItemAsFloat("rose_down_right", rose_down_right);
-			module.SetSimpleItemAsFloat("rose_down", rose_down);
-			module.SetSimpleItemAsFloat("rose_down_left", rose_down_left);
-			module.SetSimpleItemAsFloat("rose_left", rose_left);
-			module.SetSimpleItemAsFloat("rose_up_left", rose_up_left);
+			sceneModule.SetSimpleItemAsFloat("rose_up", rose_up);
+			sceneModule.SetSimpleItemAsFloat("rose_up_right", rose_up_right);
+			sceneModule.SetSimpleItemAsFloat("rose_right", rose_right);
+			sceneModule.SetSimpleItemAsFloat("rose_down_right", rose_down_right);
+			sceneModule.SetSimpleItemAsFloat("rose_down", rose_down);
+			sceneModule.SetSimpleItemAsFloat("rose_down_left", rose_down_left);
+			sceneModule.SetSimpleItemAsFloat("rose_left", rose_left);
+			sceneModule.SetSimpleItemAsFloat("rose_up_left", rose_up_left);
 
 			yield return media.SetVideoAnalyticsConfiguration(vac, true).Idle();
-			if (observer != null) {
-				observer.OnNext(this);
-			}				
+
+			yield return Observable.Concat(LoadImpl(session, observer)).Idle();
 		}
 
+		public override void RevertChanges() {
+
+			m_minObjectArea.Revert();
+			m_maxObjectArea.Revert();
+			m_maxObjectSpeed.Revert();
+			m_contrastSensitivity.Revert();
+			m_displacementSensitivity.Revert();
+			m_stabilizationTime.Revert();
+
+			m_rose_up.Revert();
+			m_rose_up_right.Revert();
+			m_rose_right.Revert();
+			m_rose_down_right.Revert();
+			m_rose_down.Revert();
+			m_rose_down_left.Revert();
+			m_rose_left.Revert();
+			m_rose_up_left.Revert();			
+
+			NotifyPropertyChanged(x => x.minObjectArea);
+			NotifyPropertyChanged(x => x.maxObjectArea);
+			NotifyPropertyChanged(x => x.maxObjectSpeed);
+			NotifyPropertyChanged(x => x.contrastSensitivity);
+			NotifyPropertyChanged(x => x.displacementSensitivity);
+			NotifyPropertyChanged(x => x.stabilizationTime);
+
+			NotifyPropertyChanged(x => x.rose_up);
+			NotifyPropertyChanged(x => x.rose_up_right);
+			NotifyPropertyChanged(x => x.rose_right);
+			NotifyPropertyChanged(x => x.rose_down_right);
+			NotifyPropertyChanged(x => x.rose_down);
+			NotifyPropertyChanged(x => x.rose_down_left);
+			NotifyPropertyChanged(x => x.rose_left);
+			NotifyPropertyChanged(x => x.rose_up_left);
+		}
 		//private int m_displacementSensitivity;
 		//private int m_contrastSensitivity;
 		//private float m_minObjectArea;
@@ -215,21 +277,180 @@ namespace odm.models {
 		//private int m_maxObjectSpeed;
 		//private float m_stabilizationTime;
 
-		public int displacementSensitivity { get; set; }
-		public int contrastSensitivity { get; set; }
-		public float minObjectArea { get; set; }
-		public float maxObjectArea { get; set; }
-		public int maxObjectSpeed { get; set; }
-		public float stabilizationTime { get; set; }
+		private ChangeTrackingProperty<int> m_displacementSensitivity = new ChangeTrackingProperty<int>();
+		public int displacementSensitivity {
+			get {
+				return m_displacementSensitivity.current;
+			}
+			set {
+				if (m_displacementSensitivity.current != value) {
+					m_displacementSensitivity.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.displacementSensitivity);
+				}
+			}
+		}
 
-		public float rose_up;
-		public float rose_up_right;
-		public float rose_right;
-		public float rose_down_right;
-		public float rose_down;
-		public float rose_down_left;
-		public float rose_left;
-		public float rose_up_left;
+		private ChangeTrackingProperty<int> m_contrastSensitivity = new ChangeTrackingProperty<int>();
+		public int contrastSensitivity {
+			get {
+				return m_contrastSensitivity.current;
+			}
+			set{
+				if(m_contrastSensitivity.current!=value){
+					m_contrastSensitivity.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.contrastSensitivity);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_minObjectArea = new ChangeTrackingProperty<float>();
+		public float minObjectArea {
+			get{return m_minObjectArea.current;}
+			set {
+				if (m_minObjectArea.current != value) {
+					m_minObjectArea.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.minObjectArea);
+				}
+		}}
+
+		private ChangeTrackingProperty<float> m_maxObjectArea = new ChangeTrackingProperty<float>();
+		public float maxObjectArea {
+			get {
+				return m_maxObjectArea.current;
+			}
+			set {
+				if (m_maxObjectArea.current != value) {
+					m_maxObjectArea.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.maxObjectArea);
+				}
+		}}
+
+		private ChangeTrackingProperty<int> m_maxObjectSpeed = new ChangeTrackingProperty<int>();
+		public int maxObjectSpeed {
+			get {
+				return m_maxObjectSpeed.current;
+			}
+			set {
+				if (m_maxObjectSpeed.current != value) {
+					m_maxObjectSpeed.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.maxObjectSpeed);
+				}
+		}}
+
+
+		private ChangeTrackingProperty<float> m_stabilizationTime = new ChangeTrackingProperty<float>();
+		public float stabilizationTime {
+			get{return m_stabilizationTime.current;}
+			set {
+				if (m_stabilizationTime.current != value) {
+					m_stabilizationTime.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.stabilizationTime);
+				}
+		}}
+
+		private ChangeTrackingProperty<float> m_rose_up = new ChangeTrackingProperty<float>();
+		public float rose_up {
+			get {
+				return m_rose_up.current;
+			}
+			set {
+				if (m_rose_up.current != value) {
+					m_rose_up.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_up);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_up_right = new ChangeTrackingProperty<float>();
+		public float rose_up_right {
+			get {
+				return m_rose_up_right.current;
+			}
+			set {
+				if (m_rose_up_right.current != value) {
+					m_rose_up_right.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_up_right);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_right = new ChangeTrackingProperty<float>();
+		public float rose_right {
+			get {
+				return m_rose_right.current;
+			}
+			set {
+				if (m_rose_right.current != value) {
+					m_rose_right.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_right);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_down_right = new ChangeTrackingProperty<float>();
+		public float rose_down_right {
+			get {
+				return m_rose_down_right.current;
+			}
+			set {
+				if (m_rose_down_right.current != value) {
+					m_rose_down_right.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_down_right);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_down = new ChangeTrackingProperty<float>();
+		public float rose_down {
+			get {
+				return m_rose_down.current;
+			}
+			set {
+				if (m_rose_down.current != value) {
+					m_rose_down.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_down);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_down_left = new ChangeTrackingProperty<float>();
+		public float rose_down_left {
+			get {
+				return m_rose_down_left.current;
+			}
+			set {
+				if (m_rose_down_left.current != value) {
+					m_rose_down_left.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_down_left);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_left = new ChangeTrackingProperty<float>();
+		public float rose_left {
+			get {
+				return m_rose_left.current;
+			}
+			set {
+				if (m_rose_left.current != value) {
+					m_rose_left.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_left);
+				}
+			}
+		}
+
+		private ChangeTrackingProperty<float> m_rose_up_left = new ChangeTrackingProperty<float>();
+		public float rose_up_left {
+			get {
+				return m_rose_up_left.current;
+			}
+			set {
+				if (m_rose_up_left.current != value) {
+					m_rose_up_left.SetCurrent(m_changeSet, value);
+					NotifyPropertyChanged(x => x.rose_up_left);
+				}
+			}
+		}
 
 		public Size encoderResolution{get; private set;}
 

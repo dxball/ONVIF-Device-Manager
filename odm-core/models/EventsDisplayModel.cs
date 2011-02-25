@@ -7,10 +7,10 @@ using System.Collections;
 using System.Drawing;
 
 namespace odm.models {
-	public class EventsDisplayModel {
-		public EventsDisplayModel(ChannelDescription channel) { }
-		public Queue<mEventDescriptor> events{get;set;}
-	}
+	//public class EventsDisplayModel {
+	//    public EventsDisplayModel(ChannelDescription channel) { }
+	//    public Queue<mEventDescriptor> events{get;set;}
+	//}
 
 	public class mEventDescriptor {
 		public Image screen { get; set; }

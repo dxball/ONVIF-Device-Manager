@@ -58,7 +58,7 @@ namespace odm.models {
 			
 			return new NetworkHost() {
 				Type = NetworkHostType.DNS,
-				IPv4Address = netHost
+				DNSname = netHost
 			};
 			
 		}
@@ -86,9 +86,9 @@ namespace odm.models {
 			}
 
 			if (ntpInfo.NTPFromDHCP != null) {
-				m_ntpServerFromDhcp.SetBoth(String.Join("; ", ntpInfo.NTPFromDHCP.Select(x => NetHostToString(x))));
+				ntpServerFromDhcp = String.Join("; ", ntpInfo.NTPFromDHCP.Select(x => NetHostToString(x)));
 			} else {
-				m_ntpServerFromDhcp.SetBoth(String.Empty);
+				ntpServerFromDhcp = String.Empty;
 			}
 						
 			m_useNtpFromDhcp.SetBoth(ntpInfo.FromDHCP);
@@ -110,9 +110,10 @@ namespace odm.models {
 			NotifyPropertyChanged(x => x.ntpServerFromDhcp);
 			NotifyPropertyChanged(x => x.ntpServerManual);
 			NotifyPropertyChanged(x => x.useNtpFromDhcp);
-
+			
 			NotifyPropertyChanged(x => x.timeZone);
 			NotifyPropertyChanged(x => x.dateTime);
+			NotifyPropertyChanged(x => x.daylightSavings);
 			NotifyPropertyChanged(x => x.isModified);
 
 			if (observer != null) {
@@ -123,8 +124,15 @@ namespace odm.models {
 		public override void RevertChanges() {
 			m_timeZone.Revert();
 			m_dateTime.Revert();
+			m_daylightSavings.Revert();
+			m_ntpServerManual.Revert();
+			m_useNtpFromDhcp.Revert();
+
 			NotifyPropertyChanged(x => x.timeZone);
 			NotifyPropertyChanged(x => x.dateTime);
+			NotifyPropertyChanged(x => x.daylightSavings);
+			NotifyPropertyChanged(x => x.ntpServerManual);
+			NotifyPropertyChanged(x => x.useNtpFromDhcp);
 			NotifyPropertyChanged(x => x.isModified);
 		}
 
@@ -164,7 +172,6 @@ namespace odm.models {
 		private ChangeTrackingProperty<System.DateTime> m_dateTime = new ChangeTrackingProperty<System.DateTime>();
 		private ChangeTrackingProperty<bool> m_daylightSavings = new ChangeTrackingProperty<bool>();
 		private ChangeTrackingProperty<string> m_ntpServerManual = new ChangeTrackingProperty<string>();
-		private ChangeTrackingProperty<string> m_ntpServerFromDhcp = new ChangeTrackingProperty<string>();
 		private ChangeTrackingProperty<bool> m_useNtpFromDhcp = new ChangeTrackingProperty<bool>();
 		
 		public string timeZone {
@@ -217,17 +224,7 @@ namespace odm.models {
 			}
 		}
 
-		public string ntpServerFromDhcp {
-			get {
-				return m_ntpServerFromDhcp.current;
-			}
-			set {
-				if (m_ntpServerFromDhcp.current != value) {
-					m_ntpServerFromDhcp.SetCurrent(m_changeSet, value);
-					NotifyPropertyChanged(x => x.ntpServerFromDhcp);
-				}
-			}
-		}
+		public string ntpServerFromDhcp {get; private set;}
 
 		public bool useNtpFromDhcp {
 			get {

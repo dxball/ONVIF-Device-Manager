@@ -28,20 +28,30 @@ using odm.utils;
 
 using onvif.services.device;
 using onvif.types;
+using System.ComponentModel;
 
 namespace odm.models {
-	public class DeviceDescriptionModel : ModelBase<DeviceDescriptionModel> {
-		private string m_Name = String.Empty;
-		private string m_Address = String.Empty;
-		private string m_Location = String.Empty;
+
+	public interface IDeviceDescriptionModel : INotifyPropertyChanged {
+		string name{get;set;}
+		string address{get;set;}
+		string location{get;set;}
+		string firmware{get;set;}
+		//public Exception error {get;set;}
+	}
+
+	public class DeviceDescriptionModel : ModelBase<DeviceDescriptionModel>, IDeviceDescriptionModel {
+		private string m_name = String.Empty;
+		private string m_address = String.Empty;
+		private string m_location = String.Empty;
 		//private string m_Id;
-		private string m_Firmware = String.Empty;
+		private string m_firmware = String.Empty;
 		private Exception m_error;
 		
 		public DeviceDescriptionModel(DeviceDescription description) {
-			this.Name = description.name;
-			this.Location = description.location;
-			this.Address = String.Join(" ,", description.uris.Select(x => x.Host));
+			this.name = description.name;
+			this.location = description.location;
+			this.address = String.Join(" ,", description.uris.Select(x => x.Host));
 		}
 
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceDescriptionModel> observer) {
@@ -63,9 +73,9 @@ namespace odm.models {
 			dbg.Assert(caps != null);
 
 			if (info != null) {
-				Name = info.Name;
-				Location = info.Location;
-				Firmware = info.FirmwareVersion;
+				name = info.Name;
+				location = info.Location;
+				firmware = info.FirmwareVersion;
 			}
 
 			if (observer != null) {
@@ -73,38 +83,38 @@ namespace odm.models {
 			}
 		}		
 
-		public string Name {
+		public string name {
 			get {
-				return m_Name;
+				return m_name;
 			}
 			set {
-				if (m_Name != value) {
-					m_Name = value;
-					NotifyPropertyChanged(x => x.Name);
+				if (m_name != value) {
+					m_name = value;
+					NotifyPropertyChanged(x => x.name);
 				}
 			}
 		}
 
-		public string Address {
+		public string address {
 			get {
-				return m_Address;
+				return m_address;
 			}
 			set {
-				if (m_Address != value) {
-					m_Address = value;
-					NotifyPropertyChanged(x => x.Address);
+				if (m_address != value) {
+					m_address = value;
+					NotifyPropertyChanged(x => x.address);
 				}
 			}
 		}
 
-		public string Location {
+		public string location {
 			get {
-				return m_Location;
+				return m_location;
 			}
 			set {
-				if (m_Location != value) {
-					m_Location = value;
-					NotifyPropertyChanged(x => x.Location);
+				if (m_location != value) {
+					m_location = value;
+					NotifyPropertyChanged(x => x.location);
 				}
 			}
 		}
@@ -121,14 +131,14 @@ namespace odm.models {
 		//    }
 		//}
 
-		public string Firmware {
+		public string firmware {
 			get {
-				return m_Firmware;
+				return m_firmware;
 			}
 			set {
-				if (m_Firmware != value) {
-					m_Firmware = value;
-					NotifyPropertyChanged(x => x.Firmware);
+				if (m_firmware != value) {
+					m_firmware = value;
+					NotifyPropertyChanged(x => x.firmware);
 				}
 			}
 		}
@@ -144,7 +154,5 @@ namespace odm.models {
 				}
 			}
 		}
-
-
 	}
 }

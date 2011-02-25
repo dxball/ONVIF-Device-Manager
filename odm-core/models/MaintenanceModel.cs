@@ -9,6 +9,7 @@ using odm.utils;
 
 using dev = global::onvif.services.device;
 using med = global::onvif.services.media;
+using tt = global::onvif.types;
 using onvif.services.device;
 using onvif.services.media;
 using System.IO;
@@ -16,15 +17,17 @@ using System.Net;
 using System.Net.Mime;
 using odm.utils.rx;
 using System.Threading;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace odm.models {
 
-	public class DeviceMaintenanceModel : ModelBase<DeviceMaintenanceModel> {
-		public DeviceMaintenanceModel() {
+	public class MaintenanceModel : ModelBase<MaintenanceModel> {
+		public MaintenanceModel() {
 			firmwareUpgradeSupported = false;
 		}
 
-		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceMaintenanceModel> observer) {
+		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<MaintenanceModel> observer) {
 			GetDeviceInformationResponse info = null;
 			yield return session.GetDeviceInformation().Handle(x => info = x);
 			dbg.Assert(info != null);
@@ -51,11 +54,56 @@ namespace odm.models {
 			}
 		}
 
+		[Serializable]
+		public class BackupFiles {
+			[XmlElement("BackupFile")]
+			//[XmlArrayItem("BackupFile")]
+			public tt::BackupFile[] files;
+		}
+
+		protected IEnumerable<IObservable<object>> BackupImpl(Stream stream, IObserver<Unit> observer) {
+			BackupFiles backup = new BackupFiles();
+			yield return session.GetSystemBackup().Handle(x => backup.files = x);
+			dbg.Assert(backup.files != null);
+
+			using (var _w = XmlDictionaryWriter.CreateMtomWriter(stream, Encoding.UTF8, int.MaxValue, "text/xml")) {
+				_w.WriteNode(backup.Serialize().CreateNavigator(), false);
+			}
+
+			if (observer != null) {
+				observer.OnNext(new Unit());
+			}
+		}
+
+		public IObservable<Unit> Backup(Stream stream) {
+			return Observable.Iterate<Unit>(observer => BackupImpl(stream, observer)).ObserveOn(SynchronizationContext.Current);
+		}
+
+
+		protected IEnumerable<IObservable<object>> RestoreImpl(Stream stream, IObserver<Unit> observer) {
+			BackupFiles backup = null;
+
+			using (var _r = XmlDictionaryReader.CreateMtomReader(stream, Encoding.UTF8, new XmlDictionaryReaderQuotas())) {
+				backup = (_r as XmlReader).Deserialize<BackupFiles>();
+			}
+
+			yield return session.RestoreSystem(backup.files).Idle();
+			
+			
+			if (observer != null) {
+				observer.OnNext(new Unit());
+			}
+		}
+
+		public IObservable<Unit> Restore(Stream stream) {
+			return Observable.Iterate<Unit>(observer => RestoreImpl(stream, observer)).ObserveOn(SynchronizationContext.Current);
+		}
+
 		public IObservable<string> Reboot() {
 			return session.SystemReboot().ObserveOn(SynchronizationContext.Current);
 		}
 
-		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<DeviceMaintenanceModel> observer) {
+		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<MaintenanceModel> observer) {
 			DeviceObservable device = null;
 			yield return session.GetDeviceClient().Handle(x => device = x);
 			dbg.Assert(device != null);

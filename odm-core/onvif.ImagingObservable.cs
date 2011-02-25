@@ -24,8 +24,13 @@ using System.Text;
 using System.ServiceModel;
 
 using onvif.services.imaging;
+using System.Xml.Serialization;
+using onvif;
 
 namespace odm.onvif {
+
+	
+
 	public class ImagingObservable:IDisposable {
 		ImagingPort m_proxy;
 
@@ -33,27 +38,27 @@ namespace odm.onvif {
 			m_proxy = proxy;
 		}
 		
-		public IObservable<ImagingSettings> GetImagingSettings(string videoSourceToken) {
+		public IObservable<ImagingSettings> GetImagingSettings(VideoSourceToken videoSourceToken) {
 			var request = new GetImagingSettingsRequest() {
-				VideoSourceToken = videoSourceToken
+				VideoSourceToken = videoSourceToken.value
 			};
 			var asyncOp = Observable.FromAsyncPattern<GetImagingSettingsRequest, GetImagingSettingsResponse>(m_proxy.BeginGetImagingSettings, m_proxy.EndGetImagingSettings);
 			return asyncOp(request).Select(x => x.ImagingSettings);
 		}
 
-		public IObservable<Unit> SetImagingSettings(string videoSourceToken, ImagingSettings imagingSettings, bool forcePersistence = true) {
+		public IObservable<Unit> SetImagingSettings(VideoSourceToken videoSourceToken, ImagingSettings imagingSettings, bool forcePersistence = true) {
 			var request = new SetImagingSettingsRequest() {
 				ImagingSettings = imagingSettings,
-				VideoSourceToken = videoSourceToken,
+				VideoSourceToken = videoSourceToken.value,
 				ForcePersistence = forcePersistence
 			};
 			var asyncOp = Observable.FromAsyncPattern<SetImagingSettingsRequest, SetImagingSettingsResponse>(m_proxy.BeginSetImagingSettings, m_proxy.EndSetImagingSettings);
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<ImagingOptions> GetOptions(string videoSourceToken) {
+		public IObservable<ImagingOptions> GetOptions(VideoSourceToken videoSourceToken) {
 			var request = new GetOptionsRequest() {
-				VideoSourceToken = videoSourceToken
+				VideoSourceToken = videoSourceToken.value
 			};
 			var asyncOp = Observable.FromAsyncPattern<GetOptionsRequest, GetOptionsResponse>(m_proxy.BeginGetOptions, m_proxy.EndGetOptions);
 			return asyncOp(request).Select(x => x.ImagingOptions);
@@ -67,25 +72,25 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => x.Status);
 		}
 
-		public IObservable<MoveOptions> GetMoveOptions(string videoSourceToken) {
+		public IObservable<MoveOptions> GetMoveOptions(VideoSourceToken videoSourceToken) {
 			var request = new GetMoveOptionsRequest() {
-				VideoSourceToken = videoSourceToken
+				VideoSourceToken = videoSourceToken.value
 			};
 			var asyncOp = Observable.FromAsyncPattern<GetMoveOptionsRequest, GetMoveOptionsResponse>(m_proxy.BeginGetMoveOptions, m_proxy.EndGetMoveOptions);
 			return asyncOp(request).Select(x => x.MoveOptions);
 		}
-		
-		public IObservable<Unit> Move(string videoSourceToken) {
+
+		public IObservable<Unit> Move(VideoSourceToken videoSourceToken) {
 			var request = new MoveRequest() {
-				VideoSourceToken = videoSourceToken
+				VideoSourceToken = videoSourceToken.value
 			};
 			var asyncOp = Observable.FromAsyncPattern<MoveRequest, MoveResponse>(m_proxy.BeginMove, m_proxy.EndMove);
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<Unit> Stop(string videoSourceToken) {
+		public IObservable<Unit> Stop(VideoSourceToken videoSourceToken) {
 			var request = new StopRequest() {
-				VideoSourceToken = videoSourceToken
+				VideoSourceToken = videoSourceToken.value
 			};
 			var asyncOp = Observable.FromAsyncPattern<StopRequest, StopResponse>(m_proxy.BeginStop, m_proxy.EndStop);
 			return asyncOp(request).Select(x => new Unit());

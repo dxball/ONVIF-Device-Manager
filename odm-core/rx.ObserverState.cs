@@ -29,12 +29,16 @@ namespace odm.utils.rx {
 	
 	public sealed class ObserverState : AsyncStateValue {
 		private ObserverState() { }
+		public static readonly ObserverState delayed = new ObserverState();
 		public static readonly ObserverState subscribed = new ObserverState();
 		public static readonly ObserverState disposed = new ObserverState();
 		public static readonly ObserverState completed = new ObserverState();
 		public static readonly ObserverState failed = new ObserverState();
 		public static AsyncState<ObserverState> Create() {
 			return new AsyncState<ObserverState>(ObserverState.subscribed);
+		}
+		public static AsyncState<ObserverState> Create(ObserverState initState) {
+			return new AsyncState<ObserverState>(initState);
 		}
 	}
 

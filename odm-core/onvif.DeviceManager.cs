@@ -16,139 +16,52 @@ using System.ServiceModel.Channels;
 
 namespace odm.onvif {
 
-	public class MyMessageFormatter : IDispatchMessageFormatter {
-		#region IDispatchMessageFormatter Members
-
-		public void DeserializeRequest(Message message, object[] parameters) {
-			//Transform message to required SOAP format
-
-			//Copy the transformed SOAP as parameter
-			//parameters[0] = transformed_message;
-		}
-
-		public Message SerializeReply(MessageVersion messageVersion, object[] parameters, object result) {
-			//result is backend reply so convert it to a WCF reply Message
-
-			//return the transformed message
-			//return transformed_result;
-			return null;
-		}
-
-		#endregion
-	}
-
-	public class MyOperationInvoker : IOperationInvoker {
-		#region IOperationInvoker Members
-
-		public object[] AllocateInputs() {
-			//Always assume there is going to be only one input parameter
-			return new object[1];
-		}
-
-		public object Invoke(object instance, object[] inputs, out object[] outputs) {
-			//Retrieve BackendMessage from the input array
-			//BackendMessage request = inputs[0] as BackendMessage;
-
-			//Invoke Backend logic
-			//BackendReply reply = DoBackEndWork(BackendMessage);
-
-			//Create memory for 0 output parameter
-			//outputs = new object[0];
-			outputs = null;
-			//return backendreply 
-			//return BackendReply;
-			return null;
-		}
-
-		public IAsyncResult InvokeBegin(object instance, object[] inputs, AsyncCallback callback, object state) {
-			//Not implementing Async
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		public object InvokeEnd(object instance, out object[] outputs, IAsyncResult result) {
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		public bool IsSynchronous {
-			//For sample reason, async is not implemented
-			get {
-				return true;
-			}
-		}
-
-		#endregion
-	}
-
-	//Use this to plug in your custom IDispatchMessageFormatter and IOperationInvoker.
-	public class MyOperationBehavior : IOperationBehavior {
-		#region IOperationBehavior Members
-
-		public void AddBindingParameters(OperationDescription operationDescription, BindingParameterCollection bindingParameters) {
-			//Noop
-		}
-
-		public void ApplyClientBehavior(OperationDescription operationDescription, ClientOperation clientOperation) {
-			//Noop
-		}
-
-		public void ApplyDispatchBehavior(OperationDescription operationDescription, DispatchOperation dispatchOperation) {
-			dispatchOperation.Formatter = new MyMessageFormatter();
-			dispatchOperation.Invoker = new MyOperationInvoker();
-		}
-
-		public void Validate(OperationDescription operationDescription) {
-			//Noop
-		}
-
-		#endregion
-	}
-
 	public class DeviceManager {
-		public class MsgInterceptor : IClientMessageInspector, IDispatchMessageInspector {
-			public void AfterReceiveReply(ref System.ServiceModel.Channels.Message reply, object correlationState) {
-				return;
-			}
+		//public class MsgInterceptor : IClientMessageInspector, IDispatchMessageInspector {
+		//    public void AfterReceiveReply(ref System.ServiceModel.Channels.Message reply, object correlationState) {
+		//        return;
+		//    }
 
-			public object BeforeSendRequest(ref System.ServiceModel.Channels.Message request, IClientChannel channel) {
-				return null;
-			}
+		//    public object BeforeSendRequest(ref System.ServiceModel.Channels.Message request, IClientChannel channel) {
+		//        return null;
+		//    }
 
-			public object AfterReceiveRequest(ref System.ServiceModel.Channels.Message request, IClientChannel channel, InstanceContext instanceContext) {
-				return null;
-			}
+		//    public object AfterReceiveRequest(ref System.ServiceModel.Channels.Message request, IClientChannel channel, InstanceContext instanceContext) {
+		//        return null;
+		//    }
 
-			public void BeforeSendReply(ref System.ServiceModel.Channels.Message reply, object correlationState) {
-				return;
-			}
-		}
+		//    public void BeforeSendReply(ref System.ServiceModel.Channels.Message reply, object correlationState) {
+		//        return;
+		//    }
+		//}
 
-		public class EpBeh : IEndpointBehavior {
-			public void AddBindingParameters(ServiceEndpoint endpoint, System.ServiceModel.Channels.BindingParameterCollection bindingParameters) {
-				return;
-			}
+		//public class EpBeh : IEndpointBehavior {
+		//    public void AddBindingParameters(ServiceEndpoint endpoint, System.ServiceModel.Channels.BindingParameterCollection bindingParameters) {
+		//        return;
+		//    }
 
-			public void ApplyClientBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.ClientRuntime clientRuntime) {
-				clientRuntime.MessageInspectors.Add(new MsgInterceptor());
-			}
+		//    public void ApplyClientBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.ClientRuntime clientRuntime) {
+		//        clientRuntime.MessageInspectors.Add(new MsgInterceptor());
+		//    }
 
-			public void ApplyDispatchBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.EndpointDispatcher endpointDispatcher) {
-				endpointDispatcher.DispatchRuntime.MessageInspectors.Add(new MsgInterceptor());
-			}
+		//    public void ApplyDispatchBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.EndpointDispatcher endpointDispatcher) {
+		//        endpointDispatcher.DispatchRuntime.MessageInspectors.Add(new MsgInterceptor());
+		//    }
 
-			public void Validate(ServiceEndpoint endpoint) {
-				return;
-			}
-		}
+		//    public void Validate(ServiceEndpoint endpoint) {
+		//        return;
+		//    }
+		//}
 
-		public class MyAnnouncementService: AnnouncementService{
-			protected override IAsyncResult OnBeginOnlineAnnouncement(DiscoveryMessageSequence messageSequence, EndpointDiscoveryMetadata endpointDiscoveryMetadata, AsyncCallback callback, object state) {
-				return base.OnBeginOnlineAnnouncement(messageSequence, endpointDiscoveryMetadata, callback, state);
-			}
+		//public class MyAnnouncementService: AnnouncementService{
+		//    protected override IAsyncResult OnBeginOnlineAnnouncement(DiscoveryMessageSequence messageSequence, EndpointDiscoveryMetadata endpointDiscoveryMetadata, AsyncCallback callback, object state) {
+		//        return base.OnBeginOnlineAnnouncement(messageSequence, endpointDiscoveryMetadata, callback, state);
+		//    }
 
-			protected override void OnEndOnlineAnnouncement(IAsyncResult result) {
-				base.OnEndOnlineAnnouncement(result);
-			}
-		}
+		//    protected override void OnEndOnlineAnnouncement(IAsyncResult result) {
+		//        base.OnEndOnlineAnnouncement(result);
+		//    }
+		//}
 
 		private class DeviceDescriptionImpl : DeviceDescription {
 			public EndpointDiscoveryMetadata m_epMetadata;
@@ -221,13 +134,31 @@ namespace odm.onvif {
 		private void ProcessDeviceDiscovery(EndpointDiscoveryMetadata epMeta) {
 			dbg.Assert(m_subscriberCnt > 0);
 			DeviceDescriptionImpl devDescr = null;
+			IEnumerable<DeviceDescriptionImpl> removedDevices = null;
 			lock (m_gate) {
 				string id = epMeta.Address.Uri.OriginalString;
 				if (!m_dict.ContainsKey(id)) {
+					
+					var devicesToRemove = m_dict.Where(pair => {
+						return pair.Value.uris.Intersect(epMeta.ListenUris).Any();
+					}).ToArray();
+
+					devicesToRemove.ForEach(x => {
+						m_dict.Remove(x.Key);
+					});
+
+					removedDevices = devicesToRemove.Select(x => x.Value);
+
 					devDescr = new DeviceDescriptionImpl(epMeta);
 					//devDescr.id = id;
 					m_dict.Add(id, devDescr);
 				}
+			}
+
+			if (removedDevices != null) {
+				removedDevices.ForEach(x => {
+					NotifyDeviceRemoval(x);
+				});
 			}
 			if (devDescr != null) {
 				try {
@@ -236,6 +167,24 @@ namespace odm.onvif {
 					dbg.Error(err);
 				}
 			}
+		}
+
+		private void NotifyDeviceRemoval(DeviceDescriptionImpl devDescr) {
+			dbg.Assert(devDescr != null);
+
+			try {
+				devDescr.m_removalSubj.OnNext(new Unit());
+			} catch (Exception err) {
+				dbg.Error(err);
+				//swallow error;
+			}
+			try {
+				devDescr.m_removalSubj.OnCompleted();
+			} catch (Exception err) {
+				dbg.Error(err);
+				//swallow error;
+			}	
+			
 		}
 
 		private void ProcessDeviceRemoval(EndpointDiscoveryMetadata epMeta) {
@@ -248,18 +197,7 @@ namespace odm.onvif {
 				}
 			}
 			if (devDescr != null) {
-				try {
-					devDescr.m_removalSubj.OnNext(new Unit());
-				} catch (Exception err) {
-					dbg.Error(err);
-					//swallow error;
-				}
-				try {
-					devDescr.m_removalSubj.OnCompleted();
-				} catch (Exception err) {
-					dbg.Error(err);
-					//swallow error;
-				}
+				NotifyDeviceRemoval(devDescr);
 			}
 		}		
 

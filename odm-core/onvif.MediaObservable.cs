@@ -24,6 +24,7 @@ using System.Text;
 using System.ServiceModel;
 
 using onvif.services.media;
+using onvif;
 
 namespace odm.onvif {
 	public class MediaObservable:IDisposable {
@@ -32,9 +33,9 @@ namespace odm.onvif {
 			m_proxy = proxy;
 		}
 
-		public IObservable<MediaUri> GetSnapshotUri(string profileToken) {
+		public IObservable<MediaUri> GetSnapshotUri(ProfileToken profileToken) {
 			var request = new GetSnapshotUriRequest() {
-				ProfileToken = profileToken,
+				ProfileToken = profileToken.value,
 			};
 			var asyncOp = Observable.FromAsyncPattern<GetSnapshotUriRequest, GetSnapshotUriResponse>(m_proxy.BeginGetSnapshotUri, m_proxy.EndGetSnapshotUri);
 			return asyncOp(request).Select(x => x.MediaUri);
@@ -47,21 +48,21 @@ namespace odm.onvif {
 			var asyncOp = Observable.FromAsyncPattern<GetProfilesRequest, GetProfilesResponse>(m_proxy.BeginGetProfiles, m_proxy.EndGetProfiles);
 			return asyncOp(request).Select(x => x.Profiles);
 		}
-		
-		public IObservable<Profile> GetProfile(string profileToken) {
-			var request = new GetProfileRequest(profileToken);
+
+		public IObservable<Profile> GetProfile(ProfileToken profileToken) {
+			var request = new GetProfileRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetProfileRequest, GetProfileResponse>(m_proxy.BeginGetProfile, m_proxy.EndGetProfile);
 			return asyncOp(request).Select(x => x.Profile);
 		}
 
-		public IObservable<Profile> CreateProfile(string name, string token) {
-			var request = new CreateProfileRequest(name, token);
+		public IObservable<Profile> CreateProfile(string profileName, ProfileToken profileToken) {
+			var request = new CreateProfileRequest(profileName, profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<CreateProfileRequest, CreateProfileResponse>(m_proxy.BeginCreateProfile, m_proxy.EndCreateProfile);
 			return asyncOp(request).Select(x => x.Profile);
 		}
 
-		public IObservable<Unit> DeleteProfile(string token) {
-			var request = new DeleteProfileRequest(token);
+		public IObservable<Unit> DeleteProfile(ProfileToken profileToken) {
+			var request = new DeleteProfileRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<DeleteProfileRequest, DeleteProfileResponse>(m_proxy.BeginDeleteProfile, m_proxy.EndDeleteProfile);
 			return asyncOp(request).Select(x => new Unit());			
 		}
@@ -80,20 +81,20 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => x.Configurations);
 		}
 
-		public IObservable<VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(string profileToken) {
-			var request = new GetCompatibleVideoSourceConfigurationsRequest(profileToken);
+		public IObservable<VideoSourceConfiguration[]> GetCompatibleVideoSourceConfigurations(ProfileToken profileToken) {
+			var request = new GetCompatibleVideoSourceConfigurationsRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoSourceConfigurationsRequest, GetCompatibleVideoSourceConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoSourceConfigurations, m_proxy.EndGetCompatibleVideoSourceConfigurations);
 			return asyncOp(request).Select(x => x.Configurations);
 		}
 
-		public IObservable<Unit> AddVideoSourceConfiguration(string profileToken, string configurationToken) {
-			var request = new AddVideoSourceConfigurationRequest(profileToken, configurationToken);
+		public IObservable<Unit> AddVideoSourceConfiguration(ProfileToken profileToken, VideoSourceConfigurationToken vscToken) {
+			var request = new AddVideoSourceConfigurationRequest(profileToken.value, vscToken.value);
 			var asyncOp = Observable.FromAsyncPattern<AddVideoSourceConfigurationRequest,AddVideoSourceConfigurationResponse>(m_proxy.BeginAddVideoSourceConfiguration, m_proxy.EndAddVideoSourceConfiguration);
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
-		public IObservable<Unit> RemoveVideoSourceConfiguration(string profileToken) {
-			var request = new RemoveVideoSourceConfigurationRequest(profileToken);
+		public IObservable<Unit> RemoveVideoSourceConfiguration(ProfileToken profileToken) {
+			var request = new RemoveVideoSourceConfigurationRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<RemoveVideoSourceConfigurationRequest, RemoveVideoSourceConfigurationResponse>(m_proxy.BeginRemoveVideoSourceConfiguration, m_proxy.EndRemoveVideoSourceConfiguration);
 			return asyncOp(request).Select(x => new Unit());
 		}
@@ -104,28 +105,28 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
-		public IObservable<VideoSourceConfigurationOptions> GetVideoSourceConfigurationOptions(string vscToken, string profileToken) {
-			var request = new GetVideoSourceConfigurationOptionsRequest(vscToken, profileToken);
+		public IObservable<VideoSourceConfigurationOptions> GetVideoSourceConfigurationOptions(VideoSourceConfigurationToken vscToken, ProfileToken profileToken) {
+			var request = new GetVideoSourceConfigurationOptionsRequest(vscToken.value, profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetVideoSourceConfigurationOptionsRequest, GetVideoSourceConfigurationOptionsResponse>(m_proxy.BeginGetVideoSourceConfigurationOptions, m_proxy.EndGetVideoSourceConfigurationOptions);
 			return asyncOp(request).Select(x => x.Options);
 		}
 
 		//Video Encoder functions
 
-		public IObservable<Unit> AddVideoEncoderConfiguration(string profileToken, string configurationToken) {
-			var request = new AddVideoEncoderConfigurationRequest(profileToken, configurationToken);
+		public IObservable<Unit> AddVideoEncoderConfiguration(ProfileToken profileToken, VideoEncoderConfigurationToken vecToken) {
+			var request = new AddVideoEncoderConfigurationRequest(profileToken.value, vecToken.value);
 			var asyncOp = Observable.FromAsyncPattern<AddVideoEncoderConfigurationRequest,AddVideoEncoderConfigurationResponse>(m_proxy.BeginAddVideoEncoderConfiguration, m_proxy.EndAddVideoEncoderConfiguration);
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
-		public IObservable<Unit> RemoveVideoEncoderConfiguration(string profileToken) {
-			var request = new RemoveVideoEncoderConfigurationRequest(profileToken);
+		public IObservable<Unit> RemoveVideoEncoderConfiguration(ProfileToken profileToken) {
+			var request = new RemoveVideoEncoderConfigurationRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<RemoveVideoEncoderConfigurationRequest, RemoveVideoEncoderConfigurationResponse>(m_proxy.BeginRemoveVideoEncoderConfiguration, m_proxy.EndRemoveVideoEncoderConfiguration);
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<VideoEncoderConfiguration[]> GetCompatibleVideoEncoderConfigurations(string profileToken) {
-			var request = new GetCompatibleVideoEncoderConfigurationsRequest(profileToken);
+		public IObservable<VideoEncoderConfiguration[]> GetCompatibleVideoEncoderConfigurations(ProfileToken profileToken) {
+			var request = new GetCompatibleVideoEncoderConfigurationsRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoEncoderConfigurationsRequest, GetCompatibleVideoEncoderConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoEncoderConfigurations, m_proxy.EndGetCompatibleVideoEncoderConfigurations);
 			return asyncOp(request).Select(x => x.Configurations);
 		}
@@ -142,8 +143,11 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
-		public IObservable<VideoEncoderConfigurationOptions> GetVideoEncoderConfigurationOptions(string vecToken, string profileToken) {
-			var request = new GetVideoEncoderConfigurationOptionsRequest(vecToken, profileToken);
+		public IObservable<VideoEncoderConfigurationOptions> GetVideoEncoderConfigurationOptions(VideoEncoderConfigurationToken vecToken, ProfileToken profileToken) {
+			var request = new GetVideoEncoderConfigurationOptionsRequest(){
+				ConfigurationToken = (vecToken==null ? null : vecToken.value),
+				ProfileToken = (profileToken==null ? null : profileToken.value)
+			};
 			var asyncOp = Observable.FromAsyncPattern<GetVideoEncoderConfigurationOptionsRequest,GetVideoEncoderConfigurationOptionsResponse>(m_proxy.BeginGetVideoEncoderConfigurationOptions, m_proxy.EndGetVideoEncoderConfigurationOptions);
 			return asyncOp(request).Select(x => x.Options);				
 		}
@@ -153,26 +157,26 @@ namespace odm.onvif {
 		}
 
 
-		public IObservable<MetadataConfiguration[]> GetCompatibleMetadataConfigurations(string profileToken) {
-			var request = new GetCompatibleMetadataConfigurationsRequest(profileToken);
+		public IObservable<MetadataConfiguration[]> GetCompatibleMetadataConfigurations(ProfileToken profileToken) {
+			var request = new GetCompatibleMetadataConfigurationsRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetCompatibleMetadataConfigurationsRequest, GetCompatibleMetadataConfigurationsResponse>(m_proxy.BeginGetCompatibleMetadataConfigurations, m_proxy.EndGetCompatibleMetadataConfigurations);
 			return asyncOp(request).Select(x => x.Configurations);
 		}
 
-		public IObservable<Unit> AddMetadataConfiguration(string profileToken, string configurationToken) {
-			var request = new AddMetadataConfigurationRequest(profileToken, configurationToken);
+		public IObservable<Unit> AddMetadataConfiguration(ProfileToken profileToken, MetadataConfigurationToken mdcToken) {
+			var request = new AddMetadataConfigurationRequest(profileToken.value, mdcToken.value);
 			var asyncOp = Observable.FromAsyncPattern<AddMetadataConfigurationRequest,AddMetadataConfigurationResponse>(m_proxy.BeginAddMetadataConfiguration, m_proxy.EndAddMetadataConfiguration);
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
-		public IObservable<MetadataConfigurationOptions> GetMetadataConfigurationOptions(string mdcToken, string profileToken) {
-			var request = new GetMetadataConfigurationOptionsRequest(mdcToken, profileToken);
+		public IObservable<MetadataConfigurationOptions> GetMetadataConfigurationOptions(MetadataConfigurationToken mdcToken, ProfileToken profileToken) {
+			var request = new GetMetadataConfigurationOptionsRequest(mdcToken.value, profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetMetadataConfigurationOptionsRequest, GetMetadataConfigurationOptionsResponse>(m_proxy.BeginGetMetadataConfigurationOptions, m_proxy.EndGetMetadataConfigurationOptions);
 			return asyncOp(request).Select(x => x.Options);
 		}
 
-		public IObservable<Unit> RemoveMetadataConfiguration(string profileToken) {
-			var request = new RemoveMetadataConfigurationRequest(profileToken);
+		public IObservable<Unit> RemoveMetadataConfiguration(ProfileToken profileToken) {
+			var request = new RemoveMetadataConfigurationRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<RemoveMetadataConfigurationRequest, RemoveMetadataConfigurationResponse>(m_proxy.BeginRemoveMetadataConfiguration, m_proxy.EndRemoveMetadataConfiguration);
 			return asyncOp(request).Select(x => new Unit());
 		}
@@ -183,9 +187,9 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => new Unit());				
 		}
 
-		public IObservable<MediaUri> GetStreamUri(StreamSetup streamSetup, string profileToken) {
+		public IObservable<MediaUri> GetStreamUri(StreamSetup streamSetup, ProfileToken profileToken) {
 			var request = new GetStreamUriRequest() {
-				ProfileToken = profileToken,
+				ProfileToken = profileToken.value,
 				StreamSetup = streamSetup
 			};
 			var asyncOp = Observable.FromAsyncPattern<GetStreamUriRequest, GetStreamUriResponse>(m_proxy.BeginGetStreamUri, m_proxy.EndGetStreamUri);
@@ -194,20 +198,20 @@ namespace odm.onvif {
 
 		//Video Analytics functions
 
-		public IObservable<Unit> AddVideoAnalyticsConfiguration(string profileToken, string configurationToken) {
-			var request = new AddVideoAnalyticsConfigurationRequest(profileToken, configurationToken);
+		public IObservable<Unit> AddVideoAnalyticsConfiguration(ProfileToken profileToken, VideoAnalyticsConfigurationToken vacToken) {
+			var request = new AddVideoAnalyticsConfigurationRequest(profileToken.value, vacToken.value);
 			var asyncOp = Observable.FromAsyncPattern<AddVideoAnalyticsConfigurationRequest, AddVideoAnalyticsConfigurationResponse>(m_proxy.BeginAddVideoAnalyticsConfiguration, m_proxy.EndAddVideoAnalyticsConfiguration);
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<Unit> RemoveVideoAnalyticsConfiguration(string profileToken) {
-			var request = new RemoveVideoAnalyticsConfigurationRequest(profileToken);
+		public IObservable<Unit> RemoveVideoAnalyticsConfiguration(ProfileToken profileToken) {
+			var request = new RemoveVideoAnalyticsConfigurationRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<RemoveVideoAnalyticsConfigurationRequest, RemoveVideoAnalyticsConfigurationResponse>(m_proxy.BeginRemoveVideoAnalyticsConfiguration, m_proxy.EndRemoveVideoAnalyticsConfiguration);
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<VideoAnalyticsConfiguration[]> GetCompatibleVideoAnalyticsConfigurations(string profileToken) {
-			var request = new GetCompatibleVideoAnalyticsConfigurationsRequest(profileToken);
+		public IObservable<VideoAnalyticsConfiguration[]> GetCompatibleVideoAnalyticsConfigurations(ProfileToken profileToken) {
+			var request = new GetCompatibleVideoAnalyticsConfigurationsRequest(profileToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetCompatibleVideoAnalyticsConfigurationsRequest, GetCompatibleVideoAnalyticsConfigurationsResponse>(m_proxy.BeginGetCompatibleVideoAnalyticsConfigurations, m_proxy.EndGetCompatibleVideoAnalyticsConfigurations);
 			return asyncOp(request).Select(x => x.Configurations);
 		}

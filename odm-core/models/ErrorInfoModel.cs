@@ -69,7 +69,8 @@ namespace odm.models {
 						var xslt = new XslCompiledTransform();
 						
 						var xmlReaderSettings = new XmlReaderSettings() {
-							DtdProcessing = DtdProcessing.Parse							
+							ProhibitDtd = false
+							//DtdProcessing = DtdProcessing.Parse							
 						};
 						XsltSettings xsltSettings = new XsltSettings() {
 							EnableScript = false,

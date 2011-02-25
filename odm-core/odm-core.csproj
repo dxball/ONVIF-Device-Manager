@@ -34,27 +34,41 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.CoreEx">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.CoreEx.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.CoreEx.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Interactive">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Interactive.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Interactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq.Async">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Linq.Async.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Linq.Async.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive">
-      <HintPath>..\ext-libs\rx-v1.0.2787\net4\System.Reactive.dll</HintPath>
+      <HintPath>..\ext-libs\rx-v1.0.2838.0\net4\System.Reactive.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Discovery" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\onvif.services\onvif.services.csproj">
+      <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
+      <Name>onvif.services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\onvif.types\onvif.types.csproj">
+      <Project>{B4EE4417-967D-4C03-90C5-99430B64E2D5}</Project>
+      <Name>onvif.types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utils\odm-utils.csproj">
+      <Project>{D4D3FFCE-F536-4ECA-9C36-4EE36F9AD98E}</Project>
+      <Name>odm-utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncState.cs" />
@@ -62,7 +76,9 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="models\AnnotationsModel.cs" />
     <Compile Include="models\AntishakerModel.cs" />
-    <Compile Include="models\ChannelDescription.cs" />
+    <Compile Include="models\ChannelModel.cs" />
+    <Compile Include="models\ApproMotionDetectorModel.cs" />
+    <Compile Include="models\SystemLogModel.cs" />
     <Compile Include="models\DateTimeSettingsModel.cs" />
     <Compile Include="models\DepthCalibrationModel.cs" />
     <Compile Include="models\DeviceCapabilityModel.cs" />
@@ -70,7 +86,7 @@
     <Compile Include="models\DeviceIdentificationModel.cs" />
     <Compile Include="models\DeviceInfo.cs" />
     <Compile Include="models\DeviceInfoExtensions.cs" />
-    <Compile Include="models\DeviceMaintenanceModel.cs" />
+    <Compile Include="models\MaintenanceModel.cs" />
     <Compile Include="models\DeviceNetworkSettingsModel.cs" />
     <Compile Include="models\DumpModel.cs" />
     <Compile Include="models\ErrorInfoModel.cs" />
@@ -106,20 +122,6 @@
     <Compile Include="synesis.onvif.extensions.cs" />
     <Compile Include="WorkItemQueue.cs" />
     <Compile Include="WsDiscoveryObservable.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\onvif.services\onvif.services.csproj">
-      <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
-      <Name>onvif.services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\onvif.types\onvif.types.csproj">
-      <Project>{B4EE4417-967D-4C03-90C5-99430B64E2D5}</Project>
-      <Name>onvif.types</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\utils\odm-utils.csproj">
-      <Project>{D4D3FFCE-F536-4ECA-9C36-4EE36F9AD98E}</Project>
-      <Name>odm-utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

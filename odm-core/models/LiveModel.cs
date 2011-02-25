@@ -12,12 +12,17 @@ using onvif.services.analytics;
 using media = onvif.services.media;
 using analytics = onvif.services.analytics;
 using tt = onvif.types;
+using onvif;
 
 namespace odm.models {
 	public class LiveVideoModel : ModelBase<LiveVideoModel> {
-		ChannelDescription m_channel;
-		public LiveVideoModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public LiveVideoModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		public LiveVideoModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
 
 		protected override IEnumerable<IObservable<Object>> LoadImpl(Session session, IObserver<LiveVideoModel> observer) {
@@ -33,22 +38,24 @@ namespace odm.models {
 			yield return session.GetCapabilities().Handle(x => caps = x);
 			dbg.Assert(caps != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				//create default profile
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    //create default profile
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
-			if (profile.VideoSourceConfiguration == null) {
-				//add default video source configuration
-				VideoSourceConfiguration[] vscs = null;
-				yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
-				dbg.Assert(vscs != null);
-				var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
-				yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
-				profile.VideoSourceConfiguration = vsc;
-			}
+			//if (profile.VideoSourceConfiguration == null) {
+			//    //add default video source configuration
+			//    VideoSourceConfiguration[] vscs = null;
+			//    yield return session.GetVideoSourceConfigurations().Handle(x => vscs = x);
+			//    dbg.Assert(vscs != null);
+			//    var vsc = vscs.Where(x => x.SourceToken == m_channel.Id).FirstOrDefault();
+			//    yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
+			//    profile.VideoSourceConfiguration = vsc;
+			//}
+			dbg.Assert(profile.VideoSourceConfiguration != null);
 
 			var vec = profile.VideoEncoderConfiguration;
 			if (vec == null) {

@@ -36,54 +36,66 @@ using odm.models;
 using odm.utils.rx;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Discovery.VersionApril2005;
+using onvif;
 
 namespace odm.onvif {
 
 	public class NvcHelper {
 		public const string OnvifNameScope = @"onvif://www.onvif.org/name/";
 		public const string OnvifLocationScope = @"onvif://www.onvif.org/location/";
-		public const string SynesisNameScope = @"http://synesis.com/name/";
-		public const string SynesisLocationScope = @"http://synesis.com/location/";
-		public const string SynesisProfileScope = @"http://synesis.com/profile/";
-		public const string SynesisDeviceIdScope = @"http://synesis.com/device-id/";
+		public const string SynesisNameScope = @"http://synesis.ru/name/";
+		public const string SynesisLocationScope = @"http://synesis.ru/location/";
+		public const string SynesisProfileScope = @"http://synesis.ru/profile/";
+		public const string SynesisDeviceIdScope = @"http://synesis.ru/device-id/";
 
-		public static string GetScopeValue(IEnumerable<string> scopes, string scopePrefix) {
+		public static string[] GetScopeValues(IEnumerable<string> scopes, string scopePrefix) {
 			if (scopes == null) {
 				return null;
 			}
-			var name = String.Join(", ", scopes
+			//var value = String.Join(", ", scopes
+			//    .Where(x => x.StartsWith(scopePrefix))
+			//    .Select(x => x.Substring(scopePrefix.Length))
+			//);
+			//return Uri.UnescapeDataString(value);
+			return scopes
 				.Where(x => x.StartsWith(scopePrefix))
 				.Select(x => x.Substring(scopePrefix.Length))
-			);
-			return Uri.UnescapeDataString(name);
+				.Select(x => Uri.UnescapeDataString(x))
+				.ToArray();
 		}
 
 		public static string GetName(IEnumerable<string> scopes) {
 
-			var name = GetScopeValue(scopes, SynesisNameScope);
-			if (!String.IsNullOrEmpty(name)) {
-				return name;
+			var names = GetScopeValues(scopes, SynesisNameScope);
+			if (names.Length>0) {
+				return names[names.Length-1];
 			}
-
-			return GetScopeValue(scopes, OnvifNameScope);
+			names = GetScopeValues(scopes, OnvifNameScope);
+			if (names.Length <= 0) {
+				return null;
+			}
+			return names[names.Length - 1];
 		}
 
 		public static string GetLocation(IEnumerable<string> scopes) {
 
-			var name = GetScopeValue(scopes, SynesisLocationScope);
-			if (!String.IsNullOrEmpty(name)) {
-				return name;
+			var locations = GetScopeValues(scopes, SynesisLocationScope);
+			if (locations.Length>0) {
+				return locations[locations.Length - 1];
 			}
-
-			return GetScopeValue(scopes, OnvifLocationScope);
+			locations = GetScopeValues(scopes, OnvifLocationScope);
+			if (locations.Length <= 0) {
+				return null;
+			}
+			return locations[locations.Length - 1];
 		}
 
 		public static string GetDeviceId(IEnumerable<string> scopes) {
-			return GetScopeValue(scopes, SynesisDeviceIdScope);
+			return GetScopeValues(scopes, SynesisDeviceIdScope).Single();
 		}
 
-		public static string GetChannelProfileToken(string videoSourceToken) {
-			return String.Concat(SynesisProfileScope, videoSourceToken);
+		public static ProfileToken GetChannelProfileToken(VideoSourceToken videoSourceToken) {
+			return new ProfileToken(String.Concat(SynesisProfileScope, videoSourceToken.value));
 		}
 	}
 	

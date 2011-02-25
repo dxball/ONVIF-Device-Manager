@@ -91,13 +91,43 @@ namespace odm.models {
 			yield return session.SetScopes(scopes_to_set).Idle();
 		}
 
+		static IEnumerable<IObservable<object>> SetLocationImpl(Session session, string Location, IObserver<Unit> observer) {
+
+			var scope_prefix = NvcHelper.SynesisLocationScope;
+			Scope[] scopes = null;
+			yield return session.GetScopes().Handle(x => scopes = x);
+
+			dbg.Assert(scopes != null);
+
+			var use_onvif_scope = scopes
+				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
+				.Any(x => x.ScopeItem.StartsWith(NvcHelper.OnvifLocationScope));
+
+			if (use_onvif_scope) {
+				scope_prefix = NvcHelper.OnvifLocationScope;
+			}
+
+			var Location_scope = String.Concat(scope_prefix, Uri.EscapeDataString(Location));
+			var scopes_to_set = scopes
+				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
+				.Select(x => x.ScopeItem)
+				.Where(x => !x.StartsWith(scope_prefix))
+				.Append(Location_scope)
+				.ToArray();
+			yield return session.SetScopes(scopes_to_set).Idle();
+		}
+
 		public static IObservable<Unit> SetName(this Session session, string name) {
 			return Observable.Iterate<Unit>(observer => SetNameImpl(session, name, observer));
 		}
 
 		public static IObservable<Unit> SetDeviceId(this Session session, string name) {
 			return Observable.Iterate<Unit>(observer => SetDeviceIdImpl(session, name, observer));
-		}	
+		}
+
+		public static IObservable<Unit> SetLocation(this Session session, string Location) {
+			return Observable.Iterate<Unit>(observer => SetLocationImpl(session, Location, observer));
+		}
 
 	};
 }

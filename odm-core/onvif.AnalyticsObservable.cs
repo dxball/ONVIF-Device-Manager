@@ -24,6 +24,7 @@ using System.Text;
 using System.ServiceModel;
 
 using onvif.services.analytics;
+using onvif;
 
 namespace odm.onvif {
 	public class AnalyticsObservable:IDisposable {
@@ -85,20 +86,20 @@ namespace odm.onvif {
 			return asyncOp(request).Select(x => x.SupportedRules);
 		}
 
-		public IObservable<Config[]> GetRules(string configurationToken) {
-			var request = new GetRulesRequest(configurationToken);
+		public IObservable<Config[]> GetRules(VideoAnalyticsConfigurationToken vacToken) {
+			var request = new GetRulesRequest(vacToken.value);
 			var asyncOp = Observable.FromAsyncPattern<GetRulesRequest, GetRulesResponse>(m_proxy.BeginGetRules, m_proxy.EndGetRules);
 			return asyncOp(request).Select(x => x.Rule);
 		}
 
-		public IObservable<Unit> CreateRules(string configurationToken, Config[] rules) {
-			var request = new CreateRulesRequest(configurationToken, rules);
+		public IObservable<Unit> CreateRules(VideoAnalyticsConfigurationToken vacToken, Config[] rules) {
+			var request = new CreateRulesRequest(vacToken.value, rules);
 			var asyncOp = Observable.FromAsyncPattern<CreateRulesRequest, CreateRulesResponse>(m_proxy.BeginCreateRules, m_proxy.EndCreateRules);
 			return asyncOp(request).Select(x => new Unit());
 		}
 
-		public IObservable<Unit> DeleteRules(string configurationToken, string[] ruleNames) {
-			var request = new DeleteRulesRequest(configurationToken, ruleNames);
+		public IObservable<Unit> DeleteRules(VideoAnalyticsConfigurationToken vacToken, string[] ruleNames) {
+			var request = new DeleteRulesRequest(vacToken.value, ruleNames);
 			var asyncOp = Observable.FromAsyncPattern<DeleteRulesRequest, DeleteRulesResponse>(m_proxy.BeginDeleteRules, m_proxy.EndDeleteRules);
 			return asyncOp(request).Select(x => new Unit());
 		}

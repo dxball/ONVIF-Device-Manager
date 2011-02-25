@@ -8,21 +8,24 @@ using System.Threading;
 
 using onvif.services.device;
 using onvif.types;
-using tt = onvif.types;
-using img=onvif.services.imaging;
-using med = onvif.services.media;
+using tt = global::onvif.types;
+using img= global::onvif.services.imaging;
+using med = global::onvif.services.media;
 
 using odm.onvif;
 using odm.utils;
 using System.Drawing;
+using onvif;
 
 namespace odm.models {
 	public partial class ImagingSettingsModel : ModelBase<ImagingSettingsModel> {
-
-		ChannelDescription m_channel;
-
-		public ImagingSettingsModel(ChannelDescription channel) {
-			m_channel = channel;
+		//ChannelDescription m_channel;
+		//public ImagingSettingsModel(ChannelDescription channel) {
+		//    m_channel = channel;
+		//}
+		ProfileToken m_profileToken;
+		public ImagingSettingsModel(ProfileToken profileToken) {
+			this.m_profileToken = profileToken;
 		}
 
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<ImagingSettingsModel> observer) {
@@ -38,20 +41,23 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				//create default profile
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    //create default profile
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
 			yield return session.GetImagingClient().Handle(x => imaging = x);
 			dbg.Assert(imaging != null);
 			
-			yield return imaging.GetImagingSettings(m_channel.Id).Handle(x => settings = x);
+			//yield return imaging.GetImagingSettings(m_channel.Id).Handle(x => settings = x);
+			yield return imaging.GetImagingSettings(profile.VideoSourceConfiguration.SourceToken).Handle(x => settings = x);
 			dbg.Assert(settings != null);
 
-			yield return imaging.GetOptions(m_channel.Id).Handle(x => options = x);
+			//yield return imaging.GetOptions(m_channel.Id).Handle(x => options = x);
+			yield return imaging.GetOptions(profile.VideoSourceConfiguration.SourceToken).Handle(x => options = x);
 			dbg.Assert(options != null);
 
 			m_brightness.SetBoth(settings.Brightness);
@@ -142,20 +148,23 @@ namespace odm.models {
 			yield return session.GetProfiles().Handle(x => profiles = x);
 			dbg.Assert(profiles != null);
 
-			var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
-			if (profile == null) {
-				//create default profile
-				yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
-			}
+			//var profile = profiles.Where(x => x.token == NvcHelper.GetChannelProfileToken(m_channel.Id)).FirstOrDefault();
+			//if (profile == null) {
+			//    //create default profile
+			//    yield return session.CreateDefaultProfile(m_channel.Id).Handle(x => profile = x);
+			//}
+			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 			dbg.Assert(profile != null);
 
 			yield return session.GetImagingClient().Handle(x => imaging = x);
 			dbg.Assert(imaging != null);
 
-			yield return imaging.GetImagingSettings(m_channel.Id).Handle(x => settings = x);
+			//yield return imaging.GetImagingSettings(m_channel.Id).Handle(x => settings = x);
+			yield return imaging.GetImagingSettings(profile.VideoSourceConfiguration.SourceToken).Handle(x => settings = x);
 			dbg.Assert(settings != null);
 
-			yield return imaging.GetOptions(m_channel.Id).Handle(x => options = x);
+			//yield return imaging.GetOptions(m_channel.Id).Handle(x => options = x);
+			yield return imaging.GetOptions(profile.VideoSourceConfiguration.SourceToken).Handle(x => options = x);
 			dbg.Assert(options != null);
 
 			settings.Brightness = brightness;
@@ -169,7 +178,8 @@ namespace odm.models {
 			settings.Sharpness = sharpness;
 			settings.WhiteBalance = whiteBalance;
 
-			yield return imaging.SetImagingSettings(m_channel.Id, settings).Idle();
+			//yield return imaging.SetImagingSettings(m_channel.Id, settings).Idle();
+			yield return imaging.SetImagingSettings(profile.VideoSourceConfiguration.SourceToken, settings).Idle();
 			
 			yield return Observable.Concat(LoadImpl(session, observer)).Idle();			
 		}

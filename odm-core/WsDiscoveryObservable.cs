@@ -76,11 +76,15 @@ namespace odm.utils {
 
 	            dc.FindProgressChanged += (sender, e) => {
 					dbg.Assert(!state.isDisposed());
-					if (dic.Add(e.EndpointDiscoveryMetadata.Address.Uri.OriginalString)) {
-						observer.OnNext(e.EndpointDiscoveryMetadata);
-					} else {
-						//DebugHelper.Error("duplicated ws-discovery probe match");
-						log.WriteError("duplicated ws-discovery probe match");
+					try {
+						if (dic.Add(e.EndpointDiscoveryMetadata.Address.Uri.OriginalString)) {
+							observer.OnNext(e.EndpointDiscoveryMetadata);
+						} else {
+							//DebugHelper.Error("duplicated ws-discovery probe match");
+							log.WriteError("duplicated ws-discovery probe match");
+						}
+					} catch (Exception err) {
+						dbg.Error(err);
 					}
 			    };
 

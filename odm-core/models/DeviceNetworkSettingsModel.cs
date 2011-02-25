@@ -13,32 +13,72 @@ using onvif.types;
 using dev = onvif.services.device;
 using tt = onvif.types;
 using net = System.Net;
+using System.Net.NetworkInformation;
 
 namespace odm.models {
 	public partial class DeviceNetworkSettingsModel : ModelBase<DeviceNetworkSettingsModel> {
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
-			NetworkSettings netSettings = null;
-			NetworkStatus netstat = null;
-			yield return Observable.Merge(
-				session.GetNetworkSettings().Handle(x => netSettings = x),
-				session.GetNetworkStatus().Handle(x => netstat = x)
-			);
-			dbg.Assert(netSettings != null);
-			dbg.Assert(netstat != null);
+			NetworkSettings netSettings = new NetworkSettings();
+			//PhysicalAddress mac = null;
+			NetworkStatus netstat = new NetworkStatus();
+			//yield return Observable.Merge(
+			//    session.GetNetworkSettings().Handle(x => netSettings = x),
+			//    session.GetNetworkStatus().Handle(x => netstat = x)
+			//);
 
+			NetworkGateway gateway = null;
+			DNSInformation dns = null;
+			tt::NetworkInterface[] nics = null;
+
+			yield return Observable.Merge(
+				session.GetNetworkDefaultGateway().Handle(x => gateway = x).IgnoreError(),
+				session.GetDNS().Handle(x => dns = x).IgnoreError(),
+				session.GetNetworkInterfaces().Handle(x => nics = x)
+			);
+
+			dbg.Assert(gateway != null);
+			dbg.Assert(dns != null);
+			dbg.Assert(nics != null);
+						
+			if (gateway != null && gateway.IPv4Address != null && gateway.IPv4Address.Count() > 0) {
+				net::IPAddress defaultGateway = net::IPAddress.None;
+				net::IPAddress.TryParse(gateway.IPv4Address[0], out defaultGateway);
+				netSettings.defaultGateway = defaultGateway;
+			}
+
+			if (dns != null && dns.DNSManual != null && dns.DNSManual.Count() > 0 && !String.IsNullOrWhiteSpace(dns.DNSManual[0].IPv4Address)) {
+				netSettings.staticDns = net::IPAddress.Parse(dns.DNSManual[0].IPv4Address);
+			} else if (dns != null && dns.DNSFromDHCP != null && dns.DNSFromDHCP.Count() > 0) {
+				netSettings.staticDns = net::IPAddress.Parse(dns.DNSFromDHCP[0].IPv4Address);
+			}
+
+			var nic = nics.Where(x => x.Enabled).FirstOrDefault();
+			if (nic != null) {
+				var nic_cfg = nic.IPv4.Config;
+				netstat.mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':', '-'));
+				netSettings.dhcp = nic.IPv4.Config.DHCP;
+
+				if (nic_cfg.Manual.Count() > 0) {
+					netSettings.staticIp = net::IPAddress.Parse(nic_cfg.Manual[0].Address);
+					netSettings.subnetPrefix = nic_cfg.Manual[0].PrefixLength;
+				} else if (nic_cfg.FromDHCP != null) {
+					netSettings.staticIp = net::IPAddress.Parse(nic_cfg.FromDHCP.Address);
+					netSettings.subnetPrefix = nic_cfg.FromDHCP.PrefixLength;
+				}
+			}
+			
 			m_dhcp.SetBoth(netSettings.dhcp);
 			m_staticIp.SetBoth(netSettings.staticIp ?? new net::IPAddress(0));
 			m_subnetMask.SetBoth(NetMaskHelper.PrefixToMask(netSettings.subnetPrefix) ?? new net::IPAddress(0));
 			m_staticGateway.SetBoth(netSettings.defaultGateway ?? new net::IPAddress(0));
 			m_staticDns.SetBoth(netSettings.staticDns ?? new net::IPAddress(0));
+			mac = BitConverter.ToString(netstat.mac.GetAddressBytes());
 
 			NotifyPropertyChanged(x => x.staticIp);
 			NotifyPropertyChanged(x => x.subnetMask);
 			NotifyPropertyChanged(x => x.staticGateway);
 			NotifyPropertyChanged(x => x.staticDns);
-
-			mac = BitConverter.ToString(netstat.mac.GetAddressBytes());
-
+			
 			if (observer != null) {
 				observer.OnNext(this);
 			}
