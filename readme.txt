@@ -1,10 +1,10 @@
-[*] - new featuries for current release.
+[*] - new features for current release.
 
 [*] Bugfixes to support Bosch VIP X1 XF IVA (base support only, without security)
 
 Implemented features:
 1. Common features
-	1.1 WS Discovery to get available devices list
+	1.1 Device discovery (Probe request, Hello/Bye observation)
 	1.2 Localization support
 	1.3 Support for switch on/off modules
 		- Object Tracker
