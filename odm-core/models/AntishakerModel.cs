@@ -56,13 +56,9 @@ namespace odm.models {
 			//    profile.VideoSourceConfiguration = vsc;
 			//}
 
+			yield return session.AddDefaultVideoEncoder(profile).Idle();
 			var vec = profile.VideoEncoderConfiguration;
-			if (vec == null) {
-				//add default video encoder
-				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
-				dbg.Assert(vec != null);
-				profile.VideoEncoderConfiguration = vec;
-			}
+			dbg.Assert(vec != null);
 
 			if (caps.Analytics != null && caps.Analytics.AnalyticsModuleSupport) {
 				yield return session.AddDefaultVideoAnalytics(profile).Idle();

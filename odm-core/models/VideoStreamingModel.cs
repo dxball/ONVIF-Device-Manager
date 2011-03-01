@@ -131,14 +131,10 @@ namespace odm.models {
 			//    yield return session.AddVideoSourceConfiguration(profile.token, vsc.token).Idle();
 			//    profile.VideoSourceConfiguration = vsc;
 			//}
-			
+
+			yield return session.AddDefaultVideoEncoder(profile).Idle();
 			var vec = profile.VideoEncoderConfiguration;
-			if (vec == null) {
-				//add default video encoder
-				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
-				dbg.Assert(vec != null);
-				profile.VideoEncoderConfiguration = vec;
-			}
+			dbg.Assert(vec != null);
 			
 			MediaObservable media = null;
 			yield return session.GetMediaClient().Handle(x => media = x);
@@ -524,13 +520,10 @@ namespace odm.models {
 			//}
 			dbg.Assert(profile.VideoSourceConfiguration != null);
 
+			yield return session.AddDefaultVideoEncoder(profile).Idle();
 			var vec = profile.VideoEncoderConfiguration;
-			if (vec == null) {
-				//add default video encoder
-				yield return session.AddDefaultVideoEncoder(profile.token).Handle(x => vec = x);
-				dbg.Assert(vec != null);
-				profile.VideoEncoderConfiguration = vec;
-			}
+			dbg.Assert(vec != null);
+
 			vec.RateControl.BitrateLimit = bitrate;
 
 			yield return session.SetVideoEncoderConfiguration(vec, true).Idle();

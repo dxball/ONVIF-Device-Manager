@@ -4,9 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	x:Name="ctrl"
-	mc:Ignorable="d" 
-	d:DesignHeight="248" d:DesignWidth="300">
+	x:Name="ctrl">
     <l:ContentColumn x:Name="title" Background="{DynamicResource ResourceKey=PropertyBrush}">
         <l:ContentColumn.Footer>
             <l:SaveCancelControl x:Name="saveCancel"/>
@@ -26,6 +24,7 @@
                     <RowDefinition  Height="auto"/>
                     <RowDefinition  Height="auto"/>
 					<RowDefinition  Height="auto"/>
+					<RowDefinition  Height="auto"/>
 				</Grid.RowDefinitions>
                 <Label 
 					x:Name="nameCaption" Grid.Row="0" Grid.Column="0"  
@@ -38,31 +37,46 @@
 				<TextBox x:Name="locationEditor" Margin="6,2,0,2" Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center"/>
 
 				<Label 
-					x:Name="lbHardware" Grid.Row="2" Grid.Column="0"
+					x:Name="manufacturerCaption" Grid.Row="2" Grid.Column="0"
+					Padding="0" VerticalAlignment="Center" Content="Manufacturer"/>
+				<TextBox x:Name="manufacturerValue" Margin="6,2,0,2" Grid.Row="2" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
+
+				<Label 
+					x:Name="modelCaption" Grid.Row="3" Grid.Column="0"
+					Padding="0" VerticalAlignment="Center" Content="Model"/>
+				<TextBox x:Name="modelValue" Margin="6,2,0,2" Grid.Row="3" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
+
+				<Label 
+					x:Name="hardwareCaption" Grid.Row="4" Grid.Column="0"
 					Padding="0" VerticalAlignment="Center" Content="Hardware"/>
-				<TextBox x:Name="tbHardware" Margin="6,2,0,2" Grid.Row="2" Grid.Column="1" VerticalContentAlignment="Center"/>
+				<TextBox x:Name="hardwareValue" Margin="6,2,0,2" Grid.Row="4" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
                 
 				<Label 
-					x:Name="lbFirmware" Grid.Row="3" Grid.Column="0"
+					x:Name="firmwareCaption" Grid.Row="5" Grid.Column="0"
 					Padding="0" VerticalAlignment="Center" Content="Firmware"/>
-				<TextBox x:Name="tbFirmware" Margin="6,2,0,2" Grid.Row="3" Grid.Column="1" VerticalContentAlignment="Center"/>
-                
+				<TextBox x:Name="firmwareValue" Margin="6,2,0,2" Grid.Row="5" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
+
 				<Label 
-					x:Name="lbDevID" Grid.Row="4" Grid.Column="0"
-					Padding="0" VerticalAlignment="Center" Content="Device Id"/>
-                <TextBox 
-					x:Name="tbDevID" Grid.Row="4" Grid.Column="1" 
-					Margin="6,2,0,2" VerticalContentAlignment="Center"/>
-                
+					x:Name="serialCaption" Grid.Row="6" Grid.Column="0"
+					Padding="0" VerticalAlignment="Center" Content="Serial"/>
+				<TextBox x:Name="serialValue" Margin="6,2,0,2" Grid.Row="6" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
+
 				<Label 
-					x:Name="lbIPAddr" Grid.Row="5" Grid.Column="0"
+					x:Name="ipAddressCaption" Grid.Row="7" Grid.Column="0"
 					Padding="0" VerticalAlignment="Center" Content="Ip address"/>
-				<TextBox x:Name="tbIPAddr" Margin="6,2,0,2" Grid.Row="5" Grid.Column="1" VerticalContentAlignment="Center"/>
+				<TextBox x:Name="ipAddressValue" Margin="6,2,0,2" Grid.Row="7" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
                 
 				<Label 
-					x:Name="lbMACAddr" Grid.Row="6" Grid.Column="0"
+					x:Name="macCaption" Grid.Row="8" Grid.Column="0"
 					Padding="0" VerticalAlignment="Center" Content="MAC"/>
-				<TextBox x:Name="tbMACAddr" Margin="6,2,0,2" Grid.Row="6" Grid.Column="1" VerticalContentAlignment="Center"/>
+				<TextBox x:Name="macValue" Margin="6,2,0,2" Grid.Row="8" Grid.Column="1" 
+					IsReadOnly="True" VerticalContentAlignment="Center"/>
             </Grid>
         </DockPanel>
     </l:ContentColumn>

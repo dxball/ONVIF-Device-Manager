@@ -40,7 +40,7 @@ namespace odm.ui.controls {
 	/// Interaction logic for PropertyNetworkSettings.xaml
 	/// </summary>
 	public partial class NetworkSettings : BasePropertyControl {
-		public NetworkSettings(DeviceNetworkSettingsModel model) {
+		public NetworkSettings(NetworkSettingsModel model) {
 			InitializeComponent();
 			this.model = model;
 
@@ -54,7 +54,7 @@ namespace odm.ui.controls {
 		}
 		LinkButtonsStrings titles = new LinkButtonsStrings();
 
-		DeviceNetworkSettingsModel model;
+		NetworkSettingsModel model;
 		public Action Save;
 		public Action Cancel;
 
@@ -65,7 +65,7 @@ namespace odm.ui.controls {
 		
 		OnOff on = new OnOff("On", true);
 		OnOff off = new OnOff("Off", false);
-		void BindData(DeviceNetworkSettingsModel devModel) {
+		void BindData(NetworkSettingsModel devModel) {
 			cbDhcp.SelectedValuePath = "Value";
 			cbDhcp.DisplayMemberPath = "Name";
 
@@ -80,10 +80,10 @@ namespace odm.ui.controls {
 			tbIpAddr.CreateBinding(TextBox.TextProperty, model, m => m.staticIp.ToString(), (m, v) => {m.staticIp = IPAddress.Parse(v);});
 			cbDhcp.CreateBinding(ComboBox.SelectedItemProperty, model, m => m.dhcp?on:off,	(m, v) => {m.dhcp = v.Value;});
 
-			tbDns.CreateBinding(TextBox.IsReadOnlyProperty, model, m => !m.dhcp);
-			tbGateway.CreateBinding(TextBox.IsReadOnlyProperty, model, m => !m.dhcp);
-			tbIpAddr.CreateBinding(TextBox.IsReadOnlyProperty, model, m => !m.dhcp);
-			tbIpMask.CreateBinding(TextBox.IsReadOnlyProperty, model, m => !m.dhcp);
+			tbDns.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.dhcp);
+			tbGateway.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.dhcp);
+			tbIpAddr.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.dhcp);
+			tbIpMask.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.dhcp);
 
 			_saveCancelControl.Cancel.CreateBinding(Button.IsEnabledProperty, model, m => m.isModified);
 			_saveCancelControl.Save.CreateBinding(Button.IsEnabledProperty, model, m => m.isModified);

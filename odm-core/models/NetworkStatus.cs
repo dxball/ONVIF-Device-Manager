@@ -30,19 +30,19 @@ using dev = onvif.services.device;
 
 namespace odm.models {
 	public class NetworkStatus {//:NotifyPropertyChangedBase<NetworkStatus> {
-		private PhysicalAddress m_mac;
+		private string m_mac;
 		private IPAddress m_ip;
 		private int m_subnetPrefix;
 		private IPAddress m_dns;
 		//private IPAddress m_defaultGateway;
 		
 		public NetworkStatus() {
-			m_mac = PhysicalAddress.None;
+			m_mac = null;
 			m_ip = new IPAddress(0);
 			m_dns = new IPAddress(0); 
 		}
 		
-		public PhysicalAddress mac {
+		public string mac {
 			get {
 				return m_mac;
 			}

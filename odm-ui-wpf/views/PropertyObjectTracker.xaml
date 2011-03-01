@@ -31,22 +31,22 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <wtk:NumericUpDown Name="numContrastSensitivity" Grid.Row="0" Grid.Column="1"/>
-                    <wtk:NumericUpDown Name="numAreaMin" Grid.Row="1" Grid.Column="1"
+                    <wtk:NumericUpDown Name="numDisplacement" Grid.Row="1" Grid.Column="1"/>
+                    <wtk:NumericUpDown Name="numAreaMin" Grid.Row="2" Grid.Column="1"
                                    Maximum="{Binding ElementName=numAreaMax, Path=Value}"
                                    />
-                    <wtk:NumericUpDown Name="numAreaMax" Grid.Row="2" Grid.Column="1"
+                    <wtk:NumericUpDown Name="numAreaMax" Grid.Row="3" Grid.Column="1"
                                    Minimum="{Binding ElementName=numAreaMin, Path=Value}"
                                    />
-                    <wtk:NumericUpDown Name="numSpeedMax" Grid.Row="3" Grid.Column="1"/>
-                    <wtk:NumericUpDown Name="numStabilization" Grid.Row="4" Grid.Column="1"/>
-                    <wtk:NumericUpDown Name="numDisplacement" Grid.Row="5" Grid.Column="1"/>
+                    <wtk:NumericUpDown Name="numSpeedMax" Grid.Row="4" Grid.Column="1"/>
+                    <wtk:NumericUpDown Name="numStabilization" Grid.Row="5" Grid.Column="1"/>
 
                     <Label Height="23" Name="tbContrastSensitivity" Grid.Row="0" Grid.Column="0"/>
-                    <Label Height="23" Name="tbAreaMin" Grid.Row="1" Grid.Column="0"/>
-                    <Label Height="23" Name="tbAreaMax" Grid.Row="2" Grid.Column="0"/>
-                    <Label Height="23" Name="tbSpeedMax" Grid.Row="3" Grid.Column="0"/>
-                    <Label Height="23" Name="tbStabilization" Grid.Row="4" Grid.Column="0"/>
-                    <Label Height="23" Name="tbDisplacement" Grid.Row="5" Grid.Column="0"/>
+                    <Label Height="23" Name="tbDisplacement" Grid.Row="1" Grid.Column="0"/>
+                    <Label Height="23" Name="tbAreaMin" Grid.Row="2" Grid.Column="0"/>
+                    <Label Height="23" Name="tbAreaMax" Grid.Row="3" Grid.Column="0"/>
+                    <Label Height="23" Name="tbSpeedMax" Grid.Row="4" Grid.Column="0"/>
+                    <Label Height="23" Name="tbStabilization" Grid.Row="5" Grid.Column="0"/>
                 </Grid>
             </StackPanel>
             <Local:VideoPlayer x:Name="_videoPlayer" DockPanel.Dock="Top" Margin="6,6,6,6"/>

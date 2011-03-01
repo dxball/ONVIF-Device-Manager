@@ -30,11 +30,11 @@ using odm.utils.controlsUIProvider;
 
 namespace odm.controllers {
 	public class PropertyNetworkSettingsController : BasePropertyController {
-		DeviceNetworkSettingsModel _devModel;
+		NetworkSettingsModel _devModel;
 		IDisposable _subscription;
 
 		protected override void LoadControl() {
-			_devModel = new DeviceNetworkSettingsModel();
+			_devModel = new NetworkSettingsModel();
 			_subscription = _devModel.Load(CurrentSession).Subscribe(arg => {
 				UIProvider.Instance.GetNetworkSettingsProvider().InitView(_devModel, ApplyChanges, CancelChanges);
 			}, err => {

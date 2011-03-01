@@ -11,6 +11,12 @@
     <string name="analytics" value="Аналитика" />
     <string name="loadingData" value="Загрузка данных..." />
     <string name="applicationName" value="Менеджер устройств ONVIF" />
+    <string name="aboutTitle" value="О Менеджере устройств ONVIF" />
+    <string name="aboutCommon" value="Менеджер устройств ONVIF является свободным программным продуктом. Вы вправе распространять и/или изменять ее в соответствии с условиями Генеральной Общественной Лицензии GNU." />
+    <string name="aboutRus" value="ООО `Синезис`, РФ, 119019, г. Москва, Гоголевский бульвар, д. 2/18/1, стр. 1" />
+    <string name="aboutBelarus" value="ООО `Синезис`, РБ, 220043 г. Минск, пр.-т Независимости, дом 95, пом. 12, офис 316" />
+    <string name="aboutBelarusPhone" value="+375 (17) 281-77-85" />
+    <string name="aboutRusPhone" value="+7 (495) 660-77-47" />
   </module>
   <module name="DeviceControlStrings" namespace="odm.ui.controls">
     <string name="title" value="Устройство" />

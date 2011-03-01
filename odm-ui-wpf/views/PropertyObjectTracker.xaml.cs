@@ -92,7 +92,7 @@ namespace odm.ui.controls {
 			numAreaMax.CreateBinding(NumericUpDown.ValueProperty, model, x => (double)x.maxObjectArea, (m, v) => {m.maxObjectArea = (float)v;});
 			numAreaMin.CreateBinding(NumericUpDown.ValueProperty, model, x => (double)x.minObjectArea, (m, v) => {m.minObjectArea = (float)v;});
 
-			numDisplacement.CreateBinding(NumericUpDown.ValueProperty, model, x => x.displacementSensitivity, (m, v) => { m.displacementSensitivity = v; });
+			numDisplacement.CreateBinding(NumericUpDown.ValueProperty, model, x => (double)x.displacementSensitivity, (m, v) => { m.displacementSensitivity = (int)v; });
 			numContrastSensitivity.CreateBinding(NumericUpDown.ValueProperty, model, x => (double)x.contrastSensitivity, (m, v) => {m.contrastSensitivity = (int)v;});
 			numSpeedMax.CreateBinding(NumericUpDown.ValueProperty, model, x => (double)x.maxObjectSpeed, (m, v) => {m.maxObjectSpeed = (int)v;});
 			numStabilization.CreateBinding(NumericUpDown.ValueProperty, model, x => (double)x.stabilizationTime, (m, v) => {m.stabilizationTime = (float)v;});

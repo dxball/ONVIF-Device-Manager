@@ -57,7 +57,7 @@ namespace odm.onvif {
 	
 	public class Session {
 		private Uri m_transportUri;
-		private DeviceDescription m_deviceDescription;
+		private IDeviceDescription m_deviceDescription;
 		public static ChannelFactory<Device> s_deviceFactory = null;
 		public static ChannelFactory<Device> s_deviceMtomFactory = null;
 		public static ChannelFactory<Media> s_mediaFactory = null;
@@ -66,7 +66,7 @@ namespace odm.onvif {
 		public static ChannelFactory<RuleEnginePort> s_ruleEngineFactory = null;
 		//public static ChannelFactory<> s_eventsFactory = null;
 
-		public Session(DeviceDescription deviceDescription) {
+		public Session(IDeviceDescription deviceDescription) {
 			this.m_deviceDescription = deviceDescription;
 			this.m_transportUri = deviceDescription.uris.Where(x => x.Scheme == Uri.UriSchemeHttp).LastOrDefault();
 			if (this.m_transportUri == null) {
@@ -162,7 +162,7 @@ namespace odm.onvif {
 		//    return Create(new Uri(uri));
 		//}
 				
-		public IObservable<DeviceDescription> GetDeviceDescription() {
+		public IObservable<IDeviceDescription> GetDeviceDescription() {
 			if (m_deviceDescription == null) {
 				DeviceObservable dev = null;
 				GetDeviceClient().Handle(x => dev = x);
@@ -471,7 +471,7 @@ namespace odm.onvif {
 			yield return AddVideoSourceConfiguration(profile.token, vsc.token);
 			profile.VideoSourceConfiguration = vsc;
 			
-			yield return AddDefaultVideoEncoder(profile.token).Handle(x => profile.VideoEncoderConfiguration = x);
+			yield return AddDefaultVideoEncoder(profile).Idle();
 			
 			if (observer != null) {
 				observer.OnNext(profile);
@@ -535,7 +535,7 @@ namespace odm.onvif {
 
 			med::VideoSource[] vsources = null;
 			yield return media.GetVideoSources().Handle(x => vsources = x);
-			//DebugHelper.Assert(vsources != null);
+			dbg.Assert(vsources != null);
 
 			if (observer != null) {
 				observer.OnNext(vsources);
@@ -906,7 +906,8 @@ namespace odm.onvif {
 			if (nic != null) {
 				var nic_cfg = nic.IPv4.Config;
 				//networkSettngs.m_token = t[0].token;
-				netStat.mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':', '-'));
+				//netStat.mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':', '-'));
+				netStat.mac = nic.Info.HwAddress.Replace(':', '-').ToUpper();
 				//netStat.m_dhcp = nic.IPv4.Config.DHCP;
 
 				if (nic_cfg.DHCP && nic_cfg.FromDHCP != null) {
@@ -1147,12 +1148,19 @@ namespace odm.onvif {
 
 
 
-		private IEnumerable<IObservable<object>> AddDefaultVideoEncoderImpl(ProfileToken profileToken, IObserver<med::VideoEncoderConfiguration> observer) {
+		private IEnumerable<IObservable<object>> AddDefaultVideoEncoderImpl(med::Profile profile, IObserver<med::VideoEncoderConfiguration> observer) {
+			if (profile.VideoEncoderConfiguration != null) {
+				if (observer != null) {
+					observer.OnNext(profile.VideoEncoderConfiguration);
+				}
+				yield break;
+			}
+
 			MediaObservable media = null;
 			yield return GetMediaClient().Handle(x => media = x);
 
 			med::VideoEncoderConfiguration[] vecs = null;
-			yield return GetCompatibleVideoEncoderConfigurations(profileToken).Handle(x => vecs = x).IgnoreError();
+			yield return GetCompatibleVideoEncoderConfigurations(profile.token).Handle(x => vecs = x).IgnoreError();
 			if (vecs == null || vecs.Length == 0) {
 				yield return GetVideoEncoderConfigurations().Handle(x => vecs = x);
 			}
@@ -1164,17 +1172,18 @@ namespace odm.onvif {
 				vec = vecs[0];
 			}
 			if (vec != null) {
-				yield return AddVideoEncoderConfiguration(profileToken, vec.token).Idle();
+				yield return AddVideoEncoderConfiguration(profile.token, vec.token).Idle();
+				profile.VideoEncoderConfiguration = vec;
 			}
 
 
 			if (observer != null) {
-				observer.OnNext(vec);
+				observer.OnNext(profile.VideoEncoderConfiguration);
 			}
 		}
 
-		public IObservable<med::VideoEncoderConfiguration> AddDefaultVideoEncoder(ProfileToken profileToken) {
-			return Observable.Iterate<med::VideoEncoderConfiguration>(observer => AddDefaultVideoEncoderImpl(profileToken, observer));
+		public IObservable<med::VideoEncoderConfiguration> AddDefaultVideoEncoder(med::Profile profile) {
+			return Observable.Iterate<med::VideoEncoderConfiguration>(observer => AddDefaultVideoEncoderImpl(profile, observer));
 		}
 
 
@@ -1316,7 +1325,7 @@ namespace odm.onvif {
 		//    return CreateMediaClient(new Uri(capabilities.Media.XAddr));
 		//}
 
-		public DeviceDescription deviceDescription {
+		public IDeviceDescription deviceDescription {
 			get {
 				return m_deviceDescription;
 			}

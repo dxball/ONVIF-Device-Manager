@@ -16,8 +16,8 @@ using net = System.Net;
 using System.Net.NetworkInformation;
 
 namespace odm.models {
-	public partial class DeviceNetworkSettingsModel : ModelBase<DeviceNetworkSettingsModel> {
-		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
+	public partial class NetworkSettingsModel : ModelBase<NetworkSettingsModel> {
+		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<NetworkSettingsModel> observer) {
 			NetworkSettings netSettings = new NetworkSettings();
 			//PhysicalAddress mac = null;
 			NetworkStatus netstat = new NetworkStatus();
@@ -55,10 +55,11 @@ namespace odm.models {
 			var nic = nics.Where(x => x.Enabled).FirstOrDefault();
 			if (nic != null) {
 				var nic_cfg = nic.IPv4.Config;
-				netstat.mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':', '-'));
+				//netstat.mac = PhysicalAddress.Parse(nic.Info.HwAddress.Replace(':', '-'));
+				netstat.mac = nic.Info.HwAddress.Replace(':', '-').ToUpper();
 				netSettings.dhcp = nic.IPv4.Config.DHCP;
 
-				if (nic_cfg.Manual.Count() > 0) {
+				if (nic_cfg.Manual!=null && nic_cfg.Manual.Count() > 0) {
 					netSettings.staticIp = net::IPAddress.Parse(nic_cfg.Manual[0].Address);
 					netSettings.subnetPrefix = nic_cfg.Manual[0].PrefixLength;
 				} else if (nic_cfg.FromDHCP != null) {
@@ -72,7 +73,8 @@ namespace odm.models {
 			m_subnetMask.SetBoth(NetMaskHelper.PrefixToMask(netSettings.subnetPrefix) ?? new net::IPAddress(0));
 			m_staticGateway.SetBoth(netSettings.defaultGateway ?? new net::IPAddress(0));
 			m_staticDns.SetBoth(netSettings.staticDns ?? new net::IPAddress(0));
-			mac = BitConverter.ToString(netstat.mac.GetAddressBytes());
+			//mac = BitConverter.ToString(netstat.mac.GetAddressBytes());
+			mac = netstat.mac;
 
 			NotifyPropertyChanged(x => x.staticIp);
 			NotifyPropertyChanged(x => x.subnetMask);
@@ -84,7 +86,7 @@ namespace odm.models {
 			}
 		}
 
-		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<DeviceNetworkSettingsModel> observer) {
+		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<NetworkSettingsModel> observer) {
 			if (!isModified) {
 				observer.OnNext(this);
 				yield break;
@@ -170,10 +172,15 @@ namespace odm.models {
 				yield return session.SetNetworkInterfaces(nic.token, nic_set).Handle(x => isRebootNeeded = x);
 
 				if (isRebootNeeded) {
-					//yield return session.SystemReboot().Idle();					
+					//yield return session.SystemReboot().Idle();
+					yield return session.SystemReboot().IgnoreError();
 				}
 
-			}			
+			}
+
+			if (observer != null) {
+				observer.OnNext(this);
+			}
 		}
 
 		private ChangeTrackingProperty<bool> m_dhcp = new ChangeTrackingProperty<bool>(false);

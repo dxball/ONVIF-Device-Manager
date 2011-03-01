@@ -47,6 +47,7 @@ namespace odm.ui.controls {
 			InitControls();
 			BindData();
 		}
+		
 		DeviceIdentificationModel model;
 		public Action Save { get; set; }
 		public Action Cancel { get; set; }
@@ -58,12 +59,6 @@ namespace odm.ui.controls {
 		LinkButtonsStrings titles = new LinkButtonsStrings();
 
 		void InitControls() {
-			tbDevID.IsReadOnly = true;
-			tbFirmware.IsReadOnly = true;
-			tbHardware.IsReadOnly = true;
-			tbIPAddr.IsReadOnly = true;
-			tbMACAddr.IsReadOnly = true;
-
 			saveCancel.Save.Click += Save_Click;
 			saveCancel.Cancel.Click += Cancel_Click;
 		}
@@ -89,20 +84,26 @@ namespace odm.ui.controls {
 			locationCaption.CreateBinding(Label.ContentProperty, strings, x => x.location);
 			locationEditor.CreateBinding(TextBox.TextProperty, model, m=>m.location, (m, v)=>{ m.location = v;});
 
-			lbDevID.CreateBinding(Label.ContentProperty, strings, x => x.deviceID);
-			tbDevID.CreateBinding(TextBox.TextProperty, model, m => m.DeviceID);
+			//manufacturerCaption.CreateBinding(Label.ContentProperty, strings, x => x.manufacturer);
+			manufacturerValue.CreateBinding(TextBox.TextProperty, model, m => m.manufacturer);
 
-			lbFirmware.CreateBinding(Label.ContentProperty, strings, x => x.firmware);
-			tbFirmware.CreateBinding(TextBox.TextProperty, model, m => m.FirmwareVer);
+			//modelCaption.CreateBinding(Label.ContentProperty, strings, x => x.model);
+			modelValue.CreateBinding(TextBox.TextProperty, model, m => m.model);
 
-			lbHardware.CreateBinding(Label.ContentProperty, strings, x => x.hardware);
-			tbHardware.CreateBinding(TextBox.TextProperty, model, m => m.HardwareVer);
+			firmwareCaption.CreateBinding(Label.ContentProperty, strings, x => x.firmware);
+			firmwareValue.CreateBinding(TextBox.TextProperty, model, m => m.firmwareVersion);
 
-			lbIPAddr.CreateBinding(Label.ContentProperty, strings, x => x.ipAddress);
-			tbIPAddr.CreateBinding(TextBox.TextProperty, model, m => m.NetworkIPAddress);
+			hardwareCaption.CreateBinding(Label.ContentProperty, strings, x => x.hardware);
+			hardwareValue.CreateBinding(TextBox.TextProperty, model, m => m.hardwareVersion);
 
-			lbMACAddr.CreateBinding(Label.ContentProperty, strings, x => x.macAddress);
-			tbMACAddr.CreateBinding(TextBox.TextProperty, model, m => m.MACAddress);
+			serialCaption.CreateBinding(Label.ContentProperty, strings, x => x.deviceID);
+			serialValue.CreateBinding(TextBox.TextProperty, model, m => m.serial);
+
+			ipAddressCaption.CreateBinding(Label.ContentProperty, strings, x => x.ipAddress);
+			ipAddressValue.CreateBinding(TextBox.TextProperty, model, m => m.networkIpAddress);
+
+			macCaption.CreateBinding(Label.ContentProperty, strings, x => x.macAddress);
+			macValue.CreateBinding(TextBox.TextProperty, model, m => m.mac);
 			
 			//tbName
 			//    .GetPropertyChangedEvents(TextBox.TextProperty)

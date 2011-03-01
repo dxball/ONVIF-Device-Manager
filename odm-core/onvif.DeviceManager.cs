@@ -63,7 +63,7 @@ namespace odm.onvif {
 		//    }
 		//}
 
-		private class DeviceDescriptionImpl : DeviceDescription {
+		private class DeviceDescriptionImpl : IDeviceDescription {
 			public EndpointDiscoveryMetadata m_epMetadata;
 			public AsyncSubject<Unit> m_removalSubj = new AsyncSubject<Unit>();
 
@@ -71,39 +71,39 @@ namespace odm.onvif {
 				m_epMetadata = epMetadata;
 			}
 
-			public override IObservable<Unit> removal {
+			public IObservable<Unit> removal {
 				get {
 					return m_removalSubj as IObservable<Unit>;
 				}
 			}
-			public override string id {
+			public string id {
 				get {
 					return m_epMetadata.Address.Uri.OriginalString;
 				}
 			}
-			public override string name {
+			public string name {
 				get {
 					var name = NvcHelper.GetName(scopes);
 					return name;
 				}
 			}
-			public override string location {
+			public string location {
 				get {
 					var location = NvcHelper.GetLocation(scopes);
 					return location;
 				}
 			}
-			public override IEnumerable<Uri> uris {
+			public IEnumerable<Uri> uris {
 				get {
 					return m_epMetadata.ListenUris;
 				}
 			}
-			public override string deviceConfigId {
+			public string deviceConfigId {
 				get {
 					return NvcHelper.GetDeviceId(scopes);
 				}
 			}
-			public override IEnumerable<string> scopes {
+			public IEnumerable<string> scopes {
 				get {
 					return m_epMetadata.Scopes.Select(x => x.OriginalString);
 				}
@@ -113,7 +113,7 @@ namespace odm.onvif {
 		AnnouncementService m_announcementService = null;
 		ServiceHost m_host = null;
 		Dictionary<string, DeviceDescriptionImpl> m_dict = new Dictionary<string, DeviceDescriptionImpl>();
-		Subject<DeviceDescription> m_subj = new Subject<DeviceDescription>();
+		Subject<IDeviceDescription> m_subj = new Subject<IDeviceDescription>();
 		MutableDisposable m_discoverySubscription = null;
 		int m_subscriberCnt = 0;
 		object m_gate = new object();
@@ -201,8 +201,8 @@ namespace odm.onvif {
 			}
 		}		
 
-		public IObservable<DeviceDescription> Discover(TimeSpan duration) {
-			return Observable.CreateWithDisposable<DeviceDescription>(observer => {
+		public IObservable<IDeviceDescription> Discover(TimeSpan duration) {
+			return Observable.CreateWithDisposable<IDeviceDescription>(observer => {
 
 				var discoveryDuration = duration;
 

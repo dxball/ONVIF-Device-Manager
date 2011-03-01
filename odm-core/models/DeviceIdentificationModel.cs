@@ -41,12 +41,14 @@ namespace odm.models {
 			
 			NotifyPropertyChanged(x => x.location);
 			NotifyPropertyChanged(x => x.Name);
-			
-			HardwareVer = info.HardwareId;
-			FirmwareVer = info.FirmwareVersion;
-			DeviceID = info.SerialNumber;
-			NetworkIPAddress = netstat.ip.ToString();
-			MACAddress = BitConverter.ToString(netstat.mac.GetAddressBytes());
+
+			serial = info.SerialNumber;
+			manufacturer = info.Manufacturer;
+			model = info.Model;
+			hardwareVersion = info.HardwareId;
+			firmwareVersion = info.FirmwareVersion;
+			networkIpAddress = netstat.ip.ToString();
+			mac = netstat.mac;
 			//m_dateTime.SetBoth(System.TimeZone.CurrentTimeZone.ToLocalTime(
 			//    new System.DateTime(time.UTCDateTime.Date.Year, time.UTCDateTime.Date.Month, time.UTCDateTime.Date.Day, time.UTCDateTime.Time.Hour, time.UTCDateTime.Time.Minute, time.UTCDateTime.Time.Second, DateTimeKind.Utc)
 			//));
@@ -105,12 +107,14 @@ namespace odm.models {
 		private ChangeTrackingProperty<string> m_name = new ChangeTrackingProperty<string>();
 		private ChangeTrackingProperty<string> m_location = new ChangeTrackingProperty<string>();
 		private ChangeTrackingProperty<System.DateTime> m_dateTime = new ChangeTrackingProperty<System.DateTime>();
-		
-		private string m_HardwareVer;
-		private string m_FirmwareVer;
-		private string m_DeviceID;
-		private string m_NetworkIPAddress;
-		private string m_MACAddress;
+
+		private string m_manufacturer;
+		private string m_model;
+		private string m_serial;
+		private string m_hardwareVersion;
+		private string m_firmwareVersion;
+		private string m_networkIpAddress;
+		private string m_mac;
 		//private System.DateTime m_dateTime;
 
 		public string Name {
@@ -137,58 +141,84 @@ namespace odm.models {
 				}
 			}
 		}
-		public string HardwareVer {
+
+		public string serial {
 			get {
-				return m_HardwareVer;
+				return m_serial;
 			}
 			private set {
-				if (m_HardwareVer != value) {
-					m_HardwareVer = value;
-					NotifyPropertyChanged(x => x.HardwareVer);
+				if (m_serial != value) {
+					m_serial = value;
+					NotifyPropertyChanged(x => x.serial);
 				}
 			}
 		}
-		public string FirmwareVer {
+
+		public string manufacturer {
 			get {
-				return m_FirmwareVer;
+				return m_manufacturer;
 			}
 			private set {
-				if (m_FirmwareVer != value) {
-					m_FirmwareVer = value;
-					NotifyPropertyChanged(x => x.FirmwareVer);
+				if (m_manufacturer != value) {
+					m_manufacturer = value;
+					NotifyPropertyChanged(x => x.manufacturer);
 				}
 			}
 		}
-		public string DeviceID {
+
+		public string model {
 			get {
-				return m_DeviceID;
+				return m_model;
 			}
 			private set {
-				if (m_DeviceID != value) {
-					m_DeviceID = value;
-					NotifyPropertyChanged(x => x.DeviceID);
+				if (m_model != value) {
+					m_model = value;
+					NotifyPropertyChanged(x => x.model);
 				}
 			}
 		}
-		public string NetworkIPAddress {
+		public string hardwareVersion {
 			get {
-				return m_NetworkIPAddress;
+				return m_hardwareVersion;
 			}
 			private set {
-				if (m_NetworkIPAddress != value) {
-					m_NetworkIPAddress = value;
-					NotifyPropertyChanged(x => x.NetworkIPAddress);
+				if (m_hardwareVersion != value) {
+					m_hardwareVersion = value;
+					NotifyPropertyChanged(x => x.hardwareVersion);
 				}
 			}
 		}
-		public string MACAddress {
+		public string firmwareVersion {
 			get {
-				return m_MACAddress;
+				return m_firmwareVersion;
 			}
 			private set {
-				if (m_MACAddress != value) {
-					m_MACAddress = value;
-					NotifyPropertyChanged(x => x.MACAddress);
+				if (m_firmwareVersion != value) {
+					m_firmwareVersion = value;
+					NotifyPropertyChanged(x => x.firmwareVersion);
+				}
+			}
+		}
+		
+		public string networkIpAddress {
+			get {
+				return m_networkIpAddress;
+			}
+			private set {
+				if (m_networkIpAddress != value) {
+					m_networkIpAddress = value;
+					NotifyPropertyChanged(x => x.networkIpAddress);
+				}
+			}
+		}
+		public string mac {
+			get {
+				return m_mac;
+			}
+			private set {
+				if (m_mac != value) {
+					m_mac = value;
+					NotifyPropertyChanged(x => x.mac);
 				}
 			}
 		}

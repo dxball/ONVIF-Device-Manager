@@ -406,7 +406,12 @@ namespace odm.controllers {
 							LoadChannelModel(selectedProf.token);
 					} else {
 						//if default profile must be selected
-						var result = prof.Where(res => res.VideoSourceConfiguration.SourceToken == vidSource)
+						var result = prof.Where(res => {
+							if (res.VideoSourceConfiguration != null)
+								return res.VideoSourceConfiguration.SourceToken == vidSource;
+							else
+								return false;
+						})
 							.FirstOrDefault(pr => pr.token == NvcHelper.GetChannelProfileToken(vidSource));
 						if (result == null) {
 							var profToken = NvcHelper.GetChannelProfileToken(vidSource);
@@ -590,9 +595,9 @@ namespace odm.controllers {
 			_buttonsList.ForEach(x => {
 				if (x.Channel == chan) {
 					if (x.LinkChannelID == LinkButtonsChannelID.Annotation)
-						x.IsChecked = chan.modules.DisplayAnnotation.GetValueOrDefault(false);
+						x.IsChecked = chan.modules.displayAnnotation.GetValueOrDefault(false);
 					if (x.LinkChannelID == LinkButtonsChannelID.Tracker)
-						x.IsChecked = chan.modules.ObjectTracker.GetValueOrDefault(false);
+						x.IsChecked = chan.modules.objectTracker.GetValueOrDefault(false);
 				}
 			});
 		}
@@ -669,7 +674,7 @@ namespace odm.controllers {
 			link.CreatePropertyAction = WorkflowController.Instance.GetPropDepthCalibrationController;
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseDepthCalibrationController;
 			link.Click = LbtnClick;
-			if (channel.modules.SceneCalibrator == null)
+			if (channel.modules.sceneCalibrator == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -683,7 +688,7 @@ namespace odm.controllers {
 			link.CreatePropertyAction = WorkflowController.Instance.GetPropDisplayAnnotationController;
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseyDisplayAnnotationController;
 			link.IsCheckable = false;
-			if (channel.modules.DisplayAnnotation == null)
+			if (channel.modules.displayAnnotation == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -698,7 +703,7 @@ namespace odm.controllers {
 			link.CreatePropertyAction = WorkflowController.Instance.GetPropTemperingController;
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseTemperingController;
 			link.IsCheckable = false;
-			if (channel.modules.DisplayAnnotation == null)
+			if (channel.modules.displayAnnotation == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -714,8 +719,8 @@ namespace odm.controllers {
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseObjectTrackerController;
 			link.CheckBoxSwitchedAcion = CheckBoxSwitched;
 			link.IsCheckable = true;
-			link.IsChecked = channel.modules.ObjectTracker.GetValueOrDefault(false);
-			if (channel.modules.ObjectTracker == null)
+			link.IsChecked = channel.modules.objectTracker.GetValueOrDefault(false);
+			if (channel.modules.objectTracker == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -730,7 +735,7 @@ namespace odm.controllers {
 			link.CreatePropertyAction = WorkflowController.Instance.GetPropApproMotionDetectorController;
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseApproMotionDetectorController;
 			link.CheckBoxSwitchedAcion = CheckBoxSwitched;
-			if (channel.modules.ApproMotionDetector == null)
+			if (channel.modules.approMotionDetector == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -745,7 +750,7 @@ namespace odm.controllers {
 			link.CreatePropertyAction = WorkflowController.Instance.GetPropRuleEngineController;
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseRuleEngineController;
 			link.IsCheckable = false;
-			if (channel.modules.RuleEngine == null)
+			if (channel.modules.ruleEngine == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -763,8 +768,8 @@ namespace odm.controllers {
 			link.ReleasePropertyAction = WorkflowController.Instance.ReleaseAntishakerController;
 			link.CheckBoxSwitchedAcion = CheckBoxSwitched;
 			link.IsCheckable = true;
-			link.IsChecked = channel.modules.DigitalAntishaker.GetValueOrDefault(false);
-			if (channel.modules.DigitalAntishaker == null)
+			link.IsChecked = channel.modules.digitalAntishaker.GetValueOrDefault(false);
+			if (channel.modules.digitalAntishaker == null)
 				link.Enabled = false;
 			else
 				link.Enabled = true;
@@ -811,11 +816,11 @@ namespace odm.controllers {
 		protected void CheckBoxSwitched(LinkCheckButtonController link, Action onSwitchError) {
 			switch (link.LinkChannelID) {
 				case LinkButtonsChannelID.Tracker:
-					link.Channel.modules.ObjectTracker = link.IsChecked;
+					link.Channel.modules.objectTracker = link.IsChecked;
 					ApplyChBoxChanges(link, onSwitchError);
 					break;
 				case LinkButtonsChannelID.Antishaker:
-					link.Channel.modules.DigitalAntishaker = link.IsChecked;
+					link.Channel.modules.digitalAntishaker = link.IsChecked;
 					ApplyChBoxChanges(link, onSwitchError);
 					break;
 			}

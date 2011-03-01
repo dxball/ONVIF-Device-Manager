@@ -31,7 +31,7 @@
 				x:Name="cbDhcp" Grid.Row="0" Grid.Column="1" 
 				VerticalContentAlignment="Center" Margin="6,2,0,2" />
 
-			<Label 
+			<Label       
 				x:Name="lbIpAddr"  Grid.Row="1" Grid.Column="0"
 				Margin="0" Padding="0,2"
 				VerticalAlignment="Center" Content="IP Address"/>

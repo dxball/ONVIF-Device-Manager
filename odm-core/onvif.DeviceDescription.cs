@@ -33,14 +33,14 @@ using System.Collections.Generic;
 //using nvc.models;
 
 namespace odm.onvif {
-	public abstract class DeviceDescription {
-		public abstract string name {get;}
-		public abstract string id {get;}
-		public abstract string deviceConfigId {get;}
-		public abstract string location {get;}
-		public abstract IEnumerable<Uri> uris {get;}
-		public abstract IEnumerable<string> scopes {get;}
-		public abstract IObservable<Unit> removal {get;}
+	public interface IDeviceDescription {
+		string name {get;}
+		string id {get;}
+		string deviceConfigId {get;}
+		string location {get;}
+		IEnumerable<Uri> uris {get;}
+		IEnumerable<string> scopes {get;}
+		IObservable<Unit> removal {get;}
 	}
 
 

@@ -177,6 +177,126 @@ namespace odm.ui.controls {
 			}  
 		}
 	
+
+
+		private const string s_aboutTitle = @"About ONVIF Device Manager";
+		private string m_aboutTitle=null;
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='aboutTitle']/@value")]
+		public string aboutTitle {
+			get { 
+				if( m_aboutTitle == null){
+					return s_aboutTitle;
+				}
+				return m_aboutTitle; 
+			}
+			set { 
+				if( value != m_aboutTitle){
+					m_aboutTitle = value;
+					NotifyPropertyChanged("aboutTitle");
+				}
+			}  
+		}
+	
+
+
+		private const string s_aboutCommon = @"Copyright 2010 Synesis ©  ONVIF Device Manager is a free software distributed under the GNU General Public License.";
+		private string m_aboutCommon=null;
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='aboutCommon']/@value")]
+		public string aboutCommon {
+			get { 
+				if( m_aboutCommon == null){
+					return s_aboutCommon;
+				}
+				return m_aboutCommon; 
+			}
+			set { 
+				if( value != m_aboutCommon){
+					m_aboutCommon = value;
+					NotifyPropertyChanged("aboutCommon");
+				}
+			}  
+		}
+	
+
+
+		private const string s_aboutRus = @"LLC Synesis Russia, 119019, Moscow Gogolevskiy bulvard, dom 2/18/1, stroenie 1";
+		private string m_aboutRus=null;
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='aboutRus']/@value")]
+		public string aboutRus {
+			get { 
+				if( m_aboutRus == null){
+					return s_aboutRus;
+				}
+				return m_aboutRus; 
+			}
+			set { 
+				if( value != m_aboutRus){
+					m_aboutRus = value;
+					NotifyPropertyChanged("aboutRus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_aboutBelarus = @"LLC Synesis Belarus, 220043, Minsk pr.-t Nezavisimosti, d. 95, zd. 12, kom. 316";
+		private string m_aboutBelarus=null;
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='aboutBelarus']/@value")]
+		public string aboutBelarus {
+			get { 
+				if( m_aboutBelarus == null){
+					return s_aboutBelarus;
+				}
+				return m_aboutBelarus; 
+			}
+			set { 
+				if( value != m_aboutBelarus){
+					m_aboutBelarus = value;
+					NotifyPropertyChanged("aboutBelarus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_aboutBelarusPhone = @"+375 (17) 281-77-85";
+		private string m_aboutBelarusPhone=null;
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='aboutBelarusPhone']/@value")]
+		public string aboutBelarusPhone {
+			get { 
+				if( m_aboutBelarusPhone == null){
+					return s_aboutBelarusPhone;
+				}
+				return m_aboutBelarusPhone; 
+			}
+			set { 
+				if( value != m_aboutBelarusPhone){
+					m_aboutBelarusPhone = value;
+					NotifyPropertyChanged("aboutBelarusPhone");
+				}
+			}  
+		}
+	
+
+
+		private const string s_aboutRusPhone = @"+7 (495) 660-77-47";
+		private string m_aboutRusPhone=null;
+		[XPath(@"/localized-strings/module[@name='CommonApplicationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='aboutRusPhone']/@value")]
+		public string aboutRusPhone {
+			get { 
+				if( m_aboutRusPhone == null){
+					return s_aboutRusPhone;
+				}
+				return m_aboutRusPhone; 
+			}
+			set { 
+				if( value != m_aboutRusPhone){
+					m_aboutRusPhone = value;
+					NotifyPropertyChanged("aboutRusPhone");
+				}
+			}  
+		}
+	
 	}
 
 }

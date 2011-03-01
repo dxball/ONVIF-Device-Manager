@@ -48,10 +48,10 @@ namespace odm.models {
 		private string m_firmware = String.Empty;
 		private Exception m_error;
 		
-		public DeviceDescriptionModel(DeviceDescription description) {
+		public DeviceDescriptionModel(IDeviceDescription description) {
 			this.name = description.name;
 			this.location = description.location;
-			this.address = String.Join(" ,", description.uris.Select(x => x.Host));
+			this.address = String.Join(" ,", description.uris.Select(x => x.Host).Distinct());
 		}
 
 		protected override IEnumerable<IObservable<object>> LoadImpl(Session session, IObserver<DeviceDescriptionModel> observer) {

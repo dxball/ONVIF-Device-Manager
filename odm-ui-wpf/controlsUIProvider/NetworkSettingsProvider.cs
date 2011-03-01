@@ -30,7 +30,7 @@ using odm.models;
 namespace odm.controlsUIProvider {
 	public class NetworkSettingsProvider : BaseUIProvider, INetworkSettingsProvider {
 		odm.ui.controls.NetworkSettings _netsettings;
-		public void InitView(DeviceNetworkSettingsModel devModel, Action ApplyChanges, Action CancelChanges) {
+		public void InitView(NetworkSettingsModel devModel, Action ApplyChanges, Action CancelChanges) {
 			_netsettings = new odm.ui.controls.NetworkSettings(devModel) { 
 				Save = ApplyChanges,
 				Cancel = CancelChanges,

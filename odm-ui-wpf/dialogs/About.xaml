@@ -3,7 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:my="clr-namespace:odm.ui.controls"
 	Style="{StaticResource ResourceKey='Common.CustomDialogWindow'}"
-	Title="About Network Video Console" 
 	Icon="/odm;component/Resources/about.png" 
 	ResizeMode="NoResize" 
 	ShowInTaskbar="False"
@@ -12,33 +11,37 @@
 	TextOptions.TextFormattingMode="Display">
 	
     <Grid>
-		<Image Height="83" HorizontalAlignment="Left" Margin="12,12,0,0" Name="image1" Stretch="Uniform" VerticalAlignment="Top" Width="134" Source="/odm;component/Resources/BigLogo.png" />
-        <TextBlock Height="83" Margin="152,12,12,166" Name="textBox1">
-            Copyright 2010 Synesis &#169;<LineBreak/>
-            ONVIF Device Manager is a<LineBreak/>
-            free software distributed under<LineBreak/>
-            the GNU General Public License.<LineBreak/>
-			<LineBreak/>
-			<Hyperlink RequestNavigate="HandleRequestNavigate" NavigateUri="http://synesis.ru" >http://synesis.ru</Hyperlink>
-        </TextBlock>
-        <GroupBox Header="Contact Info" Height="160" HorizontalAlignment="Left" Margin="12,101,0,0" Name="groupBox1" VerticalAlignment="Top" Width="318">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Image Height="83" Grid.Column="0" HorizontalAlignment="Left" Name="image1" Stretch="Uniform" VerticalAlignment="Top" Width="134" Source="/odm;component/Resources/BigLogo.png" />
+            <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                <TextBlock Name="commonCaption"  MaxWidth="234" TextWrapping="Wrap" />
+                <TextBlock>
+                    <Hyperlink RequestNavigate="HandleRequestNavigate" NavigateUri="http://synesis.ru" >http://synesis.ru</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        <GroupBox Grid.Row="1" Header="Contact Info" HorizontalAlignment="Left" Name="groupBox1" VerticalAlignment="Top">
             <Grid>
-                <TextBlock Margin="0,0,159,0">
-                    LLC Synesis<LineBreak/>
-                    Russia, 119019, Moscow<LineBreak/>
-                    Gogolevskiy bulvard,<LineBreak/>
-                    dom 2/18/1, stroenie 1<LineBreak/>
-                    www.synesis.ru<LineBreak/>
-                    +7 (495) 660-77-47<LineBreak/>
-                </TextBlock>
-                <TextBlock Margin="153,0,6,0">
-                    LLC Synesis<LineBreak/>
-                    Belarus, 220043, Minsk<LineBreak/>
-                    pr.-t Nezavisimosti,<LineBreak/>
-                    d. 95, zd. 12, kom. 316<LineBreak/>
-                    www.synesis.by<LineBreak/>
-                    +375 (17) 281-77-85<LineBreak/>
-                </TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="3" Grid.Column="0" Name="russCaption" MaxWidth="187" TextWrapping="Wrap" />
+                <TextBlock Margin="3" Grid.Column="1" Name="belarusCaption" MaxWidth="187" TextWrapping="Wrap" />
+                <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Name="russCaptionPhone" MaxWidth="187" TextWrapping="Wrap" />
+                <TextBlock Margin="3" Grid.Row="1" Grid.Column="1" Name="belarusCaptionPhone" MaxWidth="187" TextWrapping="Wrap" />
             </Grid>
         </GroupBox>
     </Grid>

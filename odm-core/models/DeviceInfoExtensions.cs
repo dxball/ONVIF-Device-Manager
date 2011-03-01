@@ -50,7 +50,7 @@ namespace odm.models {
 
 		static IEnumerable<IObservable<object>> SetNameImpl(Session session, string name, IObserver<Unit> observer) {
 			
-			var scope_prefix = NvcHelper.SynesisNameScope;
+			var scope_prefix = NvcHelper.odmNameScope;
 			Scope[] scopes = null;
 			yield return session.GetScopes().Handle(x=>scopes = x);
 
@@ -58,10 +58,10 @@ namespace odm.models {
 
 			var use_onvif_scope = scopes
 				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
-				.Any(x => x.ScopeItem.StartsWith(NvcHelper.OnvifNameScope));
+				.Any(x => x.ScopeItem.StartsWith(NvcHelper.onvifNameScope));
 
 			if (use_onvif_scope) {
-				scope_prefix = NvcHelper.OnvifNameScope;
+				scope_prefix = NvcHelper.onvifNameScope;
 			}
 
 			var name_scope = String.Concat(scope_prefix, Uri.EscapeDataString(name));
@@ -76,7 +76,7 @@ namespace odm.models {
 
 		static IEnumerable<IObservable<object>> SetDeviceIdImpl(Session session, string deviceId, IObserver<Unit> observer) {
 
-			var scope_prefix = NvcHelper.SynesisDeviceIdScope;
+			var scope_prefix = NvcHelper.odmDeviceIdScope;
 			Scope[] scopes = null;
 			yield return session.GetScopes().Handle(x => scopes = x);
 			dbg.Assert(scopes != null);
@@ -93,7 +93,7 @@ namespace odm.models {
 
 		static IEnumerable<IObservable<object>> SetLocationImpl(Session session, string Location, IObserver<Unit> observer) {
 
-			var scope_prefix = NvcHelper.SynesisLocationScope;
+			var scope_prefix = NvcHelper.odmLocationScope;
 			Scope[] scopes = null;
 			yield return session.GetScopes().Handle(x => scopes = x);
 
@@ -101,10 +101,10 @@ namespace odm.models {
 
 			var use_onvif_scope = scopes
 				.Where(x => x.ScopeDef == ScopeDefinition.Configurable)
-				.Any(x => x.ScopeItem.StartsWith(NvcHelper.OnvifLocationScope));
+				.Any(x => x.ScopeItem.StartsWith(NvcHelper.onvifLocationScope));
 
 			if (use_onvif_scope) {
-				scope_prefix = NvcHelper.OnvifLocationScope;
+				scope_prefix = NvcHelper.onvifLocationScope;
 			}
 
 			var Location_scope = String.Concat(scope_prefix, Uri.EscapeDataString(Location));

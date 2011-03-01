@@ -41,6 +41,9 @@ namespace odm.models {
 			//dbg.Assert(profiles != null);
 
 			var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
+
+			yield return session.AddDefaultVideoEncoder(profile).Idle();
+
 			//Image snapshot = null;
 			//yield return session.GetSnapshot(profile.token).Handle(x=>snapshot = x);
 			var modules = new AnalyticsModules();
@@ -57,9 +60,9 @@ namespace odm.models {
 					foreach (var m in vac.AnalyticsEngineConfiguration.AnalyticsModule.Select(x => x.Type.Name)) {
 						modules[m] = true;
 					}
-
 				}
 			}
+
 
 			var res = new Size() {
 				Width = profile.VideoEncoderConfiguration.Resolution.Width,
@@ -95,38 +98,10 @@ namespace odm.models {
 			}
 		}
 
-        protected bool HasAnalytics()
-        {
-            if (modules == null)
-            {
-                return false;
-            }
-            if (modules.DigitalAntishaker.HasValue && modules.DigitalAntishaker.Value)
-            {
-                return true;
-            }
-            if (modules.DisplayAnnotation.HasValue && modules.DisplayAnnotation.Value)
-            {
-                return true;
-            }
-            if (modules.ObjectTracker.HasValue && modules.ObjectTracker.Value)
-            {
-                return true;
-            }
-            if (modules.RuleEngine.HasValue && modules.RuleEngine.Value)
-            {
-                return true;
-            }
-            if (modules.SceneCalibrator.HasValue && modules.SceneCalibrator.Value)
-            {
-                return true;
-            }
-            if (modules.ServiceDetectors.HasValue && modules.ServiceDetectors.Value)
-            {
-                return true;
-            }
-            return false;
-        }
+		protected bool HasAnalytics() {
+			dbg.Assert(modules != null);
+			return modules.Any(x => x.Value);
+		}
 
 		protected override IEnumerable<IObservable<object>> ApplyChangesImpl(Session session, IObserver<ChannelModel> observer) {
             MediaObservable media = null;
@@ -145,74 +120,24 @@ namespace odm.models {
             //dbg.Assert(profiles != null);
             var profile = profiles.Where(x => x.token == m_profileToken).FirstOrDefault();
 
-            if (HasAnalytics())
-            {
-                yield return session.AddDefaultVideoAnalytics(profile).Idle();
-            }
-            else if (profile.VideoAnalyticsConfiguration != null)
-            {
-                yield return media.RemoveVideoAnalyticsConfiguration(profile.token).Idle();
-                profile.VideoAnalyticsConfiguration = null;
-            }
+			if (HasAnalytics()) {
+				yield return session.AddDefaultVideoAnalytics(profile).Idle();
+			} else if (profile.VideoAnalyticsConfiguration != null) {
+				yield return media.RemoveVideoAnalyticsConfiguration(profile.token).Idle();
+				profile.VideoAnalyticsConfiguration = null;
+			}
+            
             var vac = profile.VideoAnalyticsConfiguration;
 
-            if (vac != null)
-            {
-                
-                if (modules.DigitalAntishaker.GetValueOrDefault(false))
-                {
-                    yield return session.GetVideoAnalyticModule(profile, "DigitalAntishaker").Idle();
-                }
-                else if (modules.DigitalAntishaker.HasValue)
-                {
-                    yield return session.RemoveVideoAnalyticModule(profile, "DigitalAntishaker").Idle();
-                }
-
-                if (modules.DisplayAnnotation.GetValueOrDefault(false))
-                {
-                    yield return session.GetVideoAnalyticModule(profile, "Display").Idle();
-                }
-                else if (modules.DisplayAnnotation.HasValue)
-                {
-                    yield return session.RemoveVideoAnalyticModule(profile, "Display").Idle();
-                }
-
-                if (modules.SceneCalibrator.GetValueOrDefault(false))
-                {
-                    yield return session.GetVideoAnalyticModule(profile, "SceneCalibrator").Idle();
-                }
-                else if (modules.SceneCalibrator.HasValue)
-                {
-                    yield return session.RemoveVideoAnalyticModule(profile, "SceneCalibrator").Idle();
-                }
-
-                if (modules.ObjectTracker.GetValueOrDefault(false))
-                {
-                    yield return session.GetVideoAnalyticModule(profile, "ObjectTracker").Idle();
-                }
-                else if (modules.ObjectTracker.HasValue)
-                {
-                    yield return session.RemoveVideoAnalyticModule(profile, "ObjectTracker").Idle();
-                }
-
-                if (modules.RuleEngine.GetValueOrDefault(false))
-                {
-                    yield return session.GetVideoAnalyticModule(profile, "RuleEngine").Idle();
-                }
-                else if (modules.RuleEngine.HasValue)
-                {
-                    yield return session.RemoveVideoAnalyticModule(profile, "RuleEngine").Idle();
-                }
-
-                if (modules.ServiceDetectors.GetValueOrDefault(false))
-                {
-                    yield return session.GetVideoAnalyticModule(profile, "ServiceDetectors").Idle();
-                }
-                else if (modules.ServiceDetectors.HasValue)
-                {
-                    yield return session.RemoveVideoAnalyticModule(profile, "ServiceDetectors").Idle();
-                }
-            }
+			if (vac != null) {
+				foreach (var m in modules) {
+					if (m.Value) {
+						yield return session.GetVideoAnalyticModule(profile, m.Key).Idle();
+					} else {
+						yield return session.RemoveVideoAnalyticModule(profile, m.Key).Idle();
+					}
+				};
+			}
 
             if (observer != null){
                 observer.OnNext(this);

@@ -87,7 +87,7 @@
     <Compile Include="models\DeviceInfo.cs" />
     <Compile Include="models\DeviceInfoExtensions.cs" />
     <Compile Include="models\MaintenanceModel.cs" />
-    <Compile Include="models\DeviceNetworkSettingsModel.cs" />
+    <Compile Include="models\NetworkSettingsModel.cs" />
     <Compile Include="models\DumpModel.cs" />
     <Compile Include="models\ErrorInfoModel.cs" />
     <Compile Include="models\EventsDisplayModel.cs" />

@@ -11,6 +11,12 @@
 		<string name="analytics" value="Analytics" />
 		<string name="loadingData" value="Loading data ..." />
 		<string name="applicationName" value="ONVIF Device Manager" />
+    <string name="aboutTitle" value="About ONVIF Device Manager" />
+    <string name="aboutCommon" value="Copyright 2010 Synesis &#169;  ONVIF Device Manager is a free software distributed under the GNU General Public License." />
+    <string name="aboutRus" value="LLC Synesis Russia, 119019, Moscow Gogolevskiy bulvard, dom 2/18/1, stroenie 1" />
+    <string name="aboutBelarus" value="LLC Synesis Belarus, 220043, Minsk pr.-t Nezavisimosti, d. 95, zd. 12, kom. 316" />
+    <string name="aboutBelarusPhone" value="+375 (17) 281-77-85" />
+    <string name="aboutRusPhone" value="+7 (495) 660-77-47" />
 	</module>
 	<module name="DeviceControlStrings" namespace="odm.ui.controls">
 		<string name="title" value="Device configuration" />

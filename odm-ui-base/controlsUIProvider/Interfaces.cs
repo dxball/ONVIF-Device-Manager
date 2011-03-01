@@ -135,7 +135,7 @@ namespace odm.utils.controlsUIProvider {
 		void ReleaseUI();
 	}
 	public interface INetworkSettingsProvider {
-		void InitView(DeviceNetworkSettingsModel devModel, Action ApplyChanges, Action CancelChanges);
+		void InitView(NetworkSettingsModel devModel, Action ApplyChanges, Action CancelChanges);
 		void ReleaseUI();
 	}
 	public interface IObjectTrakkerProvider {

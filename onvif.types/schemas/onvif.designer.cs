@@ -11,6 +11,7 @@ namespace onvif.types {
 	using System.Collections;
 	using System.Xml.Schema;
 	using System.ComponentModel;
+	using System.Xml;
 
 
 
@@ -18,10 +19,10 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public partial class QueryExpressionType : object, System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlNode[] anyField;
@@ -65,10 +66,10 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public partial class TopicType : ExtensibleDocumented {
 
 		private QueryExpressionType messagePatternField;
@@ -163,10 +164,10 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public partial class TopicSetType : ExtensibleDocumented {
 
 		private System.Xml.XmlElement[] anyField;
@@ -186,10 +187,10 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(AnonymousType = true, Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public partial class TopicNamespaceTypeTopic : TopicType {
 
 		private string parentField;
@@ -268,10 +269,10 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public partial class TopicNamespaceType : ExtensibleDocumented {
 
 		private TopicNamespaceTypeTopic[] topicField;
@@ -355,10 +356,10 @@ namespace onvif.types {
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(TopicType))]
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(TopicNamespaceType))]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public abstract partial class ExtensibleDocumented : object, System.ComponentModel.INotifyPropertyChanged {
 
 		private Documentation documentationField;
@@ -402,10 +403,10 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/t-1")]
 	public partial class Documentation : object, System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlNode[] anyField;
@@ -435,8 +436,8 @@ namespace onvif.types {
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum CapabilityCategory {
 
 		/// <remarks/>
@@ -463,10 +464,10 @@ namespace onvif.types {
 
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class VideoSourceConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private string sourceTokenField;
@@ -558,10 +559,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IntRectangle : System.ComponentModel.INotifyPropertyChanged {
 
 		private int xField;
@@ -635,10 +636,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZConfigurationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -672,10 +673,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Space1DDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private string uRIField;
@@ -728,10 +729,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FloatRange : System.ComponentModel.INotifyPropertyChanged {
 
 		private float minField;
@@ -773,10 +774,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ZoomLimits : System.ComponentModel.INotifyPropertyChanged {
 
 		private Space1DDescription rangeField;
@@ -809,10 +810,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Space2DDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private string uRIField;
@@ -884,10 +885,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PanTiltLimits : System.ComponentModel.INotifyPropertyChanged {
 
 		private Space2DDescription rangeField;
@@ -920,10 +921,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Vector1D : System.ComponentModel.INotifyPropertyChanged {
 
 		private float xField;
@@ -972,10 +973,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Vector2D : System.ComponentModel.INotifyPropertyChanged {
 
 		private float xField;
@@ -1039,10 +1040,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZSpeed : System.ComponentModel.INotifyPropertyChanged {
 
 		private Vector2D panTiltField;
@@ -1094,9 +1095,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/b-2")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/b-2")]
 	public partial class FilterType : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -1130,10 +1131,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class EventSubscription : System.ComponentModel.INotifyPropertyChanged {
 
 		private FilterType filterField;
@@ -1225,9 +1226,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class EventSubscriptionSubscriptionPolicy : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -1261,10 +1262,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZFilter : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool statusField;
@@ -1326,10 +1327,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RuleEngineConfigurationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -1363,10 +1364,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RuleEngineConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private Config[] ruleField;
@@ -1439,10 +1440,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Config : System.ComponentModel.INotifyPropertyChanged {
 
 		private ItemList parametersField;
@@ -1515,10 +1516,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ItemList : System.ComponentModel.INotifyPropertyChanged {
 
 		private ItemListSimpleItem[] simpleItemField;
@@ -1611,9 +1612,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ItemListSimpleItem : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -1667,9 +1668,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ItemListElementItem : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement anyField;
@@ -1723,10 +1724,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ItemListExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -1760,10 +1761,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AnalyticsEngineConfigurationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -1797,10 +1798,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AnalyticsEngineConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private Config[] analyticsModuleField;
@@ -1873,10 +1874,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPAddress : System.ComponentModel.INotifyPropertyChanged {
 
 		private IPType typeField;
@@ -1944,8 +1945,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum IPType {
 
 		/// <remarks/>
@@ -1956,10 +1957,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MulticastConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private IPAddress addressField;
@@ -2074,10 +2075,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class H264Configuration : System.ComponentModel.INotifyPropertyChanged {
 
 		private int govLengthField;
@@ -2119,8 +2120,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum H264Profile {
 
 		/// <remarks/>
@@ -2137,10 +2138,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Mpeg4Configuration : System.ComponentModel.INotifyPropertyChanged {
 
 		private int govLengthField;
@@ -2182,8 +2183,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum Mpeg4Profile {
 
 		/// <remarks/>
@@ -2194,10 +2195,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoRateControl : System.ComponentModel.INotifyPropertyChanged {
 
 		private int frameRateLimitField;
@@ -2253,10 +2254,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoResolution : System.ComponentModel.INotifyPropertyChanged {
 
 		private int widthField;
@@ -2305,10 +2306,10 @@ namespace onvif.types {
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(VideoEncoderConfiguration))]
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(VideoSourceConfiguration))]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ConfigurationEntity : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -2375,10 +2376,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class PTZConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private string nodeTokenField;
@@ -2647,10 +2648,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class MetadataConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private PTZFilter pTZStatusField;
@@ -2810,10 +2811,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class VideoAnalyticsConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private AnalyticsEngineConfiguration analyticsEngineConfigurationField;
@@ -2905,10 +2906,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class AudioEncoderConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private AudioEncoding encodingField;
@@ -3043,8 +3044,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum AudioEncoding {
 
 		/// <remarks/>
@@ -3058,10 +3059,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class AudioSourceConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private string sourceTokenField;
@@ -3134,10 +3135,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class VideoEncoderConfiguration : ConfigurationEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private VideoEncoding encodingField;
@@ -3334,8 +3335,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum VideoEncoding {
 
 		/// <remarks/>
@@ -3349,10 +3350,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class Message : System.ComponentModel.INotifyPropertyChanged {
 
 		private ItemList sourceField;
@@ -3507,10 +3508,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MessageExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -3544,8 +3545,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum PropertyOperation {
 
 		/// <remarks/>
@@ -3559,10 +3560,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class Polygon : System.ComponentModel.INotifyPropertyChanged {
 
 		private Vector[] pointField;
@@ -3596,10 +3597,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Vector : System.ComponentModel.INotifyPropertyChanged {
 
 		private float xField;
@@ -3673,10 +3674,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class Polyline : System.ComponentModel.INotifyPropertyChanged {
 
 		private Vector[] pointField;
@@ -3710,10 +3711,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
 	public partial class MetadataStream : System.ComponentModel.INotifyPropertyChanged {
 
 		private object[] itemsField;
@@ -3787,10 +3788,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class EventStream : System.ComponentModel.INotifyPropertyChanged {
 
 		private object[] itemsField;
@@ -3825,9 +3826,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/b-2")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/b-2")]
 	public partial class NotificationMessageHolderType : System.ComponentModel.INotifyPropertyChanged {
 
 		private EndpointReferenceType subscriptionReferenceField;
@@ -3917,9 +3918,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.w3.org/2005/08/addressing")]
+	[XmlType(Namespace = "http://www.w3.org/2005/08/addressing")]
 	public partial class EndpointReferenceType : System.ComponentModel.INotifyPropertyChanged {
 
 		private AttributedURIType addressField;
@@ -4030,9 +4031,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.w3.org/2005/08/addressing")]
+	[XmlType(Namespace = "http://www.w3.org/2005/08/addressing")]
 	public partial class AttributedURIType : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlAttribute[] anyAttrField;
@@ -4086,9 +4087,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.w3.org/2005/08/addressing")]
+	[XmlType(Namespace = "http://www.w3.org/2005/08/addressing")]
 	public partial class ReferenceParametersType : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -4142,9 +4143,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.w3.org/2005/08/addressing")]
+	[XmlType(Namespace = "http://www.w3.org/2005/08/addressing")]
 	public partial class MetadataType : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -4198,9 +4199,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://docs.oasis-open.org/wsn/b-2")]
+	[XmlType(Namespace = "http://docs.oasis-open.org/wsn/b-2")]
 	public partial class TopicExpressionType : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlNode[] anyField;
@@ -4275,10 +4276,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class EventStreamExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -4312,10 +4313,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MetadataStreamExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -4349,10 +4350,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZStream : System.ComponentModel.INotifyPropertyChanged {
 
 		private object[] itemsField;
@@ -4387,10 +4388,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZStreamExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -4424,10 +4425,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZStatus : System.ComponentModel.INotifyPropertyChanged {
 
 		private PTZVector positionField;
@@ -4552,10 +4553,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZVector : System.ComponentModel.INotifyPropertyChanged {
 
 		private Vector2D panTiltField;
@@ -4607,10 +4608,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZMoveStatus : System.ComponentModel.INotifyPropertyChanged {
 
 		private MoveStatus panTiltField;
@@ -4682,8 +4683,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum MoveStatus {
 
 		/// <remarks/>
@@ -4697,10 +4698,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoAnalyticsStream : System.ComponentModel.INotifyPropertyChanged {
 
 		private object[] itemsField;
@@ -4735,10 +4736,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoAnalyticsStreamExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -4772,10 +4773,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Frame : System.ComponentModel.INotifyPropertyChanged {
 
 		private PTZStatus pTZStatusField;
@@ -4920,10 +4921,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Transformation : System.ComponentModel.INotifyPropertyChanged {
 
 		private Vector translateField;
@@ -5014,10 +5015,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class TransformationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -5051,10 +5052,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Object : ObjectId, System.ComponentModel.INotifyPropertyChanged {
 
 		private Appearance appearanceField;
@@ -5145,10 +5146,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Appearance : System.ComponentModel.INotifyPropertyChanged {
 
 		private Transformation transformationField;
@@ -5277,10 +5278,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ShapeDescriptor : System.ComponentModel.INotifyPropertyChanged {
 
 		private Rectangle boundingBoxField;
@@ -5391,10 +5392,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Rectangle : System.ComponentModel.INotifyPropertyChanged {
 
 		private float bottomField;
@@ -5528,10 +5529,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ShapeDescriptorExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -5565,10 +5566,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ColorDescriptor : System.ComponentModel.INotifyPropertyChanged {
 
 		private ColorDescriptorColorCluster[] colorClusterField;
@@ -5641,9 +5642,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ColorDescriptorColorCluster : System.ComponentModel.INotifyPropertyChanged {
 
 		private Color colorField;
@@ -5724,10 +5725,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Color : System.ComponentModel.INotifyPropertyChanged {
 
 		private float xField;
@@ -5806,10 +5807,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ColorCovariance : System.ComponentModel.INotifyPropertyChanged {
 
 		private float xxField;
@@ -5978,10 +5979,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ColorDescriptorExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6015,10 +6016,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ClassDescriptor : System.ComponentModel.INotifyPropertyChanged {
 
 		private ClassDescriptorClassCandidate[] classCandidateField;
@@ -6071,9 +6072,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ClassDescriptorClassCandidate : System.ComponentModel.INotifyPropertyChanged {
 
 		private ClassType typeField;
@@ -6115,8 +6116,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum ClassType {
 
 		/// <remarks/>
@@ -6136,10 +6137,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ClassDescriptorExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6173,10 +6174,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AppearanceExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6210,10 +6211,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Behaviour : System.ComponentModel.INotifyPropertyChanged {
 
 		private BehaviourRemoved removedField;
@@ -6304,9 +6305,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class BehaviourRemoved : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6340,9 +6341,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class BehaviourIdle : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6376,10 +6377,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class BehaviourExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6413,10 +6414,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ObjectExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6451,10 +6452,10 @@ namespace onvif.types {
 
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(Object))]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ObjectId : System.ComponentModel.INotifyPropertyChanged {
 
 		private string objectId1Field;
@@ -6488,10 +6489,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ObjectTree : System.ComponentModel.INotifyPropertyChanged {
 
 		private Rename[] renameField;
@@ -6624,10 +6625,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Rename : System.ComponentModel.INotifyPropertyChanged {
 
 		private ObjectId fromField;
@@ -6679,10 +6680,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Split : System.ComponentModel.INotifyPropertyChanged {
 
 		private ObjectId fromField;
@@ -6735,10 +6736,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Merge : System.ComponentModel.INotifyPropertyChanged {
 
 		private ObjectId[] fromField;
@@ -6791,10 +6792,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ObjectTreeExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6828,10 +6829,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FrameExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -6865,8 +6866,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema", IncludeInSchema = false)]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema", IncludeInSchema = false)]
 	public enum ItemsChoiceType {
 
 		/// <remarks/>
@@ -6888,10 +6889,10 @@ namespace onvif.types {
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(AudioSource))]
 	[System.Xml.Serialization.XmlIncludeAttribute(typeof(VideoSource))]
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DeviceEntity : System.ComponentModel.INotifyPropertyChanged {
 
 		private string tokenField;
@@ -6925,10 +6926,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZNode : DeviceEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -7067,10 +7068,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZSpaces : System.ComponentModel.INotifyPropertyChanged {
 
 		private Space2DDescription[] absolutePanTiltPositionSpaceField;
@@ -7283,10 +7284,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZSpacesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -7320,10 +7321,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZNodeExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -7357,10 +7358,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RelayOutput : DeviceEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private RelayOutputSettings propertiesField;
@@ -7433,10 +7434,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RelayOutputSettings : System.ComponentModel.INotifyPropertyChanged {
 
 		private RelayMode modeField;
@@ -7498,8 +7499,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum RelayMode {
 
 		/// <remarks/>
@@ -7510,8 +7511,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum RelayIdleState {
 
 		/// <remarks/>
@@ -7522,10 +7523,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterface : DeviceEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private bool enabledField;
@@ -7668,10 +7669,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterfaceInfo : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -7753,10 +7754,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterfaceLink : System.ComponentModel.INotifyPropertyChanged {
 
 		private NetworkInterfaceConnectionSetting adminSettingsField;
@@ -7822,10 +7823,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterfaceConnectionSetting : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool autoNegotiationField;
@@ -7881,8 +7882,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum Duplex {
 
 		/// <remarks/>
@@ -7893,10 +7894,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv4NetworkInterface : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool enabledField;
@@ -7943,10 +7944,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv4Configuration : System.ComponentModel.INotifyPropertyChanged {
 
 		private PrefixedIPv4Address[] manualField;
@@ -8072,10 +8073,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PrefixedIPv4Address : System.ComponentModel.INotifyPropertyChanged {
 
 		private string addressField;
@@ -8123,10 +8124,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv6NetworkInterface : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool enabledField;
@@ -8173,10 +8174,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv6Configuration : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool acceptRouterAdvertField;
@@ -8352,8 +8353,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum IPv6DHCPConfiguration {
 
 		/// <remarks/>
@@ -8370,10 +8371,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PrefixedIPv6Address : System.ComponentModel.INotifyPropertyChanged {
 
 		private string addressField;
@@ -8421,10 +8422,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv6ConfigurationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -8458,10 +8459,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterfaceExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -8495,10 +8496,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AudioSource : DeviceEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private int channelsField;
@@ -8566,10 +8567,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoSource : DeviceEntity, System.ComponentModel.INotifyPropertyChanged {
 
 		private float framerateField;
@@ -8674,10 +8675,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingSettings : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensation backlightCompensationField;
@@ -8970,10 +8971,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class BacklightCompensation : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensationMode modeField;
@@ -9015,8 +9016,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum BacklightCompensationMode {
 
 		/// <remarks/>
@@ -9027,10 +9028,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Exposure : System.ComponentModel.INotifyPropertyChanged {
 
 		private ExposureMode modeField;
@@ -9217,8 +9218,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum ExposureMode {
 
 		/// <remarks/>
@@ -9229,8 +9230,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum ExposurePriority {
 
 		/// <remarks/>
@@ -9241,10 +9242,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private AutoFocusMode autoFocusModeField;
@@ -9354,8 +9355,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum AutoFocusMode {
 
 		/// <remarks/>
@@ -9366,8 +9367,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum IrCutFilterMode {
 
 		/// <remarks/>
@@ -9381,10 +9382,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WideDynamicRange : System.ComponentModel.INotifyPropertyChanged {
 
 		private WideDynamicMode modeField;
@@ -9426,8 +9427,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum WideDynamicMode {
 
 		/// <remarks/>
@@ -9438,10 +9439,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WhiteBalance : System.ComponentModel.INotifyPropertyChanged {
 
 		private WhiteBalanceMode modeField;
@@ -9537,8 +9538,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum WhiteBalanceMode {
 
 		/// <remarks/>
@@ -9549,10 +9550,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingSettingsExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -9586,10 +9587,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoSourceExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -9623,10 +9624,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IntRectangleRange : System.ComponentModel.INotifyPropertyChanged {
 
 		private IntRange xRangeField;
@@ -9716,10 +9717,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IntRange : System.ComponentModel.INotifyPropertyChanged {
 
 		private int minField;
@@ -9761,10 +9762,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DurationRange : System.ComponentModel.INotifyPropertyChanged {
 
 		private string minField;
@@ -9818,10 +9819,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IntList : System.ComponentModel.INotifyPropertyChanged {
 
 		private int[] itemsField;
@@ -9850,10 +9851,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Profile : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -10108,10 +10109,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ProfileExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -10145,10 +10146,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoSourceConfigurationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private IntRectangleRange boundsRangeField;
@@ -10240,10 +10241,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoSourceConfigurationOptionsExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -10277,10 +10278,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoEncoderConfigurationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private IntRange qualityRangeField;
@@ -10409,10 +10410,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class JpegOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private VideoResolution[] resolutionsAvailableField;
@@ -10484,10 +10485,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Mpeg4Options : System.ComponentModel.INotifyPropertyChanged {
 
 		private VideoResolution[] resolutionsAvailableField;
@@ -10593,10 +10594,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class H264Options : System.ComponentModel.INotifyPropertyChanged {
 
 		private VideoResolution[] resolutionsAvailableField;
@@ -10702,10 +10703,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class VideoEncoderOptionsExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -10739,10 +10740,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AudioSourceConfigurationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private string[] inputTokensAvailableField;
@@ -10815,10 +10816,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AudioSourceOptionsExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -10852,10 +10853,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AudioEncoderConfigurationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private AudioEncoderConfigurationOption[] optionsField;
@@ -10909,10 +10910,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AudioEncoderConfigurationOption : System.ComponentModel.INotifyPropertyChanged {
 
 		private AudioEncoding encodingField;
@@ -11010,10 +11011,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MetadataConfigurationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private PTZStatusFilterOptions pTZStatusFilterOptionsField;
@@ -11086,10 +11087,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZStatusFilterOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool panTiltStatusSupportedField;
@@ -11171,10 +11172,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class StreamSetup : System.ComponentModel.INotifyPropertyChanged {
 
 		private StreamType streamField;
@@ -11261,8 +11262,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum StreamType {
 
 		/// <remarks/>
@@ -11275,10 +11276,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Transport : System.ComponentModel.INotifyPropertyChanged {
 
 		private TransportProtocol protocolField;
@@ -11325,8 +11326,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum TransportProtocol {
 
 		/// <remarks/>
@@ -11343,10 +11344,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MediaUri : System.ComponentModel.INotifyPropertyChanged {
 
 		private string uriField;
@@ -11468,10 +11469,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Scope : System.ComponentModel.INotifyPropertyChanged {
 
 		private ScopeDefinition scopeDefField;
@@ -11519,8 +11520,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum ScopeDefinition {
 
 		/// <remarks/>
@@ -11531,10 +11532,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkProtocol : System.ComponentModel.INotifyPropertyChanged {
 
 		private NetworkProtocolType nameField;
@@ -11630,8 +11631,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum NetworkProtocolType {
 
 		/// <remarks/>
@@ -11645,10 +11646,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkProtocolExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -11682,10 +11683,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkHost : System.ComponentModel.INotifyPropertyChanged {
 
 		private NetworkHostType typeField;
@@ -11812,8 +11813,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum NetworkHostType {
 
 		/// <remarks/>
@@ -11827,10 +11828,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkHostExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -11864,10 +11865,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class HostnameInformation : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool fromDHCPField;
@@ -11954,10 +11955,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class HostnameInformationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -11991,10 +11992,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DNSInformation : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool fromDHCPField;
@@ -12121,10 +12122,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DNSInformationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -12158,10 +12159,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NTPInformation : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool fromDHCPField;
@@ -12268,10 +12269,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NTPInformationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -12305,10 +12306,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DynamicDNSInformation : System.ComponentModel.INotifyPropertyChanged {
 
 		private DynamicDNSType typeField;
@@ -12415,8 +12416,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum DynamicDNSType {
 
 		/// <remarks/>
@@ -12430,10 +12431,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DynamicDNSInformationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -12467,10 +12468,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterfaceSetConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool enabledField;
@@ -12638,10 +12639,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv4NetworkInterfaceSetConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool enabledField;
@@ -12733,10 +12734,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPv6NetworkInterfaceSetConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool enabledField;
@@ -12857,10 +12858,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkInterfaceSetConfigurationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -12894,10 +12895,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkGateway : System.ComponentModel.INotifyPropertyChanged {
 
 		private string[] iPv4AddressField;
@@ -12951,10 +12952,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkZeroConfiguration : System.ComponentModel.INotifyPropertyChanged {
 
 		private string interfaceTokenField;
@@ -13060,10 +13061,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkZeroConfigurationExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -13097,10 +13098,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPAddressFilter : System.ComponentModel.INotifyPropertyChanged {
 
 		private IPAddressFilterType typeField;
@@ -13207,8 +13208,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum IPAddressFilterType {
 
 		/// <remarks/>
@@ -13219,10 +13220,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IPAddressFilterExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -13256,10 +13257,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Capabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private AnalyticsCapabilities analyticsField;
@@ -13426,10 +13427,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AnalyticsCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -13531,10 +13532,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DeviceCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -13683,10 +13684,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool iPFilterField;
@@ -13855,10 +13856,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class NetworkCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -13892,10 +13893,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SystemCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool discoveryResolveField;
@@ -14052,10 +14053,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class OnvifVersion : System.ComponentModel.INotifyPropertyChanged {
 
 		private int majorField;
@@ -14097,10 +14098,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SystemCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -14134,10 +14135,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IOCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private int inputConnectorsField;
@@ -14248,10 +14249,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class IOCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -14285,10 +14286,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SecurityCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool tLS11Field;
@@ -14476,10 +14477,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SecurityCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool tLS10Field;
@@ -14528,10 +14529,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DeviceCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -14565,10 +14566,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class EventCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -14684,10 +14685,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -14741,10 +14742,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MediaCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -14856,10 +14857,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RealTimeStreamingCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private bool rTPMulticastField;
@@ -14999,10 +15000,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RealTimeStreamingCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -15036,10 +15037,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MediaCapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private ProfileCapabilities profileCapabilitiesField;
@@ -15112,10 +15113,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ProfileCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private int maximumNumberOfProfilesField;
@@ -15183,10 +15184,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -15260,10 +15261,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class CapabilitiesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -15297,10 +15298,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class StorageCapabilities : System.ComponentModel.INotifyPropertyChanged {
 
 		private string xAddrField;
@@ -15386,10 +15387,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AttachmentData : System.ComponentModel.INotifyPropertyChanged {
 
 		private Include includeField;
@@ -15443,9 +15444,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.w3.org/2004/08/xop/include")]
+	[XmlType(Namespace = "http://www.w3.org/2004/08/xop/include")]
 	public partial class Include : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -15519,10 +15520,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SupportInformation : System.ComponentModel.INotifyPropertyChanged {
 
 		private AttachmentData binaryField;
@@ -15598,10 +15599,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SystemDateTime : System.ComponentModel.INotifyPropertyChanged {
 
 		private SetDateTimeType dateTimeTypeField;
@@ -15739,8 +15740,8 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum SetDateTimeType {
 
 		/// <remarks/>
@@ -15751,10 +15752,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class TimeZone : System.ComponentModel.INotifyPropertyChanged {
 
 		private string tzField;
@@ -15788,10 +15789,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class DateTime : System.ComponentModel.INotifyPropertyChanged {
 
 		private Time timeField;
@@ -15843,10 +15844,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Time : System.ComponentModel.INotifyPropertyChanged {
 
 		private int hourField;
@@ -15902,10 +15903,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Date : System.ComponentModel.INotifyPropertyChanged {
 
 		private int yearField;
@@ -15961,10 +15962,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SystemDateTimeExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -15997,177 +15998,47 @@ namespace onvif.types {
 		}
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public partial class User : System.ComponentModel.INotifyPropertyChanged {
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	public partial class User{
+		public string Username;
+		public string Password;
+		public UserLevel UserLevel;
+		public UserExtension Extension;
 
-		private string usernameField;
-
-		private string passwordField;
-
-		private UserLevel userLevelField;
-
-		private UserExtension extensionField;
-
-		private System.Xml.XmlAttribute[] anyAttrField;
-
-		public string Username {
-			get {
-				return this.usernameField;
-			}
-			set {
-				if ((this.usernameField != null)) {
-					if ((usernameField.Equals(value) != true)) {
-						this.usernameField = value;
-						this.OnPropertyChanged("Username");
-					}
-				} else {
-					this.usernameField = value;
-					this.OnPropertyChanged("Username");
-				}
-			}
-		}
-
-		public string Password {
-			get {
-				return this.passwordField;
-			}
-			set {
-				if ((this.passwordField != null)) {
-					if ((passwordField.Equals(value) != true)) {
-						this.passwordField = value;
-						this.OnPropertyChanged("Password");
-					}
-				} else {
-					this.passwordField = value;
-					this.OnPropertyChanged("Password");
-				}
-			}
-		}
-
-		public UserLevel UserLevel {
-			get {
-				return this.userLevelField;
-			}
-			set {
-				if ((userLevelField.Equals(value) != true)) {
-					this.userLevelField = value;
-					this.OnPropertyChanged("UserLevel");
-				}
-			}
-		}
-
-		public UserExtension Extension {
-			get {
-				return this.extensionField;
-			}
-			set {
-				if ((this.extensionField != null)) {
-					if ((extensionField.Equals(value) != true)) {
-						this.extensionField = value;
-						this.OnPropertyChanged("Extension");
-					}
-				} else {
-					this.extensionField = value;
-					this.OnPropertyChanged("Extension");
-				}
-			}
-		}
-
-		[System.Xml.Serialization.XmlAnyAttributeAttribute()]
-		public System.Xml.XmlAttribute[] AnyAttr {
-			get {
-				return this.anyAttrField;
-			}
-			set {
-				if ((this.anyAttrField != null)) {
-					if ((anyAttrField.Equals(value) != true)) {
-						this.anyAttrField = value;
-						this.OnPropertyChanged("AnyAttr");
-					}
-				} else {
-					this.anyAttrField = value;
-					this.OnPropertyChanged("AnyAttr");
-				}
-			}
-		}
-
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-		public virtual void OnPropertyChanged(string propertyName) {
-			System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-			if ((handler != null)) {
-				handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-			}
-		}
+		[XmlAnyAttribute]
+		public XmlAttribute[] AnyAttr;
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
 	public enum UserLevel {
-
 		/// <remarks/>
 		Administrator,
-
 		/// <remarks/>
 		Operator,
-
 		/// <remarks/>
 		User,
-
 		/// <remarks/>
 		Anonymous,
-
 		/// <remarks/>
 		Extended,
 	}
 
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public partial class UserExtension : System.ComponentModel.INotifyPropertyChanged {
-
-		private System.Xml.XmlElement[] anyField;
-
-		[System.Xml.Serialization.XmlAnyElementAttribute()]
-		public System.Xml.XmlElement[] Any {
-			get {
-				return this.anyField;
-			}
-			set {
-				if ((this.anyField != null)) {
-					if ((anyField.Equals(value) != true)) {
-						this.anyField = value;
-						this.OnPropertyChanged("Any");
-					}
-				} else {
-					this.anyField = value;
-					this.OnPropertyChanged("Any");
-				}
-			}
-		}
-
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-		public virtual void OnPropertyChanged(string propertyName) {
-			System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-			if ((handler != null)) {
-				handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-			}
-		}
+	[Serializable]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	public partial class UserExtension{
+		[XmlAnyElement]
+		public XmlElement[] Any;
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class CertificateGenerationParameters : System.ComponentModel.INotifyPropertyChanged {
 
 		private string certificateIDField;
@@ -16299,10 +16170,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class CertificateGenerationParametersExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -16349,10 +16220,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class CertificateStatus : System.ComponentModel.INotifyPropertyChanged {
 
 		private string certificateIDField;
@@ -16440,10 +16311,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZConfigurationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private PTZSpaces spacesField;
@@ -16535,10 +16406,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class PTZPreset : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -16630,10 +16501,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingStatus : System.ComponentModel.INotifyPropertyChanged {
 
 		private FocusStatus focusStatusField;
@@ -16706,10 +16577,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusStatus : System.ComponentModel.INotifyPropertyChanged {
 
 		private float positionField;
@@ -16810,10 +16681,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensationOptions backlightCompensationField;
@@ -17053,10 +16924,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class BacklightCompensationOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private WideDynamicMode[] modeField;
@@ -17104,10 +16975,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ExposureOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private ExposureMode[] modeField;
@@ -17322,10 +17193,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private AutoFocusMode[] autoFocusModesField;
@@ -17411,10 +17282,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WideDynamicRangeOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private WideDynamicMode[] modeField;
@@ -17462,10 +17333,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WhiteBalanceOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private WhiteBalanceMode[] modeField;
@@ -17532,10 +17403,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusMove : System.ComponentModel.INotifyPropertyChanged {
 
 		private AbsoluteFocus absoluteField;
@@ -17606,10 +17477,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AbsoluteFocus : System.ComponentModel.INotifyPropertyChanged {
 
 		private float positionField;
@@ -17666,10 +17537,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RelativeFocus : System.ComponentModel.INotifyPropertyChanged {
 
 		private float distanceField;
@@ -17726,10 +17597,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ContinuousFocus : System.ComponentModel.INotifyPropertyChanged {
 
 		private float speedField;
@@ -17757,10 +17628,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MoveOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private AbsoluteFocusOptions absoluteField;
@@ -17831,10 +17702,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class AbsoluteFocusOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private FloatRange positionField;
@@ -17886,10 +17757,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RelativeFocusOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private FloatRange distanceField;
@@ -17941,10 +17812,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ContinuousFocusOptions : System.ComponentModel.INotifyPropertyChanged {
 
 		private FloatRange speedField;
@@ -17977,10 +17848,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingStatus20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private FocusStatus20 focusStatus20Field;
@@ -18052,10 +17923,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusStatus20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private float positionField;
@@ -18155,10 +18026,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusStatus20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -18192,10 +18063,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingStatus20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -18229,10 +18100,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingSettings20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensation20 backlightCompensationField;
@@ -18525,10 +18396,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class BacklightCompensation20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensationMode modeField;
@@ -18585,10 +18456,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class Exposure20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private ExposureMode modeField;
@@ -18925,10 +18796,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusConfiguration20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private AutoFocusMode autoFocusModeField;
@@ -19082,10 +18953,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusConfiguration20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -19119,10 +18990,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WideDynamicRange20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private WideDynamicMode modeField;
@@ -19179,10 +19050,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WhiteBalance20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private WhiteBalanceMode modeField;
@@ -19307,10 +19178,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WhiteBalance20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -19344,10 +19215,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingSettingsExtension20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -19381,10 +19252,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensationOptions20 backlightCompensationField;
@@ -19623,10 +19494,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class BacklightCompensationOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private BacklightCompensationMode[] modeField;
@@ -19674,10 +19545,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ExposureOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private ExposureMode[] modeField;
@@ -19892,10 +19763,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private AutoFocusMode[] autoFocusModesField;
@@ -20000,10 +19871,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class FocusOptions20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -20037,10 +19908,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WideDynamicRangeOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private WideDynamicMode[] modeField;
@@ -20088,10 +19959,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WhiteBalanceOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private WhiteBalanceMode[] modeField;
@@ -20177,10 +20048,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class WhiteBalanceOptions20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -20214,10 +20085,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ImagingOptions20Extension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -20251,10 +20122,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MoveOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private AbsoluteFocusOptions absoluteField;
@@ -20325,10 +20196,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class RelativeFocusOptions20 : System.ComponentModel.INotifyPropertyChanged {
 
 		private FloatRange distanceField;
@@ -20380,10 +20251,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MessageDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private ItemListDescription sourceField;
@@ -20523,10 +20394,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ItemListDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private ItemListDescriptionSimpleItemDescription[] simpleItemDescriptionField;
@@ -20619,9 +20490,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ItemListDescriptionSimpleItemDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -20675,9 +20546,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ItemListDescriptionElementItemDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private string nameField;
@@ -20731,10 +20602,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ItemListDescriptionExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -20768,10 +20639,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class MessageDescriptionExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -20805,10 +20676,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ConfigDescription : System.ComponentModel.INotifyPropertyChanged {
 
 		private ItemListDescription parametersField;
@@ -20920,9 +20791,9 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
 	public partial class ConfigDescriptionMessages : MessageDescription, System.ComponentModel.INotifyPropertyChanged {
 
 		private string parentTopicField;
@@ -20955,10 +20826,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class ConfigDescriptionExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -20992,10 +20863,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SupportedRules : System.ComponentModel.INotifyPropertyChanged {
 
 		private string[] ruleContentSchemaLocationField;
@@ -21088,10 +20959,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SupportedRulesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;
@@ -21125,10 +20996,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SupportedAnalyticsModules : System.ComponentModel.INotifyPropertyChanged {
 
 		private string[] analyticsModuleContentSchemaLocationField;
@@ -21221,10 +21092,10 @@ namespace onvif.types {
 	}
 
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+	[Serializable]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://www.onvif.org/ver10/schema")]
-	[System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
 	public partial class SupportedAnalyticsModulesExtension : System.ComponentModel.INotifyPropertyChanged {
 
 		private System.Xml.XmlElement[] anyField;

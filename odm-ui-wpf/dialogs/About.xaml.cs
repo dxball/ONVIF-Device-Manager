@@ -32,6 +32,7 @@ using System.Windows.Shapes;
 
 using odm.ui.controls;
 using System.Diagnostics;
+using odm.utils.extensions;
 
 namespace odm {
 	/// <summary>
@@ -40,8 +41,19 @@ namespace odm {
 	public partial class About : CustomWindow {
 		public About() {
 			InitializeComponent();
+            Localization();
 		}
+        CommonApplicationStrings strings = new CommonApplicationStrings();
+        void Localization()
+        {
+            commonCaption.CreateBinding(TextBlock.TextProperty, strings, x => x.aboutCommon);
+            russCaption.CreateBinding(TextBlock.TextProperty, strings, x => x.aboutRus);
+            belarusCaption.CreateBinding(TextBlock.TextProperty, strings, x => x.aboutBelarus);
+            russCaptionPhone.CreateBinding(TextBlock.TextProperty, strings, x => x.aboutRusPhone);
+            belarusCaptionPhone.CreateBinding(TextBlock.TextProperty, strings, x => x.aboutBelarusPhone);
 
+            Title = strings.aboutTitle;
+        }
 		private void HandleRequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e) {
 			var hl = sender as Hyperlink;
 			//if (hl == null) {

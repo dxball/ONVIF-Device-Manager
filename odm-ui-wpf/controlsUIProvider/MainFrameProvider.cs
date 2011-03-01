@@ -133,9 +133,12 @@ namespace odm.controlsUIProvider {
 				//lastControl = (UserControl)_propertyPanel.Children[0];
 				//_propertyPanel.Children.Clear();
 				//_propertyPanel.Children.Add(userControl);
-				if(_propertyPanel.Content.GetType() != typeof(InfoPageNotification))
-					lastControl = (UserControl)_propertyPanel.Content;
-				_propertyPanel.Content = userControl;
+            if (_propertyPanel.Content != null)
+            {
+                if (_propertyPanel.Content.GetType() != typeof(InfoPageNotification))
+                    lastControl = (UserControl)_propertyPanel.Content;
+                _propertyPanel.Content = userControl;
+            }
 			//}
 		}
 		public void RemoveDeviceLoadingInfoControl() {

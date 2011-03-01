@@ -18,18 +18,19 @@ using syn = global::synesis.onvif.extensions;
 
 using System.Xml;
 using onvif;
+using System.Collections;
 
 namespace odm.models {
 
-	public class AnalyticsModules {
+	public class AnalyticsModules:IEnumerable<KeyValuePair<string, bool>> {
 		private Dictionary<string, bool> m_dic = new Dictionary<string,bool>();
-		public bool? SceneCalibrator{get{return this["SceneCalibrator"];}set{this["SceneCalibrator"]=value;}}
-		public bool? ServiceDetectors{get{return this["ServiceDetectors"];}set{this["ServiceDetectors"]=value;}}
-		public bool? DisplayAnnotation{get{return this["Display"];}set{this["Display"]=value;}}
-		public bool? ObjectTracker{get{return this["ObjectTracker"];}set{this["ObjectTracker"]=value;}}
-		public bool? RuleEngine{get{return this["RuleEngine"];}set{this["RuleEngine"]=value;}}
-		public bool? DigitalAntishaker{get{return this["DigitalAntishaker"];}set{this["DigitalAntishaker"]=value;}}
-		public bool? ApproMotionDetector{get{return this["ApproMotionDetector"];}set{this["ApproMotionDetector"]=value;}}
+		public bool? sceneCalibrator{get{return this["SceneCalibrator"];}set{this["SceneCalibrator"]=value;}}
+		public bool? serviceDetectors{get{return this["ServiceDetectors"];}set{this["ServiceDetectors"]=value;}}
+		public bool? displayAnnotation{get{return this["Display"];}set{this["Display"]=value;}}
+		public bool? objectTracker{get{return this["ObjectTracker"];}set{this["ObjectTracker"]=value;}}
+		public bool? ruleEngine{get{return this["RuleEngine"];}set{this["RuleEngine"]=value;}}
+		public bool? digitalAntishaker{get{return this["DigitalAntishaker"];}set{this["DigitalAntishaker"]=value;}}
+		public bool? approMotionDetector{get{return this["ApproMotionDetector"];}set{this["ApproMotionDetector"]=value;}}
 		public bool? this[string moduleType]{
 			get {
 				bool enabled;
@@ -47,56 +48,29 @@ namespace odm.models {
 			}
 		}
 
+		public bool isEmpty {
+			get {
+				return count == 0;
+			}
+		}
 
+		public int count {
+			get {
+				return m_dic.Count;
+			}
+		}
 
+		public IEnumerator<KeyValuePair<string, bool>> GetEnumerator() {
+			return m_dic.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return (m_dic as IEnumerable).GetEnumerator();
+		}
 	}
 
 	public partial class DeviceCapabilityModel : ModelBase<DeviceCapabilityModel> {
-		//private class Channel:ChannelDescription{
-		//    public string m_videoSourceToken;
-		//    public string m_name;
-		//    //public Image m_snapshot;
-		//    public Size m_encoderResolution;
-		//    public string m_mediaUri;
-		//    public AnalyticsModules m_modules;
-			
-		//    public override string Id {
-		//        get {
-		//            return m_videoSourceToken;
-		//        }
-		//    }
-
-		//    public override string Name {
-		//        get {
-		//            return m_name;
-		//        }
-		//    }
-
-		//    public override Size encoderResolution {
-		//        get {
-		//            return m_encoderResolution;
-		//        }
-		//    }
-
-		//    public override string mediaUri {
-		//        get {
-		//            return m_mediaUri;
-		//        }
-		//    }
-
-		//    public override AnalyticsModules modules {
-		//        get {
-		//            return m_modules;
-		//        }
-		//    }
-
-		//    //public override Image snapshot {
-		//    //    get {
-		//    //        return m_snapshot;
-		//    //    }
-		//    //}
-		//}
-
+		
 		public DeviceCapabilityModel() {
 
 		}
@@ -117,10 +91,6 @@ namespace odm.models {
 			
 			//dbg.Assert(profiles != null);
 			
-
-
-				
-
 			//}
 			capabilities = caps;
 			videoSources = vsources.Select(x => x.token).ToArray();

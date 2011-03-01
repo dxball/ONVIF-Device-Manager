@@ -41,13 +41,13 @@ using onvif;
 namespace odm.onvif {
 
 	public class NvcHelper {
-		public const string DefaultProfileName = @"odm-default-profile-{0}";
-		public const string OnvifNameScope = @"onvif://www.onvif.org/name/";
-		public const string OnvifLocationScope = @"onvif://www.onvif.org/location/";
-		public const string SynesisNameScope = @"http://synesis.ru/name/";
-		public const string SynesisLocationScope = @"http://synesis.ru/location/";
-		public const string SynesisProfileScope = @"http://synesis.ru/profile/";
-		public const string SynesisDeviceIdScope = @"http://synesis.ru/device-id/";
+		public const string defaultProfileName = @"odm-dp-{0}";
+		public const string onvifNameScope = @"onvif://www.onvif.org/name/";
+		public const string onvifLocationScope = @"onvif://www.onvif.org/location/";
+		public const string odmNameScope = @"urn:odm:name/";
+		public const string odmLocationScope = @"urn:odm:location/";
+		//public const string odmProfileScope = @"urn:odm:profile/";
+		public const string odmDeviceIdScope = @"urn:odm:device-id/";
 
 		public static string[] GetScopeValues(IEnumerable<string> scopes, string scopePrefix) {
 			if (scopes == null) {
@@ -67,11 +67,11 @@ namespace odm.onvif {
 
 		public static string GetName(IEnumerable<string> scopes) {
 
-			var names = GetScopeValues(scopes, SynesisNameScope);
+			var names = GetScopeValues(scopes, odmNameScope);
 			if (names.Length>0) {
 				return names[names.Length-1];
 			}
-			names = GetScopeValues(scopes, OnvifNameScope);
+			names = GetScopeValues(scopes, onvifNameScope);
 			if (names.Length <= 0) {
 				return null;
 			}
@@ -80,11 +80,11 @@ namespace odm.onvif {
 
 		public static string GetLocation(IEnumerable<string> scopes) {
 
-			var locations = GetScopeValues(scopes, SynesisLocationScope);
+			var locations = GetScopeValues(scopes, odmLocationScope);
 			if (locations.Length>0) {
 				return locations[locations.Length - 1];
 			}
-			locations = GetScopeValues(scopes, OnvifLocationScope);
+			locations = GetScopeValues(scopes, onvifLocationScope);
 			if (locations.Length <= 0) {
 				return null;
 			}
@@ -92,13 +92,13 @@ namespace odm.onvif {
 		}
 
 		public static string GetDeviceId(IEnumerable<string> scopes) {
-			return GetScopeValues(scopes, SynesisDeviceIdScope).Single();
+			return GetScopeValues(scopes, odmDeviceIdScope).Single();
 		}
 
 		public static ProfileToken GetChannelProfileToken(VideoSourceToken videoSourceToken) {
 			//var ch = Convert.ToBase64String(Encoding.UTF8.GetBytes(videoSourceToken.value));
 			var ch = videoSourceToken.value;
-			return new ProfileToken(String.Format(DefaultProfileName, ch));
+			return new ProfileToken(String.Format(defaultProfileName, ch));
 		}
 	}
 	
@@ -106,46 +106,48 @@ namespace odm.onvif {
 
     public class DeviceDiscovery{
 		
-		private class DescoveredDeviceDescription : DeviceDescription {
+		private class DescoveredDeviceDescription : IDeviceDescription {
 			private EndpointDiscoveryMetadata m_epMetadata;
 			public DescoveredDeviceDescription(EndpointDiscoveryMetadata epMetadata) {
 				m_epMetadata = epMetadata;
 			}
-			public override IObservable<Unit> removal {
+			public IObservable<Unit> removal {
 				get {
 					throw new NotImplementedException();
 				}
 			}
-			public override string id {
+			public string id {
 				get {
 					return m_epMetadata.Address.Uri.OriginalString;
 				}
 			}
-			public override string name {
+			public string name {
 				get {
 					return NvcHelper.GetName(scopes);
 				}
 			}
-			public override string location {
+			public string location {
 				get {
 					return NvcHelper.GetLocation(scopes);;
 				}
 			}
-			public override string deviceConfigId {
+			public string deviceConfigId {
 				get {
 					return NvcHelper.GetLocation(scopes);
 				}
 			}
-			public override IEnumerable<Uri> uris {
+			public IEnumerable<Uri> uris {
 				get {
 					return m_epMetadata.ListenUris;
 				}
 			}
-			public override IEnumerable<string> scopes {
+			public IEnumerable<string> scopes {
 				get {
 					return m_epMetadata.Scopes.Select(x=>x.OriginalString);
 				}
 			}
+
+			
 		}
 
 		private WsDiscoveryObservable m_wsDiscovery;
@@ -244,12 +246,12 @@ namespace odm.onvif {
 		//    });
 		//}
 
-		public IObservable<DeviceDescription> Find() {
+		public IObservable<IDeviceDescription> Find() {
 			return m_wsDiscovery.Find(m_getFindCriteria()).Select(x => new DescoveredDeviceDescription(x));
 			//return Observable.CreateWithDisposable<DeviceDescription>(FindSubscribe);
 		}
 
-		public IObservable<DeviceDescription> Resolve(string id) {
+		public IObservable<IDeviceDescription> Resolve(string id) {
 			return m_wsDiscovery.Resolve(m_getResolveCriteria(id)).Select(x => new DescoveredDeviceDescription(x));
 			//return Observable.CreateWithDisposable<DeviceDescription>(observer=>ResolveSubscribe(observer, id));
 		}
