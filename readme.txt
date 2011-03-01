@@ -1,8 +1,6 @@
 [*] - new featuries for current release.
 
-[*] Common UI refactoring. Skin support added.
-[*] Performance improvements (most frequently requests are cached now).
-[*] Bugfixes
+[*] Bugfixes to support Bosch VIP X1 XF IVA (base support only, without security)
 
 Implemented features:
 1. Common features
@@ -32,12 +30,12 @@ Implemented features:
 	4.1 Reboot button
 	4.2 Display current firmware ver.
 	4.3 Upgrade to new firmware
-[*]	4.4 System backup/restore
+	4.4 System backup/restore
 5. Channels Support.
 	5.2 Display name of each channel
 	5.2 Display channel configutation pannel for each channel
 	5.3 Display last event snapshot for every channel
-[*]	5.4 Profile management
+	5.4 Profile management
 6. Live video
 	6.1 Display real time video for selected channel
 	6.2 Record live video to user default video folder	
@@ -84,7 +82,7 @@ Implemented features:
 	12.4 obstruction
 	12.5 displacement
 13. System logs
-[*]	13.1 Systemlogs (MTOM support are added)
+	13.1 Systemlogs
 14. Dump (XML explorer)
 	14.1 Display ONVIF dump from device
 15. Antishaker
