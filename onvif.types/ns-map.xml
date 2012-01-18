@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ns-map default-ns="onvif.services">
-	<ns xml-ns="http://www.onvif.org/ver10/schema" clr-ns="onvif.types"
-	<ns xml-ns="http://www.onvif.org/ver10/schema" clr-ns="onvif.services.device"
-	<ns xml-ns="http://www.onvif.org/ver10/schema" clr-ns="onvif.services.events"
-</ns-map>
