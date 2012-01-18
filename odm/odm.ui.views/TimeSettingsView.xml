@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity name="TimeSettingsView" clr-ns="odm.ui.activities">
+	<model>
+		<prop name="timestamp" clr-type="long" read-only="true"/>
+		<prop name="utcDateTime" clr-type="DateTime" />
+		<prop name="useDateTimeFromNtp" clr-type="bool" />
+		<prop name="timeZone" clr-type="string" />
+		<prop name="daylightSavings" clr-type="bool" />
+	</model>
+	<result>
+		<option name="Apply">
+			<param name="model" clr-type="Model"/>
+		</option>
+		<option name="Close"/>
+	</result>
+</activity>

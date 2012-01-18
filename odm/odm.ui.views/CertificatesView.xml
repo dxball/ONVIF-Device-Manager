@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity name="CertificatesView" clr-ns="odm.ui.activities">
+	<use clr-ns="onvif.services"/>
+	<model>
+		<prop name="certificates" clr-type="Certificate[]" read-only="true" />
+		<prop name="enabled" clr-type="string[]" read-only="true" />
+		<!--<prop name="selection" clr-type="string" />-->
+	</model>
+	<result>
+		<option name="Upload">
+			<param name="filePath" clr-type="string"/>
+		</option>
+		<option name="SetStatus">
+			<param name="enabled" clr-type="string[]"/>
+			<!--<param name="disabled" clr-type="string[]"/>-->
+		</option>
+	</result>
+</activity>

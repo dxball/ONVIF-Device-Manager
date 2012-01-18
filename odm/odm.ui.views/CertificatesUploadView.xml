@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity name="CertificatesUploadView" clr-ns="odm.ui.activities">
+	<model>
+		<prop name="items" clr-type="string[]" read-only="true" />
+		<prop name="selection" clr-type="string" />
+	</model>
+	<result>
+		<option name="Upload"/>
+		<option name="Activate"/>
+		<option name="DeActivate"/>
+	</result>
+</activity>

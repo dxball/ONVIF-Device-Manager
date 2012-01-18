@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity name="NetworkSettingsView" clr-ns="odm.ui.activities">
+	<!--<use clr-ns="onvif.services"/>-->
+	<model>
+		<!--<prop name="hostFromDhcpSupported" clr-type="bool" read-only="true"/>-->
+		<prop name="useHostFromDhcp" clr-type="bool" />
+		<prop name="host" clr-type="string" />
+		<prop name="ip" clr-type="string" />
+		<prop name="subnet" clr-type="string" />
+		<prop name="dns" clr-type="string" />
+		<prop name="gateway" clr-type="string" />
+		<prop name="dhcp" clr-type="bool" />
+		<prop name="ntpServers" clr-type="string" />
+		<prop name="useNtpFromDhcp" clr-type="bool" />
+		<prop name="dnsServer" clr-type="string" />
+		<prop name="useDnsFromDhcp" clr-type="bool" />
+		<prop name="zeroConfSupported" clr-type="bool" read-only="true"/>
+		<prop name="zeroConfEnabled" clr-type="bool" />
+		<prop name="zeroConfIp" clr-type="string" read-only="true"/>
+		<prop name="netProtocols" clr-type="IEnumerable&lt;NetworkProtocol&gt;"/>
+	</model>
+	<model name="NetworkProtocol">
+		<prop name="name" clr-type="string" read-only="true"/>
+		<prop name="ports" clr-type="string" read-only="true"/>
+		<prop name="enabled" clr-type="bool" read-only="true"/>
+	</model>
+	<result>
+		<option name="Apply">
+			<param name="model" clr-type="Model"/>
+		</option>
+		<option name="Close"/>
+	</result>
+</activity>
