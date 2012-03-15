@@ -195,12 +195,13 @@ namespace odm.controllers {
 					IDisposable viewmodel = (x as Control).DataContext as IDisposable;
 					if (viewmodel != null)
 						viewmodel.Dispose();
-					regionManager.Regions[region].Remove(x);
 
 					var disp = (x as IDisposable);
 					if (disp != null) {
 						disp.Dispose();
 					}
+
+					regionManager.Regions[region].Remove(x);
 				});
 
 				Ctxdisp.Dispose();
@@ -397,8 +398,8 @@ namespace odm.controllers {
 			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
 
 			//TODO: Stub fix for #225 Remove this with plugin functionality
-			LastEditedModule lmodule = new LastEditedModule();
-			ctx.RegisterInstance<LastEditedModule>(lmodule);
+			ILastChangedModule lmodule = new LastChangedModule();
+			ctx.RegisterInstance<ILastChangedModule>(lmodule);
 			//
 
 			Ctxdisp = ctx;
@@ -421,6 +422,12 @@ namespace odm.controllers {
 			ShowView(column, "RulesClick", RegionNames.reg_property);
 			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.ruleEngine);
 			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			//TODO: Stub fix for #225 Remove this with plugin functionality
+			ILastChangedModule lmodule = new LastChangedModule();
+			ctx.RegisterInstance<ILastChangedModule>(lmodule);
+			//
+
 			Ctxdisp = ctx;
 
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
@@ -630,6 +637,10 @@ namespace odm.controllers {
 			ShowView(column, "IdentificationClick", RegionNames.reg_property);
 			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.identificationAndStatus);
 			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			var uri = evarg.session.deviceUri;
+			ctx.RegisterInstance<Uri>(uri);
+
 			Ctxdisp = ctx;
 
 			UIdisp = IdentificationActivity

@@ -844,9 +844,7 @@
     <Activity Include="ProfileUpdatingView.xml" />
     <Activity Include="ProfileCreationView.xml" />
     <Activity Include="AnalyticsView.xml" />
-    <Activity Include="VideoSettingsView.xml">
-      <SubType>Designer</SubType>
-    </Activity>
+    <Activity Include="VideoSettingsView.xml" />
     <Activity Include="ItemSelectorView.xml">
       <SubType>Designer</SubType>
     </Activity>
@@ -954,9 +952,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\wheel_zoom.cur" />
-    <Content Include="tz.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- 

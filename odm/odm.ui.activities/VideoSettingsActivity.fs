@@ -70,25 +70,25 @@ namespace odm.ui.activities
                 else
                     -1
 
-            let resolutions = Set.ofSeq (seq{
-                yield vec.Resolution
-                if options.H264 <> null then
-                    yield! options.H264.ResolutionsAvailable
-                if options.JPEG <> null then
-                    yield! options.JPEG.ResolutionsAvailable
-                if options.MPEG4 <> null then
-                    yield! options.MPEG4.ResolutionsAvailable
-            })
+//            let resolutions = Set.ofSeq (seq{
+//                yield vec.Resolution
+//                if options.H264 <> null then
+//                    yield! options.H264.ResolutionsAvailable
+//                if options.JPEG <> null then
+//                    yield! options.JPEG.ResolutionsAvailable
+//                if options.MPEG4 <> null then
+//                    yield! options.MPEG4.ResolutionsAvailable
+//            })
             
-            let encoders = Set.ofSeq (seq{
-                yield vec.Encoding
-                if options.H264 <> null then
-                    yield VideoEncoding.H264
-                if options.JPEG <> null then
-                    yield VideoEncoding.JPEG
-                if options.MPEG4 <> null then
-                    yield VideoEncoding.MPEG4
-            })
+//            let encoders = Set.ofSeq (seq{
+//                yield vec.Encoding
+//                if options.H264 <> null then
+//                    yield VideoEncoding.H264
+//                if options.JPEG <> null then
+//                    yield VideoEncoding.JPEG
+//                if options.MPEG4 <> null then
+//                    yield VideoEncoding.MPEG4
+//            })
 
             let frameRateRanges = Seq.toList(seq{
                 if options.H264 <> null then
@@ -184,8 +184,8 @@ namespace odm.ui.activities
                 maxFrameRate = maxFrameRate,
                 minGovLength = minGovLength,
                 maxGovLength = maxGovLength,
-                encoders = (encoders |> Set.toArray),
-                resolutions = (resolutions |> Set.toArray),
+                //encoders = (encoders |> Set.toArray),
+                //resolutions = (resolutions |> Set.toArray),
                 encoderOptions = options,
                 profToken = profToken
             )

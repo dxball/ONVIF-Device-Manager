@@ -76,7 +76,11 @@ namespace odm.ui.activities {
 			});
 
 			//try to load and fill manual list
-			var manualListpath = AppDomain.CurrentDomain.BaseDirectory + "tz.xml";
+			//TODO: get rid of hardcoded filename
+			var manualListpath = Path.Combine(
+				AppDomain.CurrentDomain.BaseDirectory,
+				"custom-time-zones.xml"
+			);
 			var listManual = TimeZoneViewModel.GetManualTimeZones(manualListpath);
             if (listManual.Count() != 0)
             {
