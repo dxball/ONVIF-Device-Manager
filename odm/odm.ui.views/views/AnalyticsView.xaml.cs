@@ -16,7 +16,7 @@ namespace odm.ui.activities {
 	/// <summary>
 	/// Interaction logic for PropertyVideoStreaming.xaml
 	/// </summary>
-	public partial class AnalyticsView : UserControl {
+	public partial class AnalyticsView : UserControl, IDisposable {
 
 		#region Activity definition
 		public static FSharpAsync<Result> Show(IUnityContainer container, Model model) {
@@ -34,6 +34,7 @@ namespace odm.ui.activities {
 		public AnalyticsStrings AnalyticsStrings { get { return AnalyticsStrings.instance; } }
 
 		private CompositeDisposable disposables = new CompositeDisposable();
+		private CompositeDisposable uiSubscribtions = new CompositeDisposable();
 
 		#region Binding
 		private string GetCfgDisplayName(ConfigurationEntity cfg) {
@@ -54,7 +55,7 @@ namespace odm.ui.activities {
             }
 
             //TODO: Stub fix for #225 Remove this with plugin functionality
-			last = activityContext.container.Resolve<LastEditedModule>();
+			last = activityContext.container.Resolve<ILastChangedModule>();
 			if (last.module != null) {
 				//CompleteWith(() => Success(new Result.ConfigureModule(last.module)));
 				Success(new Result.ConfigureModule(last.module));
@@ -82,7 +83,7 @@ namespace odm.ui.activities {
             }
         }
 		//TODO: Stub fix for #225 Remove this with plugin functionality
-        LastEditedModule last;
+		ILastChangedModule last;
 		//
 		#endregion Binding
 
@@ -101,25 +102,26 @@ namespace odm.ui.activities {
 		private void Init(Model model) {
 			OnCompleted += () => {
 				disposables.Dispose();
+				uiSubscribtions.Dispose();
 			};
 			this.DataContext = model;
 
-            var type = activityContext.container.Resolve<AnalyticType>();
+			var type = activityContext.container.Resolve<AnalyticType>();
 
-            switch (type) { 
-                case AnalyticType.MODULE:
-                    if (model.modules != null && model.modules.Count() != 0) {
-                        Array.Sort(model.modules, new ReverseComparer());
-                    }
-                    break;
-                case AnalyticType.RULE:
-                    if (model.rules != null && model.rules.Count() != 0) {
-                        Array.Sort(model.rules, new ReverseComparer());
-                    }
+			switch (type) {
+				case AnalyticType.MODULE:
+					if (model.modules != null && model.modules.Count() != 0) {
+						Array.Sort(model.modules, new ReverseComparer());
+					}
+					break;
+				case AnalyticType.RULE:
+					if (model.rules != null && model.rules.Count() != 0) {
+						Array.Sort(model.rules, new ReverseComparer());
+					}
 
-                    break;
-            }
-			
+					break;
+			}
+
 			var closeCommand = new DelegateCommand(
 				() => Success(new Result.Close()),
 				() => true
@@ -138,23 +140,24 @@ namespace odm.ui.activities {
 			);
 			DeleteModuleCommand = deleteModuleCommand;
 
-            var configureModuleCommand = new DelegateCommand(
-                () => {
-                    //TODO: Stub fix for #225 Remove this with plugin functionality
-                    last.module = SelectedModule;
+			var configureModuleCommand = new DelegateCommand(
+				() => {
+					//TODO: Stub fix for #225 Remove this with plugin functionality
+					if (last != null)
+						last.module = SelectedModule;
 					//
-                    Success(new Result.ConfigureModule(SelectedModule)); 
-                },
-                () => { return (SelectedModule != null); }
-            );
+					Success(new Result.ConfigureModule(SelectedModule));
+				},
+				() => { return (SelectedModule != null); }
+			);
 			ConfigureModuleCommand = configureModuleCommand;
 
-			this.GetPropertyChangedEvents(
+			uiSubscribtions.Add(this.GetPropertyChangedEvents(
 				AnalyticsView.SelectedModuleProperty
 			).Subscribe(x => {
 				deleteModuleCommand.RaiseCanExecuteChanged();
 				configureModuleCommand.RaiseCanExecuteChanged();
-			});
+			}));
 
 			var createRuleCommand = new DelegateCommand(
 				() => Success(new Result.CreateRule()),
@@ -174,12 +177,12 @@ namespace odm.ui.activities {
 			);
 			ConfigureRuleCommand = configureRuleCommand;
 
-			this.GetPropertyChangedEvents(
+			uiSubscribtions.Add(this.GetPropertyChangedEvents(
 				AnalyticsView.SelectedRuleProperty
 			).Subscribe(x => {
 				deleteRuleCommand.RaiseCanExecuteChanged();
 				configureRuleCommand.RaiseCanExecuteChanged();
-			});
+			}));
 
 			InitializeComponent();
 
@@ -204,10 +207,15 @@ namespace odm.ui.activities {
 
 	}
 	//TODO: Stub fix for #225 Remove this with plugin functionality
-	public class LastEditedModule {
-		public LastEditedModule() {
+	public interface ILastChangedModule {
+		string Tag { get; set; }
+		Config module { get; set; }
+	}
+	public class LastChangedModule: ILastChangedModule {
+		public LastChangedModule() {
+			Tag = "";
 		}
-		public string Tag = "";
+		public string Tag { get; set; }
 		public Config module { get; set; }
 	}
 	//

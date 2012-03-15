@@ -178,5 +178,27 @@ namespace utils {
 				return max;
 			}
 		}
+
+		public static bool IsSame<T>(this IEnumerable<T> source, IEnumerable<T> comparand){
+			if ((object)source == null) {
+				return (object)comparand == null;
+			}
+			if ((object)comparand == null) {
+				return false;
+			}
+			using (var sit = source.GetEnumerator()) {
+				using (var cit = comparand.GetEnumerator()) {
+					do {
+						if (!sit.MoveNext()) {
+							return !cit.MoveNext();
+						}
+						if (!cit.MoveNext()) {
+							return false;
+						}
+					} while (Object.Equals(sit.Current, cit.Current));
+					return false;
+				}
+			}
+		}
 	}
 }

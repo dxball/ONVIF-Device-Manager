@@ -15,6 +15,7 @@ using odm.infra;
 using onvif.services;
 using Org.BouncyCastle.X509;
 using utils;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace odm.ui.activities {
 	/// <summary>
@@ -48,27 +49,33 @@ namespace odm.ui.activities {
 				disposables.Dispose();
 			};
 			certificates = new ObservableCollection<CertificateDescr>();
-			
-			SetStatusCommand = new DelegateCommand(
+
+			DeleteCommand = new DelegateCommand(
 				() => {
-					List<string> certifIdlst = new List<string>();
-					var cert = certificates.ToList().Where(x => x.isEnabled == true);
-					cert.ForEach(crt=>{
-						certifIdlst.Add(crt.CertificateId);
-					});
-					Success(new Result.SetStatus(certifIdlst.ToArray()));
+					var descr = (certificateslist.SelectedItem as CertificateDescr);
+					if(descr != null)
+						Success(new Result.Delete(model, descr.CertificateId));	
+				},
+				() => certificateslist.SelectedItem != null
+			);
+
+			ApplyCommand = new DelegateCommand(
+				() => {
+					//List<string> certifIdlst = new List<string>();
+					//var cert = certificates.ToList().Where(x => x.isEnabled == true);
+					//cert.ForEach(crt=>{
+					//    certifIdlst.Add(crt.CertificateId);
+					//});
+					Success(new Result.Apply(model));
 				},
 				() => true
 			);
 
 			UploadCmd = new DelegateCommand(
 				() => {
-					var dlg = new OpenFileDialog();
-					dlg.Title = Strings.selectCertificateHeader;
-					//dlg.InitialDirectory = Directory.GetCurrentDirectory();
-					if (dlg.ShowDialog() == true) {
-						Success(new Result.Upload(dlg.FileName));
-					}
+					//var djg = new OpenFileDialog();
+					//djg.ShowDialog();
+					Success(new Result.Upload(model));
 				},
 				() => true
 			);
@@ -93,52 +100,92 @@ namespace odm.ui.activities {
 		}
 
 		public class CertificateDescr {
-			public CertificateDescr(Certificate cert, bool isEnabled){
+			public CertificateDescr(Certificate cert){
 				this.cert = cert;
-				this.isenabled = isEnabled;
+				Parse(cert);
 			}
 			Certificate cert;
 			
-			public string ContentType {
-				get {
-					return cert.Certificate1.contentType;
+			//public string ContentType {
+			//    get {
+			//        return cert.contentType;
+			//    }
+			//}
+			X509Certificate x509;
+			string GetSubscriber() {
+				string ret = "";
+				if(x509.IssuerDN == null){
+					ret = "Self signed";
+				}else{
+					var subscr = x509.IssuerDN.GetValues(X509Name.CN);
+					ret = "CN: ";
+					subscr.ForEach(val => {
+						ret += val.ToString() + " ";
+					});
+					var subscrCa = x509.IssuerDN.GetValues(X509Name.Name);
+					if (subscrCa.Count != 0) {
+						ret = ret + " Name: ";
+						subscr.ForEach(val => {
+							ret += val.ToString() + " ";
+						});
+					}
 				}
+				return ret;
+			}
+			string GetCertificateName() {
+				//x509.SubjectDN.
+				if (x509.SerialNumber == null)
+					return "Serial number: <None>";
+				return "Serial number: " + x509.SerialNumber.ToString();
+			}
+			string GetValidity() {
+				if (x509.NotBefore == null && x509.NotAfter == null) {
+					return "Validity: forever";
+				}
+				string notBefore = x509.NotBefore == null ? ".." : x509.NotBefore.ToShortDateString();
+				string notAfter = x509.NotAfter == null ? ".." : x509.NotAfter.ToShortDateString();
+				return "Validity: " + notBefore + " - " + notAfter;
+			}
+			void Parse(Certificate cert) {
+				var certParser = new X509CertificateParser();
+				x509 = certParser.ReadCertificate(cert.data);
 			}
 			public override string ToString() {
 				var certParser = new X509CertificateParser();
-				var x509 = certParser.ReadCertificate(cert.Certificate1.Data);
+				var x509 = certParser.ReadCertificate(cert.data);
 				return x509.ToString();
 			}
-			bool isenabled;
 			public bool isEnabled {
 				get {
-					return isenabled;
+					return cert.enabled;
 				}
 				set {
-					isenabled = value;
+					cert.enabled = value;
 				}
 			}
-			public string CertificateId { get { return cert.CertificateID; } }
+			public string CertificateId { get { return cert.cid; } }
+			public string FromTo { get { return GetValidity(); } }
+			public string CpmmonName { get { return GetCertificateName(); } }
+			public string Subscriber { get { return GetSubscriber(); } }
 		}
 		void Localization() {
 			uploadCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.uploadCertificate);
 			btnUpload.CreateBinding(Button.ContentProperty, Strings, s => s.btnUpload);
-			setStatus.CreateBinding(Button.ContentProperty, Strings, s=>s.setStatus);
+			setStatus.CreateBinding(Button.ContentProperty, ButtonsLocales, s => s.apply);
+			delete.CreateBinding(Button.ContentProperty, ButtonsLocales, s => s.delete);
 		}
 		void BindData(Model model) {
 			model.certificates.ForEach(cert => {
-				bool isEnabled = false;
-				if (model.enabled.Contains(cert.CertificateID)) {
-					isEnabled = true;
-				}
-				CertificateDescr cdescr = new CertificateDescr(cert, isEnabled);
+				bool isEnabled = cert.enabled;
+				CertificateDescr cdescr = new CertificateDescr(cert);
 				certificates.Add(cdescr);
 			});
 
 			
 			certificateslist.SelectionChanged+=new SelectionChangedEventHandler((obj, value)=>{
 				if (certificateslist.SelectedItem != null) {
-					detailsValue.Text = certificateslist.SelectedItem.ToString();
+					//detailsValue.Text = certificateslist.SelectedItem.ToString();
+					((DelegateCommand)DeleteCommand).RaiseCanExecuteChanged();
 				}
 			});
 			certificateslist.CreateBinding(ListBox.ItemsSourceProperty, this, x => x.certificates);
@@ -150,8 +197,9 @@ namespace odm.ui.activities {
 		}
 
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 		public event PropertyChangedEventHandler PropertyChanged;

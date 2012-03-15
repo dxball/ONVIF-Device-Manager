@@ -21,8 +21,9 @@ namespace utils {
 		public void NotifyPropertyChanged(String propertyName) {
 			if (PropertyChanged != null) {
 				scheduler.Schedule(() => {
-					if (PropertyChanged != null) {
-						PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+					var prop_changed = PropertyChanged;
+					if (prop_changed != null) {
+						prop_changed(this, new PropertyChangedEventArgs(propertyName));
 					}
 				});
 			}
@@ -42,11 +43,14 @@ namespace utils {
 		private IScheduler scheduler;
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void NotifyPropertyChanged(String propertyName) {
-			scheduler.Schedule(() => {
-				if (PropertyChanged != null) {
-					PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-				}
-			});
+			if (PropertyChanged != null) {
+				scheduler.Schedule(() => {
+					var prop_changed = PropertyChanged;
+					if (prop_changed != null) {
+						prop_changed(this, new PropertyChangedEventArgs(propertyName));
+					}
+				});
+			}
 		}
 		protected void NotifyPropertyChanged<TProperty>(Expression<Func<T, TProperty>> expression) {
 			var me = expression.Body as MemberExpression;

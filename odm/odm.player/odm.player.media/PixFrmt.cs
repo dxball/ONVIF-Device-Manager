@@ -10,31 +10,36 @@ namespace odm.player {
 
 	[Serializable]
 	public class MediaStreamInfo {
+		
 		[Serializable]
 		public enum Transport{
 			Udp,
 			Tcp,
 			Http
 		}
-		public MediaStreamInfo(string url, Transport transport=Transport.Udp, UserNameToken userNameToken=null) {
+
+		public readonly string url;
+		public readonly Transport transport;
+		public readonly UserNameToken userNameToken;
+
+		public MediaStreamInfo(string url, Transport transport = Transport.Udp, UserNameToken userNameToken = null) {
 			this.url = url;
 			this.transport = transport;
 			this.userNameToken = userNameToken;
 		}
-		public string url { get; private set; }
-		public Transport transport { get; private set; }
-		public UserNameToken userNameToken { get; private set; }
 	}
 
 
 	[Serializable]
 	public class UserNameToken {
+		
+		public readonly string userName;
+		public readonly string password;
+
 		public UserNameToken(string userName, string password) {
 			this.userName = userName;
 			this.password = password;
 		}
-		public string userName { get; private set; }
-		public string password { get; private set; }
 	}
 
 	[Serializable]

@@ -67,7 +67,7 @@
         </StackPanel>
         
         <Grid DockPanel.Dock="Top"  Margin="0,0,0,6" IsEnabled="{Binding IsChecked, ElementName=useTraker}">
-			<Border x:Name="player" Margin="0" Background="Black"/>
+			<Border x:Name="playerHolder" Margin="0" Background="Black"/>
 			<!--<Viewbox>
                 <Canvas>-->
             <g:RegionEditor x:Name="regeditor"/>

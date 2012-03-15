@@ -56,15 +56,15 @@
         [<Extension>]
         static member SetIdentity(odmSession:OdmSession, model:IChangeTrackable<IIdentificationModel>):Async<unit> = async{
             let session = odmSession.GetSession()
-            let name_has_changed = model.origin.name <> model.current.name
-            let location_has_changed = model.origin.location <> model.current.location
-            let is_modified = name_has_changed || location_has_changed
+            let name_changed = model.origin.name <> model.current.name
+            let location_changed = model.origin.location <> model.current.location
+            let is_modified = name_changed || location_changed
             if not is_modified then return ()
             let! scopes = session.GetScopes()
             
             let scopes_to_set = seq{
                 let vf_lst = Seq.toList (seq{
-                    if name_has_changed then
+                    if name_changed then
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
@@ -78,7 +78,7 @@
                         let filter (x:string) = not (x.StartsWith(prefix))
                         yield (value, filter)
                     
-                    if location_has_changed then
+                    if location_changed then
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
@@ -135,7 +135,7 @@
         static member SetCertificateSettings(odmSession: OdmSession, model:IChangeTrackable<ICertificateManagementModel>):Async<unit> = async{
             let session = odmSession.GetSession()
             if not (model.isModified) then return ()
-            let active_has_changed = 
+            let active_changed = 
                 model.origin.activeCertificateId <> model.current.activeCertificateId
             
             // client authentication mode has been changed

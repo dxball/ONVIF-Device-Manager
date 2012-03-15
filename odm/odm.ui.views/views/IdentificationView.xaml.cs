@@ -18,9 +18,10 @@ using Microsoft.Practices.Unity;
 using odm.infra;
 using odm.ui.controls;
 using utils;
+using System;
 
 namespace odm.ui.activities {
-	public partial class IdentificationView : UserControl {
+	public partial class IdentificationView : UserControl, IDisposable {
 
 		#region Activity definition
 		public static FSharpAsync<Result> Show(IUnityContainer container, Model model) {
@@ -75,8 +76,11 @@ namespace odm.ui.activities {
 			serialCaption.CreateBinding(Label.ContentProperty, Strings, x => x.deviceID);
 			serialValue.Text = model.serial;
 
-			onvifVersionCaption.Content = "ONVIF Version";
+			onvifVersionCaption.CreateBinding(Label.ContentProperty, Strings, x => x.version);
 			onvifVersionValue.Text = model.onvifVersion !=null ? model.onvifVersion.ToString() : "unknown";
+
+			var uri = activityContext.container.Resolve<Uri>();
+			onvifUriValue.Text = uri.AbsoluteUri;
 		}
 		#endregion Binding
 
@@ -134,6 +138,10 @@ namespace odm.ui.activities {
 		}
 
 		public void Dispose() {
+			Cancel();
+		}
+
+		void IDisposable.Dispose() {
 			Cancel();
 		}
 	}

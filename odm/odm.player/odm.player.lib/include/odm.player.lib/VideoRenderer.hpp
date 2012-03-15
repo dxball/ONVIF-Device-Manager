@@ -30,10 +30,8 @@ namespace onvifmp{
 				return;
 			}
 			auto vb = videoBuffer.get();
-			//auto width = avCodecContext->width;
-			//auto height = avCodecContext->height;
-			auto width = avCodecContext->coded_width;
-			auto height = avCodecContext->coded_height;
+			auto width = avCodecContext->width;
+			auto height = avCodecContext->height;
 			auto pixelFormat = avCodecContext->pix_fmt;
 			auto stride = avFrame->linesize;
 			auto scan0 = avFrame->data;
@@ -43,6 +41,7 @@ namespace onvifmp{
 				return;
 			}
 			__try{
+				*vb->signal = 1;
 				sws_scale(scaleContext, scan0, stride, 0, height, vb->scan0, vb->stride);
 			}__finally{
 				sws_freeContext(scaleContext);

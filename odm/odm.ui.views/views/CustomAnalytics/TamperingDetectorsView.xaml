@@ -20,6 +20,6 @@
             <CheckBox Content="{Binding Strings.imageTooBright, ElementName=ctrl}" Name="imageTooBright" Height="16" Grid.Column="0" Grid.Row="1"/>
             <CheckBox Content="{Binding Strings.imageTooNoisy, ElementName=ctrl}" Name="imageTooNoisy" Height="16" Grid.Column="0" Grid.Row="2"/>
         </StackPanel>
-		<Border x:Name="player"  Background="Black" Margin="0,0,0,6"/>
+		<Border x:Name="playerHolder"  Background="Black" Margin="0,0,0,6"/>
 	</DockPanel>
 </UserControl>

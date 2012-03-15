@@ -17,17 +17,29 @@ using Microsoft.Practices.Unity;
 using System.ComponentModel;
 using System.Xml;
 using odm.ui.controls;
+using odm.player;
+using System.Reactive.Disposables;
+using odm.ui.core;
+using odm.ui.activities;
+using System.IO;
 
 namespace odm.ui.views.CustomAnalytics {
     /// <summary>
     /// Interaction logic for SynesisAnalyticsConfigView.xaml
     /// </summary>
-    public partial class SynesisAnalyticsConfigView : UserControl, IDisposable {
+	public partial class SynesisAnalyticsConfigView : UserControl, IDisposable, IPlaybackController {
         public SynesisAnalyticsConfigView() {
             InitializeComponent();
 
+			disposables = new CompositeDisposable();
+			player = new Border();
+			player.Margin = new Thickness(0);
+			player.Background = Brushes.Black;
+
             //tabTampering.CreateBinding(TamperingDetectorsView.isCameraObstructedEnabledProperty, tabObjectTracker, x=>
         }
+
+		Border player;
 
         public string title = "Analytics module configuration";
         odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr;
@@ -180,8 +192,9 @@ namespace odm.ui.views.CustomAnalytics {
             public synesis.UserRegion UserRegion{get;set;}
             
             private void NotifyPropertyChanged(String info) {
-                if (PropertyChanged != null) {
-                    PropertyChanged(this, new PropertyChangedEventArgs(info));
+				var prop_changed = this.PropertyChanged;
+				if (prop_changed != null) {
+					prop_changed(this, new PropertyChangedEventArgs(info));
                 }
             }
             public event PropertyChangedEventHandler PropertyChanged;
@@ -453,17 +466,54 @@ namespace odm.ui.views.CustomAnalytics {
             }
         }
 
+		IPlaybackSession playbackSession;
+		VideoBuffer vidBuff;
+		CompositeDisposable disposables;
+		void VideoStartup(IVideoInfo iVideo, string profToken) {
+			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
+
+			var playerAct = container.Resolve<IVideoPlayerActivity>();
+
+			var model = new VideoPlayerActivityModel(
+				profileToken: profToken,
+				showStreamUrl: false,
+				streamSetup: new StreamSetup() {
+					Stream = StreamType.RTPUnicast,
+					Transport = new Transport() {
+						Protocol = AppDefaults.visualSettings.Transport_Type,
+						Tunnel = null
+					}
+				}
+			);
+
+			disposables.Add(
+				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			);
+		}
+		public new bool Initialized(IPlaybackSession playbackSession) {
+			this.playbackSession = playbackSession;
+			return true;
+		}
+
+		public void Shutdown() {
+		}
+
+		IUnityContainer container;
+		
         public bool Init(IUnityContainer container, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr, odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr) {
             this.modulDescr = modulDescr;
             this.videoDescr = videoDescr;
+			this.container = container;
 
+			VideoStartup(videoDescr.videoInfo, videoDescr.profileToken);
+			
             videoSourceSize = new Size(videoDescr.videoSourceResolution.Width, videoDescr.videoSourceResolution.Height);
             videoEncoderSize = new Size(videoDescr.videoInfo.Resolution.Width, videoDescr.videoInfo.Resolution.Height);
 
             model = new SynesisAnalyticsModel();
 
             try {
-                FillSimpleItems(modulDescr.config.Parameters.SimpleItem, model);
+				FillSimpleItems(modulDescr.config.Parameters.SimpleItem, model);
             } catch (Exception err) {
                 dbg.Error(err);
                 return false;
@@ -499,8 +549,45 @@ namespace odm.ui.views.CustomAnalytics {
                 return false;
             }
 
+			analyticsTabCtrl.RequestBringIntoView += new RequestBringIntoViewEventHandler((sender, evargs) => {
+				var tab = ((System.Windows.Controls.Primitives.Selector)(sender)).SelectedItem;
+				var tctrl = tab as TabItem;
+				if (tctrl.Name == tabAntishaker.Name) {
+					pageAntishaker.SetPlayer(null);
+					pageDepthCalibration.SetPlayer(null);
+					pageObjectTracker.SetPlayer(null);
+					pageTampering.SetPlayer(null);
+
+					pageAntishaker.SetPlayer(player);
+				} else if (tctrl.Name == tabDepthCalibration.Name) {
+					pageAntishaker.SetPlayer(null);
+					pageDepthCalibration.SetPlayer(null);
+					pageObjectTracker.SetPlayer(null);
+					pageTampering.SetPlayer(null);
+
+					pageDepthCalibration.SetPlayer(player);
+
+				} else if (tctrl.Name == tabObjectTracker.Name) {
+					pageAntishaker.SetPlayer(null);
+					pageDepthCalibration.SetPlayer(null);
+					pageObjectTracker.SetPlayer(null);
+					pageTampering.SetPlayer(null);
+
+					pageObjectTracker.SetPlayer(player);
+
+				} else if (tctrl.Name == tabTampering.Name) {
+					pageAntishaker.SetPlayer(null);
+					pageDepthCalibration.SetPlayer(null);
+					pageObjectTracker.SetPlayer(null);
+					pageTampering.SetPlayer(null);
+
+					pageTampering.SetPlayer(player);
+
+				}
+			});
+
             //TODO: Stub fix for #225 Remove this with plugin functionality
-			last = container.Resolve<odm.ui.activities.LastEditedModule>();
+			last = container.Resolve<odm.ui.activities.ILastChangedModule>();
 			analyticsTabCtrl.SelectionChanged += new SelectionChangedEventHandler((obj, arg) => {
 				var selection = analyticsTabCtrl.SelectedItem as TabItem;
 				var antishaker = selection.Content as AntishakerView;
@@ -524,30 +611,66 @@ namespace odm.ui.views.CustomAnalytics {
 				switch (last.Tag) {
 					case "pageAntishaker":
 						analyticsTabCtrl.SelectedItem = tabAntishaker;
+						
+						pageDepthCalibration.SetPlayer(null);
+						pageTampering.SetPlayer(null);
+						pageObjectTracker.SetPlayer(null);
+						
+						pageAntishaker.SetPlayer(player);
 						break;
 					case "pageDepthCalibration":
 						analyticsTabCtrl.SelectedItem = tabDepthCalibration;
+						
+						pageTampering.SetPlayer(null);
+						pageAntishaker.SetPlayer(null);
+						pageObjectTracker.SetPlayer(null);
+
+						pageDepthCalibration.SetPlayer(player);
 						break;
 					case "pageObjectTracker":
 						analyticsTabCtrl.SelectedItem = tabObjectTracker;
+						
+						pageDepthCalibration.SetPlayer(null);
+						pageTampering.SetPlayer(null);
+						pageAntishaker.SetPlayer(null);
+
+						pageObjectTracker.SetPlayer(player);
+						
 						break;
 					case "pageTampering":
 						analyticsTabCtrl.SelectedItem = tabTampering;
+						
+						pageDepthCalibration.SetPlayer(null);
+						pageObjectTracker.SetPlayer(null);
+						pageAntishaker.SetPlayer(null);
+
+						pageTampering.SetPlayer(player);
 						break;
 				}
+			} else {
+
+				pageDepthCalibration.SetPlayer(null);
+				pageTampering.SetPlayer(null);
+				pageAntishaker.SetPlayer(null);
+				pageObjectTracker.SetPlayer(player);
 			}
             //
 
             return true;
         }
 		//TODO: Stub fix for #225 Remove this with plugin functionality
-        odm.ui.activities.LastEditedModule last;
+		odm.ui.activities.ILastChangedModule last;
 		//
         public void Dispose() {
             pageAntishaker.Dispose();
             pageDepthCalibration.Dispose();
             pageObjectTracker.Dispose();
             pageTampering.Dispose();
+
+			if (vidBuff != null) {
+				vidBuff.Dispose();
+			}
+			disposables.Dispose();
         }
     }
 }

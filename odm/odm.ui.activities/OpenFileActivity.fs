@@ -22,16 +22,17 @@
         | Canceled
 
     type OpenFileActivity() = class
-        static member Run(filter:string) = async{
+        static member Run(title:string, filter:string) = async{
             let disp = Application.Current.Dispatcher
             return! disp.InvokeAsync(fun ()->
                 let dlg = new OpenFileDialog()
-                dlg.InitialDirectory <- Directory.GetCurrentDirectory()
+                dlg.Title <- title
+                //dlg.InitialDirectory <- Directory.GetCurrentDirectory()
                 dlg.Filter <- filter
                 if dlg.ShowDialog() = Nullable(true) then
-                    OpenFileActivityResult.Selected(dlg.FileName)
+                    dlg.FileName
                 else
-                    OpenFileActivityResult.Canceled
+                    null
             )
         }
     end

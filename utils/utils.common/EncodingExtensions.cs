@@ -11,17 +11,51 @@ namespace utils {
 
 	public static class EncodingEx {
 		public static string ToBase64(this byte[] bytes) {
-			dbg.Assert(bytes != null);
+			if (bytes == null) {
+				return null;
+			}
 			return Convert.ToBase64String(bytes);
 		}
 		public static byte[] FromBase64(this string base64) {
-			dbg.Assert(base64 != null);
+			if (base64 == null) {
+				return null;
+			}
 			return Convert.FromBase64String(base64);
 		}
 		public static byte[] ToUtf8(this string str) {
-			dbg.Assert(str != null);
+			if (str == null) {
+				return null;
+			}
 			return Encoding.UTF8.GetBytes(str);
 		}
+		public static string FromUtf8(this byte[] utf8) {
+			if (utf8 == null) {
+				return null;
+			}
+			return Encoding.UTF8.GetString(utf8);
+		}
+		public static string FromUtf8(this byte[] utf8, int index, int count) {
+			dbg.Assert(utf8 != null);
+			return Encoding.UTF8.GetString(utf8, index, count);
+		}
+		public static string FromUtf8(this byte[] utf8, int count) {
+			dbg.Assert(utf8 != null);
+			return Encoding.UTF8.GetString(utf8, 0, count);
+		}
+
+		public static byte[] ToAscii(this string str) {
+			if (str == null) {
+				return null;
+			}
+			return Encoding.ASCII.GetBytes(str);
+		}
+		public static string FromAscii(this byte[] ascii) {
+			if (ascii == null) {
+				return null;
+			}
+			return Encoding.ASCII.GetString(ascii);
+		}
+
 		private class Utf8Converter : IOutputStream<byte> {
 			const int maxCharsToBuffer = 1024;
 			String str;
@@ -94,25 +128,5 @@ namespace utils {
 			return new Utf8Converter(str);
 		}
 
-		public static string FromUtf8(this byte[] utf8) {
-			dbg.Assert(utf8 != null);
-			return Encoding.UTF8.GetString(utf8);
-		}
-		public static string FromUtf8(this byte[] utf8, int index, int count) {
-			dbg.Assert(utf8 != null);
-			return Encoding.UTF8.GetString(utf8, index, count);
-		}
-		public static string FromUtf8(this byte[] utf8, int count) {
-			dbg.Assert(utf8 != null);
-			return Encoding.UTF8.GetString(utf8, 0, count);
-		}
-		public static byte[] ToAscii(this string str) {
-			dbg.Assert(str != null);
-			return Encoding.ASCII.GetBytes(str);
-		}
-		public static string FromAscii(this byte[] ascii) {
-			dbg.Assert(ascii != null);
-			return Encoding.ASCII.GetString(ascii);
-		}
 	}
 }

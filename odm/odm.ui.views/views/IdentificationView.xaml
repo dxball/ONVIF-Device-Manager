@@ -33,6 +33,7 @@
 				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
 				<RowDefinition Height="auto"/>
 			</Grid.RowDefinitions>
 			<Grid.Resources>
@@ -146,7 +147,16 @@
 				Text="2.1"
 				Grid.Row="9"
 				IsReadOnly="True"/>
-		</Grid>
+
+            <Label  
+				Content="URI:"
+				Grid.Row="10"/>
+            <TextBox
+				x:Name="onvifUriValue"
+				Text="http://192.168.3.3/onvif-sevices"
+				Grid.Row="10"
+				IsReadOnly="True"/>
+        </Grid>
 
 		<StackPanel 
 			Grid.Row="2"

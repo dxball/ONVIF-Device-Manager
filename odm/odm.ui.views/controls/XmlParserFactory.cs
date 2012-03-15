@@ -519,8 +519,9 @@ namespace odm.ui.controls {
 		//InotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 	}
@@ -552,8 +553,9 @@ namespace odm.ui.controls {
 		}
 
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 

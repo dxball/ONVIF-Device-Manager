@@ -88,15 +88,15 @@
         }
 
         let apply(model:IdentificationView.Model) = async{
-            let name_has_changed = model.origin.name <> model.current.name
-            let location_has_changed = model.origin.location <> model.current.location
-            let is_modified = name_has_changed || location_has_changed
+            let name_changed = model.origin.name <> model.current.name
+            let location_changed = model.origin.location <> model.current.location
+            let is_modified = name_changed || location_changed
             if not is_modified then return ()
             let! scopes = session.GetScopes()
             
             let scopes_to_set = seq{
                 let changed_scopes = Seq.toList (seq{
-                    if name_has_changed then
+                    if name_changed then
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
@@ -110,7 +110,7 @@
                         let value = Uri.EscapeUriString(model.current.name)
                         yield (prefix, value)
                     
-                    if location_has_changed then
+                    if location_changed then
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 

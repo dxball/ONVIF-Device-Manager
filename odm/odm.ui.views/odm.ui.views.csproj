@@ -114,6 +114,9 @@
     <Compile Include="activities\NavigationContext.cs" />
     <Compile Include="activities\ViewPresenter.cs" />
     <Compile Include="AppDefaults.cs" />
+    <Compile Include="controls\DateTimeControl.xaml.cs">
+      <DependentUpon>DateTimeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="controls\ExpressionDefaultEditor.xaml.cs">
       <DependentUpon>ExpressionDefaultEditor.xaml</DependentUpon>
     </Compile>
@@ -138,6 +141,9 @@
     <Compile Include="core\ActivityHelper.cs" />
     <Compile Include="core\ScopesHolder.cs" />
     <Compile Include="core\TLSManager.cs" />
+    <Compile Include="dialogs\ManualTZ.xaml.cs">
+      <DependentUpon>ManualTZ.xaml</DependentUpon>
+    </Compile>
     <Compile Include="dialogs\ManualUri.xaml.cs">
       <DependentUpon>ManualUri.xaml</DependentUpon>
     </Compile>
@@ -149,8 +155,8 @@
     </Compile>
     <Compile Include="EmbeddedResource.generated.cs" />
     <Compile Include="generated\AnalyticsSetNameView.generated.cs" />
-    <Compile Include="generated\CertificatesUploadView.generated.cs" />
     <Compile Include="generated\CertificatesView.generated.cs" />
+    <Compile Include="generated\CertificateUploadView.generated.cs" />
     <Compile Include="generated\ConfigureAnalyticView.generated.cs" />
     <Compile Include="generated\ErrorView.generated.cs" />
     <Compile Include="generated\IdentificationView.generated.cs" />
@@ -258,7 +264,6 @@
     <Compile Include="viewmodels\DigitalIOViewModel.cs" />
     <Compile Include="viewmodels\ProfilesViewModel.cs" />
     <Compile Include="viewmodels\PTZViewModel.cs" />
-    <Compile Include="viewmodels\SequrityViewModel.cs" />
     <Compile Include="viewmodels\SystemLogViewModel.cs" />
     <Compile Include="viewmodels\ViewModelBase.cs" />
     <Compile Include="views\AccountManagerView.xaml.cs">
@@ -267,11 +272,14 @@
     <Compile Include="views\AnalogueOutView.xaml.cs">
       <DependentUpon>AnalogueOutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\CertificatesUploadView.xaml.cs">
-      <DependentUpon>CertificatesUploadView.xaml</DependentUpon>
+    <Compile Include="views\CertificateUploadView.xaml.cs">
+      <DependentUpon>CertificateUploadView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\CertificatesView.xaml.cs">
       <DependentUpon>CertificatesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\DevicePageView.xaml.cs">
+      <DependentUpon>DevicePageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\PtzView.xaml.cs">
       <DependentUpon>PtzView.xaml</DependentUpon>
@@ -414,9 +422,6 @@
     <Compile Include="views\PropertyRelayControl.xaml.cs">
       <DependentUpon>PropertyRelayControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\SequrityView.xaml.cs">
-      <DependentUpon>SequrityView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="views\SystemLogView.xaml.cs">
       <DependentUpon>SystemLogView.xaml</DependentUpon>
     </Compile>
@@ -434,6 +439,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="controls\DateTimeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="controls\ExpressionDefaultEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -453,6 +462,10 @@
     <Page Include="controls\GraphEditor\TripWireEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="dialogs\ManualTZ.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="dialogs\ManualUri.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -474,13 +487,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\CertificatesUploadView.xaml">
+    <Page Include="views\CertificateUploadView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="views\CertificatesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\DevicePageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="views\PtzView.xaml">
       <SubType>Designer</SubType>
@@ -658,10 +675,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\SequrityView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="views\SystemLogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -831,11 +844,15 @@
     <Activity Include="ProfileUpdatingView.xml" />
     <Activity Include="ProfileCreationView.xml" />
     <Activity Include="AnalyticsView.xml" />
-    <Activity Include="VideoSettingsView.xml" />
+    <Activity Include="VideoSettingsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
     <Activity Include="ItemSelectorView.xml">
       <SubType>Designer</SubType>
     </Activity>
-    <Activity Include="NetworkSettingsView.xml" />
+    <Activity Include="NetworkSettingsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
     <Activity Include="IdentificationView.xml" />
     <Activity Include="TimeSettingsView.xml" />
     <Activity Include="PtzView.xml" />
@@ -909,16 +926,7 @@
     <Resource Include="images\administrative_tools.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\snapshot.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="images\loading-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="images\restore.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\wheel_zoom.cur" />
   </ItemGroup>
   <ItemGroup>
     <Activity Include="CertificatesView.xml">
@@ -926,7 +934,7 @@
     </Activity>
   </ItemGroup>
   <ItemGroup>
-    <Activity Include="CertificatesUploadView.xml">
+    <Activity Include="CertificateUploadView.xml">
       <SubType>Designer</SubType>
     </Activity>
   </ItemGroup>
@@ -936,9 +944,6 @@
     </Activity>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\onvif.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="images\PaperClip3_Black.png" />
   </ItemGroup>
   <ItemGroup>
@@ -946,6 +951,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="images\system-installer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="images\wheel_zoom.cur" />
+    <Content Include="tz.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- 

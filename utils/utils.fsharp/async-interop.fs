@@ -17,11 +17,6 @@
         |Processing
         |Idle
     
-    type IAsyncObserver<'T> = interface
-        abstract OnSuccess: result:'T -> unit
-        abstract OnError: err:Exception -> unit
-        abstract OnCancel: unit -> unit
-    end
 
     [<Extension>]
     type Apm private() = class
@@ -53,31 +48,24 @@
 //            end
 //        }       
 
-        static member Create<'T>(factory: Func<Action<'T>,Action<Exception>, IDisposable>): Async<'T> = 
-            Async.CreateWithDisposable(fun (success,error)->
-                factory.Invoke(
-                    (fun res->success res), 
-                    (fun err->error err)
-                )
-            )
+        static member Create<'T>(factory: Func<IAsyncSink<'T>, IDisposable>): Async<'T> = 
+            Async.CreateWithDisposable(fun sink -> factory.Invoke sink)
 
         static member Create<'T>(factory: Func<Action<'T>,Action<Exception>,Action, IEnumerable<Async<unit>>>): Async<'T> =
             async{
                 return! Async.FromContinuations(fun (success, error, cancel)->
                     let cts = new CancellationTokenSource()
                     
-                    let complete_with = 
-                        let completed = ref 0
-                        fun cont ->
-                            if Interlocked.Exchange(completed,1)=0 then
-                                cts.Cancel()
-                                cont()
+                    let CompleteWith = CreateCompletionPoint (fun cont ->
+                        cts.Cancel()
+                        cont()
+                    )
 
                     let steps = 
                         factory.Invoke(
-                            (fun v->complete_with(fun()->success v)), 
-                            (fun e->complete_with(fun()->error e)), 
-                            (fun()->complete_with(fun()->cancel(new OperationCanceledException()))) 
+                            (fun v->CompleteWith(fun()->success v)), 
+                            (fun e->CompleteWith(fun()->error e)), 
+                            (fun()->CompleteWith(fun()->cancel(new OperationCanceledException()))) 
                         )
                     let comp = async{
                         for x in steps do
@@ -85,12 +73,12 @@
                     }                
                     Async.StartWithContinuations(comp,
                         (fun ()->()),
-                        (fun e->complete_with(fun()->error e)),
-                        (fun c->complete_with(fun()->error c)),
+                        (fun e->CompleteWith(fun()->error e)),
+                        (fun c->CompleteWith(fun()->error c)),
                         cts.Token
-                    )                    
+                    )
                 )
-            }        
+            }
         static member Defer<'T>(factory:Func<Async<'T>>):Async<'T> = 
             async{
                 return! factory.Invoke()
@@ -225,7 +213,7 @@
                 new IAsyncObserver<'T> with
                     member o.OnSuccess(result) = onSuccess.Invoke(result)
                     member o.OnError(err) = onError.Invoke(err)
-                    member o.OnCancel() = onError.Invoke(new OperationCanceledException())
+                    member o.OnCancel(err) = onError.Invoke(err)
                 end
             }
             let complete_with cont = 
@@ -240,9 +228,9 @@
             let cts = new CancellationTokenSource()
             let disp = new CancellationDisposable(cts)
             Async.StartWithContinuations(source,
-                (fun v->complete_with(fun observer -> observer.OnSuccess(v))),
-                (fun e->complete_with(fun observer -> observer.OnError(e))),
-                (fun c->complete_with(fun observer -> observer.OnCancel())),
+                (fun v->complete_with(fun observer -> observer.OnSuccess v)),
+                (fun e->complete_with(fun observer -> observer.OnError e)),
+                (fun e->complete_with(fun observer -> observer.OnCancel e)),
                 cts.Token
             )
             Disposable.Create(fun()->

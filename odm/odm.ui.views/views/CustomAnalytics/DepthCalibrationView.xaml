@@ -68,7 +68,7 @@
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 
-				<Border x:Name="player" Grid.ColumnSpan="3" Margin="0" Background="Black"/>
+				<Border x:Name="playerHolder" Grid.ColumnSpan="3" Margin="0" Background="Black"/>
 				<Border Name="infoPanel" Visibility="Collapsed" BorderBrush="Green" VerticalAlignment="Top" BorderThickness="1" Background="#7F000000" CornerRadius="3" Grid.Column="2">
 					<StackPanel Orientation="Vertical" VerticalAlignment="Top">
 						<TextBlock Name="infoMarker1" Margin="3" FontWeight="Bold" Text="{Binding Strings.infoMarker1, ElementName=ctrl}" Foreground="Red" TextWrapping="Wrap"/>

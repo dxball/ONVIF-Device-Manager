@@ -15,6 +15,34 @@ using odm.localization;
 
 
 namespace odm.ui {
+	public partial class LocalVideoPlayer: LocalizedStringsBase<LocalVideoPlayer>{
+		
+
+
+		private const string s_noSignal = @"NO SIGNAL";
+		private string m_noSignal=null;
+		[XPath(@"/localized-strings/module[@name='LocalVideoPlayer' and @namespace='odm.ui']/descendant::string[@name='noSignal']/@value")]
+		public string noSignal {
+			get { 
+				if( m_noSignal == null){
+					return s_noSignal;
+				}
+				return m_noSignal; 
+			}
+			set { 
+				if( value != m_noSignal){
+					m_noSignal = value;
+					NotifyPropertyChanged("noSignal");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui {
 	public partial class LocalSystemLog: LocalizedStringsBase<LocalSystemLog>{
 		
 
@@ -615,7 +643,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_config = @"Filter configuration";
+		private const string s_config = @"Metadata configuration";
 		private string m_config=null;
 		[XPath(@"/localized-strings/module[@name='LocalMetadata' and @namespace='odm.ui']/descendant::string[@name='config']/@value")]
 		public string config {
@@ -1679,6 +1707,46 @@ namespace odm.ui {
 		
 
 
+		private const string s_captionUtc = @"(UTC)";
+		private string m_captionUtc=null;
+		[XPath(@"/localized-strings/module[@name='LocalTimeZone' and @namespace='odm.ui']/descendant::string[@name='captionUtc']/@value")]
+		public string captionUtc {
+			get { 
+				if( m_captionUtc == null){
+					return s_captionUtc;
+				}
+				return m_captionUtc; 
+			}
+			set { 
+				if( value != m_captionUtc){
+					m_captionUtc = value;
+					NotifyPropertyChanged("captionUtc");
+				}
+			}  
+		}
+	
+
+
+		private const string s_captionLocal = @"(Local)";
+		private string m_captionLocal=null;
+		[XPath(@"/localized-strings/module[@name='LocalTimeZone' and @namespace='odm.ui']/descendant::string[@name='captionLocal']/@value")]
+		public string captionLocal {
+			get { 
+				if( m_captionLocal == null){
+					return s_captionLocal;
+				}
+				return m_captionLocal; 
+			}
+			set { 
+				if( value != m_captionLocal){
+					m_captionLocal = value;
+					NotifyPropertyChanged("captionLocal");
+				}
+			}  
+		}
+	
+
+
 		private const string s_title = @"Time settings";
 		private string m_title=null;
 		[XPath(@"/localized-strings/module[@name='LocalTimeZone' and @namespace='odm.ui']/descendant::string[@name='title']/@value")]
@@ -2503,40 +2571,40 @@ namespace odm.ui {
 	
 
 
-		private const string s_uiFpsCaption = @"Video rendering fps on UI ";
-		private string m_uiFpsCaption=null;
-		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='uiFpsCaption']/@value")]
-		public string uiFpsCaption {
+		private const string s_videoRenderingFpsCaption = @"Video rendering fps ";
+		private string m_videoRenderingFpsCaption=null;
+		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='videoRenderingFpsCaption']/@value")]
+		public string videoRenderingFpsCaption {
 			get { 
-				if( m_uiFpsCaption == null){
-					return s_uiFpsCaption;
+				if( m_videoRenderingFpsCaption == null){
+					return s_videoRenderingFpsCaption;
 				}
-				return m_uiFpsCaption; 
+				return m_videoRenderingFpsCaption; 
 			}
 			set { 
-				if( value != m_uiFpsCaption){
-					m_uiFpsCaption = value;
-					NotifyPropertyChanged("uiFpsCaption");
+				if( value != m_videoRenderingFpsCaption){
+					m_videoRenderingFpsCaption = value;
+					NotifyPropertyChanged("videoRenderingFpsCaption");
 				}
 			}  
 		}
 	
 
 
-		private const string s_enableUiFpsCaption = @"Show video rendering FPS ";
-		private string m_enableUiFpsCaption=null;
-		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='enableUiFpsCaption']/@value")]
-		public string enableUiFpsCaption {
+		private const string s_showVideoPlaybackStatisticsCaption = @"Show video playback statistics ";
+		private string m_showVideoPlaybackStatisticsCaption=null;
+		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='showVideoPlaybackStatisticsCaption']/@value")]
+		public string showVideoPlaybackStatisticsCaption {
 			get { 
-				if( m_enableUiFpsCaption == null){
-					return s_enableUiFpsCaption;
+				if( m_showVideoPlaybackStatisticsCaption == null){
+					return s_showVideoPlaybackStatisticsCaption;
 				}
-				return m_enableUiFpsCaption; 
+				return m_showVideoPlaybackStatisticsCaption; 
 			}
 			set { 
-				if( value != m_enableUiFpsCaption){
-					m_enableUiFpsCaption = value;
-					NotifyPropertyChanged("enableUiFpsCaption");
+				if( value != m_showVideoPlaybackStatisticsCaption){
+					m_showVideoPlaybackStatisticsCaption = value;
+					NotifyPropertyChanged("showVideoPlaybackStatisticsCaption");
 				}
 			}  
 		}
@@ -4687,7 +4755,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_policiesCaption = @"Polices:";
+		private const string s_policiesCaption = @"Policies:";
 		private string m_policiesCaption=null;
 		[XPath(@"/localized-strings/module[@name='LocalUserManagement' and @namespace='odm.ui']/descendant::string[@name='policiesCaption']/@value")]
 		public string policiesCaption {
@@ -6435,6 +6503,46 @@ namespace odm.ui {
 		
 
 
+		private const string s_details = @"Details:";
+		private string m_details=null;
+		[XPath(@"/localized-strings/module[@name='LocalSequrity' and @namespace='odm.ui']/descendant::string[@name='details']/@value")]
+		public string details {
+			get { 
+				if( m_details == null){
+					return s_details;
+				}
+				return m_details; 
+			}
+			set { 
+				if( value != m_details){
+					m_details = value;
+					NotifyPropertyChanged("details");
+				}
+			}  
+		}
+	
+
+
+		private const string s_enterName = @"Enter certificate name:";
+		private string m_enterName=null;
+		[XPath(@"/localized-strings/module[@name='LocalSequrity' and @namespace='odm.ui']/descendant::string[@name='enterName']/@value")]
+		public string enterName {
+			get { 
+				if( m_enterName == null){
+					return s_enterName;
+				}
+				return m_enterName; 
+			}
+			set { 
+				if( value != m_enterName){
+					m_enterName = value;
+					NotifyPropertyChanged("enterName");
+				}
+			}  
+		}
+	
+
+
 		private const string s_selectCertificateHeader = @"Select certificate file";
 		private string m_selectCertificateHeader=null;
 		[XPath(@"/localized-strings/module[@name='LocalSequrity' and @namespace='odm.ui']/descendant::string[@name='selectCertificateHeader']/@value")]
@@ -8075,7 +8183,7 @@ namespace odm.controllers {
 	
 
 
-		private const string s_loadingData = @"Loading data ...";
+		private const string s_loadingData = @"Loading ...";
 		private string m_loadingData=null;
 		[XPath(@"/localized-strings/module[@name='InfoFormStrings' and @namespace='odm.controllers']/descendant::string[@name='loadingData']/@value")]
 		public string loadingData {
@@ -9627,7 +9735,7 @@ namespace odm.ui.controls {
 	
 
 
-		private const string s_version = @"Version";
+		private const string s_version = @"ONVIF version";
 		private string m_version=null;
 		[XPath(@"/localized-strings/module[@name='PropertyIdentificationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='version']/@value")]
 		public string version {
@@ -11695,7 +11803,7 @@ namespace odm.ui.controls {
 	
 
 
-		private const string s_infoMarker1 = @"INFO: Proportions of the marker #1 is not valid. Please increase its width, or to reduce its height.";
+		private const string s_infoMarker1 = @"INFO: proportions of marker #1 are not valid. Please increase its width, or reduce its height.";
 		private string m_infoMarker1=null;
 		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='infoMarker1']/@value")]
 		public string infoMarker1 {
@@ -11715,7 +11823,7 @@ namespace odm.ui.controls {
 	
 
 
-		private const string s_infoMarker2 = @"INFO: Proportions of the marker #2 is not valid. Please increase its width, or to reduce its height.";
+		private const string s_infoMarker2 = @"INFO: proportions of marker #2 are not valid. Please increase its width, or reduce its height.";
 		private string m_infoMarker2=null;
 		[XPath(@"/localized-strings/module[@name='PropertyDepthCalibrationStrings' and @namespace='odm.ui.controls']/descendant::string[@name='infoMarker2']/@value")]
 		public string infoMarker2 {
@@ -12627,7 +12735,7 @@ namespace odm.ui.controls {
 	
 
 
-		private const string s_running = @"Running faster then ";
+		private const string s_running = @"Running faster than ";
 		private string m_running=null;
 		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='running']/@value")]
 		public string running {
@@ -12667,7 +12775,7 @@ namespace odm.ui.controls {
 	
 
 
-		private const string s_abandoning = @"Abandoning item";
+		private const string s_abandoning = @"Abandoned item";
 		private string m_abandoning=null;
 		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='abandoning']/@value")]
 		public string abandoning {

@@ -6,6 +6,7 @@ module Assert
     open System.Runtime.CompilerServices
     open System.Reactive.Concurrency
     open System.Reactive.Disposables
+    open utils
 
     type AssertionFailedException = class
         inherit Exception
@@ -15,14 +16,20 @@ module Assert
     end
     
     let Fail() = 
-        ThreadPool.QueueUserWorkItem(fun o->raise <| new AssertionFailedException()) |> ignore
+        dbg.Error("Fail")
+        let err = new AssertionFailedException("failure")
+        ThreadPool.QueueUserWorkItem(fun o->raise err) |> ignore
         while true do ()
     
-    let FailWithMessage(message) = 
-        ThreadPool.QueueUserWorkItem(fun o->raise <| new AssertionFailedException(message)) |> ignore
+    let FailWithMessage(message:string) = 
+        dbg.Error(message)
+        let err = new AssertionFailedException(message)
+        ThreadPool.QueueUserWorkItem(fun o->raise err) |> ignore
         while true do ()
 
-    let FailWithError(err) = 
+    let FailWithError(err:Exception) = 
+        dbg.Error(err)
+        let err = new AssertionFailedException("failure", err)
         ThreadPool.QueueUserWorkItem(fun o->raise err) |> ignore
         while true do ()
 

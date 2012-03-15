@@ -64,7 +64,7 @@ namespace odm.ui.viewModels {
 		OdmSession facade{
 			get {
 				if (_facade == null) {
-					throw new ArgumentNullException("facade not initialized");
+					throw new ArgumentNullException("[custom] facade not initialized");
 				}
 				return _facade;
 			}
@@ -78,7 +78,7 @@ namespace odm.ui.viewModels {
 		global::onvif.services.Capabilities capabilities {
 			get {
 				if (_capabilities == null)
-					throw new ArgumentNullException("caps pnot initialized");
+					throw new ArgumentNullException("[custom] caps not initialized");
 				return _capabilities;
 			}
 			set { _capabilities = value; }
@@ -190,11 +190,17 @@ namespace odm.ui.viewModels {
 						  }
 						  subscriptions.Add(isession.GetCapabilities().ObserveOnCurrentDispatcher()
 								.Subscribe(caps => {
-									Current = States.Common;
-									capabilities = caps;
-									EventsSubscription();
-									LoadButtons(caps);
-									LoadChannels(caps);
+									if (caps == null) {
+										dbg.Error("Capabilities == null");
+										Current = States.Error;
+										ErrorBtnClick = new DelegateCommand(() => { Reload(); });
+									} else {
+										Current = States.Common;
+										capabilities = caps;
+										EventsSubscription();
+										LoadButtons(caps);
+										LoadChannels(caps);
+									}
 								}, err => {
 									dbg.Error(err);
 									ErrorMessage = err;
@@ -268,10 +274,12 @@ namespace odm.ui.viewModels {
 					SubscribePullPoint(facade, contArray.ToArray(), topArray.ToArray());
 					break;
 				case VisualSettings.EventType.TRY_PULL:
-					if (capabilities.Events.WSPullPointSupport == true) {
-						SubscribePullPoint(facade, contArray.ToArray(), topArray.ToArray());
-					} else {
-						SubscribeBase(facade, contArray.ToArray(), topArray.ToArray());
+					if (capabilities.Events != null) {
+						if (capabilities.Events.WSPullPointSupport == true) {
+							SubscribePullPoint(facade, contArray.ToArray(), topArray.ToArray());
+						} else {
+							SubscribeBase(facade, contArray.ToArray(), topArray.ToArray());
+						}
 					}
 					break;
 			}
@@ -290,6 +298,7 @@ namespace odm.ui.viewModels {
 								  dbg.Error(err);
 							  }
 						  }, err => {
+							  
 							  dbg.Error(err);
 							  var evdescr = new EventDescriptor(null);
 							  evdescr.ErrorMessage = err.Message;
@@ -325,8 +334,8 @@ namespace odm.ui.viewModels {
 		void EventsSubscription() {
 			if (AppDefaults.visualSettings.Events_IsEnabled && capabilities.Events != null) {
 
-				OdmSession facade = new OdmSession(session);
-
+				//if (AppDefaults.visualSettings.DefEventFilter != "")
+				//    filtersList.Add(new FilterExpression() { Value = AppDefaults.visualSettings.DefEventFilter });
 				ReSubscribe();
 			}
 		} 

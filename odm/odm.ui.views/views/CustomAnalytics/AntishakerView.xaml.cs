@@ -25,23 +25,25 @@ namespace odm.ui.views.CustomAnalytics {
 	/// <summary>
 	/// Interaction logic for AntishakerView.xaml
 	/// </summary>
-	public partial class AntishakerView : UserControl, IDisposable, IPlaybackController {
+	public partial class AntishakerView : UserControl, IDisposable {
 		public AntishakerView() {
 			InitializeComponent();
-
-			disposables = new CompositeDisposable();
 		}
 		odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model;
 		IUnityContainer container;
 		public PropertyAntishakerStrings Strings { get { return PropertyAntishakerStrings.instance; } }
 		IVideoInfo videoInfo;
 
+		public void SetPlayer(Border player) {
+			//this.player = player;
+			playerHolder.Child = player;
+		}
 		public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
 			this.model = model;
 			this.videoInfo = videoInfo;
 			this.container = container;
+
 			BindData();
-			VideoStartup(videoInfo, profToken);
 			InitRectangle();
 		}
 		void BindData() {
@@ -95,37 +97,9 @@ namespace odm.ui.views.CustomAnalytics {
 			Rect r = FromSynesisAntishaker(model.AntishakerCrop);
 			rectEditor.Init(r.TopLeft, r.BottomRight, videoInfo.Resolution);
 		}
-		IPlaybackSession playbackSession;
-		VideoBuffer vidBuff;
-		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo, string profToken) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
-
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
-
-			var model = new VideoPlayerActivityModel(
-				profileToken: profToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
-
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
-			);
-		}
-
+		
 		public void Dispose() {
-			if (vidBuff != null) {
-				vidBuff.Dispose();
-			}
-			disposables.Dispose();
-			//TODO: release player host
+			//disposables.Dispose();
 		}
 
 		public bool IsModuleEnabled {
@@ -134,13 +108,5 @@ namespace odm.ui.views.CustomAnalytics {
 		}
 		public static readonly DependencyProperty IsModuleEnabledProperty =
 			DependencyProperty.Register("IsModuleEnabled", typeof(bool), typeof(AntishakerView));
-
-		public new bool Initialized(IPlaybackSession playbackSession) {
-			this.playbackSession = playbackSession;
-			return true;
-		}
-
-		public void Shutdown() {
-		}
 	}
 }

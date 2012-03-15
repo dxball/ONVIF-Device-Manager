@@ -60,48 +60,6 @@ namespace odm.ui {
             }
         }
         
-        internal static System.Drawing.Bitmap administrative_tools {
-            get {
-                object obj = ResourceManager.GetObject("administrative_tools", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap alert3_th {
-            get {
-                object obj = ResourceManager.GetObject("alert3_th", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap diskette_icon {
-            get {
-                object obj = ResourceManager.GetObject("diskette_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap gears_th {
-            get {
-                object obj = ResourceManager.GetObject("gears_th", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap help {
-            get {
-                object obj = ResourceManager.GetObject("help", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap information_icon_th {
-            get {
-                object obj = ResourceManager.GetObject("information_icon_th", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap loading_icon {
             get {
                 object obj = ResourceManager.GetObject("loading_icon", resourceCulture);
@@ -116,65 +74,9 @@ namespace odm.ui {
             }
         }
         
-        internal static System.Drawing.Bitmap PaperClip3_Black {
-            get {
-                object obj = ResourceManager.GetObject("PaperClip3_Black", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap preferences_desktop_cryptography {
-            get {
-                object obj = ResourceManager.GetObject("preferences_desktop_cryptography", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap preferences_system_th {
-            get {
-                object obj = ResourceManager.GetObject("preferences_system_th", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap restore {
-            get {
-                object obj = ResourceManager.GetObject("restore", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap snapshot {
             get {
                 object obj = ResourceManager.GetObject("snapshot", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap system_installer {
-            get {
-                object obj = ResourceManager.GetObject("system_installer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap system_installer_th {
-            get {
-                object obj = ResourceManager.GetObject("system_installer_th", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap userconfig {
-            get {
-                object obj = ResourceManager.GetObject("userconfig", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap warning_icon_th {
-            get {
-                object obj = ResourceManager.GetObject("warning_icon_th", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

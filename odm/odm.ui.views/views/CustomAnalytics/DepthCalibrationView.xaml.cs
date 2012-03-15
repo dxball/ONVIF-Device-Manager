@@ -23,9 +23,9 @@ namespace odm.ui.views.CustomAnalytics {
     /// <summary>
     /// Interaction logic for DepthCalibrationView.xaml
     /// </summary>
-    public partial class DepthCalibrationView : UserControl, IDisposable, IPlaybackController {
+    public partial class DepthCalibrationView : UserControl, IDisposable {
         public DepthCalibrationView() {
-			disposables = new CompositeDisposable();
+			//disposables = new CompositeDisposable();
 
             matrixValueCollection = new ObservableCollection<MatrixValue>();
 
@@ -43,24 +43,8 @@ namespace odm.ui.views.CustomAnalytics {
             BtnPauseResume.CreateBinding(Button.ContentProperty, ButtonStrings, x => x.pause);
 
             deptheditor.SetNotifiers(DispalyDisplacementError, DisplayMarkerScaleError, DisplayMarkerWhidthError);
-
-			InitViewPort();
         }
 
-		void InitViewPort() {
-			player.MouseWheel += new MouseWheelEventHandler(player_MouseWheel);
-			player.PreviewMouseWheel += new MouseWheelEventHandler((obj, evargs) => { });
-			scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-			scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-			try {
-				//Stream CursorStream = Application.GetResourceStream(doGetImageSourceFromResource("odm-ui-views", "images/wheel_zoom.cur")).Stream;
-				Stream CursorStream = new MemoryStream(odm.ui.Resources.wheel_zoom);
-				player.Cursor = new Cursor(CursorStream);
-				
-			} catch (Exception err) {
-				dbg.Error(err);
-			}
-		}
 		//static internal Uri doGetImageSourceFromResource(string psAssemblyName, string psResourceName) {
 		//    Uri oUri = new Uri("pack://application:,,,/" + psAssemblyName + ";component/" + psResourceName, UriKind.RelativeOrAbsolute);
 		//    return oUri;
@@ -205,6 +189,25 @@ namespace odm.ui.views.CustomAnalytics {
             deptheditor.SwitchTo2DMode();
         }
 
+		void InitViewPort() {
+			playerHolder.MouseWheel += new MouseWheelEventHandler(player_MouseWheel);
+			playerHolder.PreviewMouseWheel += new MouseWheelEventHandler((obj, evargs) => { });
+			scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+			scroller.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+			try {
+				//Stream CursorStream = Application.GetResourceStream(doGetImageSourceFromResource("odm-ui-views", "images/wheel_zoom.cur")).Stream;
+				//Stream CursorStream = new MemoryStream(odm.ui.Resources.wheel_zoom);
+				//playerHolder.Cursor = new Cursor(CursorStream);
+
+			} catch (Exception err) {
+				dbg.Error(err);
+			}
+		}
+		//Border player;
+		public void SetPlayer(Border player) {
+			//this.player = player;
+			playerHolder.Child = player;
+		}
         public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
             this.model = model;
             this.container = container;
@@ -212,7 +215,7 @@ namespace odm.ui.views.CustomAnalytics {
 			
             calibrationMarkers = new UnitedMarkerCalibration(model.Markers);
 
-			VideoStartup(videoInfo, profToken);
+			InitViewPort();
             FillData();
             InitDepthEditor();
         }
@@ -358,35 +361,8 @@ namespace odm.ui.views.CustomAnalytics {
             }
         }
 
-		IPlaybackSession playbackSession;
-		VideoBuffer vidBuff;
-		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo, string profTok) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
-
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
-
-			var model = new VideoPlayerActivityModel(
-			profileToken: profTok,
-			showStreamUrl: false,
-			streamSetup: new StreamSetup() {
-				Stream = StreamType.RTPUnicast,
-				Transport = new Transport() {
-					Protocol = AppDefaults.visualSettings.Transport_Type,
-					Tunnel = null
-				}
-			}
-		);
-
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
-			);
-		}
-
 		public void Dispose() {
-			if (vidBuff != null)
-				vidBuff.Dispose();
-			disposables.Dispose();
+			//disposables.Dispose();
 			//TODO: release player host
 		}
 
@@ -450,14 +426,6 @@ namespace odm.ui.views.CustomAnalytics {
                 BtnPauseResume.CreateBinding(Button.ContentProperty, ButtonStrings, x => x.resume);
             }
         }
-
-		public new bool Initialized(IPlaybackSession playbackSession) {
-			this.playbackSession = playbackSession;
-			return true;
-		}
-
-		public void Shutdown() {
-		}
 	}
     public class MatrixValue {
         public MatrixValue() {
@@ -519,8 +487,9 @@ namespace odm.ui.views.CustomAnalytics {
             }
         }
         private void NotifyPropertyChanged(String info) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -602,8 +571,9 @@ namespace odm.ui.views.CustomAnalytics {
         }
         
         private void NotifyPropertyChanged(String info) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -711,11 +681,12 @@ namespace odm.ui.views.CustomAnalytics {
             }
         }
 
-        private void NotifyPropertyChanged(String info) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
+		private void NotifyPropertyChanged(String info) {
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
+			}
+		}
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

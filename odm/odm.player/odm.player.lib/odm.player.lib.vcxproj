@@ -39,7 +39,7 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>odm-player</TargetName>
     <Live555Dir>$(SolutionDir)libs/live555-2012-01-13/</Live555Dir>
-    <FFMpegDir>$(SolutionDir)ext-libs/ffmpeg-git-a254452-win32-dev/</FFMpegDir>
+    <FFMpegDir>$(SolutionDir)libs/ffmpeg-git-f514695/</FFMpegDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

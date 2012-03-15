@@ -56,7 +56,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="session-extensions.fs" />
+		<Compile Include="..\..\build\AssemblyInfo.global.fs">
+			<Link>Properties\AssemblyInfo.global.fs</Link>
+		</Compile>
+		<Compile Include="Properties\AssemblyInfo.fs" />
+		<Compile Include="session-extensions.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\utils\utils.diagnostics\utils.diagnostics.csproj">

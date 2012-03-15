@@ -33,7 +33,7 @@ namespace utils {
 
 		public TraceListenerCollection listeners {
 			get {
-				return Trace.Listeners;				
+				return Trace.Listeners;
 			}
 		}
 		

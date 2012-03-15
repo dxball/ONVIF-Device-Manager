@@ -62,15 +62,7 @@
                         if protocols = null then
                             return [||]
                         else
-                            let res = Array.zeroCreate<NetworkSettingsView.NetworkProtocol>(protocols.Length)
-                            for i in {0..res.Length-1} do
-                                let ports = String.Join("; ", protocols.[i].Port.Select(fun x->x.ToString()))
-                                res.[i] <- new NetworkSettingsView.NetworkProtocol(
-                                    name = protocols.[i].Name,
-                                    ports = ports,
-                                    enabled = protocols.[i].Enabled
-                                )
-                            return res
+                            return protocols
                     }
                 )
 
@@ -130,7 +122,7 @@
                     else
                         dnsInfo.DNSFromDHCP
                 if dns <> null then
-                    model.dns <- String.Join(";", dns |> Seq.filter (fun x-> x<>null && not(String.IsNullOrWhiteSpace(x.IPv4Address))) |> Seq.map (fun x->x.IPv4Address))
+                    model.dns <- String.Join("; ", dns |> Seq.filter (fun x-> x<>null && not(String.IsNullOrWhiteSpace(x.IPv4Address))) |> Seq.map (fun x->x.IPv4Address))
             
             match nics |> Seq.tryFind (fun x -> x.Enabled) with
             | Some nic ->
@@ -161,72 +153,57 @@
                 //nothing has been changed
                 return ()
 
-            let dns_has_changed = 
+            let dns_changed = 
                 model.origin.dns <> model.current.dns ||
                 model.origin.dhcp <> model.current.dhcp ||
                 model.origin.useDnsFromDhcp <>  model.current.useDnsFromDhcp
 
-            let host_has_changed = 
+            let host_changed = 
                 model.origin.host <> model.current.host ||
                 model.origin.useHostFromDhcp <> model.current.useHostFromDhcp
 
-            let gateway_has_changed = 
+            let gateway_changed = 
                 model.origin.gateway <> model.current.gateway
                             
-            let ip_has_changed = 
+            let ip_changed = 
                 model.origin.ip <> model.current.ip ||
                 model.origin.subnet <> model.current.subnet ||
                 model.origin.dhcp <> model.current.dhcp
-                            
-            let ntp_has_changed = 
+            
+            let ntp_changed = 
                 model.origin.ntpServers <> model.current.ntpServers ||
                 model.origin.dhcp <> model.current.dhcp ||
                 model.origin.useNtpFromDhcp <> model.current.useNtpFromDhcp
                 
-            let zero_conf_has_changed = 
+            let zero_conf_changed = 
                 model.zeroConfSupported && (model.origin.zeroConfEnabled <> model.current.zeroConfEnabled)
             
             let currentNetProtocols = 
                 if model.netProtocols <> null then
                     model.netProtocols
                 else
-                    Seq.empty
+                    [||]
             
-            let protocols_has_changed = 
-                
-                let temp = new List<_>(model.origin.netProtocols)
-                currentNetProtocols |> Seq.takeWhile(fun x->
-                    let i = temp |> Seq.tryFind (fun y ->
-                        y.name = x.name && y.enabled = x.enabled && y.ports = x.ports
-                    )
-                    match i with
-                    | Some n -> temp.Remove(n)
-                    | None -> true
-                )|> Seq.iter (fun x->())
-                temp.Count <> 0
+            let protocols_changed = 
+                let PortsChanged(protocolType: NetworkProtocolType) = 
+                    let GetProtocolPorts(protocols:NetworkProtocol[]) = seq{
+                        if protocols <> null then
+                            let protocolName = protocolType.ToString()
+                            for p in protocols do 
+                                if p.Port <> null && p.Enabled && String.Compare(p.Name, protocolName, true) = 0 then
+                                    yield! p.Port
+                    }
+                    let origin = GetProtocolPorts(model.origin.netProtocols) |> Seq.toArray
+                    let current = GetProtocolPorts(currentNetProtocols) |> Seq.toArray
+                    not(origin.All( fun x-> current.Contains(x))) || not(current.All(fun x-> origin.Contains(x)))
+                PortsChanged(NetworkProtocolType.HTTP) || PortsChanged(NetworkProtocolType.HTTPS) || PortsChanged(NetworkProtocolType.RTSP)
 
-            if protocols_has_changed then
+            if protocols_changed then
                 do! async{
                     use! progress = Progress.Show(ctx, "applying protocol settings...")
-                    let netProtocols = [|
-                        for x in currentNetProtocols do
-                            let p = new NetworkProtocol()
-                            p.Name <- x.name
-                            p.Enabled <- x.enabled
-                            p.Port <- [|
-                                if x.ports <> null then
-                                    let ports = 
-                                        x.ports.Split([|';'|], StringSplitOptions.RemoveEmptyEntries)
-                                        |> Seq.map(fun h-> if h<>null then h.Trim() else null)
-                                        |> Seq.filter(fun h-> not(String.IsNullOrWhiteSpace(h)))
-                                    for i in ports do
-                                        yield Int32.Parse(i)
-                            |]
-                            yield p
-                    |]
-                    do! session.SetNetworkProtocols(netProtocols)
+                    do! session.SetNetworkProtocols(currentNetProtocols)
                 }
-            if ntp_has_changed then
+            if ntp_changed then
                 do! async{
                     use! progress = Progress.Show(ctx, LocalNetworkSettings.instance.applyindNtp)
                     let ntp_addresses = [| 
@@ -240,12 +217,12 @@
                     do! session.SetNTP(useDhcp, ntp_addresses)
                 }
 
-            if dns_has_changed then
+            if dns_changed then
                 do! async{
                     use! progress = Progress.Show(ctx, LocalNetworkSettings.instance.applyindDns)
                     let dns_addresses = [| 
                         if model.current.dns <> null then
-                            for x in model.current.dns.Split([|';'|], StringSplitOptions.RemoveEmptyEntries) do
+                            for x in model.current.dns.Split([|';'; ' '; ','|], StringSplitOptions.RemoveEmptyEntries) do
                                 let x = x.Trim()
                                 if not(String.IsNullOrWhiteSpace(x)) then
                                     yield new IPAddress(
@@ -257,12 +234,12 @@
                     do! session.SetDNS(useDhcp, null, dns_addresses)
                 }
 
-            if gateway_has_changed then
+            if gateway_changed then
                 do! async{
                     use! view = Progress.Show(ctx, LocalNetworkSettings.instance.applyindGateway)
                     let ips = [
                         if model.current.gateway <> null then
-                            for x in model.current.gateway.Split([|';'|], StringSplitOptions.RemoveEmptyEntries) do
+                            for x in model.current.gateway.Split([|';'; ' '; ','|], StringSplitOptions.RemoveEmptyEntries) do
                                 let valid,ip = IPAddress.TryParse(x.Trim())
                                 if not(valid) then
                                     failwith LocalNetworkSettings.instance.invalidIpForGateway
@@ -281,23 +258,28 @@
                     do! session.SetNetworkDefaultGateway(ipv4_list |> List.toArray, ipv6_list |> List.toArray)
                 }
 
-            if zero_conf_has_changed then
+            if zero_conf_changed then
                 do! async{
                     use! view = Progress.Show(ctx, LocalNetworkSettings.instance.applyindZeroConf)
                     let! zeroConf = dev.GetZeroConfiguration()
                     do! dev.SetZeroConfiguration(zeroConf.InterfaceToken ,model.zeroConfEnabled)
                 }
 
-            if host_has_changed then
+            if host_changed then
                 do! async{
                     use! view = Progress.Show(ctx, LocalNetworkSettings.instance.applyindHostName)
                     if model.useHostFromDhcp then
-                        do! dev.SetHostname(null)
+                        do! dev.SetHostname(String.Empty)
                     else
+                        let host =
+                            if model.host = null then
+                                String.Empty
+                            else
+                                model.host
                         do! dev.SetHostname(model.host)
                 }
 
-            if ip_has_changed then
+            if ip_changed then
                 let! rebootIsNeeded = 
                     async{
                         use! progress = Progress.Show(ctx, LocalNetworkSettings.instance.applyindIp)
@@ -337,6 +319,7 @@
 
                         return! session.SetNetworkInterfaces(nic.token, nic_set)
                     }
+                // according to 5.13 we should send explicit reboot
                 if rebootIsNeeded then
                     do! async{
                         use! progress = Progress.Show(ctx, LocalMaintenance.instance.rebooting)

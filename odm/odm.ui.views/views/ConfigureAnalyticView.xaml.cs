@@ -68,7 +68,8 @@ namespace odm.ui.activities {
             XmlQualifiedName xMagicboxRegionRule = new XmlQualifiedName("RegionRule", "http://www.synesis.ru/onvif/VideoAnalytics");
             XmlQualifiedName xMagicboxWireRule = new XmlQualifiedName("TripWireRule", "http://www.synesis.ru/onvif/VideoAnalytics");
 
-            XmlQualifiedName xApproAnalytics = new XmlQualifiedName("ApproMotionDetector", "http://www.incotex.ru/onvif/ApproMotionDetector");
+            XmlQualifiedName xIncotexApproAnalytics = new XmlQualifiedName("ApproMotionDetector", "http://www.incotex.ru/onvif/ApproMotionDetector");
+			XmlQualifiedName xSynesisApproAnalytics = new XmlQualifiedName("ApproMotionDetector", "http://www.synesis.ru/onvif/ApproMotionDetector");
 
             if (!AppDefaults.visualSettings.CustomAnalytics_IsEnabled) {
                 CommonAnalytics customview = new CommonAnalytics();
@@ -275,7 +276,7 @@ namespace odm.ui.activities {
                 }, err => {
                     Error(err);
                 }));
-            } else if (model.configDescription.Name == xApproAnalytics) {
+			} else if (model.configDescription.Name == xIncotexApproAnalytics || model.configDescription.Name == xSynesisApproAnalytics) {
 
                 var isession = activityContext.container.Resolve<INvtSession>();
                 AnalyticsVideoDescriptor videoDescr = new AnalyticsVideoDescriptor();
@@ -335,7 +336,7 @@ namespace odm.ui.activities {
         public Action Apply;
         IDisposable controlDisposable;
 		//TODO: Stub fix for #225 Remove this with plugin functionality
-		LastEditedModule last;
+		ILastChangedModule last;
 		//
 
         void ReleaseAll() {
@@ -358,7 +359,7 @@ namespace odm.ui.activities {
             var abortCommand = new DelegateCommand(
                 () => {
 					//TODO: Stub fix for #225 Remove this with plugin functionality
-                    last = activityContext.container.Resolve<LastEditedModule>();
+					last = activityContext.container.Resolve<ILastChangedModule>();
                     last.module = null;
 					//
                     Success(new Result.Abort()); 

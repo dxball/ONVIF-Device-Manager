@@ -1,4 +1,5 @@
 #include "odm.player.lib/Live555.hpp"
+#include "GroupsockHelper.hh"
 
 namespace onvifmp{
 	using namespace std;
@@ -48,9 +49,15 @@ namespace onvifmp{
 			Cleanup();
 			return;
 		}
-
+		
 		rtspClient->playMediaSession(*mediaSession);
 		//scheduler->scheduleDelayedTask(100*1000,Test::callback,&test);
+
+		//synchronize via fake GET_PARAMETER request
+		//if(rtspOptions.getParamSupported){
+		//	char* getParamResponse = nullptr;
+		//	rtspClient->getMediaSessionParameter(*mediaSession, nullptr, getParamResponse);
+		//}
 
 		scheduler->doEventLoop((char*)&(playbackSession.disposed));
 		if(!playbackSession.disposed){
@@ -133,6 +140,10 @@ namespace onvifmp{
 			}else{
 				sink = VirtualSink::CreateNew(*usageEnvironment);
 			}
+			
+			//TODO: increase receiver buffer size for HD videos
+			increaseReceiveBufferTo(*usageEnvironment, rtpSource->RTPgs()->socketNum(), 5000*1024);
+
 			sink->AddFrameProcessor(frameProcessorFactory);
 			subsession->sink = sink;
 			auto source = subsession->readSource();
@@ -154,8 +165,20 @@ namespace onvifmp{
 			Cleanup();
 			return false;
 		}
-			
-		rtspClient = RTSPClient::createNew(*usageEnvironment, 1/*verbosityLevel*/);
+		auto httpProt = 0U;
+		
+		if(mediaStreamInfo->transport == StreamTransport::Http){
+			char* username = nullptr;
+			char* password = nullptr;
+			NetAddress address;
+			portNumBits port;
+			if(!RTSPClient::parseRTSPURL(*usageEnvironment, mediaStreamInfo->url, username, password, address, port)){
+				Cleanup();
+				return false;
+			}
+			httpProt = port;
+		}
+		rtspClient = RTSPClient::createNew(*usageEnvironment, nullptr, 1/*verbosityLevel*/, nullptr/*applicationName*/, httpProt);
 		if(rtspClient == NULL){
 			//TODO: log error
 			fprintf(stderr, "error %d: %s", usageEnvironment->getErrno(), usageEnvironment->getResultMsg());
@@ -163,15 +186,20 @@ namespace onvifmp{
 			return false;
 		}
 
+		auto options = rtspClient->sendOptionsCmd(mediaStreamInfo->url, nullptr, nullptr, mediaStreamInfo->authenticator, 5/*timeout in seconds*/);
+		rtspOptions.getParamSupported = (options!= nullptr && strtok(options, "GET_PARAMETER")!=nullptr);
+		
+		//fprintf(stderr, "options : %s\n", options);
+
 		//should we take care of release sdp string???
-		auto sdp = rtspClient->describeURL(mediaStreamInfo->url, mediaStreamInfo->authenticator,0U, -1/*timeout in seconds*/);
+		auto sdp = rtspClient->describeURL(mediaStreamInfo->url, mediaStreamInfo->authenticator,0U, 5/*timeout in seconds*/);
 		if(sdp == NULL){
 			//TODO: log error
 			fprintf(stderr, "error %d: %s", usageEnvironment->getErrno(), usageEnvironment->getResultMsg());
 			Cleanup();
 			return false;
 		}
-				
+		
 		mediaSession = MediaSession::createNew(*usageEnvironment, sdp);
 		if(mediaSession == NULL){
 			//TODO: log error
@@ -244,6 +272,6 @@ namespace onvifmp{
 		//source = avc->item_name(aClass);
 		//}
 		//pLive->mInstance.Log(buf, source, (AV_LOG_FATAL == aLevel || AV_LOG_ERROR == aLevel) ?
-		//LOG_ERROR : (AV_LOG_WARNING == aLevel ? LOG_WARNING : LOG_INFORMATION));		
+		//LOG_ERROR : (AV_LOG_WARNING == aLevel ? LOG_WARNING : LOG_INFORMATION));
 	}
 }

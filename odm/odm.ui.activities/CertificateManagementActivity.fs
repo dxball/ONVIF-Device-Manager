@@ -50,10 +50,22 @@
 //                x509.ToString() |> ignore
 
             let model = new CertificatesView.Model(
-                certificates = certificates,
-                enabled = (
-                    statuses |>Seq.filter (fun cert-> cert.Status ) |> Seq.map (fun cert->cert.CertificateID )|> Seq.toArray
-                )
+                certificates = Seq.toArray(seq{
+                    for cert in certificates do
+                        let cid = cert.CertificateID
+                        let enabled = 
+                            (statuses |> Seq.tryPick (fun c -> 
+                                if (c.CertificateID = cid) then 
+                                    Some(c.Status)
+                                else
+                                    None
+                            )) = Some(true)
+                        yield CertificatesView.Certificate.Create(
+                            data = cert.Certificate1.Data,
+                            cid = cid,
+                            enabled = enabled
+                        )
+                })
             )
             return model
         }
@@ -79,8 +91,9 @@
                 try
                     let! res = CertificatesView.Show(ctx, model)
                     return res.Handle(
-                        upload = (fun filePath-> this.UploadCertificate(filePath)),
-                        setStatus = (fun enabled-> this.SetCertifacateStatuses(model, enabled))
+                        upload = (fun model-> this.UploadCertificate(model)),
+                        delete = (fun model cid -> this.Delete(model, cid)),
+                        apply = (fun model-> this.Apply(model))
                     )
                 with err -> 
                     do! show_error(err)
@@ -89,11 +102,12 @@
             return! cont
         }
         
-        member private this.UploadCertificate(filePath) = async{
+        member private this.UploadCertificate(model) = async{
             let! cont = async{
                 try
-                    do! async{
-                        use! progress = Progress.Show(ctx, LocalDevice.instance.uploading)
+                    let! filePath = OpenFileActivity.Run("Select certificate to upload", "Pem files (*.pem)|*.pem|All files (*.*)|*.*")
+                    if(filePath <> null) then
+                        use! progress = Progress.Show(ctx, "reading certificate...")
                         let cert = new Certificate()
                         let finfo = new FileInfo(filePath)
                         use fstream = finfo.OpenRead() 
@@ -101,9 +115,19 @@
                         cert.CertificateID <- finfo.Name
                         cert.Certificate1 <- new BinaryData()
                         cert.Certificate1.Data <- data
-                        do! dev.LoadCertificates([|cert|])
-                    }
-                    return this.Main()
+                        let! res = CertificateUploadView.Show(ctx, new CertificateUploadView.Model(cert))
+                        return! res.Handle(
+                            upload = (fun ()-> async{
+                                use! progress = Progress.Show(ctx, LocalDevice.instance.uploading)
+                                do! dev.LoadCertificates([|cert|])
+                                return this.Main()
+                            }),
+                            cancel = (fun ()->async{
+                                return this.ShowForm(model)
+                            })
+                        )
+                    else
+                        return this.ShowForm(model)
                 with err -> 
                     do! show_error(err)
                     return this.Main()
@@ -111,28 +135,18 @@
             return! cont
         }
         
-        member private this.SetCertifacateStatuses(model, enabled) = async{
+        member private this.Apply(model) = async{
             let! cont = async{
                 try
-                    //let! certificates = dev.GetCertificates()
-                    do! async{
+                    if (model <> null && model.certificates <> null && model.certificates.Any(fun c-> c.isModified)) then
                         use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
                         let statuses = seq{
-                            for i in model.enabled do
-                                if enabled |> Seq.forall (fun e-> e <> i) then
-                                    yield new CertificateStatus(
-                                        CertificateID = i,
-                                        Status = false
-                                    )
-                            for i in enabled do
-                                if model.enabled |> Seq.forall (fun e-> e <> i) then
-                                    yield new CertificateStatus(
-                                        CertificateID = i,
-                                        Status = true
-                                    )
+                            for cert in model.certificates -> new CertificateStatus(
+                                CertificateID = cert.cid,
+                                Status = cert.enabled
+                            )
                         }
                         do! dev.SetCertificatesStatus(statuses |> Seq.toArray)
-                    }
                     return this.Main()
                 with err -> 
                     do! show_error(err)
@@ -141,11 +155,22 @@
             return! cont
         }
         
+        member private this.Delete(model, cid) = async{
+            let! cont = async{
+                try
+                    use! progress = Progress.Show(ctx, "removing certificate...")
+                    do! dev.DeleteCertificates([|cid|])
+                    return this.Main()
+                with err -> 
+                    do! show_error(err)
+                    return this.Main()
+            }
+            return! cont
+        }
 
         member private this.Complete(res) = async{
             return res
         }
-        
 
         static member Run(ctx:IUnityContainer) = 
             let act = new CertificateManagementActivity(ctx)

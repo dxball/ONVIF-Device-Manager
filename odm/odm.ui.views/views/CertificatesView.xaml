@@ -21,22 +21,29 @@
 
 		<StackPanel Orientation="Horizontal">
 			<StackPanel Orientation="Vertical">
-				<ListBox Name="certificateslist" SelectedIndex="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3" MinHeight="50" MinWidth="150" MaxWidth="300" HorizontalAlignment="Left">
+				<ListBox Name="certificateslist" SelectedIndex="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="3" MinHeight="150" MinWidth="150" MaxWidth="300" HorizontalAlignment="Left">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Horizontal">
 								<CheckBox IsChecked="{Binding isEnabled}"/>
-								<TextBlock Text="{Binding CertificateId}"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding FromTo}"/>
+                                    <TextBlock Text="{Binding CpmmonName}"/>
+                                    <TextBlock Text="{Binding Subscriber}"/>
+                                </StackPanel>
 							</StackPanel>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
-				<Button Command="{Binding SetStatusCommand, ElementName=ctrl}" Name="setStatus" Content="Set status" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding ApplyCommand, ElementName=ctrl}" Name="setStatus" Content="Apply" HorizontalAlignment="Left"/>
+                    <Button Command="{Binding DeleteCommand, ElementName=ctrl}" Name="delete" Content="Delete" HorizontalAlignment="Left" Margin="4,0,0,0"/>
+                </StackPanel>
 			</StackPanel>
-			<StackPanel Orientation="Vertical">
+			<!--<StackPanel Orientation="Vertical">
 				<TextBlock Name="detailsCaption" Text="Details:"/>
 				<TextBlock Name="detailsValue" TextWrapping="Wrap"/>
-			</StackPanel>
+			</StackPanel>-->
 		</StackPanel>
 		
 		<!--<StackPanel 

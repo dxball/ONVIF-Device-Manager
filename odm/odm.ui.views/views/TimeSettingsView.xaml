@@ -31,15 +31,8 @@
 				Text="Current device time:"
 				Padding="0" Margin="0,0,4,0"
 				VerticalAlignment="Center"/>
-			<TextBox 
-				x:Name="deviceTimeValue"
-				Text="13:33" 
-				Margin="0,0,4,0" IsReadOnly="True"/>
-			<TextBox 
-				x:Name="deviceDateValue"
-				Text="15.07.2011" 
-				Margin="0,0,4,0" IsReadOnly="True"/>
-		</StackPanel>
+            <l:DateTimeControl x:Name="valueDeviceTime"/>
+        </StackPanel>
 		<GroupBox 
 			x:Name="timeZoneGroupBox"
 			Grid.Row="2"
@@ -47,92 +40,16 @@
 			Margin="0" Padding="4,8,4,4">
 
 			<StackPanel Margin="0">
-				<StackPanel Orientation="Vertical">
+				<StackPanel Orientation="Horizontal" Margin="0,0,0,8">
 					<ComboBox 
+						IsEditable="True"
+						IsReadOnly="True"
+						BorderThickness="0"
+						VerticalAlignment="Stretch"
 						x:Name="timeZonesComboBox"
-						Margin="0,0,0,8" HorizontalAlignment="Left" MinWidth="100">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<StackPanel Orientation="Vertical">
-									<!--<TextBlock Text="{Binding RawPosizString, Mode=OneWay}"/>-->
-									<ListBox ItemsSource="{Binding TzinfoList}">
-										<ListBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Text="{Binding}"/>
-											</DataTemplate>
-										</ListBox.ItemTemplate>
-										<ListBox.ItemContainerStyle>
-											<Style TargetType="{x:Type ListBoxItem}">
-												<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-												<Setter Property="Background" Value="White"/>
-												<Setter Property="Foreground" Value="Black"/>
-												<Setter Property="BorderBrush" Value="Black"/>
-
-												<!--<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>-->
-												<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-												<Setter Property="Padding" Value="2,0,0,0"/>
-												<Setter Property="Template">
-													<Setter.Value>
-														<ControlTemplate TargetType="{x:Type ListBoxItem}">
-															<Border>
-																<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-															</Border>
-														</ControlTemplate>
-													</Setter.Value>
-												</Setter>
-											</Style>
-										</ListBox.ItemContainerStyle>
-										<ListBox.Template>
-											<ControlTemplate TargetType="{x:Type ListBox}">
-												<ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
-													<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="0,3"/>
-												</ScrollViewer>
-											</ControlTemplate>
-										</ListBox.Template>
-									</ListBox>
-								</StackPanel>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-						<ComboBox.ItemContainerStyle>
-							<Style TargetType="{x:Type ComboBoxItem}">
-								<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-								<Setter Property="Background" Value="White"/>
-								<Setter Property="Foreground" Value="Black"/>
-								<Setter Property="BorderBrush" Value="Black"/>
-
-								<!--<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>-->
-								<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-								<Setter Property="Padding" Value="2,0,0,0"/>
-								<Setter Property="Template">
-									<Setter.Value>
-										<ControlTemplate TargetType="{x:Type ListBoxItem}">
-											<Border
-																Margin="3" CornerRadius="4"
-																Background="{TemplateBinding Background}" 
-																BorderThickness="2" 
-																BorderBrush="DarkGray">
-												<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-											</Border>
-											<ControlTemplate.Triggers>
-															<Trigger Property="IsSelected" Value="true">
-																<Setter Property="Background" Value="Gray"/>
-																<Setter Property="Foreground" Value="Black"/>
-															</Trigger>
-															<MultiTrigger>
-																<MultiTrigger.Conditions>
-																	<Condition Property="IsMouseOver" Value="True"/>
-																	<Condition Property="IsSelected" Value="False"/>
-																</MultiTrigger.Conditions>
-																<Setter Property="Background" Value="LightGray"/>
-																<Setter Property="Foreground" Value="Black"/>
-															</MultiTrigger>
-														</ControlTemplate.Triggers>
-										</ControlTemplate>
-									</Setter.Value>
-								</Setter>
-							</Style>
-						</ComboBox.ItemContainerStyle>
+						Margin="0" HorizontalAlignment="Left" MinWidth="100" MaxWidth="350">
 					</ComboBox>
+					<Button Name="btnCustomTZ" Content="..." Margin="4,0,0,0" VerticalAlignment="Stretch"/>
 				</StackPanel>
 				<CheckBox 
 					x:Name="daylightCheckBox"
@@ -150,13 +67,14 @@
 				<BooleanToVisibilityConverter x:Key="boolToVisibility"/>
 			</GroupBox.Resources>
 			<StackPanel Margin="0">
-				<ComboBox
+                    <ComboBox
 					x:Name="mode"
-					HorizontalAlignment="Left" Margin="0,0,0,8" MinWidth="100">
-					<ComboBoxItem x:Name="syncWithComp" Content="Synchronize with NTP server"/>
-					<ComboBoxItem x:Name="syncWithNtp" Content="Synchronize with computer time"/>
-					<ComboBoxItem x:Name="setManual" Content="Set manually"/>
-				</ComboBox>
+                        VerticalAlignment="Center"
+					HorizontalAlignment="Left" Margin="0,0,0,8" MinWidth="100" MaxWidth="200">
+                        <ComboBoxItem x:Name="syncWithComp" Content="Synchronize with NTP server"/>
+                        <ComboBoxItem x:Name="syncWithNtp" Content="Synchronize with computer time"/>
+                        <ComboBoxItem x:Name="setManual" Content="Set manually"/>
+                    </ComboBox>
 				<!--<Label Content="Ntp server" Name="labelNtp" Grid.Column="2" Grid.Row="1"/>-->
 				<StackPanel 
 					Name="PanelNtpMode"
@@ -191,15 +109,8 @@
 						x:Name="newCompTimeCaption"
 						Text="New time:"
 						Padding="0" Margin="0,0,4,0" VerticalAlignment="Center" />
-					<TextBox 
-						x:Name="compTimeValue"
-						Text="13:33"
-						Margin="0,0,4,0" IsReadOnly="True"/>
-					<TextBox 
-						Text="15.07.2011"
-						x:Name="compDateValue"
-						Margin="0,0,4,0" IsReadOnly="True"/>
-				</StackPanel>
+                    <l:DateTimeControl x:Name="valueNewTime"/>
+                </StackPanel>
 			</StackPanel>
 		</GroupBox>
 		

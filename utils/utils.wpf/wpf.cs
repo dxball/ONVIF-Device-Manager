@@ -32,8 +32,9 @@ namespace utils {
 			}
 			src.PropertyChanged += (sender, args) => {
 				m_isCached = false;
-				if (PropertyChanged != null) {
-					PropertyChanged(this, new PropertyChangedEventArgs("value"));
+				var prop_changed = this.PropertyChanged;
+				if (prop_changed != null) {
+					prop_changed(this, new PropertyChangedEventArgs("value"));
 				}
 			};
 		}
@@ -76,6 +77,23 @@ namespace utils {
 			}
 		}
 
+		public static T? GetQueryOrNull<T>(this BitmapMetadata metadata, string query) where T : struct {
+			if (!metadata.ContainsQuery(query)) {
+				return null;
+			}
+			return metadata.GetQuery(query) as T?;
+		}
+
+		public static T GetQueryOrDefault<T>(this BitmapMetadata metadata, string query, T defaultValue) where T : struct {
+			if (!metadata.ContainsQuery(query)) {
+				return defaultValue;
+			}
+			return (metadata.GetQuery(query) as T?).GetValueOrDefault(defaultValue);
+		}
+		
+		public static T GetQuery<T>(this BitmapMetadata metadata, string query) where T : struct {
+			return (T)metadata.GetQuery(query);
+		}
 
 		public static TControl CreateBinding<TControl, TSource, TSourceProperty>(this TControl control, DependencyProperty dp, TSource source, Func<TSource, TSourceProperty> getter)
 			where TControl : DependencyObject

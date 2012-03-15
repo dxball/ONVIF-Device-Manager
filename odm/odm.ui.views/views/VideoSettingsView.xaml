@@ -90,7 +90,7 @@
                 <Slider Margin="0,0,0,6" Value="{Binding quality}" Maximum="{Binding maxQuality}" Minimum="{Binding minQuality}"  Grid.Column="1" Grid.Row="6"/>
                 <wtk:IntegerUpDown Name="valueGovLength"  
                                    Grid.Column="1" Grid.Row="7" Margin="0,0,0,6"/>
-                <l:IntegerTextBox HorizontalAlignment="Left" x:Name="numericTemp" Grid.Row="8" Grid.Column="1"/>
+                <!--<l:IntegerTextBox HorizontalAlignment="Left" x:Name="numericTemp" Grid.Row="8" Grid.Column="1"/>-->
 			</Grid>
 			<Border x:Name="player" Margin="0" Background="Black" />
 		</DockPanel>

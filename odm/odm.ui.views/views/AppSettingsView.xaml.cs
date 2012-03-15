@@ -55,10 +55,10 @@ namespace odm.ui {
 						vs.EventsCollect_IsEnabled = collectEventsValue.IsChecked.Value;
 						vs.Snapshot_IsEnabled = enableSnapshotValue.IsChecked.Value;
 						vs.CustomAnalytics_IsEnabled = enableCustomAnalyticsValuse.IsChecked.Value;
-						vs.ui_video_rendering_fps = uiFpsValue.Value.Value;
+						vs.ui_video_rendering_fps = videoRenderingFpsValue.Value ?? 30;
 						vs.Event_Subscription_Type = ((KeyValuePair<VisualSettings.EventType, string>)eventType.SelectedValue).Key;
 						vs.Base_Subscription_Port = basePortValue.Value.Value;
-						vs.Enable_UI_Fps_Caption = enableUiFpsValue.IsChecked.Value;
+						vs.ShowVideoPlaybackStatistics = showVideoPlaybackStatisticsValue.IsChecked == true;
 						vs.Transport_Type = ((KeyValuePair<TransportProtocol, string>)transportTypes.SelectedValue).Key;
 
 						vs.UseOnlyCommonFilterView = enableOnlyDefValue.IsChecked.Value;
@@ -133,14 +133,14 @@ namespace odm.ui {
 			enableCustomAnalyticsValuse.IsChecked = vs.CustomAnalytics_IsEnabled;
 
 			int maxDefault = 100;
-			uiFpsValue.Minimum = 1;
-			uiFpsValue.Maximum = maxDefault;
+			videoRenderingFpsValue.Minimum = 1;
+			videoRenderingFpsValue.Maximum = maxDefault;
 			int fps = (AppDefaults.visualSettings.ui_video_rendering_fps <= 0 || AppDefaults.visualSettings.ui_video_rendering_fps > maxDefault)
 						?
 						maxDefault : AppDefaults.visualSettings.ui_video_rendering_fps;
-			uiFpsValue.Value = fps;
+			videoRenderingFpsValue.Value = fps;
 
-			enableUiFpsValue.IsChecked = vs.Enable_UI_Fps_Caption;
+			showVideoPlaybackStatisticsValue.IsChecked = vs.ShowVideoPlaybackStatistics;
 
 			enableOnlyDefValue.IsChecked = vs.UseOnlyCommonFilterView;
 		}
@@ -168,8 +168,8 @@ namespace odm.ui {
 			enableEventCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableEventCaption);
 			enableSnapshotCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableSnapshotCaption);
 			langCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.langCaption);
-			uiFpsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.uiFpsCaption);
-			enableUiFpsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableUiFpsCaption);
+			videoRenderingFpsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.videoRenderingFpsCaption);
+			showVideoPlaybackStatisticsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.showVideoPlaybackStatisticsCaption);
 			eventCaption.CreateBinding(GroupBox.HeaderProperty, Strings, x => x.eventCaption);
 			transportCaption.CreateBinding(TextBlock.TextProperty, Strings, x=>x.videotransport);
 

@@ -13,8 +13,19 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Image Grid.Row="0" Name="_imgVIew" Stretch="Uniform" StretchDirection="Both"/>
+
+        <Border Background="#7F000000" Visibility="{Binding Visibility, ElementName=noSignalPanel}"/>
+        <Border Name="noSignalPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="24,4,24,4" Grid.Row="0" BorderBrush="#7FFF0000" BorderThickness="4" CornerRadius="4" Background="#7FFF0000">
+            <TextBlock Name="captionNoSignal" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Foreground="#FFFFFFFF"
+                   FontSize="36" FontWeight="Bold" Text="NO SIGNAL"/>
+        </Border>
+            
 		<DockPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-			<TextBlock DockPanel.Dock="Top" Visibility="Hidden" Name="fpsCaption" Text="12.33" MaxWidth="50" Foreground="#FFF3FA00" />
+			<StackPanel DockPanel.Dock="Top" Name="playbackStatistics">
+				<TextBlock DockPanel.Dock="Top" Name="renderingFps" Text="91.35" Foreground="#FFF3FA00" />
+				<TextBlock DockPanel.Dock="Top" Name="decodingFps" Text="12.33" Foreground="#FFF3FA00" />
+			</StackPanel>
 			<Grid Margin="6">
 				<Button Name="btnPause" Width="32" Height="32" Style="{DynamicResource btnPause}"/>
 				<Button Name="btnResume" Width="32" Height="32" Style="{DynamicResource btnPlay}"/>

@@ -71,6 +71,7 @@ namespace odm.ui.activities
                     -1
 
             let resolutions = Set.ofSeq (seq{
+                yield vec.Resolution
                 if options.H264 <> null then
                     yield! options.H264.ResolutionsAvailable
                 if options.JPEG <> null then
@@ -80,6 +81,7 @@ namespace odm.ui.activities
             })
             
             let encoders = Set.ofSeq (seq{
+                yield vec.Encoding
                 if options.H264 <> null then
                     yield VideoEncoding.H264
                 if options.JPEG <> null then
@@ -202,8 +204,9 @@ namespace odm.ui.activities
 
         let apply_changes(model:VideoSettingsView.Model) = async{
             
-            let! profiles = session.GetProfiles()
-            let profile = profiles |> Seq.find (fun p-> p.token = profToken)
+            //let! profiles = session.GetProfiles()
+            //let profile = profiles |> Seq.find (fun p-> p.token = profToken)
+            let! profile = session.GetProfile(profToken)
             let vec = profile.VideoEncoderConfiguration
 //            
 //            do! session.RemoveVideoEncoderConfiguration(profile.token)

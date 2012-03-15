@@ -34,38 +34,30 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup>
+    <ApplicationIcon>odm.ico</ApplicationIcon>
+    <TargetZone>LocalIntranet</TargetZone>
+    <GenerateManifests>false</GenerateManifests>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget Condition="'$(Platform)' == 'x86'">x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugSymbols>false</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>odm.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup />
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -420,35 +412,35 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\avcodec-53.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avcodec-53.dll">
       <Link>avcodec-53.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\avdevice-53.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avdevice-53.dll">
       <Link>avdevice-53.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\avfilter-2.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avfilter-2.dll">
       <Link>avfilter-2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\avformat-53.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avformat-53.dll">
       <Link>avformat-53.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\avutil-51.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avutil-51.dll">
       <Link>avutil-51.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\postproc-51.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\postproc-51.dll">
       <Link>postproc-51.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\swresample-0.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\swresample-0.dll">
       <Link>swresample-0.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\ext-libs\ffmpeg-git-a254452-win32-dev\bin\swscale-2.dll">
+    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\swscale-2.dll">
       <Link>swscale-2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -481,7 +473,7 @@
     <Content Include="logs\player.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="odm-player-host.exe.config">
+    <Content Include="odm.player.host.exe.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

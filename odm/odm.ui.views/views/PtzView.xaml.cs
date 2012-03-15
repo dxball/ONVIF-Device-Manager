@@ -16,7 +16,6 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using odm.core;
 using odm.infra;
-using utils;
 using System.Windows.Controls.Primitives;
 using System.Timers;
 using System.Linq;
@@ -63,6 +62,7 @@ namespace odm.ui.activities {
 
 		private void Init(Model model) {
 			this.model = model;
+
 			OnCompleted += () => {
 				//TODO: release player host
 				disposables.Dispose();
@@ -243,6 +243,9 @@ namespace odm.ui.activities {
 			TiltSpeed = model.tiltMax;
 			ZoomSpeed = model.zoomMax;
 
+			valueRelAbsMove.Text = model.panMax.ToString();
+			valueRelAbsZoom.Text = model.zoomMax.ToString();
+
 			sliderPanSpeed.Minimum = pantiltSpace.XRange.Min;
 			sliderPanSpeed.Maximum = pantiltSpace.XRange.Max;
 			sliderPanSpeed.CreateBinding(Slider.ValueProperty, this,
@@ -300,19 +303,19 @@ namespace odm.ui.activities {
 			btnContinuesZoomPlus.PreviewMouseDown += new System.Windows.Input.MouseButtonEventHandler(ContinuesZoomPlus_MouseDown);
 			btnContinuesZoomPlus.PreviewMouseUp += new System.Windows.Input.MouseButtonEventHandler(ContinuesZoomPlus_MouseUp);
 
+			btnRelAbsDown.Click += new RoutedEventHandler(RelAbsDown);
+			btnRelAbsLeft.Click += new RoutedEventHandler(RelAbsLeft);
+			btnRelAbsRight.Click += new RoutedEventHandler(RelAbsRight);
+			btnRelAbsUp.Click += new RoutedEventHandler(RelAbsUp);
+			btnRelAbsZoomMinus.Click += new RoutedEventHandler(RelAbsZoomMinus);
+			btnRelAbsZoomPlus.Click += new RoutedEventHandler(RelAbsZoomPlus);
+
 			btnApplySettings.Click += new RoutedEventHandler(ApplySettings);
 			btnDelete.Click += new RoutedEventHandler(Delete);
 			btnGoHome.Click += new RoutedEventHandler(GoHome);
 			btnGoTo.Click += new RoutedEventHandler(GoTo);
 			btnSetHome.Click += new RoutedEventHandler(SetHome);
 			btnSetPreset.Click += new RoutedEventHandler(SetPreset);
-
-			//btnRelAbsDown;
-			//btnRelAbsLeft;
-			//btnRelAbsRight;
-			//btnRelAbsUp;
-			//btnRelAbsZoomMinus;
-			//btnRelAbsZoomPlus;
 		}
 
 #region ShowError
@@ -337,7 +340,26 @@ namespace odm.ui.activities {
 			errorTmr.Elapsed += new ElapsedEventHandler(errorTmr_Elapsed);
 		}
 #endregion ShowError
+		public void MoveRelative(PTZSpeed speed, PTZVector translat) {
+			subscription.Add(CurrentSession.RelativeMove(profileToken, translat, speed)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(unit => {
 
+				}, err => {
+					//dbg.Error(err);
+					SetErrorMessage(err.Message);
+				}));
+		}
+		public void MoveAbsolute(PTZSpeed speed, PTZVector translat) {
+			subscription.Add(CurrentSession.AbsoluteMove(profileToken, translat, speed)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(unit => {
+
+				}, err => {
+					//dbg.Error(err);
+					SetErrorMessage(err.Message);
+				}));
+		}
 		public void MoveContinues(PTZSpeed speed) {
 			subscription.Add(CurrentSession.ContinuousMove(profileToken, speed, global::onvif.services.Duration.FromSeconds(10))
 				.ObserveOnCurrentDispatcher()
@@ -423,6 +445,160 @@ namespace odm.ui.activities {
 		public PTZNode SelectedNode {get { return (PTZNode)GetValue(SelectedNodeProperty); }set { SetValue(SelectedNodeProperty, value); }}
 		public static readonly DependencyProperty SelectedNodeProperty = DependencyProperty.Register("SelectedNode", typeof(PTZNode), typeof(PtzView));
 
+#region RelativeAbsoluteMooveZoom
+		int RelAbsMove {
+			get {
+				int i = 0;
+				Int32.TryParse(valueRelAbsMove.Text, out i);
+				return i;
+			}
+		}
+		int RelAbsZoom {
+			get {
+				int i = 0;
+				Int32.TryParse(valueRelAbsZoom.Text, out i);
+				return i;
+			}
+		}
+		void RelAbsUp(object sender, RoutedEventArgs e){
+			var speed = new PTZSpeed();
+			speed.PanTilt = new Vector2D();
+			//speed.PanTilt.space = pantiltSpace.URI;
+			speed.Zoom = new Vector1D();
+			//speed.Zoom.space = zoomSpace.URI;
+			speed.PanTilt.x = 0;
+			speed.PanTilt.y = GetTiltSpeed();
+			speed.Zoom.x = 0;
+
+			PTZVector translat = new PTZVector();
+			translat.PanTilt = new Vector2D();
+			translat.PanTilt.x = 0;
+			translat.PanTilt.y = RelAbsMove;
+			translat.Zoom = new Vector1D();
+			translat.Zoom.x = 0;
+
+			if (IsAbsolute) {
+				MoveAbsolute(speed, translat);
+			} else {
+				MoveRelative(speed, translat);
+			}
+		}
+		void RelAbsDown(object sender, RoutedEventArgs e){
+			var speed = new PTZSpeed();
+			speed.PanTilt = new Vector2D();
+			//speed.PanTilt.space = pantiltSpace.URI;
+			speed.Zoom = new Vector1D();
+			//speed.Zoom.space = zoomSpace.URI;
+			speed.PanTilt.x = 0;
+			speed.PanTilt.y = GetTiltSpeed();
+			speed.Zoom.x = 0;
+
+			PTZVector translat = new PTZVector();
+			translat.PanTilt = new Vector2D();
+			translat.PanTilt.x = 0;
+			translat.PanTilt.y = (-1)*RelAbsMove;
+			translat.Zoom = new Vector1D();
+			translat.Zoom.x = 0;
+
+			if (IsAbsolute) {
+				MoveAbsolute(speed, translat);
+			} else {
+				MoveRelative(speed, translat);
+			}
+		}
+		void RelAbsLeft(object sender, RoutedEventArgs e){
+			var speed = new PTZSpeed();
+			speed.PanTilt = new Vector2D();
+			//speed.PanTilt.space = pantiltSpace.URI;
+			speed.Zoom = new Vector1D();
+			//speed.Zoom.space = zoomSpace.URI;
+			speed.PanTilt.x = 0;
+			speed.PanTilt.y = GetTiltSpeed();
+			speed.Zoom.x = 0;
+
+			PTZVector translat = new PTZVector();
+			translat.PanTilt = new Vector2D();
+			translat.PanTilt.x = (-1)*RelAbsMove;
+			translat.PanTilt.y = 0;
+			translat.Zoom = new Vector1D();
+			translat.Zoom.x = 0;
+
+			if (IsAbsolute) {
+				MoveAbsolute(speed, translat);
+			} else {
+				MoveRelative(speed, translat);
+			}
+		}
+		void RelAbsRight(object sender, RoutedEventArgs e){
+			var speed = new PTZSpeed();
+			speed.PanTilt = new Vector2D();
+			//speed.PanTilt.space = pantiltSpace.URI;
+			speed.Zoom = new Vector1D();
+			//speed.Zoom.space = zoomSpace.URI;
+			speed.PanTilt.x = 0;
+			speed.PanTilt.y = GetTiltSpeed();
+			speed.Zoom.x = 0;
+
+			PTZVector translat = new PTZVector();
+			translat.PanTilt = new Vector2D();
+			translat.PanTilt.x = RelAbsMove;
+			translat.PanTilt.y = 0;
+			translat.Zoom = new Vector1D();
+			translat.Zoom.x = 0;
+
+			if (IsAbsolute) {
+				MoveAbsolute(speed, translat);
+			} else {
+				MoveRelative(speed, translat);
+			}
+		}
+		void RelAbsZoomPlus(object sender, RoutedEventArgs e){
+			var speed = new PTZSpeed();
+			speed.PanTilt = new Vector2D();
+			//speed.PanTilt.space = pantiltSpace.URI;
+			speed.Zoom = new Vector1D();
+			//speed.Zoom.space = zoomSpace.URI;
+			speed.PanTilt.x = 0;
+			speed.PanTilt.y = GetTiltSpeed();
+			speed.Zoom.x = 0;
+
+			PTZVector translat = new PTZVector();
+			translat.PanTilt = new Vector2D();
+			translat.PanTilt.x = 0;
+			translat.PanTilt.y = 0;
+			translat.Zoom = new Vector1D();
+			translat.Zoom.x = RelAbsZoom;
+
+			if (IsAbsolute) {
+				MoveAbsolute(speed, translat);
+			} else {
+				MoveRelative(speed, translat);
+			}
+		}
+		void RelAbsZoomMinus(object sender, RoutedEventArgs e){
+			var speed = new PTZSpeed();
+			speed.PanTilt = new Vector2D();
+			//speed.PanTilt.space = pantiltSpace.URI;
+			speed.Zoom = new Vector1D();
+			//speed.Zoom.space = zoomSpace.URI;
+			speed.PanTilt.x = 0;
+			speed.PanTilt.y = GetTiltSpeed();
+			speed.Zoom.x = 0;
+
+			PTZVector translat = new PTZVector();
+			translat.PanTilt = new Vector2D();
+			translat.PanTilt.x = 0;
+			translat.PanTilt.y = 0;
+			translat.Zoom = new Vector1D();
+			translat.Zoom.x = (-1) * RelAbsZoom;
+
+			if (IsAbsolute) {
+				MoveAbsolute(speed, translat);
+			} else {
+				MoveRelative(speed, translat);
+			}
+		}
+#endregion RelativeAbsoluteMooveZoom
 #region ContinuesMooveZoom
 		float GetPanSpeed() {
 			if (pantiltSpace.XRange.Max - pantiltSpace.XRange.Min == 0)
@@ -664,8 +840,9 @@ namespace odm.ui.activities {
 		}
 #endregion VideoPlayback
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 		public event PropertyChangedEventHandler PropertyChanged;

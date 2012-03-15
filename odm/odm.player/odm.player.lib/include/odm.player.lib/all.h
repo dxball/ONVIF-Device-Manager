@@ -41,6 +41,7 @@ namespace onvifmp{
 		PixelFormat pixelFormat;
 		int stride[4];
 		uint8_t* scan0[4];
+		uint8_t* signal;
 	};
 
 	enum StreamTransport{

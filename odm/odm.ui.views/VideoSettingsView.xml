@@ -5,7 +5,7 @@
 		<prop name="profToken" clr-type="string" read-only="true"/>
 		
 		<prop name="resolution" clr-type="VideoResolution" />
-		<prop name="resolutions" clr-type="VideoResolution[]" read-only="true"/>
+		<!--<prop name="resolutions" clr-type="VideoResolution[]" read-only="true"/>-->
 
 		<prop name="maxFrameRate" clr-type="int" read-only="true"/>
 		<prop name="minFrameRate" clr-type="int" read-only="true"/>
@@ -28,7 +28,7 @@
 		<prop name="govLength" clr-type="int" />
 
 		<prop name="encoder" clr-type="VideoEncoding" />
-		<prop name="encoders" clr-type="VideoEncoding[]" read-only="true"/>
+		<!--<prop name="encoders" clr-type="VideoEncoding[]" read-only="true"/>-->
 
 		<prop name="encoderOptions" clr-type="VideoEncoderConfigurationOptions" read-only="true"/>
 	</model>

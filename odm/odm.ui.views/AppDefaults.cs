@@ -108,10 +108,11 @@ namespace odm.ui {
                 WndState = WindowState.Normal,
                 ui_video_rendering_fps = 30,
                 Base_Subscription_Port = 8085,
-				Enable_UI_Fps_Caption = false,
+				ShowVideoPlaybackStatistics = false,
                 Event_Subscription_Type = VisualSettings.EventType.TRY_PULL,
 				Transport_Type = TransportProtocol.UDP, 
-				UseOnlyCommonFilterView = false
+				UseOnlyCommonFilterView = false,
+				DefEventFilter = ""
             };
         }
         public static VisualSettings visualSettings {
@@ -163,10 +164,15 @@ namespace odm.ui {
             ui_video_rendering_fps = 30;
             Event_Subscription_Type = EventType.TRY_PULL;
             Base_Subscription_Port = 8085;
-			Enable_UI_Fps_Caption = false;
+			ShowVideoPlaybackStatistics = false;
 			Transport_Type = TransportProtocol.UDP;
 			UseOnlyCommonFilterView = false;
+			//TODO: railway build
+			DefEventFilter = "";
         }
+		//TODO: railway build
+		public string DefEventFilter { get; set; }
+
         public string Version { get; set; }
 		public enum TlsMode { 
 			USE_ALWAYS,
@@ -178,7 +184,7 @@ namespace odm.ui {
             ONLY_BASE
         }
 		public bool UseOnlyCommonFilterView { get; set; }
-		public bool Enable_UI_Fps_Caption { get; set; }
+		public bool ShowVideoPlaybackStatistics { get; set; }
         public int Base_Subscription_Port { get; set; }
         public EventType Event_Subscription_Type { get; set; }
 		public TransportProtocol Transport_Type { get; set; }

@@ -17,10 +17,10 @@ namespace odm.ui.views.CustomAnalytics {
     /// <summary>
     /// Interaction logic for ObjectTrackerView.xaml
     /// </summary>
-    public partial class ObjectTrackerView : UserControl , IDisposable, IPlaybackController{
+    public partial class ObjectTrackerView : UserControl , IDisposable {
         public ObjectTrackerView() {
             InitializeComponent();
-			disposables = new CompositeDisposable();
+			//disposables = new CompositeDisposable();
             Loaded += new RoutedEventHandler(ObjectTrackerView_Loaded);
         }
         bool isReady = false;
@@ -58,12 +58,17 @@ namespace odm.ui.views.CustomAnalytics {
             model.UserRegion.Points = synesisPoints.ToArray();
             GetRose();
         }
-
+		
+		public void SetPlayer(Border player) {
+			playerHolder.Child = player;
+		}
+		
         public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
             this.model = model;
             this.container = container;
             this.videoInfo = videoInfo;
-			VideoStartup(videoInfo, profToken);
+		
+			//VideoStartup(videoInfo, profToken);
             BindData();
             if (isLoaded) {
                 InitRegionEditor();
@@ -152,35 +157,8 @@ namespace odm.ui.views.CustomAnalytics {
             regeditor.Init(plist, videoInfo.Resolution);
         }
 
-		IPlaybackSession playbackSession;
-		VideoBuffer vidBuff;
-		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo, string profToken) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
-
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
-
-			var model = new VideoPlayerActivityModel(
-				profileToken: profToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
-
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
-			);
-		}
-
 		public void Dispose() {
-			if (vidBuff != null)
-				vidBuff.Dispose();
-			disposables.Dispose();
+			//disposables.Dispose();
 			//TODO: release player host
 		}
 
@@ -190,14 +168,5 @@ namespace odm.ui.views.CustomAnalytics {
         }
         public static readonly DependencyProperty IsModuleEnabledProperty =
             DependencyProperty.Register("IsModuleEnabled", typeof(bool), typeof(ObjectTrackerView));
-
-
-		public new bool Initialized(IPlaybackSession playbackSession) {
-			this.playbackSession = playbackSession;
-			return true;
-		}
-
-		public void Shutdown() {
-		}
 	}
 }

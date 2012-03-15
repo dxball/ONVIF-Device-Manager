@@ -102,8 +102,9 @@ namespace odm.ui {
 		}
 
 		public void NotifyPropertyChanged(string prop) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(prop));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(prop));
 			}
 		}
 		public event PropertyChangedEventHandler PropertyChanged;

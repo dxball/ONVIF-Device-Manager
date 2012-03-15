@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.IO;
 
 namespace utils {
 	
@@ -39,6 +40,13 @@ namespace utils {
 
 
 	public static class Extensions {
+
+		public static Stream ToStream(this byte[] byteArray) {
+			if (byteArray == null) {
+				return null;
+			}
+			return new MemoryStream(byteArray);
+		}
 
 		public static Func<TArg, TResult> Wrap<TArg, TResult>(this Func<TArg, TResult> fun, Func<Func<TArg, TResult>, Func<TArg, TResult>> wrapper) {
 			return wrapper(fun);
@@ -148,7 +156,7 @@ namespace utils {
 				var subscription = observable.Subscribe(observer);
 				return Disposable.Create(() => {
 					disposeHandler();
-					subscription.Dispose();								
+					subscription.Dispose();
 				});
 
 			});

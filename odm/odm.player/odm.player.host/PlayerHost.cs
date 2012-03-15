@@ -144,6 +144,33 @@ namespace odm.player {
 		}
 
 		public IDisposable Play(MediaStreamInfo mediaStreamInfo, IPlaybackController playbackController) {
+			//fix url
+			var url = new Uri(mediaStreamInfo.url);
+			if (url==null || !url.IsAbsoluteUri){
+				throw new Exception("Invalid playback url");
+			}
+			if (mediaStreamInfo.transport != MediaStreamInfo.Transport.Http) {
+				if (String.Compare(url.Scheme, "rtsp", true) != 0) {
+					throw new Exception("Invalid playback url");
+				}
+			} else if(String.Compare(url.Scheme, "rtsp", true) != 0) {
+				int defPort;
+				if (String.Compare(url.Scheme, Uri.UriSchemeHttp, true) == 0 ) {
+					defPort = 80;
+				} else if (String.Compare(url.Scheme, Uri.UriSchemeHttps, true) == 0) {
+					defPort = 443;
+				} else {
+					throw new Exception("Invalid playback url");
+				}
+				var ub = new UriBuilder(url);
+				ub.Scheme = "rtsp";
+				if (ub.Port == -1) {
+					ub.Port = defPort;
+				}
+				url = ub.Uri;
+				mediaStreamInfo = new MediaStreamInfo(url.ToString(), mediaStreamInfo.transport, mediaStreamInfo.userNameToken);
+			}
+			
 			var disposable = new SingleAssignmentDisposable();
 			playerTask.mediaStreamInfo = mediaStreamInfo;
 			playerTask.playbackController = playbackController;

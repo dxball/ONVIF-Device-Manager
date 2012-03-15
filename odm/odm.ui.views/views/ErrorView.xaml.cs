@@ -9,6 +9,8 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using odm.infra;
 using utils;
+using System.Text;
+using System.Collections.Generic;
 
 namespace odm.ui.activities {
 	public partial class ErrorView : UserControl {
@@ -51,7 +53,21 @@ namespace odm.ui.activities {
 			detailsButton.CreateBinding(Button.ContentProperty, LocalButtons.instance, s => s.details);
 			okButton.CreateBinding(Button.ContentProperty, LocalButtons.instance, s => s.close);
 		}
-
+		//protected string GetErrorMessage(Exception error) {
+		//    var fault = error as FaultException;
+		//    if (fault != null) {
+		//        var msg = fault.CreateMessageFault();
+		//        var list = new List<string>();
+		//        var reason = msg.Reason.ToString().Trim(' ', '.');
+		//        if (!String.IsNullOrEmpty(reason)) {
+		//            list.Add(reason);
+		//        }
+		//        if (msg.HasDetail) {
+		//            var details = msg
+					
+		//        }
+		//    }
+		//}
 		protected Exception CorrectError(Exception error){
 			var protoException = error as ProtocolException;
 			if (protoException == null) {

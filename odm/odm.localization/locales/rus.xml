@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <localized-strings lang-iso3="rus">
   <!--v 2.0-->
+  <module name="LocalVideoPlayer" namespace="odm.ui">
+    <string name="noSignal" value="НЕТ СИГНАЛА" />
+  </module>
   <module name="LocalSystemLog" namespace="odm.ui">
     <string name="logTypeSystem" value="System" />
     <string name="logTypeAccess" value="Access" />
@@ -35,7 +38,7 @@
 		<string name="title" value="Metadata" />
 		<string name="empty" value="Нет доступных метаданных" />
 		<string name="details" value="Детальное описание" />
-		<string name="config" value="Конфигурирование фильтра" />
+		<string name="config" value="Конфигурирование метаданных" />
 		<string name="includeAnalitycs" value="Включить аналитику" />
 		<string name="includePtzPosition" value="Включить позицию PTZ" />
 		<string name="includeEvents" value="Включать события" />
@@ -93,6 +96,8 @@
 		<string name="errorSupportResolution" value="Выбранный энкодер не поддерживает выбранное разрешениеSelected encoder doesn't support selected resolution" />
 	</module>
 	<module name="LocalTimeZone" namespace="odm.ui">
+    <string name="captionUtc" value="Время в UTC" />
+    <string name="captionLocal" value="Локальное время" />
 		<string name="title" value="Настройки времени" />
 		<string name="currentTime" value="Текущее время" />
 		<string name="timeZone" value="Временная зона:" />
@@ -359,6 +364,8 @@
     <string name="address" value="Адрес: " />
   </module>
 	<module name="LocalSequrity" namespace="odm.ui">
+    <string name="details" value="Детали:" />
+    <string name="enterName" value="Введите имя сертификата:" />
 		<string name="selectCertificateHeader" value="Выберите файл сертификата" />
 		<string name="setStatus" value="Установить статус" />
 		<string name="uploadCertificate" value="Загрузить сертификат" />
@@ -451,7 +458,7 @@
     <string name="close" value="Закрыть" />
     <string name="refresh" value="Перезагрузить" />
     <string name="applyChangesTitle" value="Применяем ..." />
-    <string name="loadingData" value="Загрузка данных..." />
+    <string name="loadingData" value="Загрузка ..." />
     <string name="ifoTitle" value="Информация ..." />
     <string name="errorTitle" value="Ошибка ..." />
     <string name="applyChanges" value="Пожалуйста, подождите пока изменения применятся." />
@@ -496,7 +503,7 @@
     <string name="deviceID" value="ID устройства" />
     <string name="firmware" value="Программное обеспечение" />
     <string name="hardware" value="Аппаратное обеспечение" />
-    <string name="version" value="Версия" />
+    <string name="version" value="Версия ONVIF" />
     <string name="ipAddress" value="Сетевой адрес" />
     <string name="macAddress" value="MAC-адрес" />
     <string name="manufacturer" value="Производитель" />
@@ -549,7 +556,7 @@
   
   <module name="UserManagementStrings" namespace="odm.ui.controls">
     <string name="users" value="Пользователи:" />
-    <string name="polices" value="Полиси:" />
+    <string name="policies" value="Полиси:" />
     <string name="createNew" value="Создать нового пользователя" />
     <string name="modifyUser" value="Изменить пользователя" />
     <string name="name" value="Имя" />

@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <localized-strings lang-iso3="eng" name="default">
   <!--v 2.0-->
+  <module name="LocalVideoPlayer" namespace="odm.ui">
+    <string name="noSignal" value="NO SIGNAL" />
+  </module>
   <module name="LocalSystemLog" namespace="odm.ui">
 		<string name="logTypeSystem" value="System" />
     <string name="logTypeAccess" value="Access" />
@@ -35,7 +38,7 @@
 		<string name="title" value="Metadata" />
 		<string name="empty" value="No metadata available" />
 		<string name="details" value="Metadata details" />
-		<string name="config" value="Filter configuration" />
+		<string name="config" value="Metadata configuration" />
 		<string name="includeAnalitycs" value="Include analitycs" />
 		<string name="includePtzPosition" value="Include PTZ position" />
 		<string name="includePtzStatus" value="Include PTZ status" />
@@ -93,6 +96,8 @@
 		<string name="errorSupportResolution" value="Selected encoder doesn't support selected resolution" />
 	</module>
 	<module name="LocalTimeZone" namespace="odm.ui">
+    <string name="captionUtc" value="(UTC)" />
+    <string name="captionLocal" value="(Local)" />
 		<string name="title" value="Time settings" />
 		<string name="currentTime" value="Current time" />
 		<string name="timeZone" value="Time zone:" />
@@ -139,8 +144,8 @@
     <string name="uiCaption" value="User interface settings " />
 		<string name="eventCaption" value="Events settings" />
     <string name="communicationCaption" value="Device communication settings " />
-    <string name="uiFpsCaption" value="Video rendering fps on UI " />
-		<string name="enableUiFpsCaption" value="Show video rendering FPS " />
+    <string name="videoRenderingFpsCaption" value="Video rendering fps " />-->
+		<string name="showVideoPlaybackStatisticsCaption" value="Show video playback statistics " />
 	</module>
   <module name="LocalAccount" namespace="odm.ui">
     <string name="loginCaption" value="Login" />
@@ -261,7 +266,7 @@
   </module>
   <module name="LocalUserManagement" namespace="odm.ui">
     <string name="usersCaption" value="Users:" />
-    <string name="policiesCaption" value="Polices:" />
+    <string name="policiesCaption" value="Policies:" />
     <string name="createUserButton" value="Create" />
     <string name="modifyUserButton" value="Modify" />
     <string name="deleteUserButton" value="Delete" />
@@ -358,7 +363,9 @@
     <string name="address" value="Address: " />
   </module>
 	<module name="LocalSequrity" namespace="odm.ui">
-		<string name="selectCertificateHeader" value="Select certificate file" />
+    <string name="details" value="Details:" />
+		<string name="enterName" value="Enter certificate name:" />
+    <string name="selectCertificateHeader" value="Select certificate file" />
 		<string name="setStatus" value="Set status" />
 		<string name="uploadCertificate" value="Upload Certificate" />
 		<string name="btnUpload" value="Upload ..." />
@@ -450,7 +457,7 @@
 		<string name="close" value="Close" />
     <string name="refresh" value="Refresh" />
     <string name="applyChangesTitle" value="Applying ..." />
-    <string name="loadingData" value="Loading data ..." />
+    <string name="loadingData" value="Loading ..." />
 		<string name="ifoTitle" value="Information ..." />
 		<string name="errorTitle" value="ERROR ..." />
 		<string name="applyChanges" value="Please wait until changes will be applied" />
@@ -569,7 +576,7 @@
 		<string name="deviceID" value="Device ID" />
 		<string name="firmware" value="Firmware" />
 		<string name="hardware" value="Hardware" />
-		<string name="version" value="Version" />
+		<string name="version" value="ONVIF version" />
 		<string name="ipAddress" value="IP address" />
 		<string name="macAddress" value="MAC address" />
     <string name="manufacturer" value="Manufacturer" />
@@ -694,8 +701,8 @@
 		<string name="marker2D" value="2D-marker" />
 		<string name="physHeight" value="Marker real heigth, cm" />
     <string name="physWidth" value="Marker real width, cm" />
-    <string name="infoMarker1" value="INFO: Proportions of the marker #1 is not valid. Please increase its width, or to reduce its height." />
-    <string name="infoMarker2" value="INFO: Proportions of the marker #2 is not valid. Please increase its width, or to reduce its height." />
+    <string name="infoMarker1" value="INFO: proportions of marker #1 are not valid. Please increase its width, or reduce its height." />
+    <string name="infoMarker2" value="INFO: proportions of marker #2 are not valid. Please increase its width, or reduce its height." />
     <string name="infoMarkerWhidth" value="INFO: The width of the lower marker must be greater than the upper marker." />
     <string name="infoDisplacement" value="INFO: The depth of the scene is not enough. Please extend the distance between the upper and the lower markers. The distance must be not less than 1 / 4 of screen." />
   </module>
@@ -744,17 +751,17 @@
 		<string name="meters" value="m" />
 		<string name="movingInDirections" value="in directions:" />
 		<string name="loitering" value="Loitering " />
-    <string name="runtime" value="during " />
+		<string name="runtime" value="during " />
 		<string name="seconds" value="s" />
 		<string name="within" value="s within" />
-		<string name="running" value="Running faster then " />
+		<string name="running" value="Running faster than " />
 		<string name="speed" value=" m/s" />
-		<string name="abandoning" value="Abandoning item" />
+		<string name="abandoning" value="Abandoned item" />
 		<string name="sendOnvif" value="Send ONVIF message" />
 		<string name="setFramerate" value="Set Framerate to" />
 		<string name="fps" value="fps" />
 		<string name="turnOnRelay" value="Turn on" />
-    <string name="direction" value="Direction: " />
+		<string name="direction" value="Direction: " />
 		<string name="turnOnAnalog" value="Turn on analogue output" />
 		<string name="record" value="Record to local or network drive" />
 		<string name="ptz" value="Target PTZ-camera" />

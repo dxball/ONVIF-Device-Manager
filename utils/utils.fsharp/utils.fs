@@ -14,51 +14,29 @@
     type Trampoline(max_workload) = class
         let mutable acquired = false
         let queue = new Queue<(unit->unit)>()
-        let rec process_queue_in_task() = 
+
+        let rec ProcessQueue() = 
             let cont = lock queue (fun()->
                 if queue.Count > 0 then
                     let act = queue.Dequeue()
-                    fun()->
+                    (fun()->
                         try act() with err -> dbg.Error(err)
                         true
-                else
-                    acquired <- false
-                    fun()->false
-            )
-            if cont() then process_queue_in_task()
-
-        let rec process_queue(processedOperations) = 
-            let cont = lock queue (fun()->
-                if queue.Count > 0 then
-                    let act = queue.Dequeue()
-                    let workload = queue.Count + processedOperations
-                    (fun()->
-                        if workload > max_workload then
-                            Async.StartAsTask(async{
-                                try act() with err -> dbg.Error(err)
-                                process_queue_in_task()
-                            }) |> ignore
-                            false
-                        else
-                            try act() with err -> dbg.Error(err)
-                            true
                     )
                 else
                     acquired <- false
                     (fun()->false)
             )
-            if cont() then process_queue(processedOperations+1)
+            if cont() then  ProcessQueue()
 
-        new () = Trampoline(max_workload = 10)
-
-        member this.Drop (act:Action) =
+        member this.Drop (act) =
             let acquirer = lock queue (fun()->
-                queue.Enqueue(fun()->act.Invoke())
+                queue.Enqueue(act)
                 let acquirer = not acquired
                 acquired <- true
                 acquirer
             )
-            if acquirer then process_queue(0)
+            if acquirer then ProcessQueue()
     end
 
 //    type TrampolineScheduler() = class

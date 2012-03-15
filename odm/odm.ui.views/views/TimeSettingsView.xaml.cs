@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.FSharp.Control;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
+
 using odm.controllers;
 using odm.infra;
 using odm.ui.controls;
+using odm.ui.views;
+
 using utils;
 
 namespace odm.ui.activities {
@@ -22,6 +28,196 @@ namespace odm.ui.activities {
 			SetManually,
 			SyncWithNtp,
 			SyncWithComp
+		}
+
+		private void Init(Model model) {
+			//Save model handle
+			this.model = model;
+
+			//Init command
+			OnCompleted += () => {disposables.Dispose();};
+
+			var applyCommand = new DelegateCommand(
+				() => OnApplyChanges(),
+				() => true
+			);
+			ApplyCommand = applyCommand;
+
+			var closeCommand = new DelegateCommand(
+				() => Success(new Result.Close()),
+				() => true
+			);
+			CloseCommand = closeCommand;
+
+			var cancelCommand = new DelegateCommand(
+				() => {
+					OnRevertChanges();
+				},
+				() => true
+			);
+			CancelCommand = cancelCommand;
+
+			//init all UI controls
+			InitializeComponent();
+			//Init time zones
+			InitTimeZones();
+			//Init and fill
+			Init();
+			//set up local strings
+			Localization();
+		}
+		void InitTimeZones() {
+            //refresh list
+            timeZonesComboBox.Items.Clear();
+			//Get system timezones list
+			var listSystem = TimeZoneViewModel.GetSystemTimeZones();
+			listSystem.ForEach(obj => {
+				timeZonesComboBox.Items.Add(obj);
+			});
+
+			//try to load and fill manual list
+			var manualListpath = AppDomain.CurrentDomain.BaseDirectory + "tz.xml";
+			var listManual = TimeZoneViewModel.GetManualTimeZones(manualListpath);
+            if (listManual.Count() != 0)
+            {
+                timeZonesComboBox.Items.Add(new Separator());
+                listManual.ForEach(obj =>
+                {
+                    timeZonesComboBox.Items.Add(obj);
+                });
+            }
+			
+			//Find and try to select device tz
+			PosixTz posixTZ = PosixTz.TryParse(model.timeZone);
+			TimeZoneViewModel tzmodel = null;
+			if (posixTZ != null) {
+				tzmodel = new TimeZoneViewModel(posixTZ.name, model.timeZone, posixTZ);
+
+				if (listSystem.Any(f => f == tzmodel)) {
+					timeZonesComboBox.SelectedItem = listSystem.First(f => f == tzmodel);
+				} 
+				//else if (listSystem.Any(f => f.LogicallyEquals(tzmodel))) {
+				//    timeZonesComboBox.SelectedItem = listSystem.First(f => f.LogicallyEquals(tzmodel));
+				//} 
+				else if (listManual.Any(f => f == tzmodel)) {
+					timeZonesComboBox.SelectedItem = listManual.First(f => f == tzmodel);
+				} 
+				//else if (listManual.Any(f => f.LogicallyEquals(tzmodel))) {
+				//    timeZonesComboBox.SelectedItem = listSystem.First(f => f.LogicallyEquals(tzmodel));
+				//} 
+				else {
+					timeZonesComboBox.Text = tzmodel.originalString;
+				}
+			} else {
+				//Invalid TZ
+				timeZonesComboBox.Text = model.timeZone;
+				
+			}
+		}
+		TimeZoneViewModel GetTimeZoneSelection() {
+			TimeZoneViewModel timezonemosel = null;
+			if (timeZonesComboBox.SelectedIndex == -1) {
+				timezonemosel = new TimeZoneViewModel(timeZonesComboBox.Text, timeZonesComboBox.Text, PosixTz.TryParse(timeZonesComboBox.Text));
+			}else{
+				var tmodel = timeZonesComboBox.SelectedItem as TimeZoneViewModel;
+				if(tmodel != null)
+					timezonemosel = tmodel;
+			}
+			return timezonemosel;
+		}
+		DateTime GetDeviceUtcTime() {
+			var elapsedTicks = Stopwatch.GetTimestamp() - model.timestamp;
+			var elapsedMilliseconds = (double)elapsedTicks * 1000.0 / (double)Stopwatch.Frequency;
+			var devDateTime = model.utcDateTime.Add(TimeSpan.FromMilliseconds(elapsedMilliseconds));
+
+			return devDateTime;
+		}
+		void Init() {
+			daylightCheckBox.CreateBinding(CheckBox.IsCheckedProperty, model, m => m.daylightSavings, (m, v) => { m.daylightSavings = v; });
+
+			newManualTimeValue.SelectedTime = DateTime.Now.TimeOfDay;
+			newManualDateValue.SelectedDate = DateTime.Now;
+			//Set time and date dislay
+			valueDeviceTime.SetTime(model.utcDateTime, GetTimeZoneSelection(), GetDeviceUtcTime);
+			valueNewTime.SetTime(model.utcDateTime, GetTimeZoneSelection(), () => { return DateTime.UtcNow; });
+			disposables.Add(timeZonesComboBox	
+				.GetPropertyChangedEvents(ComboBox.SelectedItemProperty)
+				.OfType <TimeZoneViewModel>()
+				.Subscribe(next => {
+					valueNewTime.TimeZoneChanged(next);
+				})
+			);
+
+			//Set selection mode
+			setDateTimeMode = model.useDateTimeFromNtp ? SetDateTimeMode.SyncWithNtp : SetDateTimeMode.SyncWithComp;
+			PanelNtpMode.Visibility =
+				setDateTimeMode == SetDateTimeMode.SyncWithNtp ?
+				Visibility.Visible : Visibility.Collapsed;
+
+			syncWithNtp.IsSelected = setDateTimeMode == SetDateTimeMode.SyncWithNtp;
+			PanelSystemMode.Visibility =
+			   setDateTimeMode == SetDateTimeMode.SyncWithComp ?
+			   Visibility.Visible : Visibility.Collapsed;
+			syncWithComp.IsSelected = setDateTimeMode == SetDateTimeMode.SyncWithComp;
+
+			PanelManualMode.Visibility = System.Windows.Visibility.Collapsed;
+			setManual.IsSelected = false;
+			
+			applyButton.Command = ApplyCommand;
+			cancelButton.Command = CancelCommand;
+
+
+			disposables.Add(
+				syncWithNtp
+					.GetPropertyChangedEvents(ComboBoxItem.IsSelectedProperty)
+					.OfType<bool>()
+					.Subscribe(value => {
+						PanelNtpMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+						setDateTimeMode = SetDateTimeMode.SyncWithNtp;
+					})
+			);
+
+			disposables.Add(
+				syncWithComp
+					.GetPropertyChangedEvents(ComboBoxItem.IsSelectedProperty)
+					.OfType<bool>()
+					.Subscribe(value => {
+						PanelSystemMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+						setDateTimeMode = SetDateTimeMode.SyncWithComp;
+					})
+			);
+
+			disposables.Add(
+				setManual
+					.GetPropertyChangedEvents(ComboBoxItem.IsSelectedProperty)
+					.OfType<bool>()
+					.Subscribe(value => {
+						PanelManualMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+						setDateTimeMode = SetDateTimeMode.SetManually;
+					})
+			);
+
+			btnCustomTZ.Click += new RoutedEventHandler((o, e) => {
+				string rowStr = "";
+				if (timeZonesComboBox.SelectedItem != null) {
+					var tz = timeZonesComboBox.SelectedItem as TimeZoneViewModel;
+					if (tz != null) {
+						if (tz.posixTz != null) {
+							rowStr = tz.posixTz.Format();
+						} else {
+							rowStr = tz.originalString;
+						}
+						
+					}
+				} else {
+					rowStr = timeZonesComboBox.Text;
+				}
+				var dlg = new ManualTZ(rowStr);
+				if (dlg.ShowDialog() == true) {
+					timeZonesComboBox.Text = dlg.posixTZ;
+					valueNewTime.TimeZoneChanged(new TimeZoneViewModel(dlg.posixTZ, dlg.posixTZ, PosixTz.TryParse(dlg.posixTZ)));
+				}
+			});
 		}
 
 		#region Activity definition
@@ -39,102 +235,12 @@ namespace odm.ui.activities {
 		public PropertyTimeZoneStrings Strings { get { return PropertyTimeZoneStrings.instance; } }
 		public Model model;
 
-		public string DeviceTimeZoneOriginal = "";
-		//public List<TimeZoneInfo> timeZones = new List<TimeZoneInfo>();
-		public List<TZInfoDescriptor> timeZones = new List<TZInfoDescriptor>();
-		public delegate void PropertyChanged();
-		public event PropertyChanged OnDeviceTimeZoneChanged;
-		
-		//public TimeZoneInfo m_deviceTimeZone;
-		//public TimeZoneInfo deviceTimeZone { 
-		//    get { 
-		//        return m_deviceTimeZone;
-		//    }
-		//    private set {
-		//        m_deviceTimeZone = value; 
-		//        if (OnDeviceTimeZoneChanged != null) {
-		//            OnDeviceTimeZoneChanged();
-		//        }
-		//    }
-		//}
-		public TZInfoDescriptor m_deviceTimeZone;
-		public TZInfoDescriptor deviceTimeZone {
-			get {
-				return m_deviceTimeZone;
-			}
-			private set {
-				m_deviceTimeZone = value;
-				if (OnDeviceTimeZoneChanged != null) {
-					OnDeviceTimeZoneChanged();
-				}
-			}
-		}
-
 		public SetDateTimeMode setDateTimeMode { get; set; }
-		public string ComputerTime {get; set;}
-		public string ComputerDate {get; set;}
-		public string CurrentDate {get; set;}
-		public string CurrentTime {get; set;}
-		public DateTime deviceDateTime {get; set;}
-		public DateTime SelectedDate {get; set;}
-		public System.TimeSpan SelectedTime {get; set;}
-		public event PropertyChanged OnAutoAdjustDaylightChanged;
-		public bool m_autoAdjustDaylight;
-		public bool autoAdjustDaylight { 
-			get{
-				return m_autoAdjustDaylight;
-			} 
-			set{
-				m_autoAdjustDaylight = value;
-				if (OnAutoAdjustDaylightChanged != null) {
-					OnAutoAdjustDaylightChanged();
-				}
-			} 
-		}
 		public bool IsNTPFromDHCP { get; set; }
 		public string NtpServerPath { get; set; }
 
         public LinkButtonsStrings Title { get { return LinkButtonsStrings.instance; } }
 
-		private void Init(Model model) {
-			OnCompleted += () => {
-				disposables.Dispose();
-			};
-			this.model = model;
-
-			var applyCommand = new DelegateCommand(
-				() => OnApplyChanges(),
-				() => true
-			);
-			ApplyCommand = applyCommand;
-
-			var closeCommand = new DelegateCommand(
-				() => Success(new Result.Close()),
-				() => true
-			);
-			CloseCommand = closeCommand;
-
-			var cancelCommand = new DelegateCommand(
-				() => {
-                    OnRevertChanges();
-				},
-				() => true
-			);
-			CancelCommand = cancelCommand;
-
-			if (model != null) {
-			}
-
-			InitializeComponent();
-			
-			DeviceTimeZoneOriginal = model.timeZone;
-			InitTimeZones();
-			Init();
-			BindModel(model);
-            Localization();
-		}
-
-        #region Binding
         void Localization() {
             daylightCheckBox.CreateBinding(CheckBox.ContentProperty, Strings, s => s.autoAdjustString);
             ntpSettingsToolTip.CreateBinding(
@@ -152,372 +258,232 @@ namespace odm.ui.activities {
             syncWithComp.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.synchronizeWithComp);
         }
 
-		void Refresh() {
-			autoAdjustDaylight = model.daylightSavings;
-			daylightCheckBox.IsChecked = autoAdjustDaylight;
-
-			if (deviceTimeZone != null) {
-				var tz = TimeZoneInfo.CreateCustomTimeZone(
-					deviceTimeZone.Id,
-					deviceTimeZone.BaseUtcOffset,
-					deviceTimeZone.DisplayName,
-					deviceTimeZone.StandardName,
-					deviceTimeZone.DaylightName,
-					deviceTimeZone.GetAdjustmentRules(),
-					!autoAdjustDaylight
-				);
-				deviceDateTime = TimeZoneInfo.ConvertTime(model.utcDateTime, tz);
-			} else {
-				deviceDateTime = model.utcDateTime;
-			}
-
-			setDateTimeMode = model.useDateTimeFromNtp ? SetDateTimeMode.SyncWithNtp : SetDateTimeMode.SyncWithComp;
-			PanelNtpMode.Visibility =
-				setDateTimeMode == SetDateTimeMode.SyncWithNtp ?
-				Visibility.Visible : Visibility.Collapsed;
-
-			syncWithNtp.IsSelected = setDateTimeMode == SetDateTimeMode.SyncWithNtp;
-			PanelSystemMode.Visibility =
-			   setDateTimeMode == SetDateTimeMode.SyncWithComp ?
-			   Visibility.Visible : Visibility.Collapsed;
-			syncWithComp.IsSelected = setDateTimeMode == SetDateTimeMode.SyncWithComp;
-
-			PanelManualMode.Visibility = System.Windows.Visibility.Collapsed;
-			setManual.IsSelected = false;
-
-			timeZonesComboBox.ItemsSource = timeZones;
-			timeZonesComboBox.SelectedItem = deviceTimeZone;
-
-			SelectedTime = new TimeSpan(
-				deviceDateTime.Hour,
-				deviceDateTime.Minute,
-				deviceDateTime.Second
-			);
-			SelectedDate = deviceDateTime;
-
-			newManualTimeValue.SelectedTime = SelectedTime;
-			newManualDateValue.SelectedDate = SelectedDate;
-		}
-
-        void BindModel(TimeSettingsView.Model model) {
-            Refresh();
-
-            applyButton.Command = ApplyCommand;
-            cancelButton.Command = CancelCommand;
-
-            daylightCheckBox.Checked += (s, a) => { autoAdjustDaylight = true; };
-            daylightCheckBox.Unchecked += (s, a) => { autoAdjustDaylight = false; };
-
-            disposables.Add(
-                syncWithNtp
-                    .GetPropertyChangedEvents(ComboBoxItem.IsSelectedProperty)
-                    .OfType<bool>()
-                    .Subscribe(value => {
-                        PanelNtpMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                        setDateTimeMode = SetDateTimeMode.SyncWithNtp;
-                    })
-            );
-
-            disposables.Add(
-                syncWithComp
-                    .GetPropertyChangedEvents(ComboBoxItem.IsSelectedProperty)
-                    .OfType<bool>()
-                    .Subscribe(value => {
-                        PanelSystemMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                        setDateTimeMode = SetDateTimeMode.SyncWithComp;
-                    })
-            );
-
-            disposables.Add(
-                setManual
-                    .GetPropertyChangedEvents(ComboBoxItem.IsSelectedProperty)
-                    .OfType<bool>()
-                    .Subscribe(value => {
-                        PanelManualMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                        setDateTimeMode = SetDateTimeMode.SetManually;
-                    })
-            );
-
-            timeZonesComboBox.SelectionChanged += (s, a) => {
-               // deviceTimeZone = (TimeZoneInfo)timeZonesComboBox.SelectedItem;
-				deviceTimeZone = (TZInfoDescriptor)timeZonesComboBox.SelectedItem;
-            };
-
-            Action UpdateCompDateTime = () => {
-                var tz = TimeZoneInfo.CreateCustomTimeZone(
-                    deviceTimeZone.Id,
-                    deviceTimeZone.BaseUtcOffset,
-                    deviceTimeZone.DisplayName,
-                    deviceTimeZone.StandardName,
-                    deviceTimeZone.DaylightName,
-                    deviceTimeZone.GetAdjustmentRules(),
-                    !autoAdjustDaylight
-                );
-                var compDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
-                compTimeValue.Text = compDateTime.ToString("T");
-                compDateValue.Text = compDateTime.ToString("d");
-            };
-            UpdateCompDateTime();
-            OnDeviceTimeZoneChanged += () => {
-                UpdateCompDateTime();
-            };
-            OnAutoAdjustDaylightChanged += () => {
-                UpdateCompDateTime();
-            };
-
-            Action UpdateDeviceDateTime = () => {
-                var elapsedTicks = Stopwatch.GetTimestamp() - model.timestamp;
-                var elapsedMilliseconds = (double)elapsedTicks * 1000.0 / (double)Stopwatch.Frequency;
-                var devDateTime = this.deviceDateTime.Add(TimeSpan.FromMilliseconds(elapsedMilliseconds));
-                deviceTimeValue.Text = devDateTime.ToString("T");
-                deviceDateValue.Text = devDateTime.ToString("d");
-            };
-            UpdateDeviceDateTime();
-
-            disposables.Add(
-                Observable
-                    .Interval(TimeSpan.FromMilliseconds(500))
-                    .ObserveOnDispatcher()
-                    .Subscribe(ticks => {
-                        try {
-                            UpdateDeviceDateTime();
-                            UpdateCompDateTime();
-                        } catch (Exception err) {
-                            dbg.Error(err);
-                        }
-                    })
-            );
-
-            
-            newManualTimeValue.SelectedTimeChanged += (s, a) => {
-                SelectedTime = newManualTimeValue.SelectedTime;
-            };
-            
-            newManualDateValue.SelectedDateChanged += (s, a) => {
-                SelectedDate = newManualDateValue.SelectedDate.Value;
-            };
-
-        }
-        #endregion Binding
-
-		void Init() {
-			Action UpdateDateTime = () => {
-				ComputerTime = System.DateTime.Now.ToString("T");
-				ComputerDate = System.DateTime.Now.ToString("d");
-				//DeviceTime = 
-				//DeviceDate = 
-			};
-			UpdateDateTime();
-			disposables.Add(
-				Observable
-					.Interval(TimeSpan.FromMilliseconds(500))
-					.ObserveOnDispatcher()
-					.Subscribe(x => {
-						UpdateDateTime();
-					})
-			);
-			SelectedDate = System.DateTime.Now;
-			SelectedTime = System.DateTime.Now.TimeOfDay;
-		}
-		public class TZInfoDescriptor {
-			public TZInfoDescriptor() {
-			}
-			public override string ToString() {
-				return Name;
-			}
-			List<TimeZoneInfo> tzinfoList = new List<TimeZoneInfo>();
-			public List<TimeZoneInfo> TzinfoList {
-				get { return tzinfoList; }
-			}
-			public void AddTimeZineInfo(TimeZoneInfo tzinfo) {
-				tzinfoList.Add(tzinfo);
-			}
-			public TimeZoneInfo GetLastTimeZone() {
-				if (tzinfoList.Count == 0)
-					return null;
-				return tzinfoList.Last();
-			}
-			public string Name {
-				get {
-					string displName = "";
-					if(tzinfoList.Count == 0)
-						return displName;
-
-					//displName += "(" + tzinfoList[0].BaseUtcOffset.Hours + ":" + tzinfoList[0].BaseUtcOffset.Minutes + ":" + tzinfoList[0].BaseUtcOffset.Seconds + ") ";
-					tzinfoList.ForEach(tz => {
-						displName += tz.DisplayName + ",";
-					});
-					displName.TrimEnd(',');
-
-					return displName;
-				}
-			}
-			public string RawPosizString {
-				get {
-					string res = PosixTimeZone.GetPosixTimeZone(tzinfoList[0]);
-					return res;
-				}
-				set { 
-				}
-			}
-			public string Id{
-				get{
-					if(tzinfoList.Count != 0)
-						return tzinfoList[0].Id;
-					return "0";
-				}
-			}
-			public string DisplayName{
-				get{
-					return Name;
-				}
-			}
-			public string StandardName{
-				get{
-					return tzinfoList[0].StandardName;
-				}
-			}
-			public string DaylightName{
-				get{
-					return tzinfoList[0].DaylightName;
-				}
-			}
-			public TimeSpan BaseUtcOffset{
-				get{
-					return tzinfoList[0].BaseUtcOffset;
-				}
-			}
-			public TimeZoneInfo.AdjustmentRule[] GetAdjustmentRules() {
-				return tzinfoList[0].GetAdjustmentRules();
-			}
-		}
-		class TZInfoDescriptorManager {
-			public static Dictionary<string, TZInfoDescriptor> Resolve(ReadOnlyCollection<TimeZoneInfo> tzInfoList) {
-				Dictionary<string, TZInfoDescriptor> dictTZInfo = new Dictionary<string, TZInfoDescriptor>();
-
-				tzInfoList.ForEach(tzi => {
-					string key = PosixTimeZone.GetPosixTimeZone(tzi);
-					if (dictTZInfo.ContainsKey(key)) {
-						dictTZInfo[key].AddTimeZineInfo(tzi);
-					} else {
-						dictTZInfo.Add(key, new TZInfoDescriptor());
-						dictTZInfo[key].AddTimeZineInfo(tzi);
-					}
-				});
-
-				return dictTZInfo;
-			}
-		}
-		void InitTimeZones() {
-			//current timezone in windows format
-			var initialPosTZ = PosixTimeZone.Convert(DeviceTimeZoneOriginal);
-
-			//init timezones list
-			var tzInfoList = TimeZoneInfo.GetSystemTimeZones();
-
-			var tzinfoDict = TZInfoDescriptorManager.Resolve(tzInfoList);
-
-			var normTZ = PosixTimeZone.GetNormalizeString(DeviceTimeZoneOriginal);
-
-			if (tzinfoDict.ContainsKey(normTZ)) {
-				deviceTimeZone = tzinfoDict[normTZ];
-			} else { 
-				TimeZoneInfo tzi = TimeZoneInfo.CreateCustomTimeZone(
-					Guid.NewGuid().ToString(),
-					new TimeSpan(
-						initialPosTZ.stdOffset.hours,
-						initialPosTZ.stdOffset.minutes,
-						initialPosTZ.stdOffset.seconds
-					),
-					DeviceTimeZoneOriginal,
-					DeviceTimeZoneOriginal
-				);
-				var tzdes = new TZInfoDescriptor();
-				tzdes.AddTimeZineInfo(tzi);
-				tzinfoDict.Add(normTZ, tzdes);
-				deviceTimeZone = tzdes;
-			}
-
-			//List<TimeZoneInfo> tzInfoListMutable = tzInfoList.ToList();
-			//var ret = tzInfoListMutable.FirstOrDefault(x => {
-			//    var posString = PosixTimeZone.GetPosixTimeZone(x);
-			//    var tmpTZ = PosixTimeZone.Convert(posString);
-			//    return PosixTimeZone.Compare(initialPosTZ, tmpTZ);
-			//});
-
-			//if (ret != null) {
-			//    deviceTimeZone = ret;
-			//} else {
-			//    TimeZoneInfo tzi = TimeZoneInfo.CreateCustomTimeZone(
-			//        Guid.NewGuid().ToString(), 
-			//        new TimeSpan(
-			//            initialPosTZ.stdOffset.hours, 
-			//            initialPosTZ.stdOffset.minutes, 
-			//            initialPosTZ.stdOffset.seconds
-			//        ),
-			//        DeviceTimeZoneOriginal, 
-			//        DeviceTimeZoneOriginal
-			//    );
-			//    tzInfoListMutable.Add(tzi);
-			//    deviceTimeZone = tzi;
-			//}
-
-			timeZones.Clear();
-			tzinfoDict.Values.ForEach(x => {
-				timeZones.Add(x);
-			});
-
-		}
-
         void OnRevertChanges() {
+			valueDeviceTime.Stop();
+			valueNewTime.Stop();
             model.RevertChanges();
             disposables.Dispose();
             disposables = new CompositeDisposable();
             InitTimeZones();
             Init();
-            BindModel(model);
+            //BindModel(model);
         }
 
 		void OnApplyChanges() {
-			//var tzinfo = DeviceTimeZone;
-			model.timeZone = deviceTimeZone.RawPosizString;
-			model.daylightSavings = autoAdjustDaylight;
-			switch (setDateTimeMode) {
-				case SetDateTimeMode.SyncWithComp:
-					model.useDateTimeFromNtp = false;
-					model.utcDateTime = DateTime.UtcNow;
-					break;
-				case SetDateTimeMode.SetManually:
-					model.useDateTimeFromNtp = false;
-					var dateTime = new DateTime(
-						SelectedDate.Year, 
-						SelectedDate.Month, 
-						SelectedDate.Day, 
-						SelectedTime.Hours,
-						SelectedTime.Minutes,
-						SelectedTime.Seconds,
-						DateTimeKind.Unspecified
-					);
-					var tz = TimeZoneInfo.CreateCustomTimeZone(
-						deviceTimeZone.Id,
-						deviceTimeZone.BaseUtcOffset,
-						deviceTimeZone.DisplayName,
-						deviceTimeZone.StandardName,
-						deviceTimeZone.DaylightName,
-						deviceTimeZone.GetAdjustmentRules(),
-						!autoAdjustDaylight
-					);
-					model.utcDateTime = TimeZoneInfo.ConvertTimeToUtc(dateTime, tz);
-					break;
-				case SetDateTimeMode.SyncWithNtp:
-					model.useDateTimeFromNtp = true;
-					break;
+			var tmodel = GetTimeZoneSelection();
+			
+			if (tmodel != null) {
+				string selectedTimeZoneString = "";
+				if (tmodel.originalString != null)
+					selectedTimeZoneString = tmodel.originalString;
+				else {
+					if (tmodel.posixTz != null) {
+						selectedTimeZoneString = tmodel.posixTz.Format();
+					} else {
+						dbg.Error("Error in timezone selection");
+					}
+				}
+				if (model.origin.timeZone != selectedTimeZoneString) {
+					model.timeZone = selectedTimeZoneString;
+				}
+				model.useDateTimeFromNtp = true;
+				switch (setDateTimeMode) { 
+					case SetDateTimeMode.SyncWithComp:
+						model.useDateTimeFromNtp = false;
+						model.utcDateTime = DateTime.UtcNow;
+						break;
+					case SetDateTimeMode.SetManually:
+						model.useDateTimeFromNtp = false;
+						DateTime tmpDt = newManualDateValue.SelectedDate?? DateTime.UtcNow;
+						DateTime manDt = new DateTime(tmpDt.Year, tmpDt.Month, tmpDt.Day, newManualTimeValue.SelectedHour, newManualTimeValue.SelectedMinute, newManualTimeValue.SelectedSecond);
+						if (tmodel.posixTz == null) {
+							model.utcDateTime = manDt;
+						} else {
+							try {
+								var systz = tmodel.posixTz.ToSystemTimeZone(valueNewTime.time.Year);
+								model.utcDateTime = TimeZoneInfo.ConvertTimeToUtc(manDt, systz);
+							} catch (Exception err) {
+								model.utcDateTime = DateTime.UtcNow;
+							}
+						}
+						break;
+				}
+			} else {
+				model.useDateTimeFromNtp = true;
+				dbg.Error("TimeZone model == null!!!");
 			}
 			Success(new Result.Apply(model));
 		} 
 
 		public void Dispose() {
+			valueDeviceTime.Dispose();
+			valueNewTime.Dispose();
 			Cancel();
+		}
+	}
+	public class TimeZoneViewModel {
+		[Serializable]
+		[XmlRoot("tz")]
+		public class ManualTimeZone {
+			[XmlAttribute("name")]
+			public string displayName;
+			[XmlAttribute("value")]
+			public string posixTz;
+		}
+		[Serializable]
+		[XmlRoot("time-zones")]
+		public class ManualTimeZones {
+			[XmlElement("tz")]
+			public ManualTimeZone[] timeZones;
+		}
+
+		public readonly string displayName;
+		public readonly string originalString;
+		public readonly PosixTz posixTz;
+		public TimeZoneViewModel(string displayName, string originalString, PosixTz posixTz) {
+			this.displayName = displayName;
+			this.originalString = originalString;
+			this.posixTz = posixTz;
+		}
+		public override string ToString() {
+			if (!String.IsNullOrWhiteSpace(displayName)) {
+				return displayName;
+			} else if (!String.IsNullOrWhiteSpace(originalString)) {
+				return originalString;
+			} else if ((object)posixTz != null) {
+				return posixTz.Format();
+			}
+			return "<null>";
+		}
+		static TimeZoneInfo.AdjustmentRule GetSystemTimeZoneRule(DateTime now, TimeZoneInfo tzi) {
+			if (!tzi.SupportsDaylightSavingTime) {
+				return null;
+			}
+			var rules = tzi.GetAdjustmentRules();
+			if (rules == null) {
+				return null;
+			}
+			foreach (var rule in rules) {
+				if ((rule.DateStart <= now) && (rule.DateEnd >= now)) {
+					return rule;
+				}
+			}
+			return null;
+		}
+
+		public static TimeZoneViewModel[] GetSystemTimeZones() {
+			var tz_list = new List<TimeZoneViewModel>(256);
+			var sys_tzs = TimeZoneInfo.GetSystemTimeZones();
+			var now = DateTime.Now;
+			foreach (var tzi in sys_tzs) {
+				PosixTz.Dst dst = null;
+				var rule = GetSystemTimeZoneRule(now, tzi);
+				var std_offset = -tzi.BaseUtcOffset.TotalSeconds.ToInt32();
+				if (rule != null) {
+					var start = PosixTzExtensions.GetPosixRuleFromTransitionTime(
+						rule.DaylightTransitionStart
+					);
+					var end = PosixTzExtensions.GetPosixRuleFromTransitionTime(
+						rule.DaylightTransitionEnd
+					);
+					var dst_offset = std_offset - rule.DaylightDelta.TotalSeconds.ToInt32();
+					dst = new PosixTz.Dst(
+						PosixTzWriter.NormalizeName(tzi.DaylightName), dst_offset, start, end
+					);
+				}
+				var posixTz = new PosixTz(
+					PosixTzWriter.NormalizeName(tzi.StandardName), std_offset, dst
+				);
+				tz_list.Add(new TimeZoneViewModel(
+					tzi.DisplayName, null, posixTz
+				));
+			}
+
+			return tz_list.OrderBy(x =>
+				new Tuple<int, string>(-x.posixTz.offset, x.displayName)
+			).ToArray();
+		}
+
+		public static TimeZoneViewModel[] GetManualTimeZones(string fileName) {
+			ManualTimeZones mtzs = null;
+			try {
+				var doc = new XmlDocument();
+				doc.Load(fileName);
+				mtzs = doc.DocumentElement.Deserialize<TimeZoneViewModel.ManualTimeZones>();
+			} catch (Exception err) {
+				dbg.Error(err);
+				return new TimeZoneViewModel[0];
+			}
+			if (mtzs == null || mtzs.timeZones == null || mtzs.timeZones.Length == 0) {
+				return new TimeZoneViewModel[0];
+			}
+
+			var tz_list = new List<TimeZoneViewModel>(256);
+			foreach (var tz in mtzs.timeZones) {
+				if (tz.posixTz != null) {
+					var posixTz = PosixTz.TryParse(tz.posixTz);
+					tz_list.Add(new TimeZoneViewModel(
+						tz.displayName, tz.posixTz, posixTz
+					));
+				}
+			}
+
+			return tz_list.OrderBy(x => {
+				if (x.posixTz != null) {
+					return new Tuple<int, int, string>(0, -x.posixTz.offset, x.displayName);
+				} else {
+					return new Tuple<int, int, string>(1, 0, x.displayName);
+				}
+			}).ToArray();
+
+		}
+
+		public static bool LogicallyEquals(TimeZoneViewModel left, TimeZoneViewModel right) {
+			return Object.ReferenceEquals(left, right) || (
+				!Object.ReferenceEquals(left, null) && (
+					PosixTz.LogicallyEquals(left.posixTz, right.posixTz) &&
+					((object)left.posixTz != null || left.originalString == right.originalString)
+				)
+			);
+		}
+		public bool LogicallyEquals(TimeZoneViewModel other) {
+			return LogicallyEquals(this, other);
+		}
+		public static int GetLogicalHashCode(TimeZoneViewModel tzm) {
+			if ((object)tzm == null) {
+				return 0;
+			}
+			if ((object)tzm.posixTz != null) {
+				return tzm.posixTz.GetLogicalHashCode();
+			}
+			return HashCode.Get(tzm.originalString);
+		}
+		public int GetLogicalHashCode() {
+			return GetLogicalHashCode(this);
+		}
+
+		public override bool Equals(object obj) {
+			return Equals(obj as TimeZoneViewModel);
+		}
+		public bool Equals(TimeZoneViewModel other) {
+			return !Object.ReferenceEquals(other, null) && (
+				(posixTz == other.posixTz) &&
+				((object)posixTz != null || originalString == other.originalString)
+			);
+		}
+		public override int GetHashCode() {
+			if ((object)posixTz != null) {
+				return posixTz.GetHashCode();
+			}
+			return HashCode.Get(originalString);
+		}
+		public static bool operator ==(TimeZoneViewModel left, TimeZoneViewModel right) {
+			return Object.ReferenceEquals(left, right) || (
+				!Object.ReferenceEquals(left, null) && left.Equals(right)
+			);
+		}
+		public static bool operator !=(TimeZoneViewModel left, TimeZoneViewModel right) {
+			return !(left == right);
 		}
 	}
 }

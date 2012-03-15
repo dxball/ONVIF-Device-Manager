@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reactive.Disposables;
@@ -46,7 +47,7 @@ namespace odm.ui.activities {
 			}
 		}
 		IPlaybackSession playbackSession;
-
+		public LocalVideoPlayer Strings { get { return LocalVideoPlayer.instance; } }
 		private void Init(Model model) {
 			OnCompleted += () => {
 				try {
@@ -61,18 +62,17 @@ namespace odm.ui.activities {
 			isPaused = false;
 			InitializeComponent();
 
+			captionNoSignal.CreateBinding(TextBlock.TextProperty, Strings, s => s.noSignal);
+			noSignalPanel.Visibility = System.Windows.Visibility.Hidden;
+
 			btnPause.Click += new RoutedEventHandler(btnPause_Click);
 			btnResume.Click += new RoutedEventHandler(btnPause_Click);
 
 			btnPause.CreateBinding(Button.VisibilityProperty, this, x => { return x.isPaused ? Visibility.Collapsed : Visibility.Visible; });
 			btnResume.CreateBinding(Button.VisibilityProperty, this, x => { return !x.isPaused ? Visibility.Collapsed : Visibility.Visible; });
 
-			if (AppDefaults.visualSettings.Enable_UI_Fps_Caption) {
-				fpsCaption.Visibility = System.Windows.Visibility.Visible;
-			} else {
-				fpsCaption.Visibility = System.Windows.Visibility.Hidden;
-			}
-
+			playbackStatistics.Visibility = AppDefaults.visualSettings.ShowVideoPlaybackStatistics ? Visibility.Visible : Visibility.Collapsed;
+			
 			if (model.isUriEnabled) {
 				uriString.Visibility = System.Windows.Visibility.Visible;
 				uriString.Text = model.mediaUri.Uri;
@@ -143,10 +143,99 @@ namespace odm.ui.activities {
 			isPaused = false;
 		}
 
+		private class PlaybackStatistics {
+			private PlaybackStatistics(){
+				signal = 0;
+				noSignalProcessor = NoSignalProcessor().GetEnumerator();
+				UpdateNoSignal();
+			}
+			static public PlaybackStatistics Start(){
+				return new PlaybackStatistics();
+			}
+
+			public const long noSignalDelay = 300;
+			public const long noSignalTimeout = 2000;
+			public const long noSignalTimeoutInitial = 5000;
+			
+			public bool isNoSignal { get; private set; }
+			public byte signal { get; private set; }
+			public double avgRenderingFps { get; private set; }
+			public double avgDecodingFps { get; private set; }
+
+			CircularBuffer<long> renderTimes = new CircularBuffer<long>(128);
+			CircularBuffer<long> decodeTimes = new CircularBuffer<long>(128);
+			IEnumerator<bool> noSignalProcessor;
+			
+			private static double SecondsFromTicks(long ticks){
+				return (double)ticks / (double)Stopwatch.Frequency;
+			}
+
+			private static double CalculateAvgFpsFromTimes(CircularBuffer<long> times) {
+				if (times.length < 2) {
+					return 0;
+				}
+				return times.length / SecondsFromTicks(times.last - times.first);
+			}
+
+			private void UpdateNoSignal(){
+				noSignalProcessor.MoveNext();
+				isNoSignal = noSignalProcessor.Current;
+			}
+
+			/// <summary>state machine for no signal</summary>
+			/// <returns>true if no signal detected</returns>
+			private IEnumerable<bool> NoSignalProcessor() {
+				var isNoSignal = false;
+				var timer = Stopwatch.StartNew();
+
+				while (signal == 0 ) {
+					if(timer.ElapsedMilliseconds > noSignalTimeoutInitial){
+						isNoSignal = true;
+						timer.Restart();
+						break;
+					}
+					yield return isNoSignal;
+				}
+				
+				while (true) {
+					if(signal != 0){
+						decodeTimes.Enqueue(Stopwatch.GetTimestamp());
+						if (!isNoSignal) {
+							timer.Restart();
+						} else if (timer.ElapsedMilliseconds > noSignalDelay) {
+							isNoSignal = false;
+							timer.Restart();
+						}
+					}else if (!isNoSignal && timer.ElapsedMilliseconds > noSignalTimeout){
+						isNoSignal = true;
+						timer.Restart();
+					}
+					yield return isNoSignal;
+				}
+			}
+
+			public void Update(VideoBuffer videoBuffer) {
+				//update rendering times history
+				renderTimes.Enqueue(Stopwatch.GetTimestamp());
+
+				//evaluate averange rendering fps
+				avgRenderingFps = CalculateAvgFpsFromTimes(renderTimes);
+				
+				//update no signal indicator
+				using (var md = videoBuffer.Lock()) {
+					signal = md.value.signal;
+					md.value.signal = 0;
+				}
+				UpdateNoSignal();
+
+				//evaluate averange rendering fps
+				avgDecodingFps = CalculateAvgFpsFromTimes(decodeTimes);
+			}
+		}
 		/// <summary>
-		/// Start Playback
+		/// Initiate rendering loop
 		/// </summary>
-		/// <param name="res"></param>
+		/// <param name="videoBuffer"></param>
 		public void InitPlayback(VideoBuffer videoBuffer) {
 			if (videoBuffer == null) {
 				throw new ArgumentNullException("videoBufferDescription");
@@ -161,16 +250,16 @@ namespace odm.ui.activities {
 			} catch {
 				renderinterval = TimeSpan.FromMilliseconds(1000 / 30);
 			}
-
+			
 			var cancellationTokenSource = new CancellationTokenSource();
 			renderSubscription.Disposable = Disposable.Create(() => {
 				cancellationTokenSource.Cancel();
 			});
 			var bitmap = PrepareForRendering(videoBuffer);
 			var cancellationToken = cancellationTokenSource.Token;
-			var dispatcher = Application.Current.Dispatcher;
+			var dispatcher = this.Dispatcher; //Application.Current.Dispatcher;
 			var renderingTask = Task.Factory.StartNew(() => {
-				var statistics = new CircularBuffer<long>(100);
+				var statistics = PlaybackStatistics.Start();
 				using (videoBuffer.Lock()) {
 					try {
 						//start rendering loop
@@ -180,15 +269,10 @@ namespace odm.ui.activities {
 									using (Disposable.Create(() => processingEvent.Set())) {
 										if (!cancellationToken.IsCancellationRequested) {
 											//update statisitc info
-											statistics.Enqueue(Stopwatch.GetTimestamp());
-											//evaluate averange rendering fps
-											var ticksEllapsed = statistics.last - statistics.first;
-											double avgFps = 0;
-											if (ticksEllapsed > 0) {
-												avgFps = ((double)statistics.length * (double)Stopwatch.Frequency) / (double)ticksEllapsed;
-											}
+											statistics.Update(videoBuffer);
+
 											//render farme to screen
-											DrawFrame(bitmap, videoBuffer, avgFps);
+											DrawFrame(bitmap, videoBuffer, statistics);
 										}
 									}
 								});
@@ -226,32 +310,36 @@ namespace odm.ui.activities {
 			return bitmap;
 		}
 
-		private void DrawFrame(WriteableBitmap bitmap, VideoBuffer videoBuffer, double averangeFps) {
+		private void DrawFrame(WriteableBitmap bitmap, VideoBuffer videoBuffer, PlaybackStatistics statistics) {
 			VerifyAccess();
 			if (isPaused) {
 				return;
 			}
-
 			bitmap.Lock();
 			try {
-				using (var ptr = videoBuffer.Lock()) {
+				using (var md = videoBuffer.Lock()) {
 					bitmap.WritePixels(
 						new Int32Rect(0, 0, videoBuffer.width, videoBuffer.height),
-						ptr.value, videoBuffer.size, videoBuffer.stride,
+						md.value.scan0Ptr, videoBuffer.size, videoBuffer.stride,
 						0, 0
 					);
 				}
 			} finally {
 				bitmap.Unlock();
 			}
-			fpsCaption.Text = averangeFps.ToString("F1");
+			renderingFps.Text = String.Format("rendering fps: {0:F1}", statistics.avgRenderingFps);
+			decodingFps.Text = String.Format("decoding fps: {0:F1}", statistics.avgDecodingFps);
+			noSignalPanel.Visibility =
+				statistics.isNoSignal ? Visibility.Visible : Visibility.Hidden;
+
 		}
 		private void BaseVideoPlayer_Loaded(object sender, RoutedEventArgs e) {
 
 		}
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 		public event PropertyChangedEventHandler PropertyChanged;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.FSharp.Control;
@@ -8,8 +9,14 @@ using odm.infra;
 using odm.ui.controls;
 using onvif.services;
 using utils;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Data;
+using System.Windows;
 
 namespace odm.ui.activities {
+
+	
 
 	public partial class NetworkSettingsView : UserControl, IDisposable {
 
@@ -34,6 +41,10 @@ namespace odm.ui.activities {
 			this.DataContext = model;
 			this.model = model;
 
+			OnCompleted+=new Action(()=>{
+				//free resources
+			});
+
 			var applyCmd = new DelegateCommand(
 				() => {
 					if (!model.dhcp) {
@@ -48,7 +59,10 @@ namespace odm.ui.activities {
 			ApplyCommand = applyCmd;
 
 			var cancelCmd = new DelegateCommand(
-				() => model.RevertChanges(),
+				() => {
+					model.RevertChanges();
+					FillProtocolsData(model);
+				},
 				() => true
 			);
 			CancelCommand = cancelCmd;
@@ -62,85 +76,87 @@ namespace odm.ui.activities {
 		void Localization() {
 			dhcpCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.dhcp);
 			dnsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.dns);
-			dnsFromDhcpCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.dnsFromDhcp);
+			//dnsFromDhcpCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.dnsFromDhcp);
 			gatewayCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.gateway);
 			ipAddressCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.ipAddress);
 			ipMaskCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.ipMask);
 			ntpCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.ntp);
-			ntpFromDhcpCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.ntpFromDhcp);
+			//ntpFromDhcpCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.ntpFromDhcp);
 			applyButton.CreateBinding(Button.ContentProperty, ButtonsLocales, x => x.apply);
 			cancelButton.CreateBinding(Button.ContentProperty, ButtonsLocales, x => x.cancel);
 			zeroCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.zeroCaption);
-			captionPortsHttp.CreateBinding(TextBlock.TextProperty, Strings, s => s.ports);
-			captionPortsHttps.CreateBinding(TextBlock.TextProperty, Strings, s => s.ports);
-			captionPortsRtsp.CreateBinding(TextBlock.TextProperty, Strings, s => s.ports);
+			//captionPortsHttp.CreateBinding(TextBlock.TextProperty, Strings, s => s.ports);
+			//captionPortsHttps.CreateBinding(TextBlock.TextProperty, Strings, s => s.ports);
+			//captionPortsRtsp.CreateBinding(TextBlock.TextProperty, Strings, s => s.ports);
+		}
+
+		private static Tuple<bool, string> GetProtocolPorts(NetworkProtocol[] protocols, NetworkProtocolType protocolType) {
+			var protocolName = protocolType.ToString();
+			if (protocols == null) {
+				return Tuple.Create(false, "");
+			}
+			var enabled = false;
+			var ports = new List<int>();
+			foreach (var protocol in protocols.Where(p => p != null && String.Compare(p.Name, protocolName, true) == 0)) {
+				if (protocol.Enabled && !enabled) {
+					enabled = true;
+					ports.Clear();
+				}
+				if (protocol.Port != null) {
+					ports.AddRange(protocol.Port);
+				}
+			}
+			return Tuple.Create(enabled, String.Join("; ", ports.Select(p => p.ToString())));
+		}
+
+		void FillProtocolsData(Model model) {
+
+			var httpPorts = GetProtocolPorts(model.netProtocols, NetworkProtocolType.HTTP);
+			valueEnableHttp.SelectedValue = httpPorts.Item1;
+			valuePortsHttp.Text = httpPorts.Item2;
+
+			var httpsPorts = GetProtocolPorts(model.netProtocols, NetworkProtocolType.HTTPS);
+			valueEnableHttps.SelectedValue = httpsPorts.Item1;
+			valuePortsHttps.Text = httpsPorts.Item2;
+			
+			var rtspPorts = GetProtocolPorts(model.netProtocols, NetworkProtocolType.RTSP);
+			valueEnableRtsp.SelectedValue = rtspPorts.Item1;
+			valuePortsRtsp.Text = rtspPorts.Item2;
+			
 		}
 		
-		void FillProtocolsData(Model model) {
-			valueEnableHttp.IsChecked = false;
-			valueEnableHttps.IsChecked = false;
-			valueEnableRtsp.IsChecked = false;
-
-			model.netProtocols.ForEach(prot => {
-				if (prot.name == NetworkProtocolType.HTTP.ToString()) {
-					if (prot.enabled) {
-						if (valueEnableHttp.IsChecked.Value) {
-							valuePortsHttp.Text +=";" + prot.ports ?? "";
-						} else {
-							valueEnableHttp.IsChecked = true;
-							valuePortsHttp.Text = prot.ports ?? "";
-						}
-					} else if (!valueEnableHttp.IsChecked.Value) {
-						valuePortsHttp.Text += ";" + prot.ports ?? "";
-					}
-
-					valuePortsHttp.Text.TrimStart(';');
-				} else if (prot.name == NetworkProtocolType.HTTPS.ToString()) {
-					if (prot.enabled) {
-						if (valueEnableHttps.IsChecked.Value) {
-							valuePortsHttps.Text += ";" + prot.ports ?? "";
-						} else {
-							valueEnableHttps.IsChecked = true;
-							valuePortsHttps.Text = prot.ports ?? "";
-						}
-					} else if (!valueEnableHttps.IsChecked.Value) {
-						valuePortsHttps.Text += ";" + prot.ports ?? "";
-					}
-
-					valuePortsHttps.Text.TrimStart(';');
-				} else if (prot.name == NetworkProtocolType.RTSP.ToString()) {
-					if (prot.enabled) {
-						if (valueEnableRtsp.IsChecked.Value) {
-							valuePortsRtsp.Text += ";" + prot.ports ?? "";
-						} else {
-							valueEnableRtsp.IsChecked = true;
-							valuePortsRtsp.Text = prot.ports ?? "";
-						}
-					} else if (!valueEnableRtsp.IsChecked.Value) {
-						valuePortsRtsp.Text += ";" + prot.ports ?? "";
-					}
-
-					valuePortsRtsp.Text.TrimStart(';');
-				}
-			});
+		private static NetworkProtocol CreateNetworkProtocol(NetworkProtocolType protocolType, string ports, bool enabled){
+			return new NetworkProtocol(){
+				Name = protocolType.ToString(),
+				Port = ports == null ? null : ports.Split(new []{';', ' ', ','}, StringSplitOptions.RemoveEmptyEntries).Select(p=>Int32.Parse(p)).ToArray(),
+				Enabled = enabled
+			};
 		}
+		
 		void GetProtocolData() {
-			NetworkProtocol httpProt = new NetworkProtocol(NetworkProtocolType.HTTP.ToString(), valuePortsHttp.Text, valueEnableHttp.IsChecked.Value);
-			NetworkProtocol httpsProt = new NetworkProtocol(NetworkProtocolType.HTTPS.ToString(), valuePortsHttps.Text, valueEnableHttps.IsChecked.Value);
-			NetworkProtocol rtspProt = new NetworkProtocol(NetworkProtocolType.RTSP.ToString(), valuePortsRtsp.Text, valueEnableRtsp.IsChecked.Value);
-			model.netProtocols = new NetworkProtocol[] { httpProt, httpsProt, rtspProt};
+			model.netProtocols = new NetworkProtocol[] { 
+				CreateNetworkProtocol(NetworkProtocolType.HTTP, valuePortsHttp.Text, (bool)valueEnableHttp.SelectedValue),
+				CreateNetworkProtocol(NetworkProtocolType.HTTPS, valuePortsHttps.Text, (bool)valueEnableHttps.SelectedValue),
+				CreateNetworkProtocol(NetworkProtocolType.RTSP, valuePortsRtsp.Text, (bool)valueEnableRtsp.SelectedValue)
+			};
 		}
+
 		void BindData(Model model) {
 			if (!model.zeroConfSupported) {
 				zeroValue.IsEnabled = false;
-				zeroIp.Text = "Not supported";
+				zeroIp.Text = "not supported";
 			} else {
 				zeroValue.CreateBinding(CheckBox.IsCheckedProperty, model,
 					x => x.zeroConfEnabled,
 					(m, v) => {
 						m.zeroConfEnabled = v;
 					});
-				zeroIp.Text = model.zeroConfIp;
+				if (!String.IsNullOrWhiteSpace(model.zeroConfIp)) {
+					zeroIp.Text = model.zeroConfIp;
+				} else {
+					zeroIp.Text = "none";
+				}
+				
 			}
 
 			FillProtocolsData(model);
@@ -148,30 +164,52 @@ namespace odm.ui.activities {
 			dhcpValue.CreateBinding(ComboBox.SelectedValueProperty, model, m => m.dhcp, (m, v) => m.dhcp = v);
 
 			ipAddressValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
-			ipAddressValue.CreateBinding(TextBox.TextProperty, model, x => x.ip, (m, v) => { m.ip = v; });
+			ipAddressValue.CreateBinding(TextBox.TextProperty, model, x => x.ip, (m, v) => m.ip = v);
 
 			ipMaskValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
-			ipMaskValue.CreateBinding(TextBox.TextProperty, model, x => x.subnet, (m, v) => { m.subnet = v; });
+			ipMaskValue.CreateBinding(TextBox.TextProperty, model, x => x.subnet, (m, v) => m.subnet = v);
 
 			gatewayValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
-			gatewayValue.CreateBinding(TextBox.TextProperty, model, x => x.gateway, (m, v) => { m.gateway = v; });
+			gatewayValue.CreateBinding(TextBox.TextProperty, model, x => x.gateway, (m, v) => m.gateway = v);
 
-			hostValue.CreateBinding(TextBox.IsReadOnlyProperty, model, m=>m.useHostFromDhcp);
-			hostValue.CreateBinding(TextBox.TextProperty, model, m => m.host, (m, v) => { m.host = v; });
-			hostFromDhcpValue.CreateBinding(CheckBox.IsCheckedProperty, model, m => m.useHostFromDhcp, (m, v) => { m.useHostFromDhcp = v; });
+			hostValue.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.useHostFromDhcp && model.dhcp);
+			hostValue.CreateBinding(TextBox.TextProperty, model, m => m.host, (m, v) => m.host = v);
+			
+			hostFromDhcpValue.CreateBinding(ComboBox.IsEnabledProperty, model, x => x.dhcp);
+			hostFromDhcpValue.CreateBinding(ComboBox.SelectedValueProperty, model, m => m.useHostFromDhcp && model.dhcp, (m, v) => m.useHostFromDhcp = v);
 
-			ntpValue.CreateBinding(TextBox.TextProperty, model, x => x.ntpServers, (m, v) => { m.ntpServers = v; });
+			dnsValue.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.useDnsFromDhcp && model.dhcp);
+			dnsValue.CreateBinding(TextBox.TextProperty, model, x => x.dns, (m, v) => m.dns = v);
 
-			dnsValue.CreateBinding(TextBox.TextProperty, model, x => x.dns, 
-				(m, v) => { 
-					m.dns = v; 
-				});
+			dnsFromDhcpValue.CreateBinding(ComboBox.IsEnabledProperty, model, x => x.dhcp);
+			dnsFromDhcpValue.CreateBinding(ComboBox.SelectedValueProperty, model, x => x.useDnsFromDhcp && model.dhcp, (m, v) => m.useDnsFromDhcp = v);
 
-			dnsFromDhcpValue.CreateBinding(CheckBox.IsEnabledProperty, model, x => x.dhcp);
-			dnsFromDhcpValue.CreateBinding(CheckBox.IsCheckedProperty, model, x => x.useDnsFromDhcp, (m, v) => { m.useDnsFromDhcp = v; });
+			ntpValue.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.useNtpFromDhcp && model.dhcp);
+			ntpValue.CreateBinding(TextBox.TextProperty, model, x => x.ntpServers, (m, v) => m.ntpServers = v);
 
-			ntpFromDhcpValue.CreateBinding(CheckBox.IsEnabledProperty, model, x => x.dhcp);
-			ntpFromDhcpValue.CreateBinding(CheckBox.IsCheckedProperty, model, x => x.useNtpFromDhcp, (m, v) => { m.useNtpFromDhcp = v; });
+			ntpFromDhcpValue.CreateBinding(ComboBox.IsEnabledProperty, model, x => x.dhcp);
+			ntpFromDhcpValue.CreateBinding(ComboBox.SelectedValueProperty, model, x => x.useNtpFromDhcp && model.dhcp, (m, v) => m.useNtpFromDhcp = v);
+
+			valueEnableHttp.SelectionChanged += (s, a) => {
+				if (a.AddedItems.Count > 0) {
+					var sel = a.AddedItems[0] as bool?;
+					valuePortsHttp.IsReadOnly = sel != true;
+				}
+			};
+
+			valueEnableHttps.SelectionChanged += (s, a) => {
+				if (a.AddedItems.Count > 0) {
+					var sel = a.AddedItems[0] as bool?;
+					valuePortsHttps.IsReadOnly = sel != true;
+				} 
+			};
+			valueEnableRtsp.SelectionChanged += (s, a) => {
+				if (a.AddedItems.Count > 0) {
+					var sel = a.AddedItems[0] as bool?;
+					valuePortsRtsp.IsReadOnly = sel != true;
+				} 
+			};
+
 		}
 
 		public void Dispose() {

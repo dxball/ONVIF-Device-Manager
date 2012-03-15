@@ -284,7 +284,8 @@
 							</StackPanel>
 						</GroupBox>
 					</Expander>
-					<Expander Name="expanderSettings" 
+					<Expander Name="expanderSettings"
+                              Visibility="Collapsed"
 							  HorizontalAlignment="Stretch" 
 							  Grid.Row="1" 
 							  Header="Settings"  

@@ -38,8 +38,5 @@
   &lt;string&gt;Guest;;0&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
-    <Setting Name="sss" Type="System.String" Scope="User">
-      <Value Profile="(Default)">sss</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

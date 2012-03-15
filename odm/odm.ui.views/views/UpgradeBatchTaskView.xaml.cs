@@ -307,11 +307,12 @@ namespace odm.ui.views {
                 set { } 
             }
 
-            private void NotifyPropertyChanged(String info) {
-                if (PropertyChanged != null) {
-                    PropertyChanged(this, new PropertyChangedEventArgs(info));
-                }
-            }
+			private void NotifyPropertyChanged(String info) {
+				var prop_changed = this.PropertyChanged;
+				if (prop_changed != null) {
+					prop_changed(this, new PropertyChangedEventArgs(info));
+				}
+			}
             public event PropertyChangedEventHandler PropertyChanged;
         }
 
@@ -381,11 +382,12 @@ namespace odm.ui.views {
             } else
                 btnUpgrade.IsEnabled = false;
         }
-        private void NotifyPropertyChanged(String info) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
+		private void NotifyPropertyChanged(String info) {
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
+			}
+		}
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void HandleRequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e) {

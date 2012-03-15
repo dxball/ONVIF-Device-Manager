@@ -306,8 +306,9 @@ namespace odm.ui.views {
 			}
 
 			private void NotifyPropertyChanged(String info) {
-				if (PropertyChanged != null) {
-					PropertyChanged(this, new PropertyChangedEventArgs(info));
+				var prop_changed = this.PropertyChanged;
+				if (prop_changed != null) {
+					prop_changed(this, new PropertyChangedEventArgs(info));
 				}
 			}
 			public event PropertyChangedEventHandler PropertyChanged;
@@ -397,8 +398,9 @@ namespace odm.ui.views {
 				});
 		}
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 		public event PropertyChangedEventHandler PropertyChanged;

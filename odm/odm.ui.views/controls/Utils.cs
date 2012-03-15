@@ -177,8 +177,9 @@ namespace odm.controllers {
 			}
 		}
 		static void ParseTimeZone(string rawData, PosixTimeZone tz) {
-            if (rawData == "")
-                return;
+			if (rawData == "") {
+				return;
+			}
 
 			string stdOffset = "";
 			string dstOffset = "";

@@ -76,6 +76,7 @@ namespace onvifmp{
 			}
 			if (avCodecContext->codec_id == CODEC_ID_H264){
 				avCodecContext->flags2 |= CODEC_FLAG2_CHUNKS;
+				//avCodecContext->flags2 |= CODEC_FLAG2_SHOW_ALL;
 			}
 			avFrame = avcodec_alloc_frame();
 			if (!avFrame){

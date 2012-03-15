@@ -52,8 +52,8 @@ namespace onvifmp{
 			if(frameProcessor){
 				auto correctedFrameSize = frameSize;
 				auto correctedBufferPtr = bufferPtr;
-				if(frameSize>sizeof(startCode4) && memcmp(startCode4, bufferPtr, sizeof(startCode4)) != 0){
-					if(frameSize>sizeof(startCode3) && memcmp(startCode3, bufferPtr, sizeof(startCode3)) != 0){
+				if(frameSize<sizeof(startCode4) || memcmp(startCode4, bufferPtr, sizeof(startCode4)) != 0){
+					if(frameSize<sizeof(startCode3) || memcmp(startCode3, bufferPtr, sizeof(startCode3)) != 0){
 						correctedFrameSize += sizeof(StartCode4_t);
 						correctedBufferPtr -= sizeof(StartCode4_t);
 					}

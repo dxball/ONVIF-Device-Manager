@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Controls;
@@ -79,7 +80,7 @@ namespace odm.ui.activities {
 			//numericTemp.IntValue = 100;
 			//numericTemp.ValueMax = 110;
 
-			numericTemp.Value = 100;
+			//numericTemp.Value = 100;
 
 
 			BindData(model);
@@ -106,7 +107,7 @@ namespace odm.ui.activities {
 			);
 		}
 
-		public class EncoderResolutionPair {
+		public class EncoderResolutionPair : IComparable<EncoderResolutionPair> {
 			public string Name {
 				get {
 					string name = "";
@@ -114,19 +115,26 @@ namespace odm.ui.activities {
 					return name;
 				}
 			}
-			public VideoEncoding Encoder { get; set; }
-			public VideoResolution Resolution { get; set; }
+			public EncoderResolutionPair(VideoEncoding Encoder, VideoResolution Resolution) {
+				this.Encoder = Encoder;
+				this.Resolution = Resolution;
+			}
+			public VideoEncoding Encoder{get; private set;}
+			public VideoResolution Resolution { get; private set; }
 			public Brush Foreground {
 				get {
 					Brush frgnd = Brushes.Black;
 					switch (Encoder) {
 						case VideoEncoding.H264:
+							//TODO: get rid of hardcode
 							frgnd = new SolidColorBrush(Color.FromArgb(255, 0, 80, 0));
 							break;
 						case VideoEncoding.JPEG:
+							//TODO: get rid of hardcode
 							frgnd = new SolidColorBrush(Color.FromArgb(255, 0, 0, 80));
 							break;
 						case VideoEncoding.MPEG4:
+							//TODO: get rid of hardcode
 							frgnd = new SolidColorBrush(Color.FromArgb(255, 80, 0, 0));
 							break;
 						default:
@@ -135,39 +143,60 @@ namespace odm.ui.activities {
 					return frgnd;
 				}
 			}
+
+			public int CompareTo(EncoderResolutionPair other) {
+				if (other == null) {
+					return 1;
+				}
+				if (Encoder == other.Encoder) {
+					return -Resolution.CompareTo(other.Resolution);
+				}
+				return Encoder - other.Encoder;
+			}
 		}
 		public List<EncoderResolutionPair> encResolutions { get; set; }
-		void FillEncodersCollection(Model model) {
-			model.encoders.ForEach(enc => {
-				switch (enc) {
-					case VideoEncoding.H264:
-						model.encoderOptions.H264.ResolutionsAvailable.ForEach(res => {
-							EncoderResolutionPair encres = new EncoderResolutionPair();
-							encres.Encoder = enc;
-							encres.Resolution = res;
-							encResolutions.Add(encres);
-						});
-						break;
-					case VideoEncoding.JPEG:
-						model.encoderOptions.JPEG.ResolutionsAvailable.ForEach(res => {
-							EncoderResolutionPair encres = new EncoderResolutionPair();
-							encres.Encoder = enc;
-							encres.Resolution = res;
-							encResolutions.Add(encres);
-						});
 
-						break;
-					case VideoEncoding.MPEG4:
-						model.encoderOptions.MPEG4.ResolutionsAvailable.ForEach(res => {
-							EncoderResolutionPair encres = new EncoderResolutionPair();
-							encres.Encoder = enc;
-							encres.Resolution = res;
-							encResolutions.Add(encres);
-						});
-
-						break;
+		static IEnumerable<Tuple<VideoEncoding, VideoResolution>> GetEncoderResolutions(Model model) {
+			if(model == null){
+				yield break;
+			}
+			yield return Tuple.Create(
+				model.encoder, model.resolution
+			);
+			var opts = model.encoderOptions;
+			if(opts == null){
+				yield break;
+			}
+			
+			if (opts.H264 != null && opts.H264.ResolutionsAvailable!=null) {
+				foreach(var res in opts.H264.ResolutionsAvailable){
+					yield return Tuple.Create(VideoEncoding.H264, res);
 				}
-			});
+			}
+
+			if (opts.JPEG != null && opts.JPEG.ResolutionsAvailable!=null) {
+				foreach(var res in opts.JPEG.ResolutionsAvailable){
+					yield return Tuple.Create(VideoEncoding.JPEG, res);
+				}
+			}
+
+			if (opts.MPEG4 != null && opts.MPEG4.ResolutionsAvailable!=null) {
+				foreach(var res in opts.MPEG4.ResolutionsAvailable){
+					yield return Tuple.Create(VideoEncoding.MPEG4, res);
+				}
+			}
+
+		}
+
+		void FillEncodersCollection(Model model) {
+			encResolutions.AddRange(
+				GetEncoderResolutions(model)
+					.Distinct()
+					.Select(x=>
+						new EncoderResolutionPair(x.Item1, x.Item2)
+					)
+					.OrderBy(x => x)
+			);
 		}
 
 		public EncoderResolutionPair EncoderResolution {

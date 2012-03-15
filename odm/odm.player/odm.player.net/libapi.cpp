@@ -11,6 +11,7 @@ namespace odm{
 	namespace player{
 
 		using namespace System;
+		using namespace System::Text;
 		using namespace System::Runtime::InteropServices;
 		using namespace utils;
 		
@@ -119,12 +120,13 @@ namespace odm{
 					onvifmpVideoBuffer->height = videoBuffer->height;
 					onvifmpVideoBuffer->stride[0] = videoBuffer->stride;
 					videoBufferLock = videoBuffer->Lock();
-					onvifmpVideoBuffer->scan0[0] = static_cast<uint8_t*>(videoBufferLock->value.ToPointer());
+					onvifmpVideoBuffer->scan0[0] = static_cast<uint8_t*>(videoBufferLock->value->scan0Ptr.ToPointer());
 					//h->
 					for(int i = 1; i<4; ++i){
 						onvifmpVideoBuffer->stride[i] = 0;
 						onvifmpVideoBuffer->scan0[i] = nullptr;
 					}
+					onvifmpVideoBuffer->signal = static_cast<uint8_t*>(videoBufferLock->value->signalPtr.ToPointer());
 					//onvifmpVideoBuffer.width = videoBuffer
 					onvifmpInstance->SetVideoOutput(onvifmpVideoBuffer);
 				}
@@ -202,10 +204,20 @@ namespace odm{
 					Authenticator* authenticator = nullptr;
 					if(mediaStreamInfo->userNameToken != nullptr){
 						auto userNameToken = mediaStreamInfo->userNameToken;
-						userNameIntPtr = Marshal::StringToHGlobalAnsi(userNameToken->userName);
-						passwordIntPtr = Marshal::StringToHGlobalAnsi(userNameToken->password);
+						
+						auto userNameBytes = Encoding::UTF8->GetBytes(userNameToken->userName);
+						userNameIntPtr = Marshal::AllocHGlobal(userNameBytes->Length+1);
+						Marshal::Copy(userNameBytes, 0, userNameIntPtr, userNameBytes->Length);
 						auto userName = static_cast<char*>(userNameIntPtr.ToPointer());
+						userName[userNameBytes->Length] = 0;
+						
+						
+						auto passwordBytes = Encoding::UTF8->GetBytes(userNameToken->password);
+						passwordIntPtr = Marshal::AllocHGlobal(passwordBytes->Length+1);
+						Marshal::Copy(passwordBytes, 0, passwordIntPtr, passwordBytes->Length);
 						auto password = static_cast<char*>(passwordIntPtr.ToPointer());
+						password[passwordBytes->Length] = 0;
+
 						authenticator = new Authenticator(userName, password);
 					}
 					//auto proxyController = std::make_shared<ProxyPlaybackController>();
@@ -257,7 +269,7 @@ namespace odm{
 			IMetadataReceiver^ metadataReceiver;
 
 			IPlaybackController^ playbackController;
-			utils::IDisposable<IntPtr>^ videoBufferLock;
+			utils::IDisposable<MappedData^>^ videoBufferLock;
 
 			
 			//void HandleError(const char* msg){

@@ -18,8 +18,9 @@ namespace odm.ui.controls {
 		public static readonly DependencyProperty DefaultCaptionProperty = DependencyProperty.Register("DefaultCaption", typeof(string), typeof(FilterTextBox));
 
 		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			var prop_changed = this.PropertyChanged;
+			if (prop_changed != null) {
+				prop_changed(this, new PropertyChangedEventArgs(info));
 			}
 		}
 		public event PropertyChangedEventHandler PropertyChanged;

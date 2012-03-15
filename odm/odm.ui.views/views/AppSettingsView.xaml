@@ -69,17 +69,17 @@
                     </ContentControl>
 
 					<ContentControl Grid.Row="2" Style="{StaticResource captionContainer}">
-						<TextBlock Name="enableUiFpsCaption" Text="UI video rendering fps "/>
+						<TextBlock Name="showVideoPlaybackStatisticsCaption" Text="show video playback statistics "/>
 					</ContentControl>
 					<ContentControl Grid.Row="2" Style="{StaticResource valueContainer}">
-						<CheckBox Name="enableUiFpsValue"/>
+						<CheckBox Name="showVideoPlaybackStatisticsValue"/>
 					</ContentControl>
 
 					<ContentControl Grid.Row="3" Style="{StaticResource captionContainer}">
-                        <TextBlock Name="uiFpsCaption" Text="UI video rendering fps "/>
+						<TextBlock Name="videoRenderingFpsCaption" Text="video rendering fps "/>
                     </ContentControl>
                     <ContentControl Grid.Row="3" Style="{StaticResource valueContainer}">
-                        <wtk:IntegerUpDown Name="uiFpsValue"/>
+						<wtk:IntegerUpDown Name="videoRenderingFpsValue"/>
                     </ContentControl>
                 </Grid>
             </GroupBox>

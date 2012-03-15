@@ -32,7 +32,6 @@
         let facade = new OdmSession(session)
         
         let show_error(err:Exception) = async{
-            dbg.Error(err)
             do! ErrorView.Show(ctx, err) |> Async.Ignore
         }
         
@@ -91,16 +90,16 @@
         }
 
         let apply_changes(model:TimeSettingsView.Model) = async{
-            let dateTime_has_changed = 
+            let dateTime_changed = 
                 model.origin.utcDateTime <> model.current.utcDateTime ||
                 model.origin.timeZone <> model.current.timeZone ||
                 model.origin.useDateTimeFromNtp <> model.current.useDateTimeFromNtp ||
                 model.origin.daylightSavings <> model.current.daylightSavings
-//            let ntp_has_changed = 
+//            let ntp_changed = 
 //                model.origin.useNtpFromDhcp <> model.current.useNtpFromDhcp ||
 //                model.origin.ntp <> model.current.ntp
             
-            if dateTime_has_changed then
+            if dateTime_changed then
                 let timeZone = 
                     new TimeZone(
                         TZ = model.current.timeZone
@@ -129,7 +128,7 @@
                         let dateTime = sysDateTime.UTCDateTime
                         do! session.SetSystemDateAndTime(SetDateTimeType.Manual, model.current.daylightSavings, timeZone, dateTime)
 
-//            if ntp_has_changed then
+//            if ntp_changed then
 //                do! session.SetNTP(model.current.useNtpFromDhcp, model.current.ntp.Split([|';'|], StringSplitOptions.RemoveEmptyEntries).Select(fun x -> NetHostFromString(x)).ToArray())
             
         }
@@ -144,6 +143,7 @@
                     }
                     return this.ShowForm(model)
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -165,6 +165,7 @@
                         close = (fun ()->this.Complete())
                     )
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.ShowForm(model)
             }
@@ -184,6 +185,7 @@
                         return! this.Main()
                     }
                 with err ->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }

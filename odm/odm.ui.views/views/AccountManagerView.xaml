@@ -21,8 +21,8 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <DockPanel HorizontalAlignment="Stretch">
-            <StackPanel Margin="0,10,0,0" DockPanel.Dock="Bottom" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" IsEnabled="True">
-                <Button Name="btnApply" cmd:Click.Command="{Binding ApplyClick}" Margin="2" Content="Apply"/>
+            <StackPanel Margin="3,10,3,3" DockPanel.Dock="Bottom" FlowDirection="RightToLeft" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" IsEnabled="True">
+                <Button Name="btnApply" cmd:Click.Command="{Binding ApplyClick}" Margin="2,0" Content="Apply"/>
                 <!--<Button Margin="2" Content="Cancel"/>-->
             </StackPanel>
             <Grid HorizontalAlignment="Stretch" Margin="3">
@@ -34,13 +34,13 @@
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <DockPanel Grid.Column="0">
+                <DockPanel Grid.Column="0" Margin="0">
                     <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Name="btnNew" cmd:Click.Command="{Binding NewClick}" Margin="2" Content="New"/>
                         <Button Name="btnDelete" cmd:Click.Command="{Binding DeleteClick}" Margin="2" Content="Delete"/>
                     </StackPanel>
 
-                    <ListBox Name="accountsList" Margin="3" MinHeight="80" MinWidth="80" ItemsSource="{Binding Accounts}" DisplayMemberPath="{Binding Name}" SelectedItem="{Binding SelectedAccount}">
+                    <ListBox Name="accountsList" Margin="2" MinHeight="80" MinWidth="80" ItemsSource="{Binding Accounts}" DisplayMemberPath="{Binding Name}" SelectedItem="{Binding SelectedAccount}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}"/>

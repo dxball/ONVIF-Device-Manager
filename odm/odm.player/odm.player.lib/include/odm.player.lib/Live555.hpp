@@ -4,6 +4,11 @@
 namespace onvifmp{
 	using namespace std;
 
+	class RtspOptions{
+	public:
+		bool getParamSupported;
+	};
+
 	class Live555 {
 	public:
 
@@ -34,6 +39,7 @@ namespace onvifmp{
 		BasicUsageEnvironment* usageEnvironment;
 		RTSPClient* rtspClient;
 		MediaSession* mediaSession;
+		RtspOptions rtspOptions;
 
 		bool videoSubsessionInitialized;
 		bool metadataSubsessionInitialized;

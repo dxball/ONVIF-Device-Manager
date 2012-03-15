@@ -24,23 +24,26 @@ namespace odm.ui.views.CustomAnalytics {
     /// <summary>
     /// Interaction logic for TamperingDetectorsView.xaml
     /// </summary>
-    public partial class TamperingDetectorsView : UserControl, IDisposable, IPlaybackController {
+    public partial class TamperingDetectorsView : UserControl, IDisposable {
         public TamperingDetectorsView() {
             InitializeComponent();
-			disposables = new CompositeDisposable();
+			//disposables = new CompositeDisposable();
         }
         odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model;
         IUnityContainer container;
         IVideoInfo videoInfo;
         public PropertyTamperingDetectorsStrings Strings { get { return PropertyTamperingDetectorsStrings.instance; } }
 
+		public void SetPlayer(Border player) {
+			playerHolder.Child = player;
+		}
+
         public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
             this.model = model;
             this.container = container;
             this.videoInfo = videoInfo;
 
-            BindData();
-			VideoStartup(videoInfo, profToken);
+			BindData();
         }
         void BindData() {
             cameraRedirected.CreateBinding(CheckBox.IsCheckedProperty, model, x => x.CameraRedirected, (m, v) => {
@@ -70,36 +73,7 @@ namespace odm.ui.views.CustomAnalytics {
             
         }
 
-		IPlaybackSession playbackSession;
-		VideoBuffer vidBuff;
-		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo, string profToken) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
-
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
-
-			var model = new VideoPlayerActivityModel(
-				profileToken: profToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
-
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
-			);
-		}
-
 		public void Dispose() {
-			if (vidBuff != null) {
-				vidBuff.Dispose();
-			}
-			disposables.Dispose();
 			//TODO: release player host
 		}
 
@@ -117,14 +91,5 @@ namespace odm.ui.views.CustomAnalytics {
         public static readonly DependencyProperty isCameraRedirectedEnabledProperty =
             DependencyProperty.Register("isCameraRedirectedEnabled", typeof(bool), typeof(TamperingDetectorsView));
 
-
-
-		public new bool Initialized(IPlaybackSession playbackSession) {
-			this.playbackSession = playbackSession;
-			return true;
-		}
-
-		public void Shutdown() {
-		}
 	}
 }

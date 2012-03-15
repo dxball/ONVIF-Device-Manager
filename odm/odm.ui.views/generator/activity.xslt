@@ -258,7 +258,7 @@ namespace <xsl:value-of select="@clr-ns" /> {
 				<xsl:value-of select="concat('ObservableCollection&lt;',@clr-type, '&gt; ', @name)"/>{get;set;}
 			</xsl:for-each>
 		}
-		public class Model: IModelAccessor, INotifyPropertyChanged{
+		public class <xsl:value-of select="$class-name"/>: IModelAccessor, INotifyPropertyChanged{
 			<xsl:apply-templates select="." mode="generate-model-constructors"/>
 			<xsl:for-each select="$s-props">
 				private <xsl:value-of select="concat('SimpleChangeTrackable&lt;', @clr-type,'&gt; m_', @name,';')"/>
@@ -288,29 +288,11 @@ namespace <xsl:value-of select="@clr-ns" /> {
 				}
 				</xsl:for-each>
 			}
-			private PropertyChangedEventHandler cb;
-			private object sync = new object();
-			public event PropertyChangedEventHandler PropertyChanged {
-				add {
-					lock(sync){
-						cb += value;
-					}
-				}
-				remove {
-					lock(sync){
-						cb -= value;
-					}
-				}
-			}
+			public event PropertyChangedEventHandler PropertyChanged;
 			private void NotifyPropertyChanged(string propertyName){
-				PropertyChangedEventHandler cb_copy = null;
-				lock(sync){
-					if(cb!=null){
-						cb_copy = cb.Clone() as PropertyChangedEventHandler;
-					}
-				}
-				if (cb_copy != null) {
-					cb_copy(this, new PropertyChangedEventArgs(propertyName));
+				var prop_changed = this.PropertyChanged;
+				if (prop_changed != null) {
+					prop_changed(this, new PropertyChangedEventArgs(propertyName));
 				}
 			}
 			<!--private class CurrentAccessor: <xsl:value-of select="$i-name"/> {
@@ -355,7 +337,7 @@ namespace <xsl:value-of select="@clr-ns" /> {
 
 			public void RevertChanges() {
 				<xsl:for-each select="$t-props">
-					<xsl:value-of select="concat('m_',@name,'.RevertChanges()')"/>;
+					<xsl:value-of select="concat('this.current.', @name, '= this.origin.', @name)"/>;
 				</xsl:for-each>
 			}
 
