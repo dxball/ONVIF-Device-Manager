@@ -31,10 +31,11 @@ namespace odm.ui.activities {
 		public class Model: IModelAccessor, INotifyPropertyChanged{
 			
 			public Model(
-				long timestamp
+				long timestamp, DateTime? localDateTime
 			){
 				
 				this.timestamp = timestamp;
+				this.localDateTime = localDateTime;
 			}
 			private Model(){
 			}
@@ -42,6 +43,7 @@ namespace odm.ui.activities {
 
 			public static Model Create(
 				long timestamp,
+				DateTime? localDateTime,
 				DateTime utcDateTime,
 				bool useDateTimeFromNtp,
 				string timeZone,
@@ -50,6 +52,7 @@ namespace odm.ui.activities {
 				var _this = new Model();
 				
 				_this.timestamp = timestamp;
+				_this.localDateTime = localDateTime;
 				_this.origin.utcDateTime = utcDateTime;
 				_this.origin.useDateTimeFromNtp = useDateTimeFromNtp;
 				_this.origin.timeZone = timeZone;
@@ -64,6 +67,7 @@ namespace odm.ui.activities {
 				private SimpleChangeTrackable<string> m_timeZone;
 				private SimpleChangeTrackable<bool> m_daylightSavings;
 				public long timestamp{get;private set;}
+				public DateTime? localDateTime{get;private set;}
 
 			private class OriginAccessor: IModelAccessor {
 				private Model m_model;

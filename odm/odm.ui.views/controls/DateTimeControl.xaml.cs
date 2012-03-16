@@ -20,94 +20,60 @@ using System.ComponentModel;
 using utils;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Threading;
 
 namespace odm.ui.controls {
 	/// <summary>
 	/// Interaction logic for DateTimeControl.xaml
 	/// </summary>
-	public partial class DateTimeControl : UserControl, INotifyPropertyChanged, IDisposable {
+	public partial class DateTimeControl : UserControl, IDisposable {
 		public DateTimeControl() {
 			InitializeComponent();
-
-			dispatch = Dispatcher.CurrentDispatcher;
-			time = DateTime.UtcNow;
-			valueTime.CreateBinding(TextBlock.TextProperty, this, t => t.time.ToLongTimeString());
-			valueDate.CreateBinding(TextBlock.TextProperty, this, t => t.time.ToShortDateString());
+			Invalidate();
 		}
-		Dispatcher dispatch;
-		DateTime _time;
-		public DateTime time {
-			get { return _time; }
-			set {
-				_time = value;
-				NotifyPropertyChanged("time");
+
+		Func<DateTime> getDateTime = null;
+		SerialDisposable timerSubscription = new SerialDisposable();
+		
+		public void Init(Func<DateTime> getDateTime) {
+			this.getDateTime = getDateTime;
+			timerSubscription.Disposable = null;
+			Invalidate();
+			if (getDateTime != null && !timerSubscription.IsDisposed) {
+				timerSubscription.Disposable = new Timer(
+					(state) => {
+						Dispatcher.BeginInvoke(() => {
+							Invalidate();
+						});
+					}, null, 500, 500
+				);
 			}
 		}
-		TimeZoneViewModel timezone { get; set; }
-		Func<DateTime> GetTime;
-		CompositeDisposable disposables = new CompositeDisposable();
-		public void SetTime(DateTime time, TimeZoneViewModel timezone, Func<DateTime> GetTime) {
-			this.GetTime = GetTime;
-			this.timezone = timezone;
-			this.time = time;
-			Startup();
-		}
-		public void TimeZoneChanged(TimeZoneViewModel timezone) {
-			this.timezone = timezone;
-			Startup();
-		}
-		public void Stop() {
-			disposables.Dispose();
-			disposables = new CompositeDisposable();
-		}
-		protected void Startup() {
-			disposables.Dispose();
-			disposables = new CompositeDisposable();
-
-			TimeZoneInfo tzInfo = null;
-			try {
-				tzInfo = timezone.posixTz.ToSystemTimeZone(time.Year);
-			} catch (Exception err) { }
-			
-			Stopwatch.GetTimestamp();
-			var difTime = DateTime.UtcNow.Subtract(time);
-			dispatch.BeginInvoke(() => {
-				InitTimeAction(tzInfo);
-			});
-			disposables.Add(
-				Observable.Interval(TimeSpan.FromMilliseconds(500))
-				.Subscribe(next=>{
-					if(GetTime != null){
-						dispatch.BeginInvoke(() => {
-							InitTimeAction(tzInfo);
-						});
-					}
-				})
-			);
-		}
-		private void InitTimeAction(TimeZoneInfo tzInfo) {
-			var tmp = GetTime();
-			if (tzInfo != null) {
-				time = TimeZoneInfo.ConvertTime(tmp, tzInfo);
+		public void Invalidate() {
+			var dateTime = default(DateTime);
+			if (getDateTime != null) {
+				dateTime = getDateTime();
+			}
+			valueTime.Text = dateTime.ToLongTimeString();
+			valueDate.Text = dateTime.ToShortDateString();
+				
+			if (dateTime.Kind != DateTimeKind.Utc) {
 				valueCaption.Text = LocalTimeZone.instance.captionLocal;
 				valueCaption.FontWeight = FontWeights.Normal;
 				valueCaption.Foreground = Brushes.DarkGray;
+					
 			} else {
-				time = tmp;
 				valueCaption.Text = LocalTimeZone.instance.captionUtc;
 				valueCaption.FontWeight = FontWeights.Bold;
 				valueCaption.Foreground = Brushes.DarkRed;
 			}
-		}
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged(String info) {
-			if (PropertyChanged != null) {
-				PropertyChanged(this, new PropertyChangedEventArgs(info));
-			}
+			
 		}
 
 		public void Dispose() {
-			disposables.Dispose();
+			timerSubscription.Disposable = null;
+			getDateTime = null;
+			Invalidate();
 		}
 	}
 }

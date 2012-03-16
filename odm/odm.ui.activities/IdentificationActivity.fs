@@ -36,12 +36,11 @@
         let facade = new OdmSession(session)
         
         let show_error(err:Exception) = async{
-            dbg.Error(err);
             do! ErrorView.Show(ctx, err) |> Async.Ignore
         }
 
         let load() = async{
-            let! devInfo, scopes, zeroConf, netstat, caps = Async.Parallel(
+            let! devInfo, scopes, zeroConf, nics, caps = Async.Parallel(
                 session.GetDeviceInformation(),
                 session.GetScopes(),
                 async{
@@ -51,13 +50,35 @@
                     else
                         return null
                 },
-                facade.GetNetworkStatus(),
+                session.GetNetworkInterfaces(),
+                //facade.GetNetworkStatus(),
                 session.GetCapabilities()
             )
 
+            let nicInfs = Seq.toArray(seq{
+                if nics <> null then
+                    for nic in nics do
+                        if nic.Enabled && nic.IPv4 <> null && nic.IPv4.Config <> null then
+                            let nic_cfg = nic.IPv4.Config
+                            let mac = 
+                                if nic.Info <> null then
+                                    nic.Info.HwAddress.Replace(':', '-').ToUpper()
+                                else
+                                    null
+                            if nic_cfg.DHCP && nic_cfg.FromDHCP <> null then
+                                yield (mac, [|nic_cfg.FromDHCP|])
+                            elif not nic_cfg.DHCP && nic_cfg.Manual<>null && nic_cfg.Manual.Count()>0 then
+                                yield (mac, nic_cfg.Manual)
+            })
+
             let ips = seq{
-                if netstat.nics <> null then
-                    yield! netstat.nics |> Seq.map (fun nic -> nic.ip.ToString())
+                for (mac, addrs) in nicInfs do
+                    yield! seq{ 
+                        for addr in addrs do
+                            if addr<>null && not(String.IsNullOrWhiteSpace(addr.Address)) then
+                                yield addr.Address.Trim()
+                    }
+                   
                 if zeroConf<>null && zeroConf.Addresses <> null then
                     yield! zeroConf.Addresses |> Seq.filter(fun x-> not(String.IsNullOrEmpty(x)))
             }
@@ -75,7 +96,7 @@
                 manufacturer = devInfo.Manufacturer,
                 model = devInfo.Model,
                 //model.host
-                mac  = String.Join(", ", netstat.nics |> Seq.map (fun nic -> nic.mac)),
+                mac  = String.Join(", ", nicInfs |> Seq.map (fun (mac, addrs) -> mac)),
                 ip  = String.Join(", ", ips.Distinct()),
                 onvifVersion = onvifVersion
             )
@@ -153,6 +174,7 @@
                     }
                     return this.ShowForm(model)
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -168,6 +190,7 @@
                         close = (fun ()->this.Complete())
                     )
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -183,6 +206,7 @@
                     }
                     return this.Main()
                 with err ->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }

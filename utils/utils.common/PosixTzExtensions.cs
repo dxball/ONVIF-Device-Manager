@@ -51,7 +51,7 @@ namespace utils {
 			);
 		}
 
-		public static TimeZoneInfo ToSystemTimeZone(this PosixTz posixTz, int year) {
+		public static TimeZoneInfo ToSystemTimeZone(this PosixTz posixTz, int year, bool isDaylightSavingTime = true) {
 			if ((object)posixTz == null) {
 				return null;
 			}
@@ -60,7 +60,7 @@ namespace utils {
 				id = id.Substring(0, 32);
 			}
 			var baseOffset = TimeSpan.FromSeconds(-posixTz.offset);
-			if ((object)posixTz.dst == null) {
+			if ((object)posixTz.dst == null || !isDaylightSavingTime) {
 				return TimeZoneInfo.CreateCustomTimeZone(
 					id, baseOffset, posixTz.Format(), posixTz.name
 				);
@@ -79,19 +79,19 @@ namespace utils {
 			);
 		}
 
-		public static DateTime ConvertUtcTimeToLocal(this PosixTz posixTz, DateTime time) {
+		public static DateTime ConvertUtcTimeToLocal(this PosixTz posixTz, DateTime time, bool isDaylightSavingTime = true) {
 			if ((object)posixTz == null) {
 				throw new ArgumentNullException("posixTz");
 			}
-			var tz = posixTz.ToSystemTimeZone(time.Year);
+			var tz = posixTz.ToSystemTimeZone(time.Year, isDaylightSavingTime);
 			return TimeZoneInfo.ConvertTimeFromUtc(time, tz);
 		}
 
-		public static DateTime ConvertLocalTimeToUtc(this PosixTz posixTz, DateTime time) {
+		public static DateTime ConvertLocalTimeToUtc(this PosixTz posixTz, DateTime time, bool isDaylightSavingTime = true) {
 			if ((object)posixTz == null) {
 				throw new ArgumentNullException("posixTz");
 			}
-			var tz = posixTz.ToSystemTimeZone(time.Year);
+			var tz = posixTz.ToSystemTimeZone(time.Year, isDaylightSavingTime);
 			return TimeZoneInfo.ConvertTimeToUtc(time, tz);
 		}
 

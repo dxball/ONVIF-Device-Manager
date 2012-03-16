@@ -2,6 +2,7 @@
 <activity name="TimeSettingsView" clr-ns="odm.ui.activities">
 	<model>
 		<prop name="timestamp" clr-type="long" read-only="true"/>
+		<prop name="localDateTime" clr-type="DateTime?" read-only="true"/>
 		<prop name="utcDateTime" clr-type="DateTime" />
 		<prop name="useDateTimeFromNtp" clr-type="bool" />
 		<prop name="timeZone" clr-type="string" />

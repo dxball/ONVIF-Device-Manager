@@ -844,7 +844,9 @@
     <Activity Include="ProfileUpdatingView.xml" />
     <Activity Include="ProfileCreationView.xml" />
     <Activity Include="AnalyticsView.xml" />
-    <Activity Include="VideoSettingsView.xml" />
+    <Activity Include="VideoSettingsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
     <Activity Include="ItemSelectorView.xml">
       <SubType>Designer</SubType>
     </Activity>

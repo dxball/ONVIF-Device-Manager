@@ -29,10 +29,11 @@ namespace odm.ui.activities {
 			SyncWithNtp,
 			SyncWithComp
 		}
-
+		PosixTz originPosixTz;
 		private void Init(Model model) {
 			//Save model handle
 			this.model = model;
+			originPosixTz = PosixTz.TryParse(model.timeZone);
 
 			//Init command
 			OnCompleted += () => {disposables.Dispose();};
@@ -67,8 +68,8 @@ namespace odm.ui.activities {
 			Localization();
 		}
 		void InitTimeZones() {
-            //refresh list
-            timeZonesComboBox.Items.Clear();
+			//refresh list
+			timeZonesComboBox.Items.Clear();
 			//Get system timezones list
 			var listSystem = TimeZoneViewModel.GetSystemTimeZones();
 			listSystem.ForEach(obj => {
@@ -82,20 +83,31 @@ namespace odm.ui.activities {
 				"custom-time-zones.xml"
 			);
 			var listManual = TimeZoneViewModel.GetManualTimeZones(manualListpath);
-            if (listManual.Count() != 0)
-            {
-                timeZonesComboBox.Items.Add(new Separator());
-                listManual.ForEach(obj =>
-                {
-                    timeZonesComboBox.Items.Add(obj);
-                });
-            }
+			if (listManual.Count() != 0) {
+				timeZonesComboBox.Items.Add(new Separator());
+				listManual.ForEach(obj => {
+					timeZonesComboBox.Items.Add(obj);
+				});
+			}
 			
 			//Find and try to select device tz
-			PosixTz posixTZ = PosixTz.TryParse(model.timeZone);
 			TimeZoneViewModel tzmodel = null;
-			if (posixTZ != null) {
-				tzmodel = new TimeZoneViewModel(posixTZ.name, model.timeZone, posixTZ);
+			ErrorBlock.Visibility = Visibility.Collapsed;
+			if (originPosixTz != null) {
+				if (model.localDateTime != null) {
+					try {
+						if (originPosixTz.ConvertUtcTimeToLocal(model.utcDateTime, model.daylightSavings) != model.localDateTime) {
+							//TODO: needs to be localized
+							ErrorMessage.Text = "Validation failed. Local time sent by device differs from calculated.";
+							ErrorBlock.Visibility = Visibility.Visible;
+						};
+					} catch (Exception err) {
+						dbg.Error(err);
+						ErrorMessage.Text = "failed to validate local time";
+						ErrorBlock.Visibility = Visibility.Visible;
+					}
+				}
+				tzmodel = new TimeZoneViewModel(model.timeZone, model.timeZone, originPosixTz);
 
 				if (listSystem.Any(f => f == tzmodel)) {
 					timeZonesComboBox.SelectedItem = listSystem.First(f => f == tzmodel);
@@ -129,26 +141,58 @@ namespace odm.ui.activities {
 			}
 			return timezonemosel;
 		}
-		DateTime GetDeviceUtcTime() {
+		DateTime GetCurrentDeviceTime() {
 			var elapsedTicks = Stopwatch.GetTimestamp() - model.timestamp;
 			var elapsedMilliseconds = (double)elapsedTicks * 1000.0 / (double)Stopwatch.Frequency;
-			var devDateTime = model.utcDateTime.Add(TimeSpan.FromMilliseconds(elapsedMilliseconds));
-
-			return devDateTime;
+			var utc = model.utcDateTime.AddMilliseconds(elapsedMilliseconds);
+			try {
+				if (originPosixTz == null) {
+					return utc;
+				}
+				return originPosixTz.ConvertUtcTimeToLocal(utc, model.origin.daylightSavings);
+			} catch {
+				//TODO: show notification when posix timezone can not be converted to system timzone
+				return utc;
+			}
+		}
+		DateTime GetNewDeviceTime() {
+			var utc = DateTime.UtcNow;
+			try {
+				var posixTz = GetTimeZoneSelection().posixTz;
+				if (posixTz == null) {
+					return utc;
+				}
+				return posixTz.ConvertUtcTimeToLocal(utc, model.daylightSavings);
+			} catch {
+				//TODO: show notification when posix timezone can not be converted to system timzone
+				return utc;
+			}
 		}
 		void Init() {
-			daylightCheckBox.CreateBinding(CheckBox.IsCheckedProperty, model, m => m.daylightSavings, (m, v) => { m.daylightSavings = v; });
-
+			
 			newManualTimeValue.SelectedTime = DateTime.Now.TimeOfDay;
 			newManualDateValue.SelectedDate = DateTime.Now;
 			//Set time and date dislay
-			valueDeviceTime.SetTime(model.utcDateTime, GetTimeZoneSelection(), GetDeviceUtcTime);
-			valueNewTime.SetTime(model.utcDateTime, GetTimeZoneSelection(), () => { return DateTime.UtcNow; });
-			disposables.Add(timeZonesComboBox	
+			//valueDeviceTime.SetTime(model.utcDateTime, GetTimeZoneSelection(), GetDeviceUtcTime);
+			valueDeviceTime.Init(GetCurrentDeviceTime);
+			
+			valueNewTime.Init(GetNewDeviceTime);
+
+			daylightCheckBox.CreateBinding(
+				CheckBox.IsCheckedProperty, model, 
+				m => m.daylightSavings, 
+				(m, v) => {
+					m.daylightSavings = v; 
+					valueNewTime.Invalidate();
+				}
+			);
+
+			disposables.Add(timeZonesComboBox
 				.GetPropertyChangedEvents(ComboBox.SelectedItemProperty)
 				.OfType <TimeZoneViewModel>()
 				.Subscribe(next => {
-					valueNewTime.TimeZoneChanged(next);
+					valueNewTime.Invalidate();
+					//valueNewTime.TimeZoneChanged(next);
 				})
 			);
 
@@ -160,8 +204,8 @@ namespace odm.ui.activities {
 
 			syncWithNtp.IsSelected = setDateTimeMode == SetDateTimeMode.SyncWithNtp;
 			PanelSystemMode.Visibility =
-			   setDateTimeMode == SetDateTimeMode.SyncWithComp ?
-			   Visibility.Visible : Visibility.Collapsed;
+				setDateTimeMode == SetDateTimeMode.SyncWithComp ?
+				Visibility.Visible : Visibility.Collapsed;
 			syncWithComp.IsSelected = setDateTimeMode == SetDateTimeMode.SyncWithComp;
 
 			PanelManualMode.Visibility = System.Windows.Visibility.Collapsed;
@@ -219,7 +263,8 @@ namespace odm.ui.activities {
 				var dlg = new ManualTZ(rowStr);
 				if (dlg.ShowDialog() == true) {
 					timeZonesComboBox.Text = dlg.posixTZ;
-					valueNewTime.TimeZoneChanged(new TimeZoneViewModel(dlg.posixTZ, dlg.posixTZ, PosixTz.TryParse(dlg.posixTZ)));
+					valueNewTime.Invalidate();
+					//valueNewTime.TimeZoneChanged(new TimeZoneViewModel(dlg.posixTZ, dlg.posixTZ, PosixTz.TryParse(dlg.posixTZ)));
 				}
 			});
 		}
@@ -243,35 +288,36 @@ namespace odm.ui.activities {
 		public bool IsNTPFromDHCP { get; set; }
 		public string NtpServerPath { get; set; }
 
-        public LinkButtonsStrings Title { get { return LinkButtonsStrings.instance; } }
+		public LinkButtonsStrings Title { get { return LinkButtonsStrings.instance; } }
 
-        void Localization() {
-            daylightCheckBox.CreateBinding(CheckBox.ContentProperty, Strings, s => s.autoAdjustString);
-            ntpSettingsToolTip.CreateBinding(
-                TextBlock.TextProperty, Strings,
-                s => s.ntpSetupInfo
-            );
-            deviceDateTimeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.currentTime);
-            syncWithNtp.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.synchronizeWithNtp);
-            setManual.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.manually);
-            timeZoneGroupBox.CreateBinding(GroupBox.HeaderProperty, Strings, s => s.timeZone);
-            newCompTimeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.newDateTime);
-            applyButton.CreateBinding(Button.ContentProperty, SaveCancelStrings.instance, s => s.save);
-            cancelButton.CreateBinding(Button.ContentProperty, SaveCancelStrings.instance, s => s.cancel);
-            newManualTimeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.newDateTime);
-            syncWithComp.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.synchronizeWithComp);
-        }
+		void Localization() {
+			daylightCheckBox.CreateBinding(CheckBox.ContentProperty, Strings, s => s.autoAdjustString);
+			ntpSettingsToolTip.CreateBinding(
+				TextBlock.TextProperty, Strings,
+				s => s.ntpSetupInfo
+			);
+			deviceDateTimeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.currentTime);
+			syncWithNtp.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.synchronizeWithNtp);
+			setManual.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.manually);
+			timeZoneGroupBox.CreateBinding(GroupBox.HeaderProperty, Strings, s => s.timeZone);
+			newCompTimeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.newDateTime);
+			applyButton.CreateBinding(Button.ContentProperty, SaveCancelStrings.instance, s => s.save);
+			cancelButton.CreateBinding(Button.ContentProperty, SaveCancelStrings.instance, s => s.cancel);
+			newManualTimeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.newDateTime);
+			syncWithComp.CreateBinding(ComboBoxItem.ContentProperty, Strings, s => s.synchronizeWithComp);
+		}
 
-        void OnRevertChanges() {
-			valueDeviceTime.Stop();
-			valueNewTime.Stop();
-            model.RevertChanges();
-            disposables.Dispose();
-            disposables = new CompositeDisposable();
-            InitTimeZones();
-            Init();
-            //BindModel(model);
-        }
+		void OnRevertChanges() {
+			//valueDeviceTime.Stop();
+			//valueDeviceTime.Stop();
+			//valueNewTime.Stop();
+			model.RevertChanges();
+			disposables.Dispose();
+			disposables = new CompositeDisposable();
+			InitTimeZones();
+			Init();
+			//BindModel(model);
+		}
 
 		void OnApplyChanges() {
 			var tmodel = GetTimeZoneSelection();
@@ -304,9 +350,16 @@ namespace odm.ui.activities {
 							model.utcDateTime = manDt;
 						} else {
 							try {
-								var systz = tmodel.posixTz.ToSystemTimeZone(valueNewTime.time.Year);
-								model.utcDateTime = TimeZoneInfo.ConvertTimeToUtc(manDt, systz);
+								var systz = tmodel.posixTz.ToSystemTimeZone(manDt.Year, model.daylightSavings);
+								if (systz.IsInvalidTime(manDt)) {
+									//TODO: notify user when datetime is invalid
+									model.utcDateTime = DateTime.UtcNow;
+								} else {
+									model.utcDateTime = TimeZoneInfo.ConvertTimeToUtc(manDt, systz);
+								}
 							} catch (Exception err) {
+								dbg.Error(err);
+								//TODO: notify user when posixTz can not be converted to system time zone
 								model.utcDateTime = DateTime.UtcNow;
 							}
 						}

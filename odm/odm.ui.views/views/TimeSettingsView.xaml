@@ -22,17 +22,38 @@
 			<RowDefinition Height="10"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<StackPanel 
-			Grid.Row="0"
-			HorizontalAlignment="Left"
-			Orientation="Horizontal" Margin="0">
-			<TextBlock 
-				x:Name="deviceDateTimeCaption"
-				Text="Current device time:"
-				Padding="0" Margin="0,0,4,0"
-				VerticalAlignment="Center"/>
-            <l:DateTimeControl x:Name="valueDeviceTime"/>
-        </StackPanel>
+		<StackPanel Grid.Row="0" Margin="0">
+			<Grid 
+				x:Name="ErrorBlock"
+				Margin="0,0,0,10"
+				HorizontalAlignment="Stretch" VerticalAlignment="Top">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="10" />
+					<ColumnDefinition x:Name="contentColumn" Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Image 
+					Grid.Row="0" Grid.Column="0" 
+					Source="/odm.ui.views;component/images/alert3-th.png" 
+					Width="42" Stretch="Uniform"
+					Margin="0" VerticalAlignment="Top"/>
+				<TextBlock 
+					x:Name="ErrorMessage"
+					Grid.Row="0" Grid.Column="2" 
+					Text="some message" 
+					Margin="0" Padding="0"
+					TextWrapping="Wrap" VerticalAlignment="Center"/>
+			</Grid>
+			<StackPanel Orientation="Horizontal" Margin="0">
+				<TextBlock 
+					x:Name="deviceDateTimeCaption"
+					Text="Current device time:"
+					Padding="0" Margin="0,0,4,0"
+					VerticalAlignment="Center"/>
+				<l:DateTimeControl x:Name="valueDeviceTime"/>
+			</StackPanel>
+		</StackPanel>
+
 		<GroupBox 
 			x:Name="timeZoneGroupBox"
 			Grid.Row="2"
@@ -67,14 +88,14 @@
 				<BooleanToVisibilityConverter x:Key="boolToVisibility"/>
 			</GroupBox.Resources>
 			<StackPanel Margin="0">
-                    <ComboBox
+				<ComboBox
 					x:Name="mode"
-                        VerticalAlignment="Center"
+					VerticalAlignment="Center"
 					HorizontalAlignment="Left" Margin="0,0,0,8" MinWidth="100" MaxWidth="200">
-                        <ComboBoxItem x:Name="syncWithComp" Content="Synchronize with NTP server"/>
-                        <ComboBoxItem x:Name="syncWithNtp" Content="Synchronize with computer time"/>
-                        <ComboBoxItem x:Name="setManual" Content="Set manually"/>
-                    </ComboBox>
+					<ComboBoxItem x:Name="syncWithComp" Content="Synchronize with NTP server"/>
+					<ComboBoxItem x:Name="syncWithNtp" Content="Synchronize with computer time"/>
+					<ComboBoxItem x:Name="setManual" Content="Set manually"/>
+				</ComboBox>
 				<!--<Label Content="Ntp server" Name="labelNtp" Grid.Column="2" Grid.Row="1"/>-->
 				<StackPanel 
 					Name="PanelNtpMode"
@@ -109,8 +130,8 @@
 						x:Name="newCompTimeCaption"
 						Text="New time:"
 						Padding="0" Margin="0,0,4,0" VerticalAlignment="Center" />
-                    <l:DateTimeControl x:Name="valueNewTime"/>
-                </StackPanel>
+					<l:DateTimeControl x:Name="valueNewTime"/>
+				</StackPanel>
 			</StackPanel>
 		</GroupBox>
 		

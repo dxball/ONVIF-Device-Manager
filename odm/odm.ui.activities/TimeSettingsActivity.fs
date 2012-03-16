@@ -38,7 +38,8 @@
         let load() = async{
             let! dateTimeInfo =  session.GetSystemDateAndTime()
             let model = new TimeSettingsView.Model(
-                timestamp = Stopwatch.GetTimestamp()
+                timestamp = Stopwatch.GetTimestamp(),
+                localDateTime = dateTimeInfo.LocalDateTime.ToSystemDateTime()
             )
             //let! ntpInfo = session.GetNTP()
 
@@ -54,13 +55,6 @@
             model.timeZone <- dateTimeInfo.TimeZone.TZ
             model.daylightSavings <- dateTimeInfo.DaylightSavings
             
-            //HACK: for Vivotek IP8330
-            let day, dayOffset = 
-                if dateTimeInfo.UTCDateTime.Date.Day <1 then 
-                    (1, Some <| double(dateTimeInfo.UTCDateTime.Date.Day)-1.0)
-                else
-                    (dateTimeInfo.UTCDateTime.Date.Day, None)
-
             // seconds can be in range 0..61 (leap seconds), see http://www.onvif.org/onvif/ver10/device/wsdl/devicemgmt.wsdl, section 38
             let seconds = 
                 if dateTimeInfo.UTCDateTime.Time.Second <= 59 then 
@@ -69,22 +63,17 @@
                     59
 
             let dateTime = 
-                new System.DateTime(
-                    dateTimeInfo.UTCDateTime.Date.Year,
-                    dateTimeInfo.UTCDateTime.Date.Month,
-                    day,
-                    dateTimeInfo.UTCDateTime.Time.Hour,
-                    dateTimeInfo.UTCDateTime.Time.Minute,
-                    seconds,
-                    DateTimeKind.Utc
+                let mutable date = new System.DateTime(
+                    dateTimeInfo.UTCDateTime.Date.Year, 1, 1, 0, 0, seconds, DateTimeKind.Utc
                 )
-                |> fun x ->
-                    match dayOffset with
-                    |Some daysToAdd -> x.AddDays(daysToAdd)
-                    |None -> x
+                date <- date.AddMonths(dateTimeInfo.UTCDateTime.Date.Month - 1)
+                date <- date.AddDays(float(dateTimeInfo.UTCDateTime.Date.Day - 1))
+                date <- date.AddHours(float(dateTimeInfo.UTCDateTime.Time.Hour))
+                date <- date.AddMinutes(float(dateTimeInfo.UTCDateTime.Time.Minute))
+                date
 
             //dateTime
-            model.utcDateTime <- dateTime
+            model.utcDateTime <- dateTime//dateTimeInfo.UTCDateTime.ToSystemDateTime()
             model.AcceptChanges()
             return model
         }
@@ -100,28 +89,25 @@
 //                model.origin.ntp <> model.current.ntp
             
             if dateTime_changed then
-                let timeZone = 
-                    new TimeZone(
-                        TZ = model.current.timeZone
-                    )
+                let timeZone = new TimeZone(
+                    TZ = model.current.timeZone
+                )
 
                 if model.current.useDateTimeFromNtp then
                     do! session.SetSystemDateAndTime(SetDateTimeType.NTP, model.current.daylightSavings, timeZone, null)
                 else
                     if model.origin.utcDateTime <> model.current.utcDateTime then
                         let dateTime = new DateTime()
-                        dateTime.Date <- 
-                            new Date(
-                                Year = model.current.utcDateTime.Year,
-                                Month = model.current.utcDateTime.Month,
-                                Day = model.current.utcDateTime.Day
-                            )
-                        dateTime.Time <- 
-                            new Time(
-                                Hour = model.current.utcDateTime.Hour,
-                                Minute = model.current.utcDateTime.Minute,
-                                Second = model.current.utcDateTime.Second
-                            )
+                        dateTime.Date <- new Date(
+                            Year = model.current.utcDateTime.Year,
+                            Month = model.current.utcDateTime.Month,
+                            Day = model.current.utcDateTime.Day
+                        )
+                        dateTime.Time <- new Time(
+                            Hour = model.current.utcDateTime.Hour,
+                            Minute = model.current.utcDateTime.Minute,
+                            Second = model.current.utcDateTime.Second
+                        )
                         do! session.SetSystemDateAndTime(SetDateTimeType.Manual, model.current.daylightSavings, timeZone, dateTime)
                     else
                         let! sysDateTime = session.GetSystemDateAndTime()
