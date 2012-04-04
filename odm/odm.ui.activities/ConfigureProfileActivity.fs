@@ -105,14 +105,14 @@
                         return [||]
                 },
                 async{
-//                    if caps.PTZ = null || caps.PTZ.XAddr = null then
-//                        return [||]
-//                    else
-//                        let ptz = session :> IPtzAsync 
-//                        let! ptzcs = ptz.GetConfigurations()
-//                        if ptzcs<> null then 
-//                            return ptzcs
-//                        else 
+                    if caps.PTZ = null || caps.PTZ.XAddr = null then
+                        return [||]
+                    else
+                        let ptz = session :> IPtzAsync 
+                        let! ptzcs = ptz.GetConfigurations()
+                        if ptzcs<> null then 
+                            return ptzcs
+                        else 
                             return [||]
                 }
             )

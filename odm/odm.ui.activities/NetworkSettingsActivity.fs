@@ -37,12 +37,11 @@
         let facade = new OdmSession(session)
         
         let show_error(err:Exception) = async{
-            dbg.Error(err)
             do! ErrorView.Show(ctx, err) |> Async.Ignore
         }
 
         let load() = async{
-            let! nics, ntpInfo, zeroConfSupported, zeroConf, host, gatewayInfo, dnsInfo, netProtocols = 
+            let! nics, ntpInfo, zeroConfSupported, zeroConf, host, gatewayInfo, dnsInfo, netProtocols, (discoveryModeSupported, discoveryMode) = 
                 Async.Parallel(
                     dev.GetNetworkInterfaces(),
                     dev.GetNTP(),
@@ -63,6 +62,14 @@
                             return [||]
                         else
                             return protocols
+                    },
+                    async{
+                        try
+                            let! dm = dev.GetDiscoveryMode()
+                            return (true, dm)
+                        with err ->
+                            dbg.Error(err)
+                            return (false, DiscoveryMode.NonDiscoverable)
                     }
                 )
 
@@ -75,14 +82,16 @@
 
             let model = new NetworkSettingsView.Model(
                 zeroConfIp = String.Join("; ", zeroConfIp),
-                zeroConfSupported = zeroConfSupported
+                zeroConfSupported = zeroConfSupported,
+                discoveryModeSupported = discoveryModeSupported
             )
             
             model.zeroConfEnabled <- zeroConfSupported && zeroConf<>null && zeroConf.Enabled
             model.useHostFromDhcp <- host.FromDHCP
             model.host <- host.Name
             model.netProtocols <- netProtocols
-            
+            model.discoveryMode <- discoveryMode
+
             if ntpInfo<>null then
                 model.useNtpFromDhcp <- ntpInfo.FromDHCP
                 let ntp = 
@@ -126,7 +135,6 @@
             
             match nics |> Seq.tryFind (fun x -> x.Enabled) with
             | Some nic ->
-                
                 let nic_cfg = nic.IPv4.Config
                 model.dhcp <- nic.IPv4.Config.DHCP
                 if nic_cfg.Manual<>null && nic_cfg.Manual.Length>0 then 
@@ -178,6 +186,9 @@
             let zero_conf_changed = 
                 model.zeroConfSupported && (model.origin.zeroConfEnabled <> model.current.zeroConfEnabled)
             
+            let discovery_mode_changed =
+                model.discoveryModeSupported && (model.origin.discoveryMode <> model.current.discoveryMode)
+
             let currentNetProtocols = 
                 if model.netProtocols <> null then
                     model.netProtocols
@@ -279,6 +290,12 @@
                         do! dev.SetHostname(model.host)
                 }
 
+            if discovery_mode_changed then
+                do! async{
+                    use! progress = Progress.Show(ctx, "setting discovery mode...")
+                    do! dev.SetDiscoveryMode(model.discoveryMode)
+                }
+
             if ip_changed then
                 let! rebootIsNeeded = 
                     async{
@@ -291,24 +308,26 @@
                         let nic_set = new NetworkInterfaceSetConfiguration()
                         nic_set.Enabled <- true
                         nic_set.EnabledSpecified <- true
-                        nic_set.MTUSpecified <- nic.Info.MTUSpecified
-                        nic_set.MTU <- nic.Info.MTU
-                        
+                        nic_set.MTUSpecified <- nic.Info <> null && nic.Info.MTUSpecified
+                        if nic_set.MTUSpecified then
+                            nic_set.MTU <- nic.Info.MTU
+
                         nic_set.IPv4 <- new IPv4NetworkInterfaceSetConfiguration()
-                        nic_set.IPv4.DHCP <- model.current.dhcp
+                        nic_set.IPv4.DHCP <- model.dhcp
                         nic_set.IPv4.DHCPSpecified <- true
                         nic_set.IPv4.Enabled <- true
                         nic_set.IPv4.EnabledSpecified <- true
-                        nic_set.IPv4.Manual <- 
-                            let ip = model.current.ip
-                            if String.IsNullOrWhiteSpace(ip) then
-                                null
-                            else [|
-                                new PrefixedIPv4Address(
-                                    Address = model.current.ip.ToString(),
-                                    PrefixLength = (model.current.subnet |> IPAddress.Parse |> NetMaskHelper.IpToCidrMask)
-                                )
-                            |]
+                        if not( model.dhcp) then
+                            nic_set.IPv4.Manual <- 
+                                let ip = model.current.ip
+                                if String.IsNullOrWhiteSpace(ip) then
+                                    [||]
+                                else [|
+                                    new PrefixedIPv4Address(
+                                        Address = model.current.ip.ToString(),
+                                        PrefixLength = (model.current.subnet |> IPAddress.Parse |> NetMaskHelper.IpToCidrMask)
+                                    )
+                                |]
                         
         //                if nic.Link <> null then
         //                    //nic_set_cfg.Link = new NetworkInterfaceConnectionSetting()
@@ -337,6 +356,7 @@
                     }
                     return this.ShowForm(model)
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -352,6 +372,7 @@
                         close = (fun ()->this.Complete())
                     )
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -362,7 +383,8 @@
             try
                 use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
                 do! apply(model)
-            with err ->
+            with err -> 
+                dbg.Error(err)
                 do! show_error(err)
 
             return! this.Main()

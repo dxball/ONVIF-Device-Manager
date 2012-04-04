@@ -122,7 +122,7 @@
                             let use_onvif_scope = 
                                 scopes 
                                     |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Fixed)
-                                    |> Seq.exists (fun x -> not(x.ScopeItem.StartsWith(ScopeHelper.onvifNameScope)))
+                                    |> Seq.forall (fun x -> not(x.ScopeItem.StartsWith(ScopeHelper.onvifNameScope)))
                             if use_onvif_scope then
                                 ScopeHelper.onvifNameScope
                             else 

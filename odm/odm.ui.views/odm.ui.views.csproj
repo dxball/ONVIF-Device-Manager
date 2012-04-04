@@ -223,7 +223,6 @@
     </Compile>
     <Compile Include="controls\MathUtil.cs" />
     <Compile Include="controls\TimePicker.cs" />
-    <Compile Include="controls\Utils.cs" />
     <Compile Include="controls\XmlViewer.xaml.cs">
       <DependentUpon>XmlViewer.xaml</DependentUpon>
     </Compile>

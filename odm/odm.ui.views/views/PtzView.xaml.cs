@@ -91,18 +91,56 @@ namespace odm.ui.activities {
 		public LocalPTZ Strings { get { return LocalPTZ.instance; } }
 		void Localize() { 
 		}
+
+		Space2DDescription AbsolutePantiltSpace;
+        Space1DDescription AbsoluteZoomSpace;
+        Space2DDescription RelativePantiltSpace;
+        Space1DDescription RelativeZoomSpace;
+        Space2DDescription ContinuesPantiltSpace;
+        Space1DDescription ContinuesZoomSpace;
+
 		Space2DDescription pantiltSpace;
 		Space1DDescription zoomSpace;
+
+		void FillDefaultSpaces(PtzView.Model model) {
+			pantiltSpace = model.currentNode.SupportedPTZSpaces.ContinuousPanTiltVelocitySpace.FirstOrDefault();
+			zoomSpace = model.currentNode.SupportedPTZSpaces.ContinuousZoomVelocitySpace.FirstOrDefault();
+			//pantiltSpace = new Space2DDescription();
+			////pantiltSpace.URI;
+			//pantiltSpace.XRange = new FloatRange();
+			//pantiltSpace.XRange.Max = 1.0f;
+			//pantiltSpace.XRange.Min = 0.0f;
+			//pantiltSpace.YRange = new FloatRange();
+			//pantiltSpace.YRange.Max = 1.0f;
+			//pantiltSpace.YRange.Min = 0.0f;
+
+			//zoomSpace = new Space1DDescription();
+			////zoomSpace.URI;
+			//zoomSpace.XRange = new FloatRange();
+			//zoomSpace.XRange.Max = 1.0f;
+			//zoomSpace.XRange.Min = 0.0f;
+		}
+
 		void InitData(PtzView.Model model) {
-			pantiltSpace = model.currentNode.SupportedPTZSpaces.AbsolutePanTiltPositionSpace.FirstOrDefault();
-			if (pantiltSpace == null) {
-				dbg.Error("No tilt spaces available");
-				return;
-			}
-			zoomSpace = model.currentNode.SupportedPTZSpaces.AbsoluteZoomPositionSpace.FirstOrDefault();
-			if (pantiltSpace == null) {
-				dbg.Error("No zoom spaces available");
-				return;
+			FillDefaultSpaces(model); 
+
+			try {
+				ContinuesPantiltSpace = model.currentNode.SupportedPTZSpaces.ContinuousPanTiltVelocitySpace.FirstOrDefault();
+				RelativePantiltSpace = model.currentNode.SupportedPTZSpaces.RelativePanTiltTranslationSpace.FirstOrDefault();
+				AbsolutePantiltSpace = model.currentNode.SupportedPTZSpaces.AbsolutePanTiltPositionSpace.FirstOrDefault();
+				if (AbsolutePantiltSpace == null || RelativePantiltSpace == null || ContinuesPantiltSpace == null) {
+					dbg.Error("No tilt spaces available");
+					return;
+				}
+				AbsoluteZoomSpace = model.currentNode.SupportedPTZSpaces.AbsoluteZoomPositionSpace.FirstOrDefault();
+				RelativeZoomSpace = model.currentNode.SupportedPTZSpaces.RelativeZoomTranslationSpace.FirstOrDefault();
+				ContinuesZoomSpace = model.currentNode.SupportedPTZSpaces.ContinuousZoomVelocitySpace.FirstOrDefault();
+				if (AbsoluteZoomSpace == null || RelativeZoomSpace == null || ContinuesZoomSpace == null) {
+					dbg.Error("No zoom spaces available");
+					return;
+				}
+			} catch (Exception err) {
+				dbg.Error(err);
 			}
 
 			Nodes.Clear();
@@ -341,7 +379,7 @@ namespace odm.ui.activities {
 		}
 #endregion ShowError
 		public void MoveRelative(PTZSpeed speed, PTZVector translat) {
-			subscription.Add(CurrentSession.RelativeMove(profileToken, translat, speed)
+			subscription.Add(CurrentSession.RelativeMove(profileToken, translat, null)
 				.ObserveOnCurrentDispatcher()
 				.Subscribe(unit => {
 
@@ -351,7 +389,7 @@ namespace odm.ui.activities {
 				}));
 		}
 		public void MoveAbsolute(PTZSpeed speed, PTZVector translat) {
-			subscription.Add(CurrentSession.AbsoluteMove(profileToken, translat, speed)
+			subscription.Add(CurrentSession.AbsoluteMove(profileToken, translat, null)
 				.ObserveOnCurrentDispatcher()
 				.Subscribe(unit => {
 
@@ -361,7 +399,7 @@ namespace odm.ui.activities {
 				}));
 		}
 		public void MoveContinues(PTZSpeed speed) {
-			subscription.Add(CurrentSession.ContinuousMove(profileToken, speed, global::onvif.services.Duration.FromSeconds(10))
+			subscription.Add(CurrentSession.ContinuousMove(profileToken, speed, null)
 				.ObserveOnCurrentDispatcher()
 				.Subscribe(unit => {
 
@@ -604,19 +642,19 @@ namespace odm.ui.activities {
 			if (pantiltSpace.XRange.Max - pantiltSpace.XRange.Min == 0)
 				return 0;
 			else
-				return PanSpeed;
+				return (float)sliderPanSpeed.Value;
 		}
 		float GetTiltSpeed() {
-			if (pantiltSpace.YRange.Max - pantiltSpace.YRange.Min == 0)
-				return 0;
-			else
-				return TiltSpeed;
+            if (pantiltSpace.YRange.Max - pantiltSpace.YRange.Min == 0)
+                return 0;
+            else
+                return (float)sliderTiltSpeed.Value;;
 		}
 		float GetZoomSpeed() {
 			if (zoomSpace.XRange.Max - zoomSpace.XRange.Min == 0)
 				return 0;
 			else
-				return ZoomSpeed;
+                return (float)sliderZoomSpeed.Value;
 		}
 		void ContinuesUp_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
 			StopMovement();

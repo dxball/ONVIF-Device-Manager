@@ -40,23 +40,30 @@ namespace odm.ui.activities
         let facade = new OdmSession(session)
         
         let show_error(err:Exception) = async{
-            dbg.Error(err)
             do! ErrorView.Show(ctx, err) |> Async.Ignore
         }
         
         let load() = async{
             let! vscs = async{
-                let! vscs = session.GetVideoSourceConfigurations()
-                if vscs <> null then
-                    return vscs |> Seq.filter (fun vsc->vsc.SourceToken = vsToken) |> Seq.toArray
-                else
+                try
+                    let! vscs = session.GetVideoSourceConfigurations()
+                    if vscs <> null then
+                        return vscs |> Seq.filter (fun vsc->vsc.SourceToken = vsToken) |> Seq.toArray
+                    else
+                        return [||]
+                with err ->
+                    dbg.Error(err)
                     return [||]
             }
             let! ascs = async{
-                let! ascs = session.GetAudioSourceConfigurations()
-                if ascs <> null then
-                    return ascs
-                else
+                try
+                    let! ascs = session.GetAudioSourceConfigurations()
+                    if ascs <> null then
+                        return ascs
+                    else
+                        return [||]
+                with err ->
+                    dbg.Error(err)
                     return [||]
             }
             let model = new ProfileCreationView.Model(
@@ -109,6 +116,7 @@ namespace odm.ui.activities
                     }
                     return this.ShowForm(model)
                 with err->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -127,6 +135,7 @@ namespace odm.ui.activities
                         configure = (fun model->this.Configure(model))
                     )
                 with err->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -141,6 +150,7 @@ namespace odm.ui.activities
                     let result = CreateProfileActivityResult.Created(profile)
                     return this.Complete(result)
                 with err->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -164,6 +174,7 @@ namespace odm.ui.activities
                             return this.Complete(result)
                     }
                 with err->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -212,6 +223,7 @@ namespace odm.ui.activities
                         | None -> ()
                     return this.ShowForm(model)
                 with err ->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.ShowForm(model)
             }
@@ -265,6 +277,7 @@ namespace odm.ui.activities
                         | None -> ()
                     return this.ShowForm(model)
                 with err ->
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.ShowForm(model)
             }

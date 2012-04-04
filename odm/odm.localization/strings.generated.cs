@@ -2271,6 +2271,26 @@ namespace odm.ui {
 		
 
 
+		private const string s_webbrowser = @"Open web in external browser";
+		private string m_webbrowser=null;
+		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='webbrowser']/@value")]
+		public string webbrowser {
+			get { 
+				if( m_webbrowser == null){
+					return s_webbrowser;
+				}
+				return m_webbrowser; 
+			}
+			set { 
+				if( value != m_webbrowser){
+					m_webbrowser = value;
+					NotifyPropertyChanged("webbrowser");
+				}
+			}  
+		}
+	
+
+
 		private const string s_videotransport = @"Video streaming transport";
 		private string m_videotransport=null;
 		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='videotransport']/@value")]

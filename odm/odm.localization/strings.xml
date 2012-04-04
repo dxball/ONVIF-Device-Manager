@@ -129,6 +129,7 @@
     <string name="removeFinishedCaption" value="Remove all finished tasks " />
   </module>
   <module name="LocalAppSettings" namespace="odm.ui">
+    <string name="webbrowser" value="Open web in external browser" />
 		<string name="videotransport" value="Video streaming transport" />
     <string name="eventOnlyPullPoint" value="Only PullPoint" />
     <string name="eventOnlyBase" value="Only Base Subscription" />

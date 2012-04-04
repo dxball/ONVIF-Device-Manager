@@ -17,6 +17,7 @@ using odm.ui.viewModels;
 using odm.ui.views;
 using onvif.services;
 using utils;
+using System.Diagnostics;
 
 namespace odm.controllers {
 	public class ContentController {

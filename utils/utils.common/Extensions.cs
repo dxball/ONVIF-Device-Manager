@@ -165,5 +165,35 @@ namespace utils {
 		public static void Add(this CompositeDisposable compositeDisposable, Action disposeHandler) {
 			compositeDisposable.Add(Disposable.Create(disposeHandler));
 		}
+
+		public static Uri GetBaseUri(this Uri uri) {
+			if (!uri.IsAbsoluteUri) {
+				return null;
+			}
+			var ub = new UriBuilder(uri.Scheme, uri.Host, uri.Port);
+			ub.UserName = uri.UserInfo;
+			return ub.Uri;
+		}
+		public static Uri Relocate(this Uri uri, string host) {
+			if (!uri.IsAbsoluteUri) {
+				return uri;
+			}
+			var ub = new UriBuilder(uri);
+			ub.UserName = uri.UserInfo;
+			ub.Password = null;
+			ub.Host = host;
+			return ub.Uri;
+		}
+		public static Uri Relocate(this Uri uri, string host, int port) {
+			if (!uri.IsAbsoluteUri) {
+				return uri;
+			}
+			var ub = new UriBuilder(uri);
+			ub.UserName = uri.UserInfo;
+			ub.Password = null;
+			ub.Host = host;
+			ub.Port = port;
+			return ub.Uri;
+		}
 	}	
 }

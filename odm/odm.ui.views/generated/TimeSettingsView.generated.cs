@@ -22,8 +22,6 @@ namespace odm.ui.activities {
 		#region Model definition
 		
 		public interface IModelAccessor{
-			DateTime utcDateTime{get;set;}
-			bool useDateTimeFromNtp{get;set;}
 			string timeZone{get;set;}
 			bool daylightSavings{get;set;}
 			
@@ -31,11 +29,13 @@ namespace odm.ui.activities {
 		public class Model: IModelAccessor, INotifyPropertyChanged{
 			
 			public Model(
-				long timestamp, DateTime? localDateTime
+				long timestamp, DateTime? localDateTime, DateTime? utcDateTime, bool useDateTimeFromNtp
 			){
 				
 				this.timestamp = timestamp;
 				this.localDateTime = localDateTime;
+				this.utcDateTime = utcDateTime;
+				this.useDateTimeFromNtp = useDateTimeFromNtp;
 			}
 			private Model(){
 			}
@@ -44,7 +44,7 @@ namespace odm.ui.activities {
 			public static Model Create(
 				long timestamp,
 				DateTime? localDateTime,
-				DateTime utcDateTime,
+				DateTime? utcDateTime,
 				bool useDateTimeFromNtp,
 				string timeZone,
 				bool daylightSavings
@@ -53,8 +53,8 @@ namespace odm.ui.activities {
 				
 				_this.timestamp = timestamp;
 				_this.localDateTime = localDateTime;
-				_this.origin.utcDateTime = utcDateTime;
-				_this.origin.useDateTimeFromNtp = useDateTimeFromNtp;
+				_this.utcDateTime = utcDateTime;
+				_this.useDateTimeFromNtp = useDateTimeFromNtp;
 				_this.origin.timeZone = timeZone;
 				_this.origin.daylightSavings = daylightSavings;
 				_this.RevertChanges();
@@ -62,25 +62,17 @@ namespace odm.ui.activities {
 				return _this;
 			}
 		
-				private SimpleChangeTrackable<DateTime> m_utcDateTime;
-				private SimpleChangeTrackable<bool> m_useDateTimeFromNtp;
 				private SimpleChangeTrackable<string> m_timeZone;
 				private SimpleChangeTrackable<bool> m_daylightSavings;
 				public long timestamp{get;private set;}
 				public DateTime? localDateTime{get;private set;}
+				public DateTime? utcDateTime{get;private set;}
+				public bool useDateTimeFromNtp{get;private set;}
 
 			private class OriginAccessor: IModelAccessor {
 				private Model m_model;
 				public OriginAccessor(Model model) {
 					m_model = model;
-				}
-				DateTime IModelAccessor.utcDateTime {
-					get {return m_model.m_utcDateTime.origin;}
-					set {m_model.m_utcDateTime.origin = value;}
-				}
-				bool IModelAccessor.useDateTimeFromNtp {
-					get {return m_model.m_useDateTimeFromNtp.origin;}
-					set {m_model.m_useDateTimeFromNtp.origin = value;}
 				}
 				string IModelAccessor.timeZone {
 					get {return m_model.m_timeZone.origin;}
@@ -97,26 +89,6 @@ namespace odm.ui.activities {
 				var prop_changed = this.PropertyChanged;
 				if (prop_changed != null) {
 					prop_changed(this, new PropertyChangedEventArgs(propertyName));
-				}
-			}
-			
-			public DateTime utcDateTime  {
-				get {return m_utcDateTime.current;}
-				set {
-					if(m_utcDateTime.current != value) {
-						m_utcDateTime.current = value;
-						NotifyPropertyChanged("utcDateTime");
-					}
-				}
-			}
-			
-			public bool useDateTimeFromNtp  {
-				get {return m_useDateTimeFromNtp.current;}
-				set {
-					if(m_useDateTimeFromNtp.current != value) {
-						m_useDateTimeFromNtp.current = value;
-						NotifyPropertyChanged("useDateTimeFromNtp");
-					}
 				}
 			}
 			
@@ -141,16 +113,12 @@ namespace odm.ui.activities {
 			}
 			
 			public void AcceptChanges() {
-				m_utcDateTime.AcceptChanges();
-				m_useDateTimeFromNtp.AcceptChanges();
 				m_timeZone.AcceptChanges();
 				m_daylightSavings.AcceptChanges();
 				
 			}
 
 			public void RevertChanges() {
-				this.current.utcDateTime= this.origin.utcDateTime;
-				this.current.useDateTimeFromNtp= this.origin.useDateTimeFromNtp;
 				this.current.timeZone= this.origin.timeZone;
 				this.current.daylightSavings= this.origin.daylightSavings;
 				
@@ -158,8 +126,6 @@ namespace odm.ui.activities {
 
 			public bool isModified {
 				get {
-					if(m_utcDateTime.isModified)return true;
-					if(m_useDateTimeFromNtp.isModified)return true;
 					if(m_timeZone.isModified)return true;
 					if(m_daylightSavings.isModified)return true;
 					
@@ -186,30 +152,90 @@ namespace odm.ui.activities {
 			
 			public abstract T Handle<T>(
 				
-				Func<Model,T> apply,
+				Func<Model,T> syncWithSystem,
+				Func<Model,T> syncWithNtp,
+				Func<Model,DateTime,T> setManual,
 				Func<T> close
 			);
 	
-			public bool IsApply(){
-				return AsApply() != null;
+			public bool IsSyncWithSystem(){
+				return AsSyncWithSystem() != null;
 			}
-			public virtual Apply AsApply(){ return null; }
-			public class Apply : Result {
-				public Apply(Model model){
+			public virtual SyncWithSystem AsSyncWithSystem(){ return null; }
+			public class SyncWithSystem : Result {
+				public SyncWithSystem(Model model){
 					
 					this.model = model;
 					
 				}
 				public Model model{ get; set; }
-				public override Apply AsApply(){ return this; }
+				public override SyncWithSystem AsSyncWithSystem(){ return this; }
 				
 				public override T Handle<T>(
 				
-					Func<Model,T> apply,
+					Func<Model,T> syncWithSystem,
+					Func<Model,T> syncWithNtp,
+					Func<Model,DateTime,T> setManual,
 					Func<T> close
 				){
-					return apply(
+					return syncWithSystem(
 						model
+					);
+				}
+	
+			}
+			
+			public bool IsSyncWithNtp(){
+				return AsSyncWithNtp() != null;
+			}
+			public virtual SyncWithNtp AsSyncWithNtp(){ return null; }
+			public class SyncWithNtp : Result {
+				public SyncWithNtp(Model model){
+					
+					this.model = model;
+					
+				}
+				public Model model{ get; set; }
+				public override SyncWithNtp AsSyncWithNtp(){ return this; }
+				
+				public override T Handle<T>(
+				
+					Func<Model,T> syncWithSystem,
+					Func<Model,T> syncWithNtp,
+					Func<Model,DateTime,T> setManual,
+					Func<T> close
+				){
+					return syncWithNtp(
+						model
+					);
+				}
+	
+			}
+			
+			public bool IsSetManual(){
+				return AsSetManual() != null;
+			}
+			public virtual SetManual AsSetManual(){ return null; }
+			public class SetManual : Result {
+				public SetManual(Model model,DateTime utcDateTime){
+					
+					this.model = model;
+					
+					this.utcDateTime = utcDateTime;
+					
+				}
+				public Model model{ get; set; }public DateTime utcDateTime{ get; set; }
+				public override SetManual AsSetManual(){ return this; }
+				
+				public override T Handle<T>(
+				
+					Func<Model,T> syncWithSystem,
+					Func<Model,T> syncWithNtp,
+					Func<Model,DateTime,T> setManual,
+					Func<T> close
+				){
+					return setManual(
+						model,utcDateTime
 					);
 				}
 	
@@ -228,7 +254,9 @@ namespace odm.ui.activities {
 				
 				public override T Handle<T>(
 				
-					Func<Model,T> apply,
+					Func<Model,T> syncWithSystem,
+					Func<Model,T> syncWithNtp,
+					Func<Model,DateTime,T> setManual,
 					Func<T> close
 				){
 					return close(
@@ -241,7 +269,9 @@ namespace odm.ui.activities {
 		}
 		#endregion
 
-		public ICommand ApplyCommand{ get; private set; }
+		public ICommand SyncWithSystemCommand{ get; private set; }
+		public ICommand SyncWithNtpCommand{ get; private set; }
+		public ICommand SetManualCommand{ get; private set; }
 		public ICommand CloseCommand{ get; private set; }
 		
 		IActivityContext<Result> activityContext = null;

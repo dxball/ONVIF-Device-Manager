@@ -163,7 +163,7 @@ namespace odm.ui.viewModels {
 
 						  if (devHolder.DeviceIconUri != null) {
 							  Uri uri = new Uri(isession.deviceUri, devHolder.DeviceIconUri);
-							  subscriptions.Add(facade.DownloadStream(uri, null, isession.credentials)
+							  subscriptions.Add(facade.DownloadStream(uri, null)
 								  .ObserveOnCurrentDispatcher()
 								  .Subscribe(imgStream => {
 									  try {
@@ -364,7 +364,9 @@ namespace odm.ui.viewModels {
 						if (caps.Device.IO.InputConnectors > 0 || caps.Device.IO.RelayOutputs > 0)
 							Buttons.Add(new DigitalIOButton(eventAggregator, session, curAccount));
 				}
+
 				Buttons.Add(new WebPageButton(eventAggregator, session, curAccount));
+				
 				if (AppDefaults.visualSettings.Events_IsEnabled) {
 					if (caps.Events != null)
 						Buttons.Add(new DeviceEventsButton(eventAggregator, filtersList, events, session, curAccount));

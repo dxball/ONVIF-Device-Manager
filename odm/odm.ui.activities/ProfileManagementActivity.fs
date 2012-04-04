@@ -112,7 +112,7 @@
                     }
                     let selectedProfile = 
                         if not(String.IsNullOrEmpty(selctedProfToken)) then
-                            model.profiles |> Seq.find (fun p->p.token = selctedProfToken)
+                            model.profiles.FirstOrDefault(fun (p:Profile) -> p.token = selctedProfToken)
                         else
                             null
                     return this.ShowForm(model, selectedProfile)

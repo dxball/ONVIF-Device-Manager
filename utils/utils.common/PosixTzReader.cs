@@ -46,9 +46,9 @@ namespace utils {
 			}
 		}
 
-		public T Eval<T>(Func<T> func) {
-			return func();
-		}
+		//public T Eval<T>(Func<T> func) {
+		//    return func();
+		//}
 
 		public bool ReadDigit(ref int dig) {
 			if (AtEnd()) {
@@ -97,7 +97,7 @@ namespace utils {
 			}
 			int name_pos = pos;
 			while (true) {
-				if (pos >= str.Length) {
+				if (AtEnd()) {
 					//quated name should end with '>'
 					RaiseParseError();
 				}

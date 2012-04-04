@@ -50,6 +50,7 @@ namespace odm.ui.activities {
 					if (!model.dhcp) {
 						model.useNtpFromDhcp = false;
 						model.useDnsFromDhcp = false;
+						model.useHostFromDhcp = false;
 					}
 					GetProtocolData();
 					Success(new Result.Apply(model));
@@ -164,10 +165,16 @@ namespace odm.ui.activities {
 			dhcpValue.CreateBinding(ComboBox.SelectedValueProperty, model, m => m.dhcp, (m, v) => m.dhcp = v);
 
 			ipAddressValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
-			ipAddressValue.CreateBinding(TextBox.TextProperty, model, x => x.ip, (m, v) => m.ip = v);
+			ipAddressValue.CreateBinding(TextBox.TextProperty, model,
+				m => m.dhcp ? m.origin.ip : m.ip, 
+				(m, v) => m.ip = v
+			);
 
 			ipMaskValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
-			ipMaskValue.CreateBinding(TextBox.TextProperty, model, x => x.subnet, (m, v) => m.subnet = v);
+			ipMaskValue.CreateBinding(TextBox.TextProperty, model, 
+				m => m.dhcp ? m.origin.subnet : m.subnet, 
+				(m, v) => m.subnet = v
+			);
 
 			gatewayValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
 			gatewayValue.CreateBinding(TextBox.TextProperty, model, x => x.gateway, (m, v) => m.gateway = v);
@@ -210,6 +217,12 @@ namespace odm.ui.activities {
 				} 
 			};
 
+			if (model.discoveryModeSupported) {
+				discoveryModeValue.CreateBinding(ComboBox.SelectedValueProperty, model, x => x.discoveryMode, (m, v) => m.discoveryMode = v);
+			} else {
+				discoveryModeValue.Visibility = Visibility.Collapsed;
+				discoveryModeCaption.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		public void Dispose() {

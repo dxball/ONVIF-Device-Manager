@@ -18,6 +18,8 @@
 		<prop name="zeroConfEnabled" clr-type="bool" />
 		<prop name="zeroConfIp" clr-type="string" read-only="true"/>
 		<prop name="netProtocols" clr-type="NetworkProtocol[]"/>
+		<prop name="discoveryModeSupported" clr-type="bool" read-only="true"/>
+		<prop name="discoveryMode" clr-type="DiscoveryMode"/>
 	</model>
 	<result>
 		<option name="Apply">

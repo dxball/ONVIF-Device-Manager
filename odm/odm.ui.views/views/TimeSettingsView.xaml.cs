@@ -29,20 +29,38 @@ namespace odm.ui.activities {
 			SyncWithNtp,
 			SyncWithComp
 		}
+		
 		PosixTz originPosixTz;
+		DateTime originUtcDateTime = default(DateTime);
+		TimeZoneViewModel originTimeZone;
+		TimeZoneViewModel newTimeZone;
+
 		private void Init(Model model) {
 			//Save model handle
 			this.model = model;
+
 			originPosixTz = PosixTz.TryParse(model.timeZone);
+			if(model.utcDateTime != null){
+				originUtcDateTime = model.utcDateTime.Value;
+			} else if ((object)originPosixTz != null && model.localDateTime != null) {
+				try{
+					originUtcDateTime = originPosixTz.ConvertLocalTimeToUtc(
+						(DateTime)model.localDateTime, model.origin.daylightSavings
+					);
+				}catch(Exception err){
+					dbg.Error(err);
+				}
+			}
+			
 
 			//Init command
 			OnCompleted += () => {disposables.Dispose();};
 
-			var applyCommand = new DelegateCommand(
-				() => OnApplyChanges(),
-				() => true
-			);
-			ApplyCommand = applyCommand;
+			//var applyCommand = new DelegateCommand(
+			//    () => OnApplyChanges(),
+			//    () => true
+			//);
+			//ApplyCommand = applyCommand;
 
 			var closeCommand = new DelegateCommand(
 				() => Success(new Result.Close()),
@@ -67,6 +85,7 @@ namespace odm.ui.activities {
 			//set up local strings
 			Localization();
 		}
+
 		void InitTimeZones() {
 			//refresh list
 			timeZonesComboBox.Items.Clear();
@@ -94,24 +113,26 @@ namespace odm.ui.activities {
 			TimeZoneViewModel tzmodel = null;
 			ErrorBlock.Visibility = Visibility.Collapsed;
 			if (originPosixTz != null) {
-				if (model.localDateTime != null) {
+				if (model.localDateTime != null && model.utcDateTime!=null) {
 					try {
-						if (originPosixTz.ConvertUtcTimeToLocal(model.utcDateTime, model.daylightSavings) != model.localDateTime) {
+						if (originPosixTz.ConvertUtcTimeToLocal((DateTime)model.utcDateTime, model.daylightSavings) != (DateTime)model.localDateTime) {
 							//TODO: needs to be localized
 							ErrorMessage.Text = "Validation failed. Local time sent by device differs from calculated.";
 							ErrorBlock.Visibility = Visibility.Visible;
 						};
 					} catch (Exception err) {
 						dbg.Error(err);
+						//TODO: needs to be localized
 						ErrorMessage.Text = "failed to validate local time";
 						ErrorBlock.Visibility = Visibility.Visible;
 					}
 				}
 				tzmodel = new TimeZoneViewModel(model.timeZone, model.timeZone, originPosixTz);
 
+				
 				if (listSystem.Any(f => f == tzmodel)) {
 					timeZonesComboBox.SelectedItem = listSystem.First(f => f == tzmodel);
-				} 
+				}
 				//else if (listSystem.Any(f => f.LogicallyEquals(tzmodel))) {
 				//    timeZonesComboBox.SelectedItem = listSystem.First(f => f.LogicallyEquals(tzmodel));
 				//} 
@@ -130,6 +151,9 @@ namespace odm.ui.activities {
 				
 			}
 		}
+		
+
+
 		TimeZoneViewModel GetTimeZoneSelection() {
 			TimeZoneViewModel timezonemosel = null;
 			if (timeZonesComboBox.SelectedIndex == -1) {
@@ -144,7 +168,7 @@ namespace odm.ui.activities {
 		DateTime GetCurrentDeviceTime() {
 			var elapsedTicks = Stopwatch.GetTimestamp() - model.timestamp;
 			var elapsedMilliseconds = (double)elapsedTicks * 1000.0 / (double)Stopwatch.Frequency;
-			var utc = model.utcDateTime.AddMilliseconds(elapsedMilliseconds);
+			var utc = originUtcDateTime.AddMilliseconds(elapsedMilliseconds);
 			try {
 				if (originPosixTz == null) {
 					return utc;
@@ -210,8 +234,8 @@ namespace odm.ui.activities {
 
 			PanelManualMode.Visibility = System.Windows.Visibility.Collapsed;
 			setManual.IsSelected = false;
-			
-			applyButton.Command = ApplyCommand;
+
+			applyButton.Click += (s, a) => OnApplyChanges(); //.Command = ApplyCommand;
 			cancelButton.Command = CancelCommand;
 
 
@@ -320,56 +344,59 @@ namespace odm.ui.activities {
 		}
 
 		void OnApplyChanges() {
-			var tmodel = GetTimeZoneSelection();
-			
-			if (tmodel != null) {
-				string selectedTimeZoneString = "";
-				if (tmodel.originalString != null)
-					selectedTimeZoneString = tmodel.originalString;
-				else {
-					if (tmodel.posixTz != null) {
-						selectedTimeZoneString = tmodel.posixTz.Format();
-					} else {
-						dbg.Error("Error in timezone selection");
-					}
-				}
-				if (model.origin.timeZone != selectedTimeZoneString) {
-					model.timeZone = selectedTimeZoneString;
-				}
-				model.useDateTimeFromNtp = true;
-				switch (setDateTimeMode) { 
-					case SetDateTimeMode.SyncWithComp:
-						model.useDateTimeFromNtp = false;
-						model.utcDateTime = DateTime.UtcNow;
-						break;
-					case SetDateTimeMode.SetManually:
-						model.useDateTimeFromNtp = false;
-						DateTime tmpDt = newManualDateValue.SelectedDate?? DateTime.UtcNow;
-						DateTime manDt = new DateTime(tmpDt.Year, tmpDt.Month, tmpDt.Day, newManualTimeValue.SelectedHour, newManualTimeValue.SelectedMinute, newManualTimeValue.SelectedSecond);
-						if (tmodel.posixTz == null) {
-							model.utcDateTime = manDt;
-						} else {
-							try {
-								var systz = tmodel.posixTz.ToSystemTimeZone(manDt.Year, model.daylightSavings);
-								if (systz.IsInvalidTime(manDt)) {
-									//TODO: notify user when datetime is invalid
-									model.utcDateTime = DateTime.UtcNow;
-								} else {
-									model.utcDateTime = TimeZoneInfo.ConvertTimeToUtc(manDt, systz);
-								}
-							} catch (Exception err) {
-								dbg.Error(err);
-								//TODO: notify user when posixTz can not be converted to system time zone
-								model.utcDateTime = DateTime.UtcNow;
-							}
-						}
-						break;
-				}
-			} else {
-				model.useDateTimeFromNtp = true;
-				dbg.Error("TimeZone model == null!!!");
+			var tzm = GetTimeZoneSelection();
+			if (tzm == null) {
+				Error(new Exception("time zone can't be null"));
+				return;
 			}
-			Success(new Result.Apply(model));
+			string tz = null;
+			if (tzm.originalString != null) {
+				tz = tzm.originalString;
+			} else if (tzm.posixTz != null) {
+				tz = tzm.posixTz.Format();
+			}
+			model.timeZone = tz;
+
+			switch (setDateTimeMode) {
+				case SetDateTimeMode.SyncWithComp:
+					Success(new Result.SyncWithSystem(model));
+					return;
+				case SetDateTimeMode.SetManually:
+					if (newManualDateValue.SelectedDate == null) {
+						Error(new Exception("date wasn't selected"));
+						return;
+					}
+					var manUtcDate = newManualDateValue.SelectedDate.Value;
+					var newUtc = new DateTime(
+						manUtcDate.Year, manUtcDate.Month, manUtcDate.Day,
+						newManualTimeValue.SelectedHour, newManualTimeValue.SelectedMinute, newManualTimeValue.SelectedSecond
+					);
+					if (tzm.posixTz != null) {
+						try {
+							var systz = tzm.posixTz.ToSystemTimeZone(newUtc.Year, model.daylightSavings);
+							if (systz.IsInvalidTime(newUtc)) {
+								Error(new Exception("date wasn't selected"));
+								return;
+							} if (systz.IsAmbiguousTime(newUtc)) {
+								Error(new Exception("date time is ambiguous"));
+								return;
+							}
+							newUtc = TimeZoneInfo.ConvertTimeToUtc(newUtc, systz);
+						} catch (Exception err) {
+							dbg.Error(err);
+							Error(new Exception("selected posix time zone can not be converted to system time zone", err));
+							return;
+						}
+					}
+					Success(new Result.SetManual(model, newUtc));
+					return;
+				case SetDateTimeMode.SyncWithNtp:
+					Success(new Result.SyncWithNtp(model));
+					return;
+				default:
+					Error(new Exception("invalid mode"));
+					return;
+			}
 		} 
 
 		public void Dispose() {
@@ -445,11 +472,11 @@ namespace odm.ui.activities {
 					);
 					var dst_offset = std_offset - rule.DaylightDelta.TotalSeconds.ToInt32();
 					dst = new PosixTz.Dst(
-						PosixTzWriter.NormalizeName(tzi.DaylightName), dst_offset, start, end
+						/*PosixTzWriter.NormalizeName(tzi.DaylightName)*/"DaylightTime", dst_offset, start, end
 					);
 				}
 				var posixTz = new PosixTz(
-					PosixTzWriter.NormalizeName(tzi.StandardName), std_offset, dst
+					PosixTzWriter.NormalizeName(/*tzi.StandardName*/tzi.Id), std_offset, dst
 				);
 				tz_list.Add(new TimeZoneViewModel(
 					tzi.DisplayName, null, posixTz

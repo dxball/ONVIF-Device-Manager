@@ -41,6 +41,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="6"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -80,6 +81,13 @@
                     </ContentControl>
                     <ContentControl Grid.Row="3" Style="{StaticResource valueContainer}">
 						<wtk:IntegerUpDown Name="videoRenderingFpsValue"/>
+                    </ContentControl>
+
+                    <ContentControl Grid.Row="4" Style="{StaticResource captionContainer}">
+                        <TextBlock Name="webCaption" Text="Open web uri on external browser "/>
+                    </ContentControl>
+                    <ContentControl Grid.Row="4" Style="{StaticResource valueContainer}">
+                        <CheckBox Name="webValue"/>
                     </ContentControl>
                 </Grid>
             </GroupBox>

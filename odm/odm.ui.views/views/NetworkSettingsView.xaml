@@ -6,6 +6,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	xmlns:onvif="clr-namespace:onvif.services;assembly=onvif.services"
 	x:Name="ctrl">
 	<Grid 
 		Margin="10,15,10,10" MaxWidth="400" MinWidth="250"
@@ -15,6 +16,7 @@
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
@@ -373,8 +375,7 @@
 			HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
 			Height="1" Fill="{DynamicResource BackgroundHighlight}"/>
 		<ContentControl Grid.Row="13" Style="{StaticResource captionContainer}">
-			
-			<TextBlock x:Name="zeroCaption" Text="Use zero config"/>
+			<TextBlock x:Name="zeroCaption" Text="Use zero configuration:"/>
 		</ContentControl>
 		<ContentControl Grid.Row="13" Style="{StaticResource valueContainer}">
 			<DockPanel >
@@ -383,8 +384,39 @@
 				<TextBox IsReadOnly="True" BorderThickness="0" Background="White" x:Name="zeroIp" Margin="0" Padding="3,0,0,0" Text="100.100.100.100" />
 			</DockPanel>
 		</ContentControl>
+
+		<ContentControl Grid.Row="14" Style="{StaticResource captionContainer}">
+			<TextBlock x:Name="discoveryModeCaption" Text="ONVIF discovery mode:"/>
+		</ContentControl>
+		<ContentControl Grid.Row="14" Style="{StaticResource valueContainer}">
+			<ComboBox x:Name="discoveryModeValue">
+				<onvif:DiscoveryMode>Discoverable</onvif:DiscoveryMode>
+				<onvif:DiscoveryMode>NonDiscoverable</onvif:DiscoveryMode>
+				<ComboBox.SelectedValue>
+					<onvif:DiscoveryMode>Discoverable</onvif:DiscoveryMode>
+				</ComboBox.SelectedValue>
+				<ComboBox.ItemTemplate>
+					<DataTemplate DataType="sys:Boolean">
+						<TextBlock x:Name="item"/>
+						<DataTemplate.Triggers>
+							<DataTrigger Binding="{Binding}"  Value="Discoverable">
+								<DataTrigger.Setters>
+									<Setter TargetName="item" Property="Text" Value="discoverable"/>
+								</DataTrigger.Setters>
+							</DataTrigger>
+							<DataTrigger Binding="{Binding}" Value="NonDiscoverable" >
+								<DataTrigger.Setters>
+									<Setter TargetName="item" Property="Text" Value="non discoverable" />
+								</DataTrigger.Setters>
+							</DataTrigger>
+						</DataTemplate.Triggers>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+		</ContentControl>
+		
 		<StackPanel 
-			Grid.Row="14" Grid.ColumnSpan="2" 
+			Grid.Row="15" Grid.ColumnSpan="2" 
 			Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button x:Name="applyButton" Command="{Binding ApplyCommand, ElementName=ctrl}" Content="Apply" Style="{StaticResource ButtonLeft}"/>
 			<Button x:Name="cancelButton" Command="{Binding CancelCommand, ElementName=ctrl}" Content="Cancel" Style="{StaticResource ButtonRight}" />

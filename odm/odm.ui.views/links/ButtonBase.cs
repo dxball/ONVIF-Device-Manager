@@ -15,6 +15,7 @@ using odm.ui.controls;
 using utils;
 using odm.ui.viewModels;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace odm.ui.links {
 	public class ButtonBase :Button{
@@ -51,37 +52,17 @@ namespace odm.ui.links {
 		protected INvtSession session;
         protected IAccount currentAccount;
 
-		public string LinkName {
-			get { return (string)GetValue(LinkNameProperty); }
-			set { SetValue(LinkNameProperty, value); }
-		}
-		// Using a DependencyProperty as the backing store for Name.  This enables animation, styling, binding, etc...
-		public static readonly DependencyProperty LinkNameProperty =
-			DependencyProperty.Register("LinkName", typeof(string), typeof(ButtonBase));
+		public string LinkName {get { return (string)GetValue(LinkNameProperty); }set { SetValue(LinkNameProperty, value); }}
+		public static readonly DependencyProperty LinkNameProperty = DependencyProperty.Register("LinkName", typeof(string), typeof(ButtonBase));
 
-		public bool IsChBoxEnabled {
-			get { return (bool)GetValue(IsChBoxEnabledProperty); }
-			set { SetValue(IsChBoxEnabledProperty, value); }
-		}
-		// Using a DependencyProperty as the backing store for IsEnabled.  This enables animation, styling, binding, etc...
-		public static readonly DependencyProperty IsChBoxEnabledProperty =
-			DependencyProperty.Register("IsChBoxEnabled", typeof(bool), typeof(ButtonBase), new UIPropertyMetadata(true));
+		public bool IsChBoxEnabled {get { return (bool)GetValue(IsChBoxEnabledProperty); }set { SetValue(IsChBoxEnabledProperty, value); }}
+		public static readonly DependencyProperty IsChBoxEnabledProperty = DependencyProperty.Register("IsChBoxEnabled", typeof(bool), typeof(ButtonBase), new UIPropertyMetadata(true));
 
-		public Visibility IsCheckBox {
-			get { return (Visibility)GetValue(IsCheckBoxProperty); }
-			set { SetValue(IsCheckBoxProperty, value); }
-		}
-		// Using a DependencyProperty as the backing store for IsCheckBox.  This enables animation, styling, binding, etc...
-		public static readonly DependencyProperty IsCheckBoxProperty =
-			DependencyProperty.Register("IsCheckBox", typeof(Visibility), typeof(ButtonBase), new UIPropertyMetadata(Visibility.Hidden));
+		public Visibility IsCheckBox {get { return (Visibility)GetValue(IsCheckBoxProperty); }set { SetValue(IsCheckBoxProperty, value); }}
+		public static readonly DependencyProperty IsCheckBoxProperty = DependencyProperty.Register("IsCheckBox", typeof(Visibility), typeof(ButtonBase), new UIPropertyMetadata(Visibility.Hidden));
 
-		public bool IsChBoxChecked {
-			get { return (bool)GetValue(IsChBoxCheckedProperty); }
-			set { SetValue(IsChBoxCheckedProperty, value); }
-		}
-		// Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsChBoxCheckedProperty =
-            DependencyProperty.Register("IsChBoxChecked", typeof(bool), typeof(ButtonBase), new UIPropertyMetadata(true));
+		public bool IsChBoxChecked {get { return (bool)GetValue(IsChBoxCheckedProperty); }set { SetValue(IsChBoxCheckedProperty, value); }}
+        public static readonly DependencyProperty IsChBoxCheckedProperty = DependencyProperty.Register("IsChBoxChecked", typeof(bool), typeof(ButtonBase), new UIPropertyMetadata(true));
 
 	}
     public class ChannelButtonBase : ButtonBase{
@@ -318,7 +299,17 @@ namespace odm.ui.links {
 			Init();
 		}
 		public override void ButtonClick() {
-			eventAggregator.GetEvent<WebPageClick>().Publish(GetEventArg());
+			var vs = AppDefaults.visualSettings;
+			if (vs.OpenInExternalWebBrowser) {
+				try {
+					var evarg = GetEventArg();
+					Process.Start("IExplore.exe", evarg.session.deviceUri.GetLeftPart(UriPartial.Authority));
+				} catch (Exception err) {
+					dbg.Error(err);
+				}
+			} else {
+				eventAggregator.GetEvent<WebPageClick>().Publish(GetEventArg());
+			}
 		}
 		void Init() {
 			this.CreateBinding(LinkNameProperty, Titles, x => x.webPage);

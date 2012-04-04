@@ -201,10 +201,12 @@ namespace odm.ui.activities {
 		//public ObservableCollection<MetadataUnit> MetaData { get; set; }
 
 		void Reload(INvtSession session) {
+			var vs = AppDefaults.visualSettings;
+
 			StreamSetup strSetup = new StreamSetup();
 			strSetup.Stream = StreamType.RTPUnicast;
 			strSetup.Transport = new Transport();
-			strSetup.Transport.Protocol = TransportProtocol.UDP;
+			strSetup.Transport.Protocol = vs.Transport_Type;
 			strSetup.Transport.Tunnel = null;
 
 			subscription.Add(session.GetStreamUri(strSetup, profile.token)
@@ -239,7 +241,24 @@ namespace odm.ui.activities {
 					}
 				}
 			}));
-			MediaStreamInfo mstreamInfo = new MediaStreamInfo(iVideo.MediaUri, MediaStreamInfo.Transport.Udp, usToken);
+			var vs = AppDefaults.visualSettings;
+			MediaStreamInfo.Transport medtranp = MediaStreamInfo.Transport.Tcp;
+			switch(vs.Transport_Type){
+				case TransportProtocol.HTTP:
+					medtranp = MediaStreamInfo.Transport.Http;
+					break;
+				case TransportProtocol.RTSP:
+					medtranp = MediaStreamInfo.Transport.Tcp;
+					break;
+				case TransportProtocol.TCP:
+					medtranp = MediaStreamInfo.Transport.Tcp;
+					break;
+				case TransportProtocol.UDP:
+					medtranp = MediaStreamInfo.Transport.Udp;
+					break;
+			}
+			
+			MediaStreamInfo mstreamInfo = new MediaStreamInfo(iVideo.MediaUri, medtranp, usToken);
 			playerEngine.Play(mstreamInfo, this);
 
 			disposables.Add(playerEngine);

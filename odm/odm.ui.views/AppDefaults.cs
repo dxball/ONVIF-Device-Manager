@@ -112,6 +112,7 @@ namespace odm.ui {
                 Event_Subscription_Type = VisualSettings.EventType.TRY_PULL,
 				Transport_Type = TransportProtocol.UDP, 
 				UseOnlyCommonFilterView = false,
+				OpenInExternalWebBrowser = false,
 				DefEventFilter = ""
             };
         }
@@ -169,6 +170,7 @@ namespace odm.ui {
 			UseOnlyCommonFilterView = false;
 			//TODO: railway build
 			DefEventFilter = "";
+			OpenInExternalWebBrowser = false;
         }
 		//TODO: railway build
 		public string DefEventFilter { get; set; }
@@ -183,6 +185,7 @@ namespace odm.ui {
             TRY_PULL,
             ONLY_BASE
         }
+		public bool OpenInExternalWebBrowser { get; set; }
 		public bool UseOnlyCommonFilterView { get; set; }
 		public bool ShowVideoPlaybackStatistics { get; set; }
         public int Base_Subscription_Port { get; set; }

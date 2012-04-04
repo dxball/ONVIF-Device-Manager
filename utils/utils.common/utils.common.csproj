@@ -62,6 +62,7 @@
     <Compile Include="ActionFlow.cs" />
     <Compile Include="ActionFlowScheduler.cs" />
     <Compile Include="CircularBuffer.cs" />
+    <Compile Include="HttpReader.cs" />
     <Compile Include="PosixTz.Dst.cs" />
     <Compile Include="PosixTz.DstRule.cs" />
     <Compile Include="PosixTz.TimeUnit.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="InternationalAtomicTime.cs" />
     <Compile Include="PosixTz.cs" />
     <Compile Include="Trampoline.cs" />
+    <Compile Include="UtfBasicAuthenticationModule.cs" />
     <Compile Include="Weak.cs" />
     <Compile Include="ExposedObject.cs" />
     <Compile Include="SerialDisposable.cs" />

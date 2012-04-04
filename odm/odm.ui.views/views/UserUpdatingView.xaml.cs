@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Controls;
 using Microsoft.FSharp.Control;
 using Microsoft.Practices.Prism.Commands;
@@ -88,7 +89,7 @@ namespace odm.ui.activities {
 			};
 
 			roleCaption.CreateBinding(Label.ContentProperty, this.Strings, s => s.roleCaption);
-			roleValue.ItemsSource = EnumHelper.GetValues<UserLevel>();
+			roleValue.ItemsSource = EnumHelper.GetValues<UserLevel>().Where(v => v != UserLevel.Anonymous && v != UserLevel.Extended);
 			roleValue.CreateBinding(ComboBox.SelectedValueProperty, model, m => m.level, (m, v) => m.level = v);
 
 			applyButton.Command = ApplyCommand;

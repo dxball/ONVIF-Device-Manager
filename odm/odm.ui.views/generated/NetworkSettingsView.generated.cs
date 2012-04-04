@@ -36,16 +36,18 @@ namespace odm.ui.activities {
 			bool useDnsFromDhcp{get;set;}
 			bool zeroConfEnabled{get;set;}
 			NetworkProtocol[] netProtocols{get;set;}
+			DiscoveryMode discoveryMode{get;set;}
 			
 		}
 		public class Model: IModelAccessor, INotifyPropertyChanged{
 			
 			public Model(
-				bool zeroConfSupported, string zeroConfIp
+				bool zeroConfSupported, string zeroConfIp, bool discoveryModeSupported
 			){
 				
 				this.zeroConfSupported = zeroConfSupported;
 				this.zeroConfIp = zeroConfIp;
+				this.discoveryModeSupported = discoveryModeSupported;
 			}
 			private Model(){
 			}
@@ -66,12 +68,15 @@ namespace odm.ui.activities {
 				bool zeroConfSupported,
 				bool zeroConfEnabled,
 				string zeroConfIp,
-				NetworkProtocol[] netProtocols
+				NetworkProtocol[] netProtocols,
+				bool discoveryModeSupported,
+				DiscoveryMode discoveryMode
 			){
 				var _this = new Model();
 				
 				_this.zeroConfSupported = zeroConfSupported;
 				_this.zeroConfIp = zeroConfIp;
+				_this.discoveryModeSupported = discoveryModeSupported;
 				_this.origin.useHostFromDhcp = useHostFromDhcp;
 				_this.origin.host = host;
 				_this.origin.ip = ip;
@@ -85,6 +90,7 @@ namespace odm.ui.activities {
 				_this.origin.useDnsFromDhcp = useDnsFromDhcp;
 				_this.origin.zeroConfEnabled = zeroConfEnabled;
 				_this.origin.netProtocols = netProtocols;
+				_this.origin.discoveryMode = discoveryMode;
 				_this.RevertChanges();
 				
 				return _this;
@@ -103,8 +109,10 @@ namespace odm.ui.activities {
 				private SimpleChangeTrackable<bool> m_useDnsFromDhcp;
 				private SimpleChangeTrackable<bool> m_zeroConfEnabled;
 				private SimpleChangeTrackable<NetworkProtocol[]> m_netProtocols;
+				private SimpleChangeTrackable<DiscoveryMode> m_discoveryMode;
 				public bool zeroConfSupported{get;private set;}
 				public string zeroConfIp{get;private set;}
+				public bool discoveryModeSupported{get;private set;}
 
 			private class OriginAccessor: IModelAccessor {
 				private Model m_model;
@@ -162,6 +170,10 @@ namespace odm.ui.activities {
 				NetworkProtocol[] IModelAccessor.netProtocols {
 					get {return m_model.m_netProtocols.origin;}
 					set {m_model.m_netProtocols.origin = value;}
+				}
+				DiscoveryMode IModelAccessor.discoveryMode {
+					get {return m_model.m_discoveryMode.origin;}
+					set {m_model.m_discoveryMode.origin = value;}
 				}
 				
 			}
@@ -303,6 +315,16 @@ namespace odm.ui.activities {
 				}
 			}
 			
+			public DiscoveryMode discoveryMode  {
+				get {return m_discoveryMode.current;}
+				set {
+					if(m_discoveryMode.current != value) {
+						m_discoveryMode.current = value;
+						NotifyPropertyChanged("discoveryMode");
+					}
+				}
+			}
+			
 			public void AcceptChanges() {
 				m_useHostFromDhcp.AcceptChanges();
 				m_host.AcceptChanges();
@@ -317,6 +339,7 @@ namespace odm.ui.activities {
 				m_useDnsFromDhcp.AcceptChanges();
 				m_zeroConfEnabled.AcceptChanges();
 				m_netProtocols.AcceptChanges();
+				m_discoveryMode.AcceptChanges();
 				
 			}
 
@@ -334,6 +357,7 @@ namespace odm.ui.activities {
 				this.current.useDnsFromDhcp= this.origin.useDnsFromDhcp;
 				this.current.zeroConfEnabled= this.origin.zeroConfEnabled;
 				this.current.netProtocols= this.origin.netProtocols;
+				this.current.discoveryMode= this.origin.discoveryMode;
 				
 			}
 
@@ -352,6 +376,7 @@ namespace odm.ui.activities {
 					if(m_useDnsFromDhcp.isModified)return true;
 					if(m_zeroConfEnabled.isModified)return true;
 					if(m_netProtocols.isModified)return true;
+					if(m_discoveryMode.isModified)return true;
 					
 					return false;
 				}

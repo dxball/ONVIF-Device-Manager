@@ -60,6 +60,7 @@ namespace odm.ui {
 						vs.Base_Subscription_Port = basePortValue.Value.Value;
 						vs.ShowVideoPlaybackStatistics = showVideoPlaybackStatisticsValue.IsChecked == true;
 						vs.Transport_Type = ((KeyValuePair<TransportProtocol, string>)transportTypes.SelectedValue).Key;
+						vs.OpenInExternalWebBrowser = webValue.IsChecked.Value;
 
 						vs.UseOnlyCommonFilterView = enableOnlyDefValue.IsChecked.Value;
 
@@ -127,6 +128,7 @@ namespace odm.ui {
 
 			basePortValue.Value = vs.Base_Subscription_Port;
 
+			webValue.IsChecked = vs.OpenInExternalWebBrowser;
 			enableEventValue.IsChecked = vs.Events_IsEnabled;
 			collectEventsValue.IsChecked = vs.EventsCollect_IsEnabled;
 			enableSnapshotValue.IsChecked = vs.Snapshot_IsEnabled;
@@ -162,6 +164,8 @@ namespace odm.ui {
 
 			basePortCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.basePortCaption);
 			eventTypeCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.eventTypeCaption);
+
+			webCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.webbrowser);
 
 			collectEventsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.collectEventsCaption);
 			enableCustomAnalyticsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableCustomAnalyticsCaption);

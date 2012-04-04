@@ -721,7 +721,55 @@
 //            Async.Race
 
     end
-    
+
+
+    type AsyncSemaphore(initialCnt) = class
+        let gate = new obj()
+        let list = new LinkedList<unit->bool>()
+        let cnt = ref initialCnt
+        member this.Wait(wasAcquired) = Async.CreateWithDisposable(fun sink ->
+            let cont = lock gate (fun () -> 
+                if !cnt > 0 then
+                    cnt := !cnt - 1
+                    fun() -> 
+                        if sink.Success() then
+                            wasAcquired := true
+                        else
+                            this.Release()
+                        Disposable.Empty
+                else
+                    let node = list.AddLast(fun () ->
+                        if sink.Success() then
+                            wasAcquired := true
+                            true
+                        else
+                            false
+                    )
+                    fun() -> 
+                        Disposable.Create(fun () ->
+                            lock gate ( fun () ->
+                                if node.List <> null then
+                                    list.Remove(node)
+                            )
+                        )
+            )
+            cont()
+        )
+        member this.Release() = 
+            let first = lock gate (fun() ->
+                let first = list.First
+                if first <> null then
+                    list.RemoveFirst()
+                else
+                    cnt := !cnt + 1
+                first
+            )
+            if first <> null then
+                let success = first.Value
+                if not(success()) then
+                    this.Release()
+    end
+
     ///<summary>IScheduler extensions</summary>
     type IScheduler with
         
