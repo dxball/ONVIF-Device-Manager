@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="CertificateManagementModel" clr-ns="odm.models">
+	<prop name="activeCertificateId" clr-type="string" />
+	<prop name="clientAuthentication" clr-type="bool" />
+	<prop name="serverCertificates" clr-type="string" collection="list" />
+</model>
