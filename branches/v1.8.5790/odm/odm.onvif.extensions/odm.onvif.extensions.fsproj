@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{b900157a-8f66-4c82-bef3-9bfa7e85df9d}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>odm.onvif.extensions</RootNamespace>
+    <AssemblyName>odm.onvif.extensions</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Name>odm.onvif.extensions</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <Tailcalls>false</Tailcalls>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Debug\odm.onvif.extensions.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Release\odm.onvif.extensions.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core" />
+    <Reference Include="onvif.services">
+      <HintPath>..\..\libs\onvif\onvif.services.dll</HintPath>
+    </Reference>
+    <Reference Include="onvif.session">
+      <HintPath>..\..\libs\onvif\onvif.session.dll</HintPath>
+    </Reference>
+    <Reference Include="onvif.utils">
+      <HintPath>..\..\libs\onvif\onvif.utils.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Reactive">
+      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+		<Compile Include="..\..\build\AssemblyInfo.global.fs">
+			<Link>Properties\AssemblyInfo.global.fs</Link>
+		</Compile>
+		<Compile Include="Properties\AssemblyInfo.fs" />
+		<Compile Include="session-extensions.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\utils\utils.diagnostics\utils.diagnostics.csproj">
+      <Name>utils.diagnostics</Name>
+      <Project>{c89d83ca-c0fa-4573-a63e-f716dd628696}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\utils\utils.fsharp\utils.fsharp.fsproj">
+      <Name>utils.fsharp</Name>
+      <Project>{04196c86-66f6-4a9c-be0b-90aa5353b1c6}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\utils\utils.xml\utils.xml.csproj">
+      <Name>utils.xml</Name>
+      <Project>{c00b45e2-5aba-4f7a-bd85-505594794aae}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\odm.infra\odm.infra.fsproj">
+      <Name>odm.infra</Name>
+      <Project>{a13dcae1-f908-431b-94ba-9cce4c11d496}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\odm.ui.models\odm.ui.models.csproj">
+      <Name>odm.ui.models</Name>
+      <Project>{312a926d-b6b9-4ce9-9a1e-a56142d28120}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	     Other similar extension points exist, see Microsoft.Common.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

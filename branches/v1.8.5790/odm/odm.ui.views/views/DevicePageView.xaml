@@ -1,0 +1,47 @@
+﻿<UserControl 
+	x:Class="odm.ui.views.DevicePageView"
+	xmlns:l="clr-namespace:odm.ui.viewModels"
+	xmlns:my="clr-namespace:odm.ui.controls"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:link="clr-namespace:odm.ui.links"
+	xmlns:cmd="clr-namespace:Microsoft.Practices.Prism.Commands;assembly=Microsoft.Practices.Prism"
+	mc:Ignorable="d"
+	d:DesignHeight="300" d:DesignWidth="300">
+
+	<UserControl.Resources>
+	</UserControl.Resources>
+	
+	<my:ContentColumn 
+		VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Title="{Binding DeviceName}">
+		<ContentControl
+			x:Name="content">
+			
+			<ScrollViewer 
+				x:Name="deviceView"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+				ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+				ScrollViewer.VerticalScrollBarVisibility="Auto">
+				<DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+					<StackPanel DockPanel.Dock="Top" Visibility="{Binding StateCommon}" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Left" Margin="2,1,2,2">
+						<Image Height="128" Width="128" ToolTip="{Binding snapshotToolTip}" Source="{Binding devImage}" HorizontalAlignment="Center" Stretch="Uniform" VerticalAlignment="Center" Margin="0,3" />
+						<ListBox HorizontalAlignment="Left" Margin="3,0,3,3" ItemsSource="{Binding Buttons}" Style="{StaticResource links}" SelectedItem="{Binding SelectedButton}"/>
+					</StackPanel>
+					<StackPanel Margin="3" Visibility="{Binding ChannelsErrorVisibility}" DockPanel.Dock="Top" Orientation="Vertical">
+						<TextBlock FontWeight="Bold" Foreground="Black" FontSize="10" Text="Info:"/>
+						<TextBlock Margin="0,3,0,0" TextWrapping="Wrap" MaxWidth="300" Text="{Binding ChannelLoadingErrorMessage}"/>
+					</StackPanel>
+					<ListBox 
+						HorizontalAlignment="Stretch" 
+						Margin="0,10,0,0" 
+						ScrollViewer.CanContentScroll="False" 
+						ItemsSource="{Binding Channels}" 
+						Style="{StaticResource channels}"/>
+				</DockPanel>
+			</ScrollViewer>
+
+		</ContentControl>
+	</my:ContentColumn>
+</UserControl>

@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2FAA440A-87D3-41AB-9931-25AC306A25BA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>utils</RootNamespace>
+    <AssemblyName>utils.common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\build\AssemblyInfo.global.cs">
+      <Link>Properties\AssemblyInfo.global.cs</Link>
+    </Compile>
+    <Compile Include="ActionFlow.cs" />
+    <Compile Include="ActionFlowScheduler.cs" />
+    <Compile Include="CircularBuffer.cs" />
+    <Compile Include="HttpReader.cs" />
+    <Compile Include="PosixTz.Dst.cs" />
+    <Compile Include="PosixTz.DstRule.cs" />
+    <Compile Include="PosixTz.TimeUnit.cs" />
+    <Compile Include="HashCode.cs" />
+    <Compile Include="PosixTzExtensions.cs" />
+    <Compile Include="PosixTzWriter.cs" />
+    <Compile Include="PosixTzReader.cs" />
+    <Compile Include="DoubleExtensions.cs" />
+    <Compile Include="InternationalAtomicTime.cs" />
+    <Compile Include="PosixTz.cs" />
+    <Compile Include="Trampoline.cs" />
+    <Compile Include="UtfBasicAuthenticationModule.cs" />
+    <Compile Include="Weak.cs" />
+    <Compile Include="ExposedObject.cs" />
+    <Compile Include="SerialDisposable.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="Utils.cs" />
+    <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="CommandLineArgs.cs" />
+    <Compile Include="EncodingExtensions.cs" />
+    <Compile Include="EnumHelper.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WeakReference.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\utils.diagnostics\utils.diagnostics.csproj">
+      <Project>{C89D83CA-C0FA-4573-A63E-F716DD628696}</Project>
+      <Name>utils.diagnostics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utils.linq\utils.linq.csproj">
+      <Project>{65FB2C9F-3A0F-4E3F-ADBD-912BC6F08508}</Project>
+      <Name>utils.linq</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

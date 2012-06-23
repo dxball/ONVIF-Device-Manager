@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity name="PtzView" clr-ns="odm.ui.activities">
+	<use clr-ns="onvif.services"/>
+	<model>
+		<prop name="profToken" clr-type="string" read-only="true"/>
+		
+		<prop name="presets" clr-type="PTZPreset[]" read-only="true"/>
+		<!--<prop name="presetsMax" clr-type="int" read-only="true"/>-->
+		<prop name="nodes" clr-type="PTZNode[]" read-only="true"/>
+		<prop name="currentNode" clr-type="PTZNode"/>
+		<prop name="tiltMin" clr-type="float" read-only="true"/>
+		<prop name="tiltMax" clr-type="float" read-only="true"/>
+		<prop name="panMin" clr-type="float" read-only="true"/>
+		<prop name="panMax" clr-type="float" read-only="true"/>
+		<prop name="zoomMin" clr-type="float" read-only="true"/>
+		<prop name="zoomMax" clr-type="float" read-only="true"/>
+	</model>
+
+	<result>
+		<option name="Close"/>
+	</result>
+</activity>
