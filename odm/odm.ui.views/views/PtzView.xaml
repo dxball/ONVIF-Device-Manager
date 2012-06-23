@@ -1,0 +1,494 @@
+﻿<UserControl 
+	x:Class="odm.ui.activities.PtzView"
+	xmlns:l="clr-namespace:odm.ui.controls"
+	xmlns:cmd="clr-namespace:Microsoft.Practices.Prism.Commands;assembly=Microsoft.Practices.Prism"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:odm_ui_controls="clr-namespace:odm.ui.controls"
+	mc:Ignorable="d" 
+	d:DesignHeight="600" d:DesignWidth="600">
+
+	<UserControl.Resources>
+		<Style x:Key="floatFormat" TargetType="Label">
+			<Setter Property="ContentStringFormat" Value="F1"/>
+		</Style>
+		<Style x:Key="ErrorMessageStyle" TargetType="Border">
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ErrorMessage}" Value="">
+					<Setter Property="Visibility" Value="Collapsed"/>
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+	</UserControl.Resources>
+	<DockPanel>
+		<Grid Background="Black">
+			<ContentControl x:Name="player" Margin="0,0,0,6"/>
+			<Grid Margin="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition x:Name="centercolumn" Width="54"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="1*"/>
+					<RowDefinition Height="54"/>
+					<RowDefinition Height="1*"/>
+				</Grid.RowDefinitions>
+
+<!--Info group box-->
+				<GroupBox Name="groupInfo"
+							Visibility="Collapsed"
+							Grid.ColumnSpan="3" Grid.RowSpan="3"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Header="INFO form" Style="{DynamicResource vb_groupbox}">
+					<Label Content="{Binding InfoString}" Style="{DynamicResource vb_label}"/>
+				</GroupBox>
+<!--Continues buttons-->
+				<odm_ui_controls:ControlVbDirection x:Name="btnContinuseDown"
+							Grid.Column="1" Grid.Row="2"
+							Margin="0,0,0,10" Width="54" Height="54"
+                            VerticalAlignment="Center"   
+							Style="{DynamicResource vb_double_direction}" 
+							Orientation="Bottom"/>
+				<odm_ui_controls:ControlVbDirection x:Name="btnContinuesLeft"		
+							Grid.Column="0" Grid.Row="1"
+							Margin="10,0,0,0" Width="54" Height="54"
+							HorizontalAlignment="Center"
+							Style="{DynamicResource vb_double_direction}"
+	                        Orientation="Left"/>
+				<odm_ui_controls:ControlVbDirection x:Name="btnContinuesRight"
+							Grid.Column="2" Grid.Row="1"
+							Margin="0,0,10,0" Width="54" Height="54"
+                            HorizontalAlignment="Center"   
+							Style="{DynamicResource vb_double_direction}" 
+							Orientation="Right"/>
+				<odm_ui_controls:ControlVbDirection x:Name="btnContinuseUp"
+							Grid.Column="1" Grid.Row="0"
+							Margin="0,10,0,0" Width="54" Height="54"
+							VerticalAlignment="Center"   
+							Style="{DynamicResource vb_double_direction}" 
+							Orientation="Top"/>
+<!--Presets list and control-->
+				<GroupBox Name="groupPresets"
+                            Grid.Column="0" Grid.Row="2"
+                            Margin="10,0,0,10" 
+                            VerticalAlignment="Stretch"  
+                            HorizontalAlignment="Left"
+                            Style="{DynamicResource vb_groupbox}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+						<Button Name="btnGoHome" 
+								Grid.Row="0" Width="70" Height="40" 
+								Style="{DynamicResource vb_ptz_home}"/>
+						<ListBox Name="valuePresetsList"  
+								Grid.Row="1" Margin="4" Style="{DynamicResource ptz_presets}"/>
+						<StackPanel Orientation="Horizontal" Grid.Row="2">
+							<Button Name="btnGoTo"
+                                Margin="3" HorizontalAlignment="Left" 
+                                Content="GoTo"
+                                Style="{DynamicResource vb_button}"/>
+							<Button Name="btnDelete"
+                                Margin="3" HorizontalAlignment="Right" 
+                                Content="Delete"
+                                Style="{DynamicResource vb_button}"/>
+						</StackPanel>
+					</Grid>
+				</GroupBox>
+<!--Settings controls-->
+				<Grid HorizontalAlignment="Right" Margin="0,10,10,10"
+                              VerticalAlignment="Bottom"
+                              Grid.Column="2"
+                              Grid.Row="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<Expander Name="expanderQuickSet" 
+							  HorizontalAlignment="Stretch" Grid.Row="0" 
+							  Header="Quick Settings" 
+							  Style="{DynamicResource vb_expander}">
+						<GroupBox Style="{DynamicResource vb_borgergroupbox}">
+							<StackPanel Orientation="Vertical">
+								<Button Name="btnSetHome" 
+										Margin="2" 
+										Content="Set Home" 
+										Style="{DynamicResource vb_button}"/>
+								<DockPanel Margin="2">
+									<TextBox Name="valuePresetName" 
+										MinWidth="50" MaxWidth="150" 
+                                        HorizontalContentAlignment="Right" HorizontalAlignment="Stretch" 
+                                        Text="enter preset name"
+                                        Style="{DynamicResource vb_textbox}"/>
+									<Button Name="btnSetPreset" 
+										Margin="2,0,0,0" DockPanel.Dock="Left" 
+										Content="Set Preset" 
+										Style="{DynamicResource vb_button}"/>
+								</DockPanel>
+								<StackPanel Orientation="Vertical">
+									<ToggleButton Name="tglbtnRelativeMove" 
+										Content="Relative move" 
+										Style="{DynamicResource VbRadioButton}"/>
+									<ToggleButton Name="tglbtnAbsoluteMove" 
+										Content="Absolute move" 
+										Style="{DynamicResource VbRadioButton}"/>
+								</StackPanel>
+								<Grid Margin="2">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto"/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+									</Grid.RowDefinitions>
+									<Label Name="captionPanSpeed" VerticalAlignment="Center"
+                                        Content="Pan Speed"
+                                        Style="{DynamicResource vb_label}"/>
+									<Grid Grid.Column="1" Grid.Row="0">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="Auto"/>
+										</Grid.ColumnDefinitions>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto"/>
+											<RowDefinition Height="Auto"/>
+										</Grid.RowDefinitions>
+										<Label
+											HorizontalAlignment="Left"
+											Margin="0" Padding="0"
+											Grid.Column="0"
+											Content="{Binding Minimum, ElementName=sliderPanSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Label
+											HorizontalAlignment="Right"
+											Margin="0" Padding="0"
+											Grid.Column="2"
+											Content="{Binding Maximum, ElementName=sliderPanSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Label 
+											HorizontalAlignment="Center"
+											Margin="0" Padding="0"
+											Grid.Column="1"
+											ContentStringFormat="F1"
+											Content="{Binding Value, ElementName=sliderPanSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Slider Name="sliderPanSpeed" 
+											Grid.Row="1"
+											Grid.Column="0" Grid.ColumnSpan="3"
+											MinWidth="100" MaxWidth="200"
+											Style="{DynamicResource vb_slider}"
+											Orientation="Horizontal"/>
+									</Grid>
+									<Label Name="captionTiltSpeed" VerticalAlignment="Center"
+										Grid.Column="0" Grid.Row="1" 
+                                        Content="Tilt Speed"
+                                        Style="{DynamicResource vb_label}"/>
+									<Grid Grid.Column="1" Grid.Row="1">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="Auto"/>
+										</Grid.ColumnDefinitions>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto"/>
+											<RowDefinition Height="Auto"/>
+										</Grid.RowDefinitions>
+										<Label
+											HorizontalAlignment="Left"
+											Margin="0" Padding="0"
+											Grid.Column="0"
+											Content="{Binding Minimum, ElementName=sliderTiltSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Label
+											HorizontalAlignment="Right"
+											Margin="0" Padding="0"
+											Grid.Column="2"
+											Content="{Binding Maximum, ElementName=sliderTiltSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Label 
+											HorizontalAlignment="Center"
+											Margin="0" Padding="0"
+											Grid.Column="1"
+											ContentStringFormat="F1"
+											Content="{Binding Value, ElementName=sliderTiltSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Slider Name="sliderTiltSpeed" 
+											Grid.Row="1"
+											Grid.Column="0" Grid.ColumnSpan="3"
+											MinWidth="100" MaxWidth="200"
+											Style="{DynamicResource vb_slider}"
+											Orientation="Horizontal"/>
+									</Grid>
+									<Label Name="captionZoomSpeed" VerticalAlignment="Center"
+										Grid.Column="0" Grid.Row="2" 
+                                        Content="Zoom Speed"
+                                        Style="{DynamicResource vb_label}"/>
+									<Grid Grid.Column="1" Grid.Row="2" >
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="Auto"/>
+											<ColumnDefinition Width="Auto"/>
+										</Grid.ColumnDefinitions>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto"/>
+											<RowDefinition Height="Auto"/>
+										</Grid.RowDefinitions>
+										<Label
+											HorizontalAlignment="Left"
+											Margin="0" Padding="0"
+											Grid.Column="0"
+											Content="{Binding Minimum, ElementName=sliderZoomSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Label
+											HorizontalAlignment="Right"
+											Margin="0" Padding="0"
+											Grid.Column="2"
+											Content="{Binding Maximum, ElementName=sliderZoomSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Label 
+											HorizontalAlignment="Center"
+											Margin="0" Padding="0"
+											Grid.Column="1"
+											ContentStringFormat="F1"
+											Content="{Binding Value, ElementName=sliderZoomSpeed}"
+											Style="{DynamicResource vb_label}"/>
+										<Slider Name="sliderZoomSpeed" 
+											Grid.Row="1"
+											Grid.Column="0" Grid.ColumnSpan="3"
+											MinWidth="100" MaxWidth="200"
+											Style="{DynamicResource vb_slider}"
+											Orientation="Horizontal"/>
+									</Grid>
+								</Grid>
+							</StackPanel>
+						</GroupBox>
+					</Expander>
+					<Expander Name="expanderSettings"
+                              Visibility="Collapsed"
+							  HorizontalAlignment="Stretch" 
+							  Grid.Row="1" 
+							  Header="Settings"  
+							  Style="{DynamicResource vb_expander}">
+						<GroupBox Style="{DynamicResource vb_borgergroupbox}">
+							<Grid Margin="2">
+								<Grid.RowDefinitions>
+									<RowDefinition/>
+									<RowDefinition/>
+									<RowDefinition/>
+								</Grid.RowDefinitions>
+								<StackPanel Grid.Row="0" Orientation="Horizontal">
+									<Label Name="captionSelectNode" 
+										   Content="Select Node" 
+										   Style="{DynamicResource vb_label}"/>
+									<ComboBox Name="valueNodes"
+										   Grid.Column="1" Grid.Row="0" 
+                                           Style="{DynamicResource vb_green_combobox}" 
+                                           ItemContainerStyle="{DynamicResource vb_combobox_item}">
+										<ComboBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding Name}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+								</StackPanel>
+
+								<Label Name="captionSetLimits" 
+									   Grid.Row="1" 
+									   Content="Set Limits" 
+									   Style="{DynamicResource vb_label}"/>
+								<Grid Grid.Row="2">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+										<RowDefinition/>
+									</Grid.RowDefinitions>
+
+									<Label Name="captionTiltMin" 
+										   Grid.Column="0" Grid.Row="0" 
+										   Content="Tilt Min" 
+										   Style="{DynamicResource vb_label}"/>
+									<odm_ui_controls:ControlNumericTextBox x:Name="valueTiltMin" 
+										   Grid.Column="1" Grid.Row="0" MinWidth="50"
+										   Text="Tilt Min" Style="{DynamicResource vb_textbox}"/>
+									<Label Name="captionTiltMax" 
+										   Grid.Column="2" Grid.Row="0" 
+										   Content="Tilt Max" Style="{DynamicResource vb_label}"/>
+									<odm_ui_controls:ControlNumericTextBox x:Name="valueTiltMax" 
+										   Grid.Column="3" Grid.Row="0" MinWidth="50"
+										   Text="Tilt Max"   Style="{DynamicResource vb_textbox}"/>
+									<Label Name="captionPanMin" 
+										   Grid.Column="0" Grid.Row="1" 
+										   Content="Pan Min" Style="{DynamicResource vb_label}"/>
+									<odm_ui_controls:ControlNumericTextBox x:Name="valuePanMin" 
+										   Grid.Column="1" Grid.Row="1" MinWidth="50"
+										   Text="Pan Min" Style="{DynamicResource vb_textbox}"/>
+									<Label Name="captionPanMax" 
+										   Grid.Column="2" Grid.Row="1" 
+										   Content="Pan Max" Style="{DynamicResource vb_label}"/>
+									<odm_ui_controls:ControlNumericTextBox x:Name="valuePanMax" 
+										   Grid.Column="3" Grid.Row="1" MinWidth="50"
+										   Text="Pan Max"  Style="{DynamicResource vb_textbox}"/>
+									<Label Name="captionZoomMin" 
+										   Grid.Column="0" Grid.Row="2" 
+										   Content="Zoom Min" Style="{DynamicResource vb_label}"/>
+									<odm_ui_controls:ControlNumericTextBox x:Name="valueZoomMin" 
+										   Grid.Column="1" Grid.Row="2" MinWidth="50"
+										   Text="Zoom Min" Style="{DynamicResource vb_textbox}"/>
+									<Label Name="captionZoomMax" 
+										   Grid.Column="2" Grid.Row="2" 
+										   Content="Zoom Max" Style="{DynamicResource vb_label}"/>
+									<odm_ui_controls:ControlNumericTextBox x:Name="valueZoomMax" 
+										   Grid.Column="3" Grid.Row="2" MinWidth="50"
+										   Text="Zoom Max" Style="{DynamicResource vb_textbox}"/>
+
+									<Button Name="btnApplySettings"
+											HorizontalAlignment="Right" 
+											Grid.Column="3" Grid.Row="3" 
+											Content="Apply" Style="{DynamicResource vb_button}"/>
+								</Grid>
+							</Grid>
+						</GroupBox>
+					</Expander>
+				</Grid>
+				<GroupBox Name="groupRelativeMoove"
+                            Header="Relative Move"
+                            Margin="10,10,0,0"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left"
+                            Style="{DynamicResource vb_groupbox}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="50"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+						<odm_ui_controls:ControlVbDirection x:Name="btnRelAbsUp"
+							VerticalAlignment="Bottom" 
+							Grid.Column="1" Grid.Row="0" Width="50" Height="25" 
+							Style="{DynamicResource vb_single_direction}" 
+							Orientation="Top"/>
+						<odm_ui_controls:ControlVbDirection x:Name="btnRelAbsLeft" 
+							HorizontalAlignment="Right" 
+							Grid.Column="0" Grid.Row="1" Width="25" Height="50" 
+							Style="{DynamicResource vb_single_direction}" 
+							Orientation="Left"/>
+						<odm_ui_controls:ControlVbDirection x:Name="btnRelAbsRight" 
+							HorizontalAlignment="Left" 
+							Grid.Column="2" Grid.Row="1" Width="25" Height="50" 
+							Style="{DynamicResource vb_single_direction}" 
+							Orientation="Right"/>
+						<odm_ui_controls:ControlVbDirection x:Name="btnRelAbsDown"
+							VerticalAlignment="Top" 
+							Grid.Column="1" Grid.Row="2" Width="50" Height="25" 
+							Style="{DynamicResource vb_single_direction}"
+							Orientation="Bottom"/>
+						<odm_ui_controls:ControlNumericTextBox x:Name="valueRelAbsMove" 
+							Margin="2" HorizontalContentAlignment="Center" HorizontalAlignment="Center" 
+							VerticalAlignment="Center" 
+							Grid.Column="1" Grid.Row="1"  Width="50" 
+							Style="{DynamicResource vb_textbox}"/>
+					</Grid>
+				</GroupBox>
+				<Grid Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right">
+					<Grid VerticalAlignment="Center" Margin="0,10,10,0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+
+						<odm_ui_controls:ControlVbDirection x:Name="btnContinuesZoomMinus"
+									Grid.Column="0"	
+                                    Width="54" Height="54" 
+                                    Style="{DynamicResource vb_double_direction}" 
+                                    Orientation="Left"/>
+						<GroupBox Name="groupRelAbsZoom"
+									Grid.Column="1"	
+									Margin="3,0,3,0"
+									Header="Zoom" 
+									VerticalAlignment="Top"
+									HorizontalAlignment="Right" 
+									Style="{DynamicResource vb_groupbox}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+								</Grid.ColumnDefinitions>
+
+								<Button Name="btnRelAbsZoomPlus"
+                                        Width="25"
+                                        Height="25"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="3"
+                                        Style="{DynamicResource vb_button_plus}"/>
+								<Button Name="btnRelAbsZoomMinus"
+                                        Width="25"
+                                        Height="25"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="1"
+                                        Style="{DynamicResource vb_button_minus}"/>
+								<odm_ui_controls:ControlNumericTextBox  x:Name="valueRelAbsZoom"
+                                    Grid.Column="2"
+                                    Width="50"
+                                    Margin="2" 
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    HorizontalContentAlignment="Center"
+                                    Style="{DynamicResource vb_textbox}"/>
+							</Grid>
+						</GroupBox>
+						<odm_ui_controls:ControlVbDirection x:Name="btnContinuesZoomPlus"
+									Grid.Column="2"	
+									Margin="3,0,0,0"
+									Width="54" Height="54" 
+									Style="{DynamicResource vb_double_direction}" 
+									Orientation="Right"/>
+					</Grid>
+				</Grid>
+			</Grid>
+			<Border CornerRadius="4" Background="Black" Style="{StaticResource ErrorMessageStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="2" BorderBrush="Red">
+				<TextBlock Name="captionErrorMessage" 
+						   Margin="3" Foreground="Red" 
+						   FontSize="18" FontWeight="Bold" Background="Black"/>
+			</Border>
+		</Grid>
+	</DockPanel>
+</UserControl>

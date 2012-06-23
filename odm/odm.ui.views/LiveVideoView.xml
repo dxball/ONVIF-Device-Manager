@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<activity name="LiveVideoView" clr-ns="odm.ui.activities">
+	<use clr-ns="onvif.services"/>
+	<model>
+		<prop name="profToken" clr-type="string" read-only="true"/>
+	</model>
+
+	<result>
+		<option name="Close"/>
+	</result>
+</activity>

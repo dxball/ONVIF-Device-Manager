@@ -1,0 +1,28 @@
+﻿<l:BasePropertyControl 
+	x:Class="odm.ui.activities.LiveVideoView"
+	xmlns:l="clr-namespace:odm.ui.controls"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:cmd="clr-namespace:Microsoft.Practices.Prism.Commands;assembly=Microsoft.Practices.Prism"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	mc:Ignorable="d" 
+	d:DesignHeight="300" d:DesignWidth="387" xmlns:my="clr-namespace:odm.ui.controls" xmlns:my1="clr-namespace:odm">
+    <DockPanel>
+        <!--<Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>-->
+                <!--<ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto"/>-->
+            <!--</Grid.ColumnDefinitions>-->
+        <!--<TextBox Name="uriString"  Margin="2,0,2,0" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Background="White" Foreground="Black" IsReadOnly="True"/>-->
+        <!--</Grid>-->
+        <DockPanel>
+            <Grid Margin="0,0,0,6">
+                <!--<my:VideoPlayer x:Name="player" Margin="0"/>-->
+				<Border x:Name="player" Margin="0" Background="Black"/>
+                <!--<CheckBox Command="{Binding RecordCommand}" ToolTip="Start record" Content="CheckBox" Height="22" HorizontalAlignment="Left" Margin="6" Name="checkBox1" VerticalAlignment="Top" Width="57" Style="{StaticResource RecordCheckBox}" />-->
+			</Grid> 
+		</DockPanel>
+    </DockPanel>
+</l:BasePropertyControl>
