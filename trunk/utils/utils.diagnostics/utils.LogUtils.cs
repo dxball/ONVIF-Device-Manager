@@ -170,8 +170,16 @@ namespace utils {
 
 		[Conditional("TRACE")]
 		public static void WriteError(Exception err) {
-			WriteEvent(err.Message, null, TraceEventType.Error);
+
+            WriteEvent(GetInner(err), null, TraceEventType.Error);
 		}
+        static string GetInner(Exception err) {
+            string result = err.ToString();
+            if (err.InnerException != null) {
+                result += Environment.NewLine + GetInner(err.InnerException);
+            }
+            return result;
+        }
 		
 		[Conditional("TRACE")]
 		public static void WriteWarning(string warnMsg, string source) {

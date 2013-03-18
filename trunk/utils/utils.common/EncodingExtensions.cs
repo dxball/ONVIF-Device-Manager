@@ -10,11 +10,19 @@ using System.IO;
 namespace utils {
 
 	public static class EncodingEx {
-		public static string ToBase64(this byte[] bytes) {
+		public static string ToBase64(this IEnumerable<byte> bytes, bool insertLineBreaks = false) {
 			if (bytes == null) {
 				return null;
 			}
-			return Convert.ToBase64String(bytes);
+			var opt = insertLineBreaks ? Base64FormattingOptions.InsertLineBreaks : Base64FormattingOptions.None;
+			return Convert.ToBase64String(bytes.ToArray(), opt);
+		}
+		public static string ToBase64(this byte[] bytes, bool insertLineBreaks = false) {
+			if (bytes == null) {
+				return null;
+			}
+			var opt = insertLineBreaks? Base64FormattingOptions.InsertLineBreaks:Base64FormattingOptions.None;
+			return Convert.ToBase64String(bytes, opt);
 		}
 		public static byte[] FromBase64(this string base64) {
 			if (base64 == null) {

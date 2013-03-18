@@ -11,7 +11,7 @@ using System.Xml.XPath;
 
 namespace utils {
 	public class XmlSerializerNamespaceResolver : IXmlNamespaceResolver {
-		Dictionary<string, string> m_namespaces;
+		Dictionary<string, string> m_namespaces = new Dictionary<string,string>();
 		
 		public XmlSerializerNamespaceResolver(XmlSerializerNamespaces serializerNamespaces) {
 			serializerNamespaces.ToArray().ForEach(qns => {

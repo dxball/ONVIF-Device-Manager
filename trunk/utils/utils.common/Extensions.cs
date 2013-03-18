@@ -2,6 +2,8 @@
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.IO;
+using System.Collections.Generic;
+using System.Net;
 
 namespace utils {
 	
@@ -195,5 +197,49 @@ namespace utils {
 			ub.Port = port;
 			return ub.Uri;
 		}
+		
+		/// <summary>
+		/// adds element at end of the list and shifts it left unless the list length is lower or equal than sizeMax
+		/// </summary>
+		/// <typeparam name="E">list elemnet type</typeparam>
+		/// <param name="list">list where element is pushed</param>
+		/// <param name="elem">element to push</param>
+		/// <param name="sizeMax">maximum length of list after element was pushed</param>
+		public static void ShiftPush<E>(this IList<E> list, E elem, int sizeMax) {
+			if (sizeMax < 0) {
+				throw new ArgumentOutOfRangeException("sizeMax");
+			}
+			list.Add(elem);
+			while (list.Count > sizeMax) {
+				list.RemoveAt(0);
+			}
+		}
+
+		/// <summary>
+		/// checks if status code is successful
+		/// </summary>
+		/// <param name="statusCode">status code</param>
+		/// <returns>true if status is successful, false otherwise </returns>
+		public static bool IsSuccessful(this HttpStatusCode statusCode) {
+			var i = (int)statusCode;
+			return i >= 200 && i < 300;
+		}
+
+
+        public static void AddRange<T>(this ICollection<T> container, IEnumerable<T> items) {
+            foreach (var item in items)
+                container.Add(item);
+        }
+        /// <summary>
+        /// container should contain only unique items
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="container"></param>
+        /// <param name="items"></param>
+        public static void RemoveRange<T>(this ICollection<T> container, IEnumerable<T> items) {
+            foreach (var item in items)
+                container.Remove(item);
+        }
 	}	
+
 }

@@ -13,6 +13,18 @@ namespace utils {
 
 		[Conditional("DEBUG")]
 		[DebuggerHidden]
+		public static void Warning(string errMsg) {
+			_WarningInternal(2, errMsg, null);
+		}
+
+		[Conditional("DEBUG")]
+		[DebuggerHidden]
+		public static void Warning(string errMsg, string errSrc) {
+			_WarningInternal(2, errMsg, errSrc);
+		}
+
+		[Conditional("DEBUG")]
+		[DebuggerHidden]
 		public static void Error(string errMsg) {
 			_ErrorInternal(2, errMsg, null);
 		}
@@ -147,6 +159,24 @@ namespace utils {
 			log.WriteEvent(evtSb.ToString(), src, TraceEventType.Error);
 			log.Flush();
 			Break();
+		}
+
+		protected static void _WarningInternal(int framesToSkip, string errMsg, string src) {
+
+			StackTrace stack = new StackTrace(framesToSkip, true);
+			var evtSb = new StringBuilder();
+			//if (!String.IsNullOrEmpty(errMsg)) {
+			//    evtSb.Append(" \"");
+			evtSb.Append(errMsg);
+			//    evtSb.Append("\"");
+			//}
+			//evtSb.Append(" at ");
+			var sf = stack.GetFrame(0);
+			//AppendStackFrame(evtSb, sf);
+			src = _ResolveSourceIfNone(sf, src);
+			log.WriteEvent(evtSb.ToString(), src, TraceEventType.Warning);
+			log.Flush();
+			//Break();
 		}
 
 		protected static void _InfoInternal(int framesToSkip, string errMsg, string src) {

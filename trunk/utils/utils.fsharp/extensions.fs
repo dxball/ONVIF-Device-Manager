@@ -20,6 +20,17 @@
             match Interlocked.Exchange<_>(handler, None) with
             | Some f -> f h
             | None -> ()
+    
+    let inline IsNull (value:^a when ^a: not struct and ^a:null) = obj.ReferenceEquals(value, null)
+    let inline NotNull (value:^a when ^a:not struct and ^a:null) = not(value |> IsNull)
+    let inline IfNotNull c v = if NotNull(v) then c(v) else null
+    
+    let inline Suppress exclusion substitute value  = 
+        if value<>exclusion then value else substitute
+
+    let inline SuppressNull substitute value = 
+        if IsNull(value) then substitute else value
+    
 
     type ObservedEvent<'T> = 
     | Notification of 'T
@@ -40,21 +51,21 @@
             elif value > max then max
             else value
     end
-    
+
     ///<summary></summary>
     type AsyncObserver<'T> = ('T->unit)*(Exception->unit)
     
     [<AllowNullLiteral>]
     type IAsyncObserver<'T> = interface
-        abstract member OnSuccess: result:'T -> unit
-        abstract member OnError: error:Exception -> unit
-        abstract member OnCancel: error:OperationCanceledException -> unit
+        abstract OnSuccess: result:'T -> unit
+        abstract OnError: error:Exception -> unit
+        abstract OnCancel: error:OperationCanceledException -> unit
     end
 
     type IAsyncSink<'T> = interface
-        abstract member Success: result:'T -> bool
-        abstract member Error: error:Exception -> bool
-        abstract member Cancel: error:OperationCanceledException -> bool
+        abstract Success: result:'T -> bool
+        abstract Error: error:Exception -> bool
+        abstract Cancel: error:OperationCanceledException -> bool
     end
 
     type internal AsyncResult<'T> = 
@@ -81,7 +92,7 @@
         | Initialized
 
     ///<summary>Async extensions</summary>
-    type Async with
+    type global.Microsoft.FSharp.Control.Async with
         //static new() = ()
         //static let inline a = ()
         static member inline Map cont comp = async{
@@ -184,7 +195,7 @@
                         callback = (fun state -> CompleteWith(success)), 
                         state = null, dueTime = milliseconds, period = Timeout.Infinite
                     )
-                    if tmr = null then
+                    if tmr |> IsNull then
                         CompleteWith(fun ()->error(new Exception("failed to create timer")))
                     else
                         timerSubscription.Disposable <- Disposable.Create(fun()->
@@ -195,23 +206,25 @@
                 return ()
         }
 
-        static member StartChildEx (comp:Async<'TRes>) = async{
+        static member StartChildEx (comp:Async<'TRes>):Async<Async<'TRes>> = async{
             let! ct = Async.CancellationToken
             
             let gate = ref AsyncGate.Started
-            let CompleteWith cont =
-                if Interlocked.Exchange(gate, Notified) <> Notified then
-                    cont()
-            let ProcessResults (res:AsyncResult<'TRes>) =
-                let t = Interlocked.CompareExchange<AsyncGate<'TRes>>(gate, AsyncGate.Completed(res), AsyncGate.Started)
-                match t with
-                | AsyncGate.Subscribed callbacks -> 
-                    CompleteWith(fun ()->
-                        match res with
+            let CompleteWith(result:AsyncResult<'T>, callbacks:IAsyncObserver<'T>) =
+                let notify() = 
+                    match result with
                         | AsyncResult.Succeeded v -> callbacks.OnSuccess(v)
                         | AsyncResult.Failed e -> callbacks.OnError(e)
                         | AsyncResult.Canceled e -> callbacks.OnCancel(e)
-                    )
+                match Interlocked.Exchange(gate, Notified) with 
+                    | Notified -> ()
+                    | _ -> notify()
+
+            let ProcessResults (result:AsyncResult<'TRes>) =
+                let t = Interlocked.CompareExchange<AsyncGate<'TRes>>(gate, AsyncGate.Completed(result), AsyncGate.Started)
+                match t with
+                | AsyncGate.Subscribed callbacks -> 
+                    CompleteWith(result, callbacks)
                 | _ -> ()
             let Subscribe (success, error, cancel) = 
                 let callbacks = {
@@ -223,12 +236,7 @@
                 let t = Interlocked.CompareExchange<AsyncGate<'TRes>>(gate, AsyncGate.Subscribed(callbacks), AsyncGate.Started)
                 match t with
                 | AsyncGate.Completed result -> 
-                    CompleteWith(fun ()->
-                        match result with
-                        | AsyncResult.Succeeded v -> callbacks.OnSuccess(v)
-                        | AsyncResult.Failed e -> callbacks.OnError(e)
-                        | AsyncResult.Canceled e -> callbacks.OnCancel(e)
-                    )
+                    CompleteWith(result, callbacks)
                 | _ -> ()
 
             Async.StartWithContinuations(
@@ -608,56 +616,85 @@
                     )
                 )
 
-                let runningTasks = ref 1
+                let runningTasks = ref 0
                 let last_error = ref None
-
-                let itor = comps.GetEnumerator()
-                let rec loop () = 
-                    tramp.Drop(fun ()->
-                        if itor.MoveNext() && not(!completed) then
-                            runningTasks := !runningTasks + 1
-                            Async.StartWithContinuations(
-                                itor.Current,
-                                (fun v -> tramp.Drop( fun ()->
-                                    runningTasks := !runningTasks - 1
-                                    CompleteWith(fun()->
-                                        success (Some v)
-                                    )
-                                )),
-                                (fun e -> tramp.Drop( fun ()-> 
-                                    runningTasks := !runningTasks - 1
-                                    if !runningTasks = 0 then
-                                        CompleteWith(fun()-> error e)
-                                    else
-                                        last_error := Some e
-                                )),
-                                (fun e -> tramp.Drop( fun ()->
-                                    runningTasks := !runningTasks - 1
-                                    if !runningTasks = 0 then
-                                        CompleteWith(fun()-> error e)
-                                    else
-                                        last_error := Some (e:>Exception)
-                                )),
-                                cts.Token
-                            )
-                            loop()
-                        else
-                            itor.Dispose()
-                    )
-                loop()
-                tramp.Drop(fun()->
-                    runningTasks := !runningTasks - 1
+                tramp.Drop(fun ()->
+                    for comp in comps do
+                        runningTasks := !runningTasks + 1
+                        Async.StartWithContinuations(
+                            comp,
+                            (fun v -> tramp.Drop( fun ()->
+                                runningTasks := !runningTasks - 1
+                                CompleteWith(fun()->
+                                    success (Some v)
+                                )
+                            )),
+                            (fun e -> tramp.Drop( fun ()-> 
+                                runningTasks := !runningTasks - 1
+                                if !runningTasks = 0 then
+                                    CompleteWith(fun()-> error e)
+                                else
+                                    last_error := Some e
+                            )),
+                            (fun e -> tramp.Drop( fun ()->
+                                runningTasks := !runningTasks - 1
+                                if !runningTasks = 0 then
+                                    CompleteWith(fun()-> error e)
+                                else
+                                    last_error := Some (e:>Exception)
+                            )),
+                            cts.Token
+                        )
                     if !runningTasks = 0 then
-                        match !last_error with
-                        | None -> 
-                            CompleteWith(fun()->
-                                success None
-                            )
-                        | Some e -> 
-                            CompleteWith(fun()->
-                                error e
-                            )
+                        CompleteWith(fun()-> success None)
                 )
+//                let itor = comps.GetEnumerator()
+//                let rec loop () = 
+//                    tramp.Drop(fun ()->
+//                        if itor.MoveNext() && not(!completed) then
+//                            runningTasks := !runningTasks + 1
+//                            Async.StartWithContinuations(
+//                                itor.Current,
+//                                (fun v -> tramp.Drop( fun ()->
+//                                    runningTasks := !runningTasks - 1
+//                                    CompleteWith(fun()->
+//                                        success (Some v)
+//                                    )
+//                                )),
+//                                (fun e -> tramp.Drop( fun ()-> 
+//                                    runningTasks := !runningTasks - 1
+//                                    if !runningTasks = 0 then
+//                                        CompleteWith(fun()-> error e)
+//                                    else
+//                                        last_error := Some e
+//                                )),
+//                                (fun e -> tramp.Drop( fun ()->
+//                                    runningTasks := !runningTasks - 1
+//                                    if !runningTasks = 0 then
+//                                        CompleteWith(fun()-> error e)
+//                                    else
+//                                        last_error := Some (e:>Exception)
+//                                )),
+//                                cts.Token
+//                            )
+//                            loop()
+//                        else
+//                            itor.Dispose()
+//                    )
+//                loop()
+//                tramp.Drop(fun()->
+//                    runningTasks := !runningTasks - 1
+//                    if !runningTasks = 0 then
+//                        match !last_error with
+//                        | None -> 
+//                            CompleteWith(fun()->
+//                                success None
+//                            )
+//                        | Some e -> 
+//                            CompleteWith(fun()->
+//                                error e
+//                            )
+//                )
             )
         }
 
@@ -711,7 +748,7 @@
 //                    |UriHostNameType.IPv4 -> IPAddress.Parse(uri.Host)
 //                    |UriHostNameType.IPv6 -> IPAddress.Parse(uri.Host)
 //                    |_->null
-//                if ipAddr = null then
+//                if ipAddr |> IsNull then
 //                    false
 //                else
 //                    let addrBytes = ipAddr.GetAddressBytes()
@@ -748,7 +785,7 @@
                     fun() -> 
                         Disposable.Create(fun () ->
                             lock gate ( fun () ->
-                                if node.List <> null then
+                                if node.List |> NotNull then
                                     list.Remove(node)
                             )
                         )
@@ -758,13 +795,13 @@
         member this.Release() = 
             let first = lock gate (fun() ->
                 let first = list.First
-                if first <> null then
+                if first |> NotNull then
                     list.RemoveFirst()
                 else
                     cnt := !cnt + 1
                 first
             )
-            if first <> null then
+            if first |> NotNull then
                 let success = first.Value
                 if not(success()) then
                     this.Release()
@@ -822,7 +859,7 @@
                         cont()
                     )
                 ))
-                if op <> null then
+                if op |> NotNull then
                     disp.Disposable <- Disposable.Create(fun()->
                         CompleteWith(fun()-> 
                             cancel(new OperationCanceledException())

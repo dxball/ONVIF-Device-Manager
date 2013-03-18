@@ -3,6 +3,7 @@
     open System.Collections.Generic
     open System.Linq
     open System.Threading
+    open System.Threading.Tasks
     //open System.Windows.Threading
     open System.Runtime.CompilerServices
     open System.Reactive.Concurrency
@@ -46,7 +47,7 @@
 //                member this.OnCancel() = 
 //                    scheduler.Schedule(fun ()-> observer.OnCancel()) |> ignore
 //            end
-//        }       
+//        }
 
         static member Create<'T>(factory: Func<IAsyncSink<'T>, IDisposable>): Async<'T> = 
             Async.CreateWithDisposable(fun sink -> factory.Invoke sink)
@@ -70,7 +71,7 @@
                     let comp = async{
                         for x in steps do
                             do! x
-                    }                
+                    }
                     Async.StartWithContinuations(comp,
                         (fun ()->()),
                         (fun e->CompleteWith(fun()->error e)),
@@ -268,24 +269,25 @@
             }
         
         [<Extension>]
-        static member Select<'T, 'U>(source: Async<'T>, selector:Func<'T, 'U>): Async<'U> = 
+        static member Select<'T, 'U>(comp: Async<'T>, selector:Func<'T, 'U>): Async<'U> = 
            async{
-                let! v = source
+                let! v = comp
                 return selector.Invoke(v)
             }
         
         [<Extension>]
-        static member SelectMany<'T, 'U>(source:Async<'T>, cont:Func<'T,Async<'U>>): Async<'U> = 
+        static member SelectMany<'T, 'U>(comp: Async<'T> , cont:Func< Async<'T> , Async<'U> >): Async<'U> = 
            async{
-                let! v = source
-                return! cont.Invoke(v)
+                let! branch = Async.StartChildEx(comp)
+                return! cont.Invoke(branch)
             }
         
         [<Extension>]
-        static member SelectMany<'T, 'U, 'W>(source:Async<'T>, cont:Func<'T,Async<'U>>, selector:Func<'T, 'U, 'W>): Async<'W> = 
+        static member SelectMany<'T, 'U, 'W>(comp:Async<'T>, cont:Func<Async<'T>,Async<'U>>, selector:Func<'T, 'U, 'W>): Async<'W> = 
             async{
-                let! t = source
-                let! u = cont.Invoke(t)
+                let! branch = Async.StartChildEx(comp)
+                let! u = cont.Invoke(branch)
+                let! t = branch
                 return selector.Invoke(t,u)
             }
         
@@ -317,5 +319,33 @@
                     )
                 )
             }
+
+        [<Extension>]
+        static member StartAsTask<'T>(comp: Async<'T>): Task<'T> = 
+            let cs = new TaskCompletionSource<'T>()
+            Async.StartWithContinuations(
+                comp,
+                (fun v->cs.SetResult(v)),
+                (fun e->cs.SetException(e)),
+                (fun c->cs.SetCanceled())
+            )
+            cs.Task
+
+        [<Extension>]
+        static member StartAsTask<'T>(comp: Async<'T>, cancellationToken: CancellationToken): Task<'T> = 
+            let cs = new TaskCompletionSource<'T>()
+            Async.StartWithContinuations(
+                comp,
+                (fun v->cs.SetResult(v)),
+                (fun e->cs.SetException(e)),
+                (fun c->cs.SetCanceled()),
+                cancellationToken
+            )
+            cs.Task
+
+        [<Extension>]
+        static member GetAwaiter<'T>(comp: Async<'T>): TaskAwaiter<'T> = 
+            Apm.StartAsTask(comp).GetAwaiter()
+           
     end
 
