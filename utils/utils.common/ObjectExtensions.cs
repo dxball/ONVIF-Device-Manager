@@ -56,5 +56,10 @@ namespace utils {
 			var ser = new JavaScriptSerializer();
 			ser.Serialize(val, builder);
 		}
+
+		public static T FromJson<T>(this string input) {
+			var ser = new JavaScriptSerializer();
+			return ser.Deserialize<T>(input);
+		}
 	}
 }

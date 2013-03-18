@@ -11,7 +11,7 @@
         |Success of 'T
         |Error of Exception
 
-    type Trampoline(max_workload) = class
+    type Trampoline() = class
         let mutable acquired = false
         let queue = new Queue<(unit->unit)>()
 

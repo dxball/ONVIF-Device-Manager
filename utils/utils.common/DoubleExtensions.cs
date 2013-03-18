@@ -1,8 +1,8 @@
 ﻿using System;
 
 namespace utils {
-
 	public static class DoubleExtensions {
+		//TODO: comments is needed
 		public static int ToInt32(this double value) {
 			if (value >= 0.0) {
 				if (value < 2147483647.5) {
@@ -23,7 +23,7 @@ namespace utils {
 					return result;
 				}
 			}
-			throw new OverflowException("failed to cast doble to int");
+			throw new OverflowException("failed to cast double to int");
 		}
 	}
 }

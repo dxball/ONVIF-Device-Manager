@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using System;
 
 namespace utils {
 
@@ -19,7 +19,6 @@ namespace utils {
 				}
 			}
 
-			var serializer = new XmlSerializer(type);
 			using (var reader = new XmlNodeReader(xmlNode)) {
 				return Deserialize(reader, type);
 			}
@@ -41,17 +40,45 @@ namespace utils {
 			}
 		}
 
-		public static Object Deserialize(this XNode xNode, Type type) {
-			var xroot = type.GetCustomAttribute<XmlRootAttribute>();
-			if (xroot == null) {
-				var xtype = type.GetCustomAttribute<XmlTypeAttribute>();
-				if (xtype != null && xNode.NodeType == XmlNodeType.Element) {
-					var xElement = (XElement)xNode;
-					return Deserialize(xNode, type, xElement.Name);
+		private static Dictionary<Tuple<Type, XmlQualifiedName>, XmlSerializer> serializers = new Dictionary<Tuple<Type, XmlQualifiedName>, XmlSerializer>();
+
+		public static XmlSerializer GetSerializer(Type type, XmlQualifiedName qname = null) {
+			var key = new Tuple<Type, XmlQualifiedName>(type, qname);
+			XmlSerializer serializer;
+			lock (serializers) {
+				if (!serializers.TryGetValue(key, out serializer)) {
+					if (qname == null || qname.IsEmpty) {
+						var xroot = type.GetCustomAttribute<XmlRootAttribute>();
+						if (xroot == null) {
+							string rootName = type.Name;
+							string rootNs = null;
+							var xtype = type.GetCustomAttribute<XmlTypeAttribute>();
+							if (xtype != null) {
+								if (!String.IsNullOrEmpty(xtype.TypeName)) {
+									rootName = xtype.TypeName;
+								}
+								rootNs = xtype.Namespace;
+							}
+							xroot = new XmlRootAttribute(rootName) { Namespace = rootNs };
+						}
+						var rkey = new Tuple<Type, XmlQualifiedName>(type, new XmlQualifiedName(xroot.ElementName, xroot.Namespace));
+						if (!serializers.TryGetValue(rkey, out serializer)) {
+							serializer = new XmlSerializer(type, xroot);
+							serializers.Add(rkey, serializer);
+						}
+					} else {
+						serializer = new XmlSerializer(type, new XmlRootAttribute(qname.Name) { Namespace = qname.Namespace });
+					}
+					serializers.Add(key, serializer);
 				}
 			}
+			return serializer;
+		}
+
+		public static Object Deserialize(this XNode xNode, Type type) {
+			var serializer = GetSerializer(type, null);
 			using (var reader = xNode.CreateReader()) {
-				return Deserialize(reader, type);
+				return serializer.Deserialize(reader);
 			}
 		}
 
@@ -70,14 +97,13 @@ namespace utils {
 		}
 
 		public static Object Deserialize(this XmlReader xmlReader, Type type) {
-			var serializer = new XmlSerializer(type);
+			var serializer = GetSerializer(type, null);
 			return serializer.Deserialize(xmlReader);
 		}
 
 		public static Object Deserialize(this XmlReader xmlReader, Type type, string rootName, string rootNamespace) {
-			var rootAttr = new XmlRootAttribute(rootName);
-			rootAttr.Namespace = rootNamespace;
-			var serializer = new XmlSerializer(type, rootAttr);
+			var qname = new XmlQualifiedName(rootName, rootNamespace);
+			var serializer = GetSerializer(type, qname);
 			return serializer.Deserialize(xmlReader);
 		}
 
@@ -108,7 +134,7 @@ namespace utils {
 		}
 
 		public static XmlElement Serialize(this object obj) {
-			var serializer = new XmlSerializer(obj.GetType());
+			var serializer = GetSerializer(obj.GetType());
 			var xmlDoc = new XmlDocument();
 			using (var writer = xmlDoc.CreateNavigator().AppendChild()) {
 				serializer.Serialize(writer, obj);
@@ -139,7 +165,7 @@ namespace utils {
 		}
 
 		public static XElement SerializeAsXElement<T>(this T obj, XmlSerializerNamespaces ns) {
-			var serializer = new XmlSerializer(typeof(T));
+			var serializer = GetSerializer(typeof(T));
 			var xd = new XDocument();
 			using (var writer = xd.CreateWriter()) {
 				serializer.Serialize(writer, obj, ns);
@@ -150,7 +176,7 @@ namespace utils {
 		}
 
 		public static XmlElement Serialize<T>(this T obj, XmlSerializerNamespaces ns) {
-			var serializer = new XmlSerializer(typeof(T));
+			var serializer = GetSerializer(typeof(T));
 			var xmlDoc = new XmlDocument();
 			using (var writer = xmlDoc.CreateNavigator().AppendChild()) {
 				serializer.Serialize(writer, obj, ns);
@@ -159,9 +185,7 @@ namespace utils {
 		}
 
 		public static XmlElement Serialize<T>(this T obj, XmlQualifiedName root) {
-			var rootAttr = new XmlRootAttribute(root.Name);
-			rootAttr.Namespace = root.Namespace;
-			var serializer = new XmlSerializer(typeof(T), rootAttr);
+			var serializer = GetSerializer(typeof(T), root);
 			var xmlDoc = new XmlDocument();
 
 			using (var writer = xmlDoc.CreateNavigator().AppendChild()) {
@@ -171,7 +195,7 @@ namespace utils {
 			return xmlDoc.DocumentElement;
 		}
 
-		public static XmlElement ToXmlElement(this XElement xelement){
+		public static XmlElement ToXmlElement(this XElement xelement) {
 			var xmlDoc = new XmlDocument();
 			using (var reader = xelement.CreateReader()) {
 				xmlDoc.Load(reader);
@@ -210,7 +234,7 @@ namespace utils {
 						continue;
 					}
 					var key = prefix.GetString() as string;
-					if(String.IsNullOrEmpty(key)){
+					if (String.IsNullOrEmpty(key)) {
 						continue;
 					}
 					var uri = ExposedObject.From(ns.Uri);
@@ -220,6 +244,59 @@ namespace utils {
 				return dic;
 			}
 			return null;
+		}
+
+		public static bool Any(this XmlAttributeCollection attrs, Func<XmlAttribute, bool> pred) {
+			return attrs.OfType<XmlAttribute>().Any(pred);
+		}
+
+		public static void ForEachElement(this XmlNodeList nodes, Action<XmlElement> action) {
+			foreach (var node in nodes.OfType<XmlElement>()) {
+				action(node);
+			}
+		}
+
+		//TODO: very specific functional, needs to be scoped
+		public static object ConvertXSValue(XmlQualifiedName type, string value) {
+			const string ns = @"http://www.w3.org/2001/XMLSchema";
+			if (type == new XmlQualifiedName("boolean", ns))
+				return value == null ? false : XmlConvert.ToBoolean(value.ToLowerInvariant()); //value.ParseBoolInvariant();
+			else if (type == new XmlQualifiedName("integer", ns))
+				return value == null ? 0 : XmlConvert.ToInt32(value);//int.Parse(value);
+			//skip double for good
+			return value ?? string.Empty;
+		}
+
+		public static string ConvertBackXSValue(object value) {
+			if (value == null) {
+				return null;
+			}
+
+			var _string = value as string;
+			if (_string != null) {
+				return _string;
+			}
+
+			var _double = value as double?;
+			if (_double.HasValue) {
+				return XmlConvert.ToString(_double.Value);
+			}
+
+			var _float = value as float?;
+			if (_float.HasValue) {
+				return XmlConvert.ToString(_float.Value);
+			}
+
+			var _int = value as int?;
+			if (_int.HasValue) {
+				return XmlConvert.ToString(_int.Value);
+			}
+			
+			var _bool = value as bool?;
+			if (_bool.HasValue) {
+				return XmlConvert.ToString(_bool.Value);
+			}
+			return value.ToString();
 		}
 	}
 }

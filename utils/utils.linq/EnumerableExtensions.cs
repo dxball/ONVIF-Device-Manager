@@ -28,12 +28,12 @@ namespace utils {
 			}
 		}
 
-		public static IEnumerable Where(this IEnumerable src, Func<Object, bool> predicate) {
-			if (src == null) {
-				return null;
-			}
-			return WhereImpl(src, predicate);
-		}
+		//public static IEnumerable Where(this IEnumerable src, Func<Object, bool> predicate) {
+		//	if (src == null) {
+		//		return null;
+		//	}
+		//	return WhereImpl(src, predicate);
+		//}
 
 		public static T FirstOrDefault<T>(this IEnumerable<T> src, Func<T> factory) {
 			if (src == null) {
@@ -103,7 +103,7 @@ namespace utils {
 				return;
 			}
 			if (action == null) {
-				action = (o,i) => { };
+				action = (o, i) => { };
 			}
 			int index = 0;
 			foreach (var element in src) {
@@ -126,6 +126,54 @@ namespace utils {
 				return src.Concat(Enumerable.Repeat(tail, 1));
 			}
 		}
+
+		/// <summary>
+		/// excludes all occurrences of item in src, based on equality
+		/// </summary>
+		/// <typeparam name="T">type of elements of sequnce</typeparam>
+		/// <param name="src">input sequnce</param>
+		/// <param name="item">element to exclude</param>
+		/// <returns>output sequence</returns>
+		public static IEnumerable<T> RemoveAll<T>(this IEnumerable<T> src, T item) where T : class {
+			if (src == null) {
+				return null;
+			} else {
+				return src.Where<T>(x => !Object.Equals(x,item));
+			}
+		}
+
+		private static IEnumerable<T> RemoveFirstImpl<T>(IEnumerable<T> src, T item) where T : class {
+			using (var itor = src.GetEnumerator()) {
+				while (true){
+					if(!itor.MoveNext()){
+						yield break;
+					}
+					if (!Object.Equals(itor.Current, item)) {
+						break;
+					}
+					yield return itor.Current;
+				}
+				while (itor.MoveNext()) {
+					yield return itor.Current;
+				}
+			}
+		}
+
+		/// <summary>
+		/// excludes first occurrence of item in src, based on equality
+		/// </summary>
+		/// <typeparam name="T">type of elements of sequnce</typeparam>
+		/// <param name="src">input sequnce</param>
+		/// <param name="item">element to exclude</param>
+		/// <returns>output sequence</returns>
+		public static IEnumerable<T> RemoveFirst<T>(this IEnumerable<T> src, T item) where T : class {
+			if (src == null) {
+				return null;
+			} else {
+				return RemoveFirstImpl(src, item);
+			}
+		}
+
 		public static IEnumerable<T> Repeat<T>(this IEnumerable<T> src, int times) {
 			if (src == null) {
 				yield break;
@@ -154,8 +202,8 @@ namespace utils {
 		/// <param name="comparer">Comparer to use to compare projected values</param>
 		/// <returns>The maximal element, according to the projection.</returns>
 
-		public static TSource MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null) where TSource:class{
-			if(source == null){
+		public static TSource MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer = null) where TSource : class {
+			if (source == null) {
 				return default(TSource);
 			}
 			if (comparer == null) {
@@ -179,7 +227,7 @@ namespace utils {
 			}
 		}
 
-		public static bool IsSame<T>(this IEnumerable<T> source, IEnumerable<T> comparand){
+		public static bool IsSame<T>(this IEnumerable<T> source, IEnumerable<T> comparand) {
 			if ((object)source == null) {
 				return (object)comparand == null;
 			}

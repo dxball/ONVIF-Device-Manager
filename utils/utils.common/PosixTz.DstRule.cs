@@ -67,7 +67,6 @@ namespace utils {
 			public static bool operator !=(DstRule left, DstRule right) {
 				return !(left == right);
 			}
-
 			public class FixedDateRule : DstRule, IEquatable<FixedDateRule> {
 				public struct MonthAndDay {
 					//zero-based month
@@ -75,7 +74,7 @@ namespace utils {
 					//zero-based day of month
 					public int day;
 				}
-				//day of year in range 1..365, leap days isn't counted
+				//day of year in range 1..365, leap days aren't counted
 				public readonly int day;
 				public MonthAndDay GetDate() {
 					var d = (day + 305) % 365;
@@ -121,7 +120,7 @@ namespace utils {
 					//zero-based day of month
 					public int day;
 				}
-				//day of year in range 0..365, leap days is counted
+				//day of year in range 0..365, leap days are counted
 				public readonly int day;
 				public MonthAndDay GetDate(int year) {
 					var daysPerYear = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 366 : 365;//DateTime.IsLeapYear(year) ? 366 : 365;

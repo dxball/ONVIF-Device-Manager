@@ -9,7 +9,8 @@ namespace utils {
 	public static class Utils {
 
 		public static string MapPath(string path) {
-			var assembly = Assembly.GetExecutingAssembly();
+			//TODO: GetEntryAssembly in some cases may return null, see msdn for details
+			var assembly = Assembly.GetEntryAssembly();
 			var baseDir = Path.GetDirectoryName(assembly.Location);
 			string fullPath = null;
 			if (path.StartsWith("~/")) {
@@ -20,20 +21,34 @@ namespace utils {
 			return fullPath;
 		}
 		
+		/// <summary>
+		/// Add specified search pathes to environment variable PATH
+		/// </summary>
+		/// <param name="searchPath">pathes to add</param>
 		public static void AddEnvironmentPath(IEnumerable<string> searchPath) {
+			searchPath = searchPath.Select(x => x.Trim()).ToArray();
 			string pathVar = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-			pathVar += ";" + String.Join(";",
-				from s in searchPath
-				where !String.IsNullOrEmpty(s)
-				select MapPath(s)
+			var pathes = pathVar.Split(';').Select(x=>x.Trim());
+			Environment.SetEnvironmentVariable("PATH", 
+				String.Join(";", 
+					searchPath.Concat(pathes.Where(x => !searchPath.Contains(x)))
+				)
 			);
-			Environment.SetEnvironmentVariable("PATH", pathVar);
 		}
-		
+
+		/// <summary>
+		/// Add specified search path to environment variable PATH
+		/// </summary>
+		/// <param name="searchPath">path to add</param>
 		public static void AddEnvironmentPath(string searchPath) {
+			searchPath = searchPath.Trim();
 			string pathVar = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-			pathVar += ";" + MapPath(searchPath);
-			Environment.SetEnvironmentVariable("PATH", pathVar);
+			var pathes = pathVar.Split(';').Select(x => x.Trim());
+			Environment.SetEnvironmentVariable("PATH",
+				String.Join(";",
+					pathes.Where(x => x != searchPath).Prepend(searchPath)
+				)
+			);
 		}
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
