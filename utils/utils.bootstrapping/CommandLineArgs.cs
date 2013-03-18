@@ -28,7 +28,7 @@ namespace utils {
 				throw new Exception(String.Format("parameter {0} is not specified", paramName));
 			}
 			if (val.Count > 1) {
-				throw new Exception(String.Format("parameter {0} is specified more than one time", paramName));
+				throw new Exception(String.Format("parameter {0} is specified more than once", paramName));
 			}
 			return val.First();
 		}
@@ -46,7 +46,6 @@ namespace utils {
 			}
 			return args.ToArray();
 		}
-
 
 		public static CommandLineArgs Parse(String[] args) {
 			var commandLineArgs = new CommandLineArgs();
