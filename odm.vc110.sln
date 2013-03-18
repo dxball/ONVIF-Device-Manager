@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "odm.player", "odm.player", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "odm.player.media", "odm\odm.player\odm.player.media\odm.player.media.csproj", "{5EE86409-3EA7-482A-8702-6DCA0D3BC4B1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odm.player.net", "odm\odm.player\odm.player.net\odm.player.net.vcxproj", "{D3EEB24E-79A7-48B3-8D58-EDBABB68CF0A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odm.player.net.v110", "odm\odm.player\odm.player.net\odm.player.net.v110.vcxproj", "{D3EEB24E-79A7-48B3-8D58-EDBABB68CF0A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odm.player.lib", "odm\odm.player\odm.player.lib\odm.player.lib.vcxproj", "{28075439-FFFD-4E7A-AE50-A7C315566F87}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odm.player.lib.v110", "odm\odm.player\odm.player.lib\odm.player.lib.v110.vcxproj", "{28075439-FFFD-4E7A-AE50-A7C315566F87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "odm.player.host", "odm\odm.player\odm.player.host\odm.player.host.csproj", "{31A6319F-F5E4-4DA4-8258-76B8E3A09EA4}"
 EndProject
@@ -86,7 +86,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "utils.fsharp.tests", "utils
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utils.fsharp.tests.launcher", "utils.tests\utils.fsharp.tests.launcher\utils.fsharp.tests.launcher.csproj", "{37E06805-AAEB-4834-8B03-054E98847BFF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "live555", "libs\live555-2013.02.11\live555.vcxproj", "{9819B4D5-2F85-4349-8159-E3A64CF97DC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "live555-v110", "libs\live555-2013.02.11\live555-v110.vcxproj", "{9819B4D5-2F85-4349-8159-E3A64CF97DC1}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "odm.setup", "odm.setup\odm.setup.wixproj", "{A4D00B80-596A-4A1C-AE88-ACE067D37619}"
 EndProject
