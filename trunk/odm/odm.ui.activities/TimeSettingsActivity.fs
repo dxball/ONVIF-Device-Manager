@@ -39,17 +39,17 @@
             let! dateTimeInfo =  session.GetSystemDateAndTime()
             let model = new TimeSettingsView.Model(
                 timestamp = Stopwatch.GetTimestamp(),
-                localDateTime = dateTimeInfo.LocalDateTime.ToSystemDateTime(),
-                utcDateTime = dateTimeInfo.UTCDateTime.ToSystemDateTime(DateTimeKind.Utc),
-                useDateTimeFromNtp = (dateTimeInfo.DateTimeType = SetDateTimeType.NTP)
+                localDateTime = dateTimeInfo.localDateTime.ToSystemDateTime(),
+                utcDateTime = dateTimeInfo.utcDateTime.ToSystemDateTime(DateTimeKind.Utc),
+                useDateTimeFromNtp = (dateTimeInfo.dateTimeType = SetDateTimeType.ntp)
             )
             
             model.timeZone <- 
-                if dateTimeInfo.TimeZone <> null then 
-                    dateTimeInfo.TimeZone.TZ
+                if dateTimeInfo.timeZone |> NotNull then 
+                    dateTimeInfo.timeZone.tz
                 else
                     null
-            model.daylightSavings <- dateTimeInfo.DaylightSavings
+            model.daylightSavings <- dateTimeInfo.daylightSavings
             
             model.AcceptChanges()
             return model
@@ -98,18 +98,18 @@
                     use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
                     let utcNow = System.DateTime.UtcNow;
                     let newUtc = new DateTime()
-                    newUtc.Date <- new Date(
-                        Year = utcNow.Year,
-                        Month = utcNow.Month,
-                        Day = utcNow.Day
+                    newUtc.date <- new Date(
+                        year = utcNow.Year,
+                        month = utcNow.Month,
+                        day = utcNow.Day
                     )
-                    newUtc.Time <- new Time(
-                        Hour = utcNow.Hour,
-                        Minute = utcNow.Minute,
-                        Second = utcNow.Second
+                    newUtc.time <- new Time(
+                        hour = utcNow.Hour,
+                        minute = utcNow.Minute,
+                        second = utcNow.Second
                     )
-                    let newTz = new TimeZone(TZ = model.timeZone)
-                    do! session.SetSystemDateAndTime(SetDateTimeType.Manual, model.daylightSavings, newTz, newUtc)
+                    let newTz = new TimeZone(tz = model.timeZone)
+                    do! session.SetSystemDateAndTime(SetDateTimeType.manual, model.daylightSavings, newTz, newUtc)
                     return async{
                         do! InfoView.Show(ctx, LocalTimeZone.instance.applySuccess) |> Async.Ignore
                         return! this.Main()
@@ -130,8 +130,8 @@
                         return this.Main()
                     else
                         use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
-                        let newTz = new TimeZone(TZ = model.timeZone)
-                        do! session.SetSystemDateAndTime(SetDateTimeType.NTP, model.daylightSavings, newTz, null)
+                        let newTz = new TimeZone(tz = model.timeZone)
+                        do! session.SetSystemDateAndTime(SetDateTimeType.ntp, model.daylightSavings, newTz, null)
                         return async{
                             do! InfoView.Show(ctx, LocalTimeZone.instance.applySuccess) |> Async.Ignore
                             return! this.Main()
@@ -150,18 +150,18 @@
                 try
                     use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
                     let newUtc = new DateTime()
-                    newUtc.Date <- new Date(
-                        Year = utcDateTime.Year,
-                        Month = utcDateTime.Month,
-                        Day = utcDateTime.Day
+                    newUtc.date <- new Date(
+                        year = utcDateTime.Year,
+                        month = utcDateTime.Month,
+                        day = utcDateTime.Day
                     )
-                    newUtc.Time <- new Time(
-                        Hour = utcDateTime.Hour,
-                        Minute = utcDateTime.Minute,
-                        Second = utcDateTime.Second
+                    newUtc.time <- new Time(
+                        hour = utcDateTime.Hour,
+                        minute = utcDateTime.Minute,
+                        second = utcDateTime.Second
                     )
-                    let newTz = new TimeZone(TZ = model.timeZone)
-                    do! session.SetSystemDateAndTime(SetDateTimeType.Manual, model.daylightSavings, newTz, newUtc)
+                    let newTz = new TimeZone(tz = model.timeZone)
+                    do! session.SetSystemDateAndTime(SetDateTimeType.manual, model.daylightSavings, newTz, newUtc)
                     return async{
                         do! InfoView.Show(ctx, LocalTimeZone.instance.applySuccess) |> Async.Ignore
                         return! this.Main()

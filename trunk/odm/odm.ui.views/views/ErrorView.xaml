@@ -15,6 +15,7 @@
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
 			<RowDefinition Height="10" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
@@ -29,17 +30,23 @@
 			Text="some message" 
 			Margin="0" Padding="0"
 			TextWrapping="Wrap" VerticalAlignment="Center"/>
-			<!--<Expander Header="Details" Visibility="Visible">
-			<WebBrowser/>
-		</Expander>-->
+		
+		<TextBlock 
+            Name="valueDetails" 
+            Visibility="Collapsed" 
+            Grid.Row="1" 
+            Grid.Column="2"
+            TextWrapping="Wrap"
+            />
+		
 		<StackPanel 
 			x:Name="buttonsStackPanel"
-			Grid.Row="2" Grid.Column="2"
+			Grid.Row="3" Grid.Column="2"
 			Margin="0"
 			Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button 
 				x:Name="detailsButton"
-				IsEnabled="False"
+				IsEnabled="false"
 				Content="Show details" 
 				Margin="0"
 				HorizontalAlignment="Right" Style="{DynamicResource ButtonLeft}"/>

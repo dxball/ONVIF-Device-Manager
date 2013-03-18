@@ -60,7 +60,7 @@
     end
 
     type ProfileManagementActivity(ctx:IUnityContainer, activeProfToken:string, vsToken: string) = class
-        do if vsToken = null then raise (new ArgumentNullException("vsToken"))
+        do if vsToken |> IsNull then raise (new ArgumentNullException("vsToken"))
         let session = ctx.Resolve<INvtSession>()
         let facade = new OdmSession(session)
 
@@ -74,7 +74,10 @@
             let! profiles = async{
                 let! profs = session.GetProfiles()
                 return profs 
-                    |> Seq.filter(fun p-> p.VideoSourceConfiguration = null || p.VideoSourceConfiguration.SourceToken = vsToken)
+                    |> Seq.filter(fun p-> 
+                        let vsc = p.videoSourceConfiguration 
+                        IsNull(vsc) || vsc.sourceToken = vsToken
+                    )
                     |> Seq.toArray
             }
             let! videoSources = session.GetVideoSources()
@@ -85,10 +88,7 @@
                     try
                         let ptz = session :> IPtzAsync
                         let! nodes = ptz.GetNodes()
-                        if nodes <> null then
-                            return nodes
-                        else
-                            return [||]
+                        return nodes |> SuppressNull [||]
                     with err->
                         dbg.Error(err)
                         return [||]
@@ -112,7 +112,7 @@
                     }
                     let selectedProfile = 
                         if not(String.IsNullOrEmpty(selctedProfToken)) then
-                            model.profiles.FirstOrDefault(fun (p:Profile) -> p.token = selctedProfToken)
+                            model.profiles |> Seq.firstOrDefault(fun p -> p.token = selctedProfToken)
                         else
                             null
                     return this.ShowForm(model, selectedProfile)
@@ -130,7 +130,7 @@
                         for prof in model.profiles do
                             let details = GetProfileDetails(prof, model.videoSources, model.audioSources, model.ptzNodes)
                             let flags = 
-                                if prof.VideoSourceConfiguration <> null then
+                                if prof.videoSourceConfiguration |> NotNull then
                                     ItemSelectorView.ItemFlags.AllOperationsAvailable
                                 else
                                     ItemSelectorView.ItemFlags.CanBeDeleted ||| ItemSelectorView.ItemFlags.CanBeModified
@@ -145,10 +145,13 @@
                         | None -> null
                     let items = profItems |> List.map(fun (p,i)->i)
                     let selection = 
-                        match profItems |> List.tryFind (fun (x,y) -> x.token = selectedProfile.token) with
-                        | Some (cfg, item) -> 
-                            item
-                        | None -> 
+                        if selectedProfile |> NotNull then
+                            match profItems |> List.tryFind (fun (x,y) -> x.token = selectedProfile.token) with
+                            | Some (cfg, item) -> 
+                                item
+                            | None -> 
+                                null
+                        else
                             null
                     let itemSelectorModel = new ItemSelectorView.Model(
                         items = (
@@ -184,7 +187,7 @@
                             modify = (fun item -> async{
                                 //configure profile
                                 let prof = GetProfileFromItem(item)
-                                if prof<>null then
+                                if prof |> NotNull then
                                     let! was_aborted = ConfigureProfileActivity.Run(ctx, prof)
                                     if was_aborted then
                                         return! show()
@@ -202,7 +205,7 @@
                             select = (fun item -> async{
                                 //activate selected profile
                                 let prof = GetProfileFromItem(item)
-                                if prof<>null then
+                                if prof |> NotNull then
                                     return this.Complete(ProfileManagementActivityResult.Select(prof.token))
                                 else
                                     do! show_error(new Exception(LocalProfile.instance.selectFail))
@@ -225,7 +228,7 @@
         member private this.DeleteProfile(model, profileToDelete) = async{
             let! cont = async{
                 try
-                    if profileToDelete=null then
+                    if profileToDelete |> IsNull then
                         do! show_error(new Exception(LocalProfile.instance.deleteFail))
                         return this.ShowForm(model, profileToDelete)
                     else
@@ -239,7 +242,7 @@
                                 do! InfoView.Show(ctx, LocalProfile.instance.deletingSuccess) |> Async.Ignore
                             } |> Async.StartImmediate
                             let newActiveProfileToken = 
-                                match model.profiles |> Seq.tryFind (fun p->p.token<>activeProfToken && p.VideoSourceConfiguration<>null) with
+                                match model.profiles |> Seq.tryFind (fun p->p.token<>activeProfToken && p.videoSourceConfiguration |> NotNull) with
                                 | Some p -> p.token
                                 | None -> null
                             //return this.Complete(ProfileManagerActivityResult.Refresh)

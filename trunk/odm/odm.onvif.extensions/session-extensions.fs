@@ -39,8 +39,9 @@
                 session.GetScopes(),
                 odmSession.GetNetworkStatus()
             )
-            model.name <- ScopeHelper.GetName(scopes |> Seq.map (fun x->x.ScopeItem))
-            model.location <- ScopeHelper.GetLocation(scopes |> Seq.map (fun x->x.ScopeItem))
+            model.name <- ScopeHelper.GetName(scopes |> Seq.map (fun x->x.scopeItem))
+            model.location <- ScopeHelper.GetLocation(scopes |> Seq.map (fun x->x.scopeItem))
+            model.iconUri <- ScopeHelper.GetDeviceIconUri(scopes |> Seq.map (fun x->x.scopeItem));
             model.firmware <- devInfo.FirmwareVersion
             model.hardware <- devInfo.HardwareId
             model.serial <- devInfo.SerialNumber
@@ -68,8 +69,8 @@
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
-                                    |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Configurable)
-                                    |> Seq.exists (fun x -> x.ScopeItem.StartsWith(ScopeHelper.onvifNameScope))
+                                    |> Seq.filter (fun x -> x.scopeDef = ScopeDefinition.configurable)
+                                    |> Seq.exists (fun x -> x.scopeItem.StartsWith(ScopeHelper.onvifNameScope))
                             if use_onvif_scope then
                                 ScopeHelper.onvifNameScope
                             else 
@@ -82,8 +83,8 @@
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
-                                    |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Configurable)
-                                    |> Seq.exists (fun x -> x.ScopeItem.StartsWith(ScopeHelper.onvifLocationScope))
+                                    |> Seq.filter (fun x -> x.scopeDef = ScopeDefinition.configurable)
+                                    |> Seq.exists (fun x -> x.scopeItem.StartsWith(ScopeHelper.onvifLocationScope))
                             if use_onvif_scope then
                                 ScopeHelper.onvifLocationScope
                             else 
@@ -96,8 +97,8 @@
                 let filter (x:string) = vf_lst |> Seq.forall (fun (v,f) -> (f x))
                 
                 yield! scopes
-                    |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Configurable)
-                    |> Seq.map (fun x -> x.ScopeItem)
+                    |> Seq.filter (fun x -> x.scopeDef = ScopeDefinition.configurable)
+                    |> Seq.map (fun x -> x.scopeItem)
                     |> Seq.filter filter
                 
                 yield! vf_lst |> Seq.map (fun (v,f) -> v)
@@ -105,65 +106,65 @@
             do! session.SetScopes(scopes_to_set.ToArray())
         }
 
-        [<Extension>]
-        static member GetCertificateSettings(odmSession: OdmSession, factory:Func<IChangeTrackable<ICertificateManagementModel>>):Async<IChangeTrackable<ICertificateManagementModel>> = async{
-            let session = odmSession.GetSession()
-            let change_trackable = factory.Invoke()
-            let model = change_trackable.origin
-            let! certStatuses = session.GetCertificatesStatus()
-            let! certificates = session.GetCertificates()
-            model.serverCertificates <-
-                let list = new LinkedList<string>()
-                if certificates<>null then
-                    for x in certificates do 
-                        list.AddLast(x.CertificateID) |> ignore
-                list
-            model.activeCertificateId <-
-                if certStatuses<>null then
-                    match certStatuses |> Seq.tryFind (fun x->x.Status = true) with
-                    | Some c -> c.CertificateID
-                    | None -> null
-                else
-                    null
-            let! clientAuth = session.GetClientCertificateMode()
-            model.clientAuthentication <- clientAuth
-            change_trackable.RevertChanges()
-            return change_trackable
-        }
-        
-        [<Extension>]
-        static member SetCertificateSettings(odmSession: OdmSession, model:IChangeTrackable<ICertificateManagementModel>):Async<unit> = async{
-            let session = odmSession.GetSession()
-            if not (model.isModified) then return ()
-            let active_changed = 
-                model.origin.activeCertificateId <> model.current.activeCertificateId
-            
-            // client authentication mode has been changed
-            if model.origin.clientAuthentication <> model.current.clientAuthentication then 
-                do! session.SetClientCertificateMode(model.current.clientAuthentication)
-            
-            // active server certificate has been changed
-            if model.origin.activeCertificateId <> model.current.activeCertificateId then 
-                do! session.SetCertificatesStatus(seq{
-                    if model.origin.serverCertificates <> null then
-                        for x in model.origin.serverCertificates -> 
-                            new CertificateStatus(CertificateID = x, Status = (x = model.current.activeCertificateId))
-                } |> Seq.toArray)
-            
-            // process removed certificates
-            let certificatesToRemove = Seq.toArray(seq{
-                if model.current.serverCertificates <> null then 
-                    if model.origin.serverCertificates = null then
-                        yield! model.current.serverCertificates
-                    else
-                        for c in model.origin.serverCertificates do
-                            if model.current.serverCertificates |> Seq.forall (fun x -> x<>c) then
-                                yield c
-            })
-            if certificatesToRemove.Length>0 then
-                do! session.DeleteCertificates(certificatesToRemove)
-
-        }
+//        [<Extension>]
+//        static member GetCertificateSettings(odmSession: OdmSession, factory:Func<IChangeTrackable<ICertificateManagementModel>>):Async<IChangeTrackable<ICertificateManagementModel>> = async{
+//            let session = odmSession.GetSession()
+//            let change_trackable = factory.Invoke()
+//            let model = change_trackable.origin
+//            let! certStatuses = session.GetCertificatesStatus()
+//            let! certificates = session.GetCertificates()
+//            model.serverCertificates <-
+//                let list = new LinkedList<string>()
+//                if certificates |> NotNull then
+//                    for x in certificates do 
+//                        list.AddLast(x.CertificateID) |> ignore
+//                list
+//            model.activeCertificateId <-
+//                if certStatuses |> NotNull then
+//                    match certStatuses |> Seq.tryFind (fun x->x.Status = true) with
+//                    | Some c -> c.CertificateID
+//                    | None -> null
+//                else
+//                    null
+//            let! clientAuth = session.GetClientCertificateMode()
+//            model.clientAuthentication <- clientAuth
+//            change_trackable.RevertChanges()
+//            return change_trackable
+//        }
+//        
+//        [<Extension>]
+//        static member SetCertificateSettings(odmSession: OdmSession, model:IChangeTrackable<ICertificateManagementModel>):Async<unit> = async{
+//            let session = odmSession.GetSession()
+//            if not (model.isModified) then return ()
+//            let active_changed = 
+//                model.origin.activeCertificateId <> model.current.activeCertificateId
+//            
+//            // client authentication mode has been changed
+//            if model.origin.clientAuthentication <> model.current.clientAuthentication then 
+//                do! session.SetClientCertificateMode(model.current.clientAuthentication)
+//            
+//            // active server certificate has been changed
+//            if model.origin.activeCertificateId <> model.current.activeCertificateId then 
+//                do! session.SetCertificatesStatus(seq{
+//                    if model.origin.serverCertificates |> NotNull then
+//                        for x in model.origin.serverCertificates -> 
+//                            new CertificateStatus(CertificateID = x, Status = (x = model.current.activeCertificateId))
+//                } |> Seq.toArray)
+//            
+//            // process removed certificates
+//            let certificatesToRemove = Seq.toArray(seq{
+//                if model.current.serverCertificates |> NotNull then 
+//                    if model.origin.serverCertificates |> IsNull then
+//                        yield! model.current.serverCertificates
+//                    else
+//                        for c in model.origin.serverCertificates do
+//                            if model.current.serverCertificates |> Seq.forall (fun x -> x<>c) then
+//                                yield c
+//            })
+//            if certificatesToRemove.Length>0 then
+//                do! session.DeleteCertificates(certificatesToRemove)
+//
+//        }
 
 
 

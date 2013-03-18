@@ -34,7 +34,7 @@ namespace odm.ui {
 			);
 
 
-			AppDefaults.InitConfigs();
+			//AppDefaults.InitConfigs();
 
 			InitPosition();
 
@@ -43,32 +43,32 @@ namespace odm.ui {
 				mvs.WndState = this.WindowState;
 
 				if (this.WindowState == System.Windows.WindowState.Maximized) {
-					AppDefaults.SetVisualSettings(mvs);
+					AppDefaults.UpdateVisualSettings(mvs);
 					return;
 				}
 
 				if (this.WindowState == System.Windows.WindowState.Minimized) {
-					AppDefaults.SetVisualSettings(mvs);
+					AppDefaults.UpdateVisualSettings(mvs);
 					return;
 				}
 
 				mvs.WndSize = new Rect(mvs.WndSize.X, mvs.WndSize.Y, evargs.NewSize.Width, evargs.NewSize.Height);
-				AppDefaults.SetVisualSettings(mvs);
+				AppDefaults.UpdateVisualSettings(mvs);
 			});
 			LocationChanged += new EventHandler((obj, evargs) => {
 				var vs = AppDefaults.visualSettings;
 				vs.WndState = this.WindowState;
 				if (this.WindowState == System.Windows.WindowState.Maximized) {
-					AppDefaults.SetVisualSettings(vs);
+					AppDefaults.UpdateVisualSettings(vs);
 					return;
 				}
 				if (this.WindowState == System.Windows.WindowState.Minimized) {
-					AppDefaults.SetVisualSettings(vs);
+					AppDefaults.UpdateVisualSettings(vs);
 					return;
 				}
 
 				vs.WndSize = new Rect(this.Left, this.Top, vs.WndSize.Width, vs.WndSize.Height);
-				AppDefaults.SetVisualSettings(vs);
+				AppDefaults.UpdateVisualSettings(vs);
 			});
 		}
 

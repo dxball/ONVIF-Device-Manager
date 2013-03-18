@@ -11,9 +11,10 @@ using odm.infra;
 using utils;
 using System.Text;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace odm.ui.activities {
-	public partial class ErrorView : UserControl {
+	public partial class ErrorView : UserControl, IDisposable {
 
 		#region Activity definition
 		public static FSharpAsync<Result> Show(IUnityContainer container, Exception error) {
@@ -28,7 +29,7 @@ namespace odm.ui.activities {
 
 		public Model model;
 
-		public ErrorView(Exception error){
+		public ErrorView(Exception error) {
 			Init(new Model(error));
 		}
 
@@ -45,10 +46,46 @@ namespace odm.ui.activities {
 				() => true
 			);
 
+			detailsButton.Click += (o, e) => {
+				if (valueDetails.Visibility != System.Windows.Visibility.Visible) {
+					valueDetails.Visibility = System.Windows.Visibility.Visible;
+					detailsButton.ClearBinding(Button.ContentProperty);
+					detailsButton.Content = "Hide details";
+				} else {
+					valueDetails.Visibility = System.Windows.Visibility.Collapsed;
+					detailsButton.ClearBinding(Button.ContentProperty);
+					detailsButton.CreateBinding(Button.ContentProperty, LocalButtons.instance, s => s.details);
+				}
+
+			};
+			if (model.error is WebException) {
+			}
 			var err = CorrectError(model.error);
+			if (err is FaultException) {
+				var faulrExc = (err as FaultException);
+				var msgFault = faulrExc.CreateMessageFault();
+				if (msgFault.HasDetail) {
+					try {
+						var sb = new StringBuilder();
+						var reader = msgFault.GetReaderAtDetailContents();
+						do {
+							sb.Append(reader.Value);
+						} while (reader.Read());
+						var det = sb.ToString();
+						if (!String.IsNullOrEmpty(det)) {
+							valueDetails.Text = det; // det.InnerText;
+							detailsButton.IsEnabled = true;
+						}
+					} catch {
+						//swallow error
+						//no details will be shown, if something went wrong
+					}
+				}
+			}
+
 			message.Text = err.Message;
 		}
-
+		//SerialDisposable
 		void Localization() {
 			detailsButton.CreateBinding(Button.ContentProperty, LocalButtons.instance, s => s.details);
 			okButton.CreateBinding(Button.ContentProperty, LocalButtons.instance, s => s.close);
@@ -64,11 +101,12 @@ namespace odm.ui.activities {
 		//        }
 		//        if (msg.HasDetail) {
 		//            var details = msg
-					
+
 		//        }
 		//    }
 		//}
-		protected Exception CorrectError(Exception error){
+
+		protected Exception CorrectError(Exception error) {
 			var protoException = error as ProtocolException;
 			if (protoException == null) {
 				return error;
@@ -81,9 +119,9 @@ namespace odm.ui.activities {
 			if (response == null) {
 				return error;
 			}
-			try{
+			try {
 				using (var stream = response.GetResponseStream()) {
-					using(var xmlReader = XmlReader.Create(stream)){
+					using (var xmlReader = XmlReader.Create(stream)) {
 						var msg = Message.CreateMessage(xmlReader, int.MaxValue, MessageVersion.Soap12WSAddressing10);
 						if (msg.IsFault) {
 							var fault = MessageFault.CreateFault(msg, Int16.MaxValue);
@@ -91,10 +129,10 @@ namespace odm.ui.activities {
 						}
 					}
 				}
-			}catch{
+			} catch {
 				return error;
 			}
-			
+
 			return error;
 		}
 

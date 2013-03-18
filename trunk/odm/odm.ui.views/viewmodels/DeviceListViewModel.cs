@@ -120,6 +120,7 @@ namespace odm.ui.viewModels {
 		public LocalDeviceList Strings { get { return LocalDeviceList.instance; } }
 		public LocalButtons BtnStrings { get { return LocalButtons.instance; } }
 		public LocalTitles Titles { get { return LocalTitles.instance; } }
+		
 		private INvtManager deviceManager;
 		private readonly IEventAggregator eventAggregator;
 		private readonly IUnityContainer container;
@@ -216,7 +217,7 @@ namespace odm.ui.viewModels {
 					  .Subscribe(isession => {
 						  ManualInitDeviceHolder(isession, devHolder);
 					  }, err => {
-						  //dbg.Error(err);
+						  dbg.Error(err);
 					  }));
 		}
 
@@ -280,7 +281,7 @@ namespace odm.ui.viewModels {
         }
         BatchTaskEventArgs GetBatchTaskEventArgs() {
             BatchTaskEventArgs evargs = new BatchTaskEventArgs();
-            evargs.currentAccount = AccountManager.CurrentAccount;
+            evargs.currentAccount = AccountManager.Instance.CurrentAccount;
             evargs.Devices = DisplayDevices.ToList();
             return evargs;
         }
@@ -318,14 +319,11 @@ namespace odm.ui.viewModels {
 		OdmSession facade;
 		System.Net.NetworkCredential currentAccount = null;
 		System.Net.NetworkCredential LoadCurrentAccount() {
-			var acc = AccountManager.CurrentAccount;
-			System.Net.NetworkCredential account = new System.Net.NetworkCredential();
-			if (acc.Account == null)
-				account = null;
-			else {
-				account.UserName = acc.Name;
-				account.Password = acc.Password;
-			}
+			var acc = AccountManager.Instance.CurrentAccount;
+			System.Net.NetworkCredential account = null;
+			if (!acc.IsAnonymous)
+                account = new System.Net.NetworkCredential() { UserName = acc.Name, Password = acc.Password };
+			
 			return account;
 		}
 		System.Net.NetworkCredential GetCurrentAccount() {

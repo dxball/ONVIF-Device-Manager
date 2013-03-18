@@ -10,39 +10,54 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>odm.localization</RootNamespace>
     <AssemblyName>odm.localization</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Platform)' == 'Net40' ">
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <DefineConstants>NET40; $(DefineConstants)</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+  <PropertyGroup Condition="'$(Platform)' == 'Net45' ">
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefineConstants>NET45; $(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <DebugSymbols Condition="'$(Configuration)' == 'Debug'">true</DebugSymbols>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+    <DebugType Condition="'$(Configuration)' == 'Debug'">full</DebugType>
+    <DebugType Condition="'$(Configuration)' == 'Release'">pdbonly</DebugType>
+    <Optimize Condition="'$(Configuration)' == 'Debug'">false</Optimize>
+    <Optimize Condition="'$(Configuration)' == 'Release'">true</Optimize>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel Condition="'$(Configuration)' == 'Debug'">4</WarningLevel>
+    <WarningLevel Condition="'$(Configuration)' == 'Release'">3</WarningLevel>
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">DEBUG;TRACE;$(DefineConstants)</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'Release'">TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Reactive.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Core.2.0.20823\lib\$(Platform)\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Interfaces.2.0.20823\lib\$(Platform)\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Linq.2.0.20823\lib\$(Platform)\System.Reactive.Linq.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\build\AssemblyInfo.global.cs">
+    <Compile Include="..\~cfg\AssemblyInfo.global.cs">
       <Link>Properties\AssemblyInfo.global.cs</Link>
     </Compile>
     <Compile Include="LanguageManager.cs" />
@@ -60,6 +75,10 @@
     </Xslt>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="locales\-dir.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
     <None Include="strings.generator.xslt">
       <DependentUpon>strings.xml</DependentUpon>
     </None>
@@ -78,6 +97,10 @@
     <ProjectReference Include="..\..\utils\utils.bindings\utils.bindings.csproj">
       <Project>{161F40E9-5DB5-4AAC-93E3-20533C8EC463}</Project>
       <Name>utils.bindings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\utils\utils.bootstrapping\utils.bootstrapping.csproj">
+      <Project>{90b75c37-636e-40fd-9005-4fd885a83eb2}</Project>
+      <Name>utils.bootstrapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\utils\utils.common\utils.common.csproj">
       <Project>{2FAA440A-87D3-41AB-9931-25AC306A25BA}</Project>

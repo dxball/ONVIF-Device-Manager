@@ -17,6 +17,7 @@ using System.Windows.Input;
 using odm.infra;
 namespace odm.ui.activities {
 	using global::onvif.services;
+	using global::odm.player;
 	
 	public partial class VideoPlayerView{
 		
@@ -25,7 +26,7 @@ namespace odm.ui.activities {
 		public class Model{
 			
 			public Model(
-				string profileToken, StreamSetup streamSetup, MediaUri mediaUri, VideoResolution encoderResolution, bool isUriEnabled
+				string profileToken, StreamSetup streamSetup, MediaUri mediaUri, VideoResolution encoderResolution, bool isUriEnabled, IMetadataReceiver metadataReceiver
 			){
 				
 				this.profileToken = profileToken;
@@ -33,6 +34,7 @@ namespace odm.ui.activities {
 				this.mediaUri = mediaUri;
 				this.encoderResolution = encoderResolution;
 				this.isUriEnabled = isUriEnabled;
+				this.metadataReceiver = metadataReceiver;
 			}
 			private Model(){
 			}
@@ -43,7 +45,8 @@ namespace odm.ui.activities {
 				StreamSetup streamSetup,
 				MediaUri mediaUri,
 				VideoResolution encoderResolution,
-				bool isUriEnabled
+				bool isUriEnabled,
+				IMetadataReceiver metadataReceiver
 			){
 				var _this = new Model();
 				
@@ -52,6 +55,7 @@ namespace odm.ui.activities {
 				_this.mediaUri = mediaUri;
 				_this.encoderResolution = encoderResolution;
 				_this.isUriEnabled = isUriEnabled;
+				_this.metadataReceiver = metadataReceiver;
 				return _this;
 			}
 		
@@ -60,6 +64,7 @@ namespace odm.ui.activities {
 			public MediaUri mediaUri{get;private set;}
 			public VideoResolution encoderResolution{get;private set;}
 			public bool isUriEnabled{get;private set;}
+			public IMetadataReceiver metadataReceiver{get;private set;}
 		}
 			
 		#endregion

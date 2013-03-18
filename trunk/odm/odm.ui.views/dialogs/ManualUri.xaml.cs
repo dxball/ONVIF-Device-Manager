@@ -50,7 +50,17 @@ namespace odm.ui.views {
 			get { return (string)GetValue(devUriProperty); }
 			set { SetValue(devUriProperty, value); }
 		}
-		public static readonly DependencyProperty devUriProperty = DependencyProperty.Register("devUri", typeof(string), typeof(ManualUri));
+		public static readonly DependencyProperty devUriProperty = DependencyProperty.Register("devUri", typeof(string), typeof(ManualUri), new PropertyMetadata((o, evarg) => {
+			var instance = o as ManualUri;
+			if (instance != null) {
+				instance.btnApply.IsEnabled = Uri.IsWellFormedUriString((string)evarg.NewValue, UriKind.RelativeOrAbsolute);
+				if (instance.btnApply.IsEnabled) {
+					instance.valueErrorInfo.Visibility = Visibility.Collapsed;
+				} else {
+					instance.valueErrorInfo.Visibility = Visibility.Visible;
+				}
+			}
+		}));
 
         void CloseBtn() {
 			//devUri = "";

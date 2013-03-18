@@ -22,6 +22,7 @@ using System.Reactive.Disposables;
 using odm.ui.core;
 using odm.ui.activities;
 using System.IO;
+using System.Xml.Schema;
 
 namespace odm.ui.views.CustomAnalytics {
     /// <summary>
@@ -44,15 +45,37 @@ namespace odm.ui.views.CustomAnalytics {
         public string title = "Analytics module configuration";
         odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr;
         odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr;
-        SynesisAnalyticsModel model = new SynesisAnalyticsModel();
+        SynesisAnalyticsModel model;
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
 
         Size videoSourceSize;
         Size videoEncoderSize;
 
         public class SynesisAnalyticsModel:INotifyPropertyChanged {
-            public SynesisAnalyticsModel (){
+            public SynesisAnalyticsModel(XmlSchemaSet schema)
+            {
+
+                {
+                    int min, max;
+                    var typeName = new XmlQualifiedName("DisplacementSensitivityValue", "http://www.synesis.ru/onvif/VideoAnalytics");
+                    if (schema.TryGetIntLimitsOfGlobalType(typeName, out min, out max))
+                    {
+                        this.DisplacementSensitivityValueMin = min;
+                        this.DisplacementSensitivityValueMax = max;
+                    }
+                }
+
+                {
+                    int min, max;
+                    var typeName = new XmlQualifiedName("ContrastSensitivityValue", "http://www.synesis.ru/onvif/VideoAnalytics");
+                    if (schema.TryGetIntLimitsOfGlobalType(typeName, out min, out max))
+                    {
+                        this.ContrastSensitivityValueMin = min;
+                        this.ContrastSensitivityValueMax = max;
+                    }
+                }
             }
+
             bool useObjectTracker = false;
             public bool UseObjectTracker {
                 get {
@@ -92,8 +115,8 @@ namespace odm.ui.views.CustomAnalytics {
                     NotifyPropertyChanged("MaxObjectSpeed");
                 }
             }
-            public const int DisplacementSensitivityValueMin = 0;
-            public const int DisplacementSensitivityValueMax = 5;
+            public int DisplacementSensitivityValueMin { get; private set; }
+            public int DisplacementSensitivityValueMax { get; private set; }
             int displacementSensivity;
             public int DisplacementSensivity {
                 get { return displacementSensivity; }
@@ -144,8 +167,8 @@ namespace odm.ui.views.CustomAnalytics {
                     NotifyPropertyChanged("CameraObstructed");
                 }
             }
-            public const int ContrastSensitivityValueMin = 1;
-            public const int ContrastSensitivityValueMax = 15;
+            public int ContrastSensitivityValueMin { get; private set; }
+            public int ContrastSensitivityValueMax { get; private set; }
             int contrastSensivity;
             public int ContrastSensivity {
                 get { return contrastSensivity; }
@@ -201,139 +224,139 @@ namespace odm.ui.views.CustomAnalytics {
         }
 
         void GetSimpleItems() {
-            modulDescr.config.Parameters.SimpleItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.simpleItem.ForEach(x => {
+                switch (x.name) {
                     case "StabilizationTime":
-                        x.Value = XmlConvert.ToString(model.StabilizationTime);
+                        x.value = XmlConvert.ToString(model.StabilizationTime);
                         break;
                     case "ShiftOutputPicture":
-                        x.Value = XmlConvert.ToString(model.ShiftOutputPicture);
+                        x.value = XmlConvert.ToString(model.ShiftOutputPicture);
                         break;
                     case "UseObjectTracker":
-                        x.Value = XmlConvert.ToString(model.UseObjectTracker);
+                        x.value = XmlConvert.ToString(model.UseObjectTracker);
                         break;
                     case "MaxObjectArea":
-                        x.Value = XmlConvert.ToString(model.MaxObjectArea);
+                        x.value = XmlConvert.ToString(model.MaxObjectArea);
                         break;
                     case "MinObjectArea":
-                        x.Value = XmlConvert.ToString(model.MinObjectArea);
+                        x.value = XmlConvert.ToString(model.MinObjectArea);
                         break;
                     case "MaxObjectSpeed":
-                        x.Value = XmlConvert.ToString(model.MaxObjectSpeed);
+                        x.value = XmlConvert.ToString(model.MaxObjectSpeed);
                         break;
                     case "DisplacementSensitivity":
-                        x.Value = XmlConvert.ToString(model.DisplacementSensivity);
+                        x.value = XmlConvert.ToString(model.DisplacementSensivity);
                         break;
                     case "CameraObstructed":
-                        x.Value = XmlConvert.ToString(model.CameraObstructed);
+                        x.value = XmlConvert.ToString(model.CameraObstructed);
                         break;
                     case "UseAntishaker":
-                        x.Value = XmlConvert.ToString(model.UseAntishaker); 
+                        x.value = XmlConvert.ToString(model.UseAntishaker); 
                         break;
                     case "CameraRedirected":
-                        x.Value = XmlConvert.ToString(model.CameraRedirected);
+                        x.value = XmlConvert.ToString(model.CameraRedirected);
                         break;
                     case "ContrastSensitivity":
-                        x.Value = XmlConvert.ToString(model.ContrastSensivity); 
+                        x.value = XmlConvert.ToString(model.ContrastSensivity); 
                         break;
                     case "ImageTooDark":
-                        x.Value = XmlConvert.ToString(model.ImageTooDark); 
+                        x.value = XmlConvert.ToString(model.ImageTooDark); 
                         break;
                     case "ImageTooBlurry":
-                        x.Value = XmlConvert.ToString(model.ImageTooBlurry);
+                        x.value = XmlConvert.ToString(model.ImageTooBlurry);
                         break;
                     case "ImageTooBright":
-                        x.Value = XmlConvert.ToString(model.ImageTooBright);
+                        x.value = XmlConvert.ToString(model.ImageTooBright);
                         break;
                     case "ImageTooNoisy":
-                        x.Value = XmlConvert.ToString(model.ImageTooNoisy);
+                        x.value = XmlConvert.ToString(model.ImageTooNoisy);
                         break;
                 }
             });
         }
         void GetElementItems() {
-            modulDescr.config.Parameters.ElementItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.elementItem.ForEach(x => {
+                switch (x.name) {
                     case "AntishakerCrop":
                         ScaleAntishakerCropOutput(model.AntishakerCrop);
-                        x.Any = model.AntishakerCrop.Serialize();
+								x.any = model.AntishakerCrop.Serialize();
                         break;
                     case "MarkerCalibration":
                         ScaleMarkersOutput(model.Markers);
-                        x.Any = model.Markers.Serialize();
+								x.any = model.Markers.Serialize();
                         break;
                     case "UserRegion":
                         ScaleUserRegionOutput(model.UserRegion);
-                        x.Any = model.UserRegion.Serialize();
+								x.any = model.UserRegion.Serialize();
                         break;
                 }
             });
         }
-        void FillSimpleItems(ItemListSimpleItem[] simpleItems, SynesisAnalyticsModel model) {
+        void FillSimpleItems(ItemList.SimpleItem[] simpleItems, SynesisAnalyticsModel model) {
             simpleItems.ForEach(x => {
-                switch (x.Name) {
+                switch (x.name) {
                     case "StabilizationTime":
-                        model.StabilizationTime = DataConverter.StringToInt(x.Value);
+                        model.StabilizationTime = DataConverter.StringToInt(x.value);
                         break;
                     case "ShiftOutputPicture":
-                        model.ShiftOutputPicture = DataConverter.StringToBool(x.Value);
+                        model.ShiftOutputPicture = DataConverter.StringToBool(x.value);
                         break;
                     case "UseObjectTracker":
-                        model.UseObjectTracker = DataConverter.StringToBool(x.Value);
+                        model.UseObjectTracker = DataConverter.StringToBool(x.value);
                         break;
                     case "MaxObjectArea":
-                        model.MaxObjectArea = DataConverter.StringToFloat(x.Value);
+                        model.MaxObjectArea = DataConverter.StringToFloat(x.value);
                         break;
                     case "MinObjectArea":
-                        model.MinObjectArea = DataConverter.StringToFloat(x.Value);
+                        model.MinObjectArea = DataConverter.StringToFloat(x.value);
                         break;
                     case "MaxObjectSpeed":
-                        model.MaxObjectSpeed = DataConverter.StringToFloat(x.Value);
+                        model.MaxObjectSpeed = DataConverter.StringToFloat(x.value);
                         break;
                     case "DisplacementSensitivity":
-                        model.DisplacementSensivity = DataConverter.StringToInt(x.Value);
+                        model.DisplacementSensivity = DataConverter.StringToInt(x.value);
                         break;
                     case "CameraObstructed":
-                        model.CameraObstructed = DataConverter.StringToBool(x.Value);
+                        model.CameraObstructed = DataConverter.StringToBool(x.value);
                         break;
                     case "UseAntishaker":
-                        model.UseAntishaker = DataConverter.StringToBool(x.Value);
+                        model.UseAntishaker = DataConverter.StringToBool(x.value);
                         break;
                     case "CameraRedirected":
-                        model.CameraRedirected = DataConverter.StringToBool(x.Value);
+                        model.CameraRedirected = DataConverter.StringToBool(x.value);
                         break;
                     case "ContrastSensitivity":
-                        model.ContrastSensivity = DataConverter.StringToInt(x.Value);
+                        model.ContrastSensivity = DataConverter.StringToInt(x.value);
                         break;
                     case "ImageTooDark":
-                        model.ImageTooDark = DataConverter.StringToBool(x.Value);
+                        model.ImageTooDark = DataConverter.StringToBool(x.value);
                         break;
                     case "ImageTooBlurry":
-                        model.ImageTooBlurry = DataConverter.StringToBool(x.Value);
+                        model.ImageTooBlurry = DataConverter.StringToBool(x.value);
                         break;
                     case "ImageTooBright":
-                        model.ImageTooBright = DataConverter.StringToBool(x.Value);
+                        model.ImageTooBright = DataConverter.StringToBool(x.value);
                         break;
                     case "ImageTooNoisy":
-                        model.ImageTooNoisy = DataConverter.StringToBool(x.Value);
+                        model.ImageTooNoisy = DataConverter.StringToBool(x.value);
                         break;
                 }
             });
         }
 
-        void FillElementItems(ItemListElementItem[] elementItems, SynesisAnalyticsModel model) {
+        void FillElementItems(ItemList.ElementItem[] elementItems, SynesisAnalyticsModel model) {
             elementItems.ForEach(x => {
-                switch (x.Name) {
+                switch (x.name) {
                     case "AntishakerCrop":
-                        model.AntishakerCrop = x.Any.Deserialize<synesis.AntishakerCrop>();
+                        model.AntishakerCrop = x.any.Deserialize<synesis.AntishakerCrop>();
                         ScaleAntishakerCropInput(model.AntishakerCrop);
                         break;
                     case "MarkerCalibration":
-                        model.Markers = x.Any.Deserialize<synesis.MarkerCalibration>();
+                        model.Markers = x.any.Deserialize<synesis.MarkerCalibration>();
                         ScaleMarkersInput(model.Markers);
                         break;
                     case "UserRegion":
-                        model.UserRegion = x.Any.Deserialize<synesis.UserRegion>();
+                        model.UserRegion = x.any.Deserialize<synesis.UserRegion>();
                         ScaleUserRegionInput(model.UserRegion);
                         break;
                 }
@@ -469,27 +492,27 @@ namespace odm.ui.views.CustomAnalytics {
 		IPlaybackSession playbackSession;
 		VideoBuffer vidBuff;
 		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo, string profToken) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
+		void VideoStartup(StreamInfoArgs args){//, string profToken) {
+			vidBuff = new VideoBuffer((int)args.sourceResolution.Width, (int)args.sourceResolution.Height);
 
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
+			VideoPlayerView playview = new VideoPlayerView();
+			disposables.Add(playview);
 
-			var model = new VideoPlayerActivityModel(
-				profileToken: profToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
+			player.Child = playview;
 
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			playview.Init(
+				new VideoPlayerView.Model(
+					"", 
+					args.streamSetup,
+					new MediaUri() { uri = args.streamUri },
+					new VideoResolution(){ 
+						height = (int)args.sourceResolution.Height, 
+						width = (int)args.sourceResolution.Width},
+					false, 
+                    null)
 			);
 		}
+		
 		public new bool Initialized(IPlaybackSession playbackSession) {
 			this.playbackSession = playbackSession;
 			return true;
@@ -499,55 +522,64 @@ namespace odm.ui.views.CustomAnalytics {
 		}
 
 		IUnityContainer container;
-		
-        public bool Init(IUnityContainer container, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr, odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr) {
-            this.modulDescr = modulDescr;
-            this.videoDescr = videoDescr;
+
+		public bool Init(IUnityContainer container, StreamInfoArgs args, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr) {
+			this.modulDescr = modulDescr;
 			this.container = container;
 
-			VideoStartup(videoDescr.videoInfo, videoDescr.profileToken);
-			
-            videoSourceSize = new Size(videoDescr.videoSourceResolution.Width, videoDescr.videoSourceResolution.Height);
-            videoEncoderSize = new Size(videoDescr.videoInfo.Resolution.Width, videoDescr.videoInfo.Resolution.Height);
+			try {
+				this.videoDescr = new ConfigureAnalyticView.AnalyticsVideoDescriptor() {
+					videoInfo = new VideoInfo() { MediaUri = args.streamUri, Resolution = new Size() { Width = args.sourceResolution.Width, Height = args.sourceResolution.Height } },
+					videoSourceResolution = new Size() { Width = args.encoderResolution.Width, Height = args.encoderResolution.Height }
+				};
 
-            model = new SynesisAnalyticsModel();
+				VideoStartup(args);//, videoDescr.profileToken);
 
-            try {
-				FillSimpleItems(modulDescr.config.Parameters.SimpleItem, model);
-            } catch (Exception err) {
-                dbg.Error(err);
-                return false;
-            }
-            try{
-                FillElementItems(modulDescr.config.Parameters.ElementItem, model);
-            } catch (Exception err) {
-                dbg.Error(err);
-                return false;
-            }
-            try{
-				pageAntishaker.Init(container, model, videoDescr.videoInfo, videoDescr.profileToken);
-            }catch(Exception err) {
-                dbg.Error(err);
-                return false;
-            }
-            try{
-				pageDepthCalibration.Init(container, model, videoDescr.videoInfo, videoDescr.profileToken);
-            }catch(Exception err) {
-                dbg.Error(err);
-                return false;
-            }
-            try{
-				pageObjectTracker.Init(container, model, videoDescr.videoInfo, videoDescr.profileToken);
-            }catch(Exception err) {
-                dbg.Error(err);
-                return false;
-            }
-            try{
-				pageTampering.Init(container, model, videoDescr.videoInfo, videoDescr.profileToken);
-            } catch (Exception err) {
-                dbg.Error(err);
-                return false;
-            }
+				videoSourceSize = new Size(videoDescr.videoSourceResolution.Width, videoDescr.videoSourceResolution.Height);
+				videoEncoderSize = new Size(videoDescr.videoInfo.Resolution.Width, videoDescr.videoInfo.Resolution.Height);
+
+				model = new SynesisAnalyticsModel(modulDescr.schema);
+
+			} catch (Exception err) {
+				return false;
+			}
+
+			try {
+				FillSimpleItems(modulDescr.config.parameters.simpleItem, model);
+			} catch (Exception err) {
+				dbg.Error(err);
+				return false;
+			}
+			try {
+				FillElementItems(modulDescr.config.parameters.elementItem, model);
+			} catch (Exception err) {
+				dbg.Error(err);
+				return false;
+			}
+			try {
+				pageAntishaker.Init(container, model, videoDescr.videoInfo);//, videoDescr.profileToken);
+			} catch (Exception err) {
+				dbg.Error(err);
+				return false;
+			}
+			try {
+				pageDepthCalibration.Init(container, model, videoDescr.videoInfo);//, videoDescr.profileToken);
+			} catch (Exception err) {
+				dbg.Error(err);
+				return false;
+			}
+			try {
+				pageObjectTracker.Init(container, model, videoDescr.videoInfo);//, videoDescr.profileToken);
+			} catch (Exception err) {
+				dbg.Error(err);
+				return false;
+			}
+			try {
+				pageTampering.Init(container, model, videoDescr.videoInfo);//, videoDescr.profileToken);
+			} catch (Exception err) {
+				dbg.Error(err);
+				return false;
+			}
 
 			analyticsTabCtrl.RequestBringIntoView += new RequestBringIntoViewEventHandler((sender, evargs) => {
 				var tab = ((System.Windows.Controls.Primitives.Selector)(sender)).SelectedItem;
@@ -586,7 +618,7 @@ namespace odm.ui.views.CustomAnalytics {
 				}
 			});
 
-            //TODO: Stub fix for #225 Remove this with plugin functionality
+			//TODO: Stub fix for #225 Remove this with plugin functionality
 			last = container.Resolve<odm.ui.activities.ILastChangedModule>();
 			analyticsTabCtrl.SelectionChanged += new SelectionChangedEventHandler((obj, arg) => {
 				var selection = analyticsTabCtrl.SelectedItem as TabItem;
@@ -611,16 +643,16 @@ namespace odm.ui.views.CustomAnalytics {
 				switch (last.Tag) {
 					case "pageAntishaker":
 						analyticsTabCtrl.SelectedItem = tabAntishaker;
-						
+
 						pageDepthCalibration.SetPlayer(null);
 						pageTampering.SetPlayer(null);
 						pageObjectTracker.SetPlayer(null);
-						
+
 						pageAntishaker.SetPlayer(player);
 						break;
 					case "pageDepthCalibration":
 						analyticsTabCtrl.SelectedItem = tabDepthCalibration;
-						
+
 						pageTampering.SetPlayer(null);
 						pageAntishaker.SetPlayer(null);
 						pageObjectTracker.SetPlayer(null);
@@ -629,17 +661,17 @@ namespace odm.ui.views.CustomAnalytics {
 						break;
 					case "pageObjectTracker":
 						analyticsTabCtrl.SelectedItem = tabObjectTracker;
-						
+
 						pageDepthCalibration.SetPlayer(null);
 						pageTampering.SetPlayer(null);
 						pageAntishaker.SetPlayer(null);
 
 						pageObjectTracker.SetPlayer(player);
-						
+
 						break;
 					case "pageTampering":
 						analyticsTabCtrl.SelectedItem = tabTampering;
-						
+
 						pageDepthCalibration.SetPlayer(null);
 						pageObjectTracker.SetPlayer(null);
 						pageAntishaker.SetPlayer(null);
@@ -648,16 +680,16 @@ namespace odm.ui.views.CustomAnalytics {
 						break;
 				}
 			} else {
-
 				pageDepthCalibration.SetPlayer(null);
 				pageTampering.SetPlayer(null);
 				pageAntishaker.SetPlayer(null);
 				pageObjectTracker.SetPlayer(player);
 			}
-            //
+			//
 
-            return true;
-        }
+			return true;
+		}
+        
 		//TODO: Stub fix for #225 Remove this with plugin functionality
 		odm.ui.activities.ILastChangedModule last;
 		//

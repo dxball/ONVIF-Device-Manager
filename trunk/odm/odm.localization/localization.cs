@@ -39,6 +39,7 @@ namespace odm.localization {
 		}
 
 		public static T instance = new T();
+        public T GetInstance() { return instance; }
 
 		public virtual void SetLocale(Func<string, string> xeval) {
 			var _xeval = xeval.Catch(err => {

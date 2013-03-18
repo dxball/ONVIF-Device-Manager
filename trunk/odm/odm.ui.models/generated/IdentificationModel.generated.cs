@@ -18,6 +18,7 @@ namespace odm.models {
 	public interface IIdentificationModel:INotifyPropertyChanged{
 		string name{get;set;}
 		string location{get;set;}
+		string iconUri{get;set;}
 		string manufacturer{get;set;}
 		string model{get;set;}
 		string firmware{get;set;}
@@ -32,6 +33,7 @@ namespace odm.models {
 	public class IdentificationModel:IChangeTrackable<IIdentificationModel>, IIdentificationModel {
 		private SimpleChangeTrackable<string> m_name;
 		private SimpleChangeTrackable<string> m_location;
+		private SimpleChangeTrackable<string> m_iconUri;
 		private SimpleChangeTrackable<string> m_manufacturer;
 		private SimpleChangeTrackable<string> m_model;
 		private SimpleChangeTrackable<string> m_firmware;
@@ -87,6 +89,15 @@ namespace odm.models {
 					if(m_model.m_location.origin != value){
 						m_model.m_location.origin = value;
 						NotifyPropertyChanged("location");
+					}
+				}
+			}
+			string IIdentificationModel.iconUri {
+				get {return m_model.m_iconUri.origin;}
+				set {
+					if(m_model.m_iconUri.origin != value){
+						m_model.m_iconUri.origin = value;
+						NotifyPropertyChanged("iconUri");
 					}
 				}
 			}
@@ -210,6 +221,16 @@ namespace odm.models {
 			}
 		}
 		
+		public string iconUri  {
+			get {return m_iconUri.current;}
+			set {
+				if(m_iconUri.current != value) {
+					m_iconUri.current = value;
+					NotifyPropertyChanged("iconUri");
+				}
+			}
+		}
+		
 		public string manufacturer  {
 			get {return m_manufacturer.current;}
 			set {
@@ -293,6 +314,7 @@ namespace odm.models {
 		public void AcceptChanges() {
 			origin.name = name;
 			origin.location = location;
+			origin.iconUri = iconUri;
 			origin.manufacturer = manufacturer;
 			origin.model = model;
 			origin.firmware = firmware;
@@ -307,6 +329,7 @@ namespace odm.models {
 		public void RevertChanges() {
 			name = origin.name;
 			location = origin.location;
+			iconUri = origin.iconUri;
 			manufacturer = origin.manufacturer;
 			model = origin.model;
 			firmware = origin.firmware;
@@ -322,6 +345,7 @@ namespace odm.models {
 			get {
 				if(m_name.isModified)return true;
 				if(m_location.isModified)return true;
+				if(m_iconUri.isModified)return true;
 				if(m_manufacturer.isModified)return true;
 				if(m_model.isModified)return true;
 				if(m_firmware.isModified)return true;

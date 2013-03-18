@@ -42,26 +42,26 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Slider Name="numContrastSensitivity" Grid.ColumnSpan="3" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"/>
+                    <Slider Name="numContrastSensitivity" Grid.ColumnSpan="3" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}" MinWidth="200"/>
                     <!--<wtk:NumericUpDown Name="numContrastSensitivity" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
                                        Minimum="0"/>-->
-                    <Slider Name="numDisplacement" Grid.Row="1"  Grid.ColumnSpan="3" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"/>
+                    <Slider Name="numDisplacement" Grid.Row="1"  Grid.ColumnSpan="3" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}" MinWidth="200"/>
                     <!--<wtk:NumericUpDown Name="numDisplacement" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
                                        Minimum="0"/>-->
-                    <wtk:DoubleUpDown Name="numAreaMin" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
+                    <wtk:DoubleUpDown Name="numAreaMin" Visibility="Collapsed" Grid.Row="3" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
                                    Minimum="0"/>
-                    <wtk:DoubleUpDown Name="numAreaMax" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"/>
-                    <wtk:DoubleUpDown Name="numSpeedMax" Grid.Row="3" Grid.Column="3" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
+                    <wtk:DoubleUpDown Name="numAreaMax" Visibility="Collapsed" Grid.Row="4" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=useTraker}"/>
+                    <wtk:DoubleUpDown Name="numSpeedMax" Visibility="Collapsed" Grid.Row="3" Grid.Column="3" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
                                        Minimum="0"/>
-                    <wtk:IntegerUpDown Name="numStabilization" Grid.Row="4" Grid.Column="3" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
+                    <wtk:IntegerUpDown Name="numStabilization" Visibility="Collapsed" Grid.Row="4" Grid.Column="3" IsEnabled="{Binding IsChecked, ElementName=useTraker}"
                                        Minimum="0"/>
 
                     <Label Height="23" Content="{Binding Strings.contrast, ElementName=ctrl}" Grid.Row="0"  Grid.Column="0"/>
                     <Label Height="23" Content="{Binding Strings.displacement, ElementName=ctrl}" Grid.Row="1" Grid.Column="0"/>
-                    <Label Height="23" Content="{Binding Strings.areaMin, ElementName=ctrl}" Grid.Row="3" Grid.Column="0"/>
-                    <Label Height="23" Content="{Binding Strings.areaMax, ElementName=ctrl}" Grid.Row="4" Grid.Column="0"/>
-                    <Label Height="23" Content="{Binding Strings.speedMax, ElementName=ctrl}" Grid.Row="3" Grid.Column="2"/>
-                    <Label Height="23" Content="{Binding Strings.stabilization, ElementName=ctrl}" Grid.Row="4" Grid.Column="2"/>
+                    <Label Height="23" Visibility="Collapsed" Content="{Binding Strings.areaMin, ElementName=ctrl}" Grid.Row="3" Grid.Column="0"/>
+                    <Label Height="23" Visibility="Collapsed" Content="{Binding Strings.areaMax, ElementName=ctrl}" Grid.Row="4" Grid.Column="0"/>
+                    <Label Height="23" Visibility="Collapsed" Content="{Binding Strings.speedMax, ElementName=ctrl}" Grid.Row="3" Grid.Column="2"/>
+                    <Label Height="23" Visibility="Collapsed" Content="{Binding Strings.stabilization, ElementName=ctrl}" Grid.Row="4" Grid.Column="2"/>
                 </Grid>
             </Grid>
         </StackPanel>

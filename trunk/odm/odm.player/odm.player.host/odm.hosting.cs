@@ -22,8 +22,9 @@ namespace odm.hosting {
 					var serverSinkProvider = new BinaryServerFormatterSinkProvider();
 					var clientSinkProvider = new BinaryClientFormatterSinkProvider();
 					serverSinkProvider.TypeFilterLevel = TypeFilterLevel.Full;
-					var props = new Dictionary<string, string>();
-					props["portName"] = ipcChannelName;
+					var props = new Dictionary<string, string>{
+						{"portName", ipcChannelName}
+					};
 					m_hostChannel = new IpcChannel(props, clientSinkProvider, serverSinkProvider);
 					ChannelServices.RegisterChannel(m_hostChannel, false);
 				}

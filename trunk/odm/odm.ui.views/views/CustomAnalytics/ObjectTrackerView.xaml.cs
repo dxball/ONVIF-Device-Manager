@@ -63,7 +63,7 @@ namespace odm.ui.views.CustomAnalytics {
 			playerHolder.Child = player;
 		}
 		
-        public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
+        public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo) {//, string profToken) {
             this.model = model;
             this.container = container;
             this.videoInfo = videoInfo;
@@ -90,15 +90,15 @@ namespace odm.ui.views.CustomAnalytics {
             });
 
             //numContrastSensitivity.ValueType = typeof(int);
-            numContrastSensitivity.Minimum = SynesisAnalyticsConfigView.SynesisAnalyticsModel.ContrastSensitivityValueMin;
-            numContrastSensitivity.Maximum = SynesisAnalyticsConfigView.SynesisAnalyticsModel.ContrastSensitivityValueMax;
+            numContrastSensitivity.Minimum = model.ContrastSensitivityValueMin;
+            numContrastSensitivity.Maximum = model.ContrastSensitivityValueMax;
             numContrastSensitivity.CreateBinding(Slider.ValueProperty, model, x => x.ContrastSensivity, (m, v) => {
                 m.ContrastSensivity = v;
             });
 
             //numDisplacement.ValueType = typeof(int);
-            numDisplacement.Minimum = SynesisAnalyticsConfigView.SynesisAnalyticsModel.DisplacementSensitivityValueMin;
-            numDisplacement.Maximum = SynesisAnalyticsConfigView.SynesisAnalyticsModel.DisplacementSensitivityValueMax;
+            numDisplacement.Minimum = model.DisplacementSensitivityValueMin;
+            numDisplacement.Maximum = model.DisplacementSensitivityValueMax;
             numDisplacement.CreateBinding(Slider.ValueProperty, model, x => x.DisplacementSensivity, (m, v) => {
                 m.DisplacementSensivity = v;
             });

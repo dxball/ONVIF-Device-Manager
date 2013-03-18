@@ -36,51 +36,42 @@
 //    open odm.ui.dialogs
 
 
-    type AnalyticsActivity(ctx:IUnityContainer, profToken:string) = class
-        do if profToken=null then raise( new ArgumentNullException("profile") )
+    type AnalyticsActivity(ctx:IUnityContainer, vacToken:string) = class
+        do if vacToken |> IsNull then raise( new ArgumentNullException("vac token does not specified") )
         let session = ctx.Resolve<INvtSession>()
         let van = session :> IAnalyticsAsync
+        let dev = session :> IDeviceAsync
         let facade = new OdmSession(session)
         
-        let show_error(err:Exception) = async{
-            dbg.Error(err)
-            do! ErrorView.Show(ctx, err) |> Async.Ignore
-        }
-        
         let load() = async{
-            let! profile, caps = Async.Parallel(
-                session.GetProfile(profToken),
-                session.GetCapabilities()
-            )
             return! async{
-                if caps.Analytics<>null && profile.VideoAnalyticsConfiguration <> null then
+                let! caps = dev.GetCapabilities()
+                if caps.analytics |> NotNull then
                     //TODO: do this in parallel
-
                     let! (modules, moduleTypes, moduleSchemes) = async{
-                        if caps.Analytics.AnalyticsModuleSupport then
+                        if caps.analytics.analyticsModuleSupport then
                             let! modules, moduleTypes = Async.Parallel(
-                                van.GetAnalyticsModules(profile.VideoAnalyticsConfiguration.token),
-                                van.GetSupportedAnalyticsModules(profile.VideoAnalyticsConfiguration.token)
+                                van.GetAnalyticsModules(vacToken),
+                                van.GetSupportedAnalyticsModules(vacToken)
                             )
-                            let! moduleSchemes = facade.DownloadSchemes(moduleTypes.AnalyticsModuleContentSchemaLocation)
-                            return (modules, moduleTypes.AnalyticsModuleDescription, moduleSchemes)
+                            let! moduleSchemes = facade.DownloadSchemes(moduleTypes.analyticsModuleContentSchemaLocation)
+                            return (modules, moduleTypes.analyticsModuleDescription, moduleSchemes)
                         else
                             return ([||], [||], new XmlSchemaSet())
                     }
 
                     let! (rules, ruleTypes, ruleSchemes) = async{
-                        if caps.Analytics.RuleSupport then
+                        if caps.analytics.ruleSupport then
                             let! rules, ruleTypes = Async.Parallel(
-                                van.GetRules(profile.VideoAnalyticsConfiguration.token),
-                                van.GetSupportedRules(profile.VideoAnalyticsConfiguration.token)
+                                van.GetRules(vacToken),
+                                van.GetSupportedRules(vacToken)
                             )
-                            let! ruleSchemes = facade.DownloadSchemes(ruleTypes.RuleContentSchemaLocation)
-                            return (rules, ruleTypes.RuleDescription, ruleSchemes)
+                            let! ruleSchemes = facade.DownloadSchemes(ruleTypes.ruleContentSchemaLocation)
+                            return (rules, ruleTypes.ruleDescription, ruleSchemes)
                         else
                             return ([||], [||], new XmlSchemaSet())
                     }
                     return new AnalyticsView.Model(
-                        profile = profile,
                         rules = rules, 
                         ruleTypes = ruleTypes,
                         ruleSchemes = ruleSchemes, 
@@ -90,7 +81,6 @@
                     )
                 else
                     return new AnalyticsView.Model(
-                        profile = profile,
                         rules = [||], 
                         ruleTypes = [||],
                         ruleSchemes = new XmlSchemaSet(), 
@@ -111,13 +101,13 @@
                         return this.ShowForm(model)
                     }
                 with err -> 
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
                     return this.Main()
             }
             return! cont
         }
         member private this.ShowForm(model) = async{
-            let vac = model.profile.VideoAnalyticsConfiguration
             let! cont = async{
                 try
                     let! res = AnalyticsView.Show(ctx, model)
@@ -145,53 +135,62 @@
                         )
                     )
                 with err -> 
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
                     return this.Complete()
             }
             return! cont
         }
-        member private this.CreateDefaultConfig(name:string, description:ConfigDescription, schemaSet: XmlSchemaSet) = 
+        member private this.CreateDefaultConfig(name:string, description:ConfigDescription, schemaSet: XmlSchemaSet, existingConfigs: Config[]) = 
             let cfg = new Config()
-            cfg.Name <- name
-            cfg.Type <- description.Name
+            cfg.xmlns <- new XmlSerializerNamespaces()
+            cfg.xmlns.Add("tt", "http://www.onvif.org/ver10/schema")
+            cfg.name <- name
+            cfg.``type`` <- description.name
             let simpleItems = Seq.toList(seq{
-                if description.Parameters<>null && description.Parameters.SimpleItemDescription<>null then
-                    for sid in description.Parameters.SimpleItemDescription do
-                        let item = new ItemListSimpleItem()
-                        item.Name <- sid.Name
-                        item.Value <- 
-                            if sid.Type.Namespace = XmlSchema.Namespace then
-                                let simpleType = XmlSchemaSimpleType()
-                                ProtoSchemeGenerator.CreateProtoXsdType(sid.Type.Name)
-                            else
-                                let simpleTypes = schemaSet.GlobalTypes.Values.OfType<XmlSchemaSimpleType>()
-                                let simpleType = simpleTypes |> Seq.find(fun x->x.QualifiedName =  sid.Type)
-                                ProtoSchemeGenerator.CreateProtoSimpleType(simpleType)
-                        yield item
+                let sids = description.parameters |> IfNotNull (fun x->x.simpleItemDescription)
+                for sid in sids |> SuppressNull [||] do
+                    let item = new ItemList.SimpleItem()
+                    item.name <- sid.name
+                    item.value <- 
+                        if sid.``type``.Namespace = XmlSchema.Namespace then
+                            let simpleType = XmlSchemaSimpleType()
+                            ProtoSchemeGenerator.CreateProtoXsdType(sid.``type``.Name)
+                        else
+                            let simpleTypes = schemaSet.GlobalTypes.Values.OfType<XmlSchemaSimpleType>()
+                            let simpleType = simpleTypes |> Seq.find(fun x->x.QualifiedName =  sid.``type``)
+                            ProtoSchemeGenerator.CreateProtoSimpleType(simpleType)
+                    yield item
             })
             let elementItems = Seq.toList(seq{
-                if description.Parameters<>null && description.Parameters.ElementItemDescription<>null then
-                    for eid in description.Parameters.ElementItemDescription do
-                        let item = new ItemListElementItem()
-                        item.Name <- eid.Name
-                        let schemaElements = schemaSet.GlobalElements.Values.OfType<XmlSchemaElement>()
-                        let schemaElement = schemaElements |> Seq.tryFind(fun t-> t.QualifiedName = eid.Type)
-                        item.Any <- 
-                            match schemaElement with
-                            | Some sel ->
-                                ProtoSchemeGenerator.CreateProtoElement(sel).ToXmlElement()
-                            |None ->
-                                let err = new Exception(String.Format("scheme definition for element {0} is missing", eid.Type))
-                                dbg.Error(err)
-                                raise err
-                        //item.Any <- get_element_default(eid.Type)
-                                
-                        yield item
+                let eids = description.parameters |> IfNotNull (fun x->x.elementItemDescription) 
+                for eid in eids |> SuppressNull [||] do
+                    let item = new ItemList.ElementItem()
+                    item.name <- eid.name
+                    let schemaElements = schemaSet.GlobalElements.Values.OfType<XmlSchemaElement>()
+                    let schemaElement = schemaElements |> Seq.tryFind(fun t-> t.QualifiedName = eid.``type``)
+                    item.any <- 
+                        match schemaElement with
+                        | Some sel ->
+                            ProtoSchemeGenerator.CreateProtoElement(sel).ToXmlElement()
+                        | None ->
+                            let err = new Exception(String.Format("scheme definition for element {0} is missing", eid.``type``))
+                            dbg.Error(err)
+                            raise err
+                    //item.Any <- get_element_default(eid.Type)
+                    yield item
             })
-            cfg.Parameters <- new ItemList()
-            cfg.Parameters.SimpleItem <- simpleItems |> List.toArray
-            cfg.Parameters.ElementItem <- elementItems |> List.toArray
+            cfg.parameters <- new ItemList()
+            cfg.parameters.simpleItem <- simpleItems |> List.toArray
+            cfg.parameters.elementItem <- elementItems |> List.toArray
             cfg
+            
+            
+        member private this.CreateConfig(name:string, description:ConfigDescription, schemaSet: XmlSchemaSet, existingConfigs: Config[]) = 
+            let defaultConfig = this.CreateDefaultConfig(name, description, schemaSet, existingConfigs)
+            let customConfig = ctx.Resolve<odm.ui.core.IConfiguratorFactory>().Create(description.name).Configure(defaultConfig, existingConfigs)
+            customConfig
+
 
         member private this.CreateModule(model) = 
             let rec set_name() = 
@@ -211,7 +210,8 @@
                                 )
                             )
                         with err ->
-                            do! show_error(err)
+                            dbg.Error(err)
+                            do! ErrorView.Show(ctx, err) |> Async.Ignore
                             return this.ShowForm(model)
                     }
                     return! cont
@@ -220,11 +220,9 @@
                 async{
                     let! cont = async{
                         try
-                            let vac = model.profile.VideoAnalyticsConfiguration
                             let vm = new ConfigureAnalyticView.Model(
-                                config = this.CreateDefaultConfig(name, description, model.moduleSchemes),
+                                config = this.CreateConfig(name, description, model.moduleSchemes, existingConfigs = model.modules),
                                 configDescription = description,
-                                profile = model.profile,
                                 schemes = model.moduleSchemes
                             )
                             let! res = ConfigureAnalyticView.Show(ctx, vm)
@@ -237,7 +235,8 @@
                                 )
                             )
                         with err ->
-                            do! show_error(err)
+                            dbg.Error(err)
+                            do! ErrorView.Show(ctx, err) |> Async.Ignore
                             return this.ShowForm(model)
                     }
                     return! cont
@@ -245,11 +244,11 @@
             and create(config) = 
                 async{
                     try
-                        let vac = model.profile.VideoAnalyticsConfiguration
                         use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
-                        do! van.CreateAnalyticsModules(vac.token, [|config|])
+                        do! van.CreateAnalyticsModules(vacToken, [|config|])
                     with err ->
-                        do! show_error(err)
+                        dbg.Error(err)
+                        do! ErrorView.Show(ctx, err) |> Async.Ignore
 
                     return! this.Main()
                 }
@@ -275,7 +274,8 @@
                                 )
                             )
                         with err ->
-                            do! show_error(err)
+                            dbg.Error(err)
+                            do! ErrorView.Show(ctx, err) |> Async.Ignore
                             return this.ShowForm(model)
                     }
                     return! cont
@@ -284,11 +284,9 @@
                 async{
                     let! cont = async{
                         try
-                            let vac = model.profile.VideoAnalyticsConfiguration
                             let vm = new ConfigureAnalyticView.Model(
-                                config = this.CreateDefaultConfig(name, description, model.ruleSchemes),
+                                config = this.CreateConfig(name, description, model.ruleSchemes, existingConfigs = model.rules),
                                 configDescription = description,
-                                profile = model.profile,
                                 schemes = model.ruleSchemes
                             )
                             let! res = ConfigureAnalyticView.Show(ctx, vm)
@@ -301,7 +299,8 @@
                                 )
                             )
                         with err ->
-                            do! show_error(err)
+                            dbg.Error(err)
+                            do! ErrorView.Show(ctx, err) |> Async.Ignore
                             return this.ShowForm(model)
                     }
                     return! cont
@@ -309,11 +308,11 @@
             and create(config) = 
                 async{
                     try
-                        let vac = model.profile.VideoAnalyticsConfiguration
                         use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
-                        do! van.CreateRules(vac.token, [|config|])
+                        do! van.CreateRules(vacToken, [|config|])
                     with err ->
-                        do! show_error(err)
+                        dbg.Error(err)
+                        do! ErrorView.Show(ctx, err) |> Async.Ignore
 
                     return! this.Main()
                 }
@@ -322,15 +321,13 @@
         member private this.ConfigModule(model, moduleCfg) = async{
             let! cont = async{
                 try
-                    let vac = model.profile.VideoAnalyticsConfiguration
                     let vm = new ConfigureAnalyticView.Model(
                         config = moduleCfg,
                         configDescription = (
                             model.moduleTypes |> Seq.find(fun x->
-                                x.Name = moduleCfg.Type
+                                x.name = moduleCfg.``type``
                             )
                         ),
-                        profile = model.profile,
                         schemes = model.moduleSchemes
                     )
                     let! res = ConfigureAnalyticView.Show(ctx, vm)
@@ -343,7 +340,8 @@
                         )
                     )
                 with err ->
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
                     return this.ShowForm(model)
             }
             return! cont
@@ -351,13 +349,11 @@
         member private this.ConfigRule(model, ruleCfg) = async{
             let! cont = async{
                 try
-                    let vac = model.profile.VideoAnalyticsConfiguration
                     let vm = new ConfigureAnalyticView.Model(
                         config = ruleCfg,
                         configDescription = (
-                            model.ruleTypes |> Seq.find(fun x-> x.Name = ruleCfg.Type)
+                            model.ruleTypes |> Seq.find(fun x-> x.name = ruleCfg.``type``)
                         ),
-                        profile = model.profile,
                         schemes = model.ruleSchemes
                     )
                     let! res = ConfigureAnalyticView.Show(ctx, vm)
@@ -370,7 +366,8 @@
                         )
                     )
                 with err ->
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
                     return this.ShowForm(model)
             }
             return! cont
@@ -378,49 +375,49 @@
         
         member private this.ApplyModuleChanges(model, config) = async{
             try
-                let vac = model.profile.VideoAnalyticsConfiguration
                 use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
-                do! van.ModifyAnalyticsModules(vac.token, [|config|])
+                do! van.ModifyAnalyticsModules(vacToken, [|config|])
             with err ->
-                do! show_error(err)
+                dbg.Error(err)
+                do! ErrorView.Show(ctx, err) |> Async.Ignore
             
             return! this.Main()
         }
         
         member private this.ApplyRuleChanges(model, config) = async{
             try
-                let vac = model.profile.VideoAnalyticsConfiguration
                 use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
-                do! van.ModifyRules(vac.token, [|config|])
+                do! van.ModifyRules(vacToken, [|config|])
             with err ->
-                do! show_error(err)
+                dbg.Error(err)
+                do! ErrorView.Show(ctx, err) |> Async.Ignore
             
             return! this.Main()
         }
 
         member private this.DeleteModule(model, moduleName) = async{
-            let vac = model.profile.VideoAnalyticsConfiguration
             let! cont = async{
                 try
                     use! progress = Progress.Show(ctx, LocalDevice.instance.deleting)
-                    do! van.DeleteAnalyticsModules(vac.token, [|moduleName|])
+                    do! van.DeleteAnalyticsModules(vacToken, [|moduleName|])
                     return this.Main()
                 with err ->
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
                     return this.Main()
             }
             return! cont
         }
 
         member private this.DeleteRule(model, ruleName) = async{
-            let vac = model.profile.VideoAnalyticsConfiguration
             let! cont = async{
                 try
                     use! progress = Progress.Show(ctx, LocalDevice.instance.deleting)
-                    do! van.DeleteRules(vac.token, [|ruleName|])
+                    do! van.DeleteRules(vacToken, [|ruleName|])
                     return this.Main()
                 with err ->
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
                     return this.Main()
             }
             return! cont
@@ -430,8 +427,8 @@
             return res
         }
 
-        static member Run(ctx, profToken) = 
-            let act = new AnalyticsActivity(ctx, profToken)
+        static member Run(ctx, vacToken) = 
+            let act = new AnalyticsActivity(ctx, vacToken)
             act.Main()
     end
 

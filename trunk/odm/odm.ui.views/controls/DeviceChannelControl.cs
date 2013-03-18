@@ -30,8 +30,5 @@ namespace odm.ui.controls {
 			get { return (FrameworkElement)GetValue(HeaderProperty); }
 			set { SetValue(HeaderProperty, value); }
 		}
-
-
-
 	}
 }

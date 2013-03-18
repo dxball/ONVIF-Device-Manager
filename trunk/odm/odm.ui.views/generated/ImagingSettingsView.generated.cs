@@ -29,11 +29,13 @@ namespace odm.ui.activities {
 		public class Model: IModelAccessor, INotifyPropertyChanged{
 			
 			public Model(
-				string profToken, ImagingOptions20 options
+				string profToken, string sourceToken, ImagingOptions20 options, MoveOptions20 moveOptions
 			){
 				
 				this.profToken = profToken;
+				this.sourceToken = sourceToken;
 				this.options = options;
+				this.moveOptions = moveOptions;
 			}
 			private Model(){
 			}
@@ -41,13 +43,17 @@ namespace odm.ui.activities {
 
 			public static Model Create(
 				string profToken,
+				string sourceToken,
 				ImagingOptions20 options,
-				ImagingSettings20 settings
+				ImagingSettings20 settings,
+				MoveOptions20 moveOptions
 			){
 				var _this = new Model();
 				
 				_this.profToken = profToken;
+				_this.sourceToken = sourceToken;
 				_this.options = options;
+				_this.moveOptions = moveOptions;
 				_this.origin.settings = settings;
 				_this.RevertChanges();
 				
@@ -56,7 +62,9 @@ namespace odm.ui.activities {
 		
 				private SimpleChangeTrackable<ImagingSettings20> m_settings;
 				public string profToken{get;private set;}
+				public string sourceToken{get;private set;}
 				public ImagingOptions20 options{get;private set;}
+				public MoveOptions20 moveOptions{get;private set;}
 
 			private class OriginAccessor: IModelAccessor {
 				private Model m_model;

@@ -18,6 +18,10 @@ using odm.ui.views;
 using onvif.services;
 using utils;
 using System.Diagnostics;
+using System.Linq;
+using Microsoft.FSharp.Core;
+using System.Collections.Generic;
+using Microsoft.FSharp.Control;
 
 namespace odm.controllers {
 	public class ContentController {
@@ -39,6 +43,7 @@ namespace odm.controllers {
 		}
 		void Subscribe() {
 			eventAggregator.GetEvent<Refresh>().Subscribe(Refresh, false);
+			eventAggregator.GetEvent<ReleaseUI>().Subscribe(ReleaseUI, false); //only released ui
 
 			eventAggregator.GetEvent<AboutClick>().Subscribe(AboutClick, false);
 
@@ -48,7 +53,6 @@ namespace odm.controllers {
 			eventAggregator.GetEvent<AppSettingsClick>().Subscribe(AppSettingsStartup, false);
 			eventAggregator.GetEvent<UpgradeButchReady>().Subscribe(UpgradeBatchStartup, false);
 			eventAggregator.GetEvent<RestoreButchReady>().Subscribe(RestoreBatchStartup, false);
-			eventAggregator.GetEvent<AccountManagerClick>().Subscribe(AccountManagerStartup, false);
 			eventAggregator.GetEvent<DeviceSelectedEvent>().Subscribe(OnSelectedDeviceChanged, false);
 
 			eventAggregator.GetEvent<IdentificationClick>().Subscribe(IdentificationClick, false);
@@ -56,12 +60,15 @@ namespace odm.controllers {
 			eventAggregator.GetEvent<MaintenanceClick>().Subscribe(MaintenanceClick, false);
 			eventAggregator.GetEvent<SystemLogClick>().Subscribe(SystemLogClick, false);
 			eventAggregator.GetEvent<DigitalIOClick>().Subscribe(DigitalIOClick, false);
+			eventAggregator.GetEvent<ActionsClick>().Subscribe(ActionsClick, false);
+			eventAggregator.GetEvent<ActionTriggersClick>().Subscribe(ActionTriggersClick, false);
 			eventAggregator.GetEvent<NetworkClick>().Subscribe(NetworkClick, false);
 			//eventAggregator.GetEvent<XMLExplorerClick>().Subscribe(XmlExplorerClick, false);
 			eventAggregator.GetEvent<UserManagerClick>().Subscribe(UserManagerClick, false);
-			eventAggregator.GetEvent<SequrityClick>().Subscribe(SequrityClick, false);
+			eventAggregator.GetEvent<SecurityClick>().Subscribe(SequrityClick, false);
 			eventAggregator.GetEvent<WebPageClick>().Subscribe(WebPageClick, false);
 			eventAggregator.GetEvent<DeviceEventsClick>().Subscribe(DeviceEventsClick, false);
+			eventAggregator.GetEvent<ReceiversClick>().Subscribe(ReceiversClick, false);
 
 			eventAggregator.GetEvent<AnalyticsClick>().Subscribe(AnalyticsClick, false);
 			eventAggregator.GetEvent<RulesClick>().Subscribe(RulesClick, false);
@@ -73,9 +80,20 @@ namespace odm.controllers {
 			eventAggregator.GetEvent<VideoStreamingClick>().Subscribe(VideoStreamingClick, false);
 			eventAggregator.GetEvent<MetadataClick>().Subscribe(MetadataClick, false);
 			eventAggregator.GetEvent<UITestClick>().Subscribe(UITestClick, false);
+
+			eventAggregator.GetEvent<NVALiveVideoClick>().Subscribe(NVALiveVideoClick, false);
+			eventAggregator.GetEvent<NVAControlsClick>().Subscribe(NVAControlsClick, false);
+			eventAggregator.GetEvent<NVAAnalyticsClick>().Subscribe(NVAAnalyticsClick, false);
+			eventAggregator.GetEvent<NVAInputsClick>().Subscribe(NVAInputsClick, false);
+			eventAggregator.GetEvent<NVAMetadataClick>().Subscribe(NVAMetadataClick, false);
+			eventAggregator.GetEvent<NVASettingsClick>().Subscribe(NVASettingsClick, false);
+			eventAggregator.GetEvent<ControlChangedPreviewEvent>().Subscribe(ControlChangedPreviewEvent, false);
 		}
 		void Refresh(bool res) {
 			ReleaseUI();
+		}
+		void ReleaseUI(bool res) {
+			ReleaseViewModels(RegionNames.reg_property);
 		}
 
 		public void FireAccountStartupEvent() {
@@ -156,16 +174,6 @@ namespace odm.controllers {
 					}
 				);
 		}
-		void AccountManagerStartup(DeviceLinkEventArgs evarg) {
-			var wnd = new AccountManagerView(new AccountManagerViewModel(container));
-			wnd.Owner = Application.Current.MainWindow;
-			//wnd.Owner = this;
-			TextOptions.SetTextFormattingMode(wnd, TextFormattingMode.Display);
-			TextOptions.SetTextRenderingMode(wnd, TextRenderingMode.Aliased);
-			wnd.ShowInTaskbar = false;
-			wnd.ShowDialog();
-			//wnd.Show();
-		}
 		void ProfileChangedPreviewEvent(ProfileChangedEventArgs evargs) {
 			ReleasePropertyUI();
 			eventAggregator.GetEvent<ProfileChangedEvent>().Publish(evargs);
@@ -209,7 +217,6 @@ namespace odm.controllers {
 				UIdisp.Dispose();
 				subscriptions.Dispose();
 				subscriptions = new CompositeDisposable();
-
 			} catch (Exception err) {
 				dbg.Error(err);
 			}
@@ -247,6 +254,227 @@ namespace odm.controllers {
 				dbg.Error(err);
 			}
 		}
+
+		#region NVALinks
+		void ControlChangedPreviewEvent(ControlChangedEventArgs evargs) {
+			ReleasePropertyUI();
+			eventAggregator.GetEvent<ControlChangedEvent>().Publish(evargs);
+		}
+		void NVALiveVideoClick(NVALinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "NVAControlsClick", RegionNames.reg_property);
+			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.liveVideo);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			StreamInfoHelper strinfo = new StreamInfoHelper();
+			strinfo.streamInfo = () => {
+				return Apm.Iterate(LoadStreamInfoNVA(evarg, strinfo));
+			};
+			ctx.RegisterInstance<IStreamInfoHelper>(strinfo);
+
+			Ctxdisp = ctx;
+
+			var ssetup = new StreamSetup() {
+				transport = new Transport() {
+					protocol = AppDefaults.visualSettings.Transport_Type
+				}
+			};
+
+			//EngineControlsView.Start(new EngineControlsView.Model(null, null), container, column);
+			UIdisp = NvaLiveVideoActivity
+				.Run(ctx, evarg.control.token, evarg.control.engineConfigToken, ssetup)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(x => {
+				}, err => {
+					dbg.Error(err);
+				});
+		}
+		void NVAControlsClick(NVALinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "NVAControlsClick", RegionNames.reg_property);
+			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.nvaControls);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+			Ctxdisp = ctx;
+
+			string token = null;
+			if (evarg.control != null) {
+				token = evarg.control.token;
+			}
+
+			UIdisp = NvaControlManagmentActivity
+				.Run(ctx, evarg.engine, token)//evarg.controlToken)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(x => {
+					if (x.IsSelect) {
+						//var profTok = ((ProfileManagementActivityResult.Select)x).Item;
+						//ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, profTok);
+						//eventAggregator.GetEvent<ProfileChangedPreviewEvent>().Publish(evargs);
+						var controlTok = ((NvaControlManagmentActivityResult.Select)x).Item;
+						ControlChangedEventArgs evargs = new ControlChangedEventArgs(evarg.session, evarg.engine, controlTok);
+						eventAggregator.GetEvent<ControlChangedPreviewEvent>().Publish(evargs);
+					} else if (x.IsRefresh) {
+						//ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, evarg.profileToken);
+						//eventAggregator.GetEvent<ProfileChangedPreviewEvent>().Publish(evargs);
+						ControlChangedEventArgs evargs = new ControlChangedEventArgs(evarg.session, evarg.engine, evarg.control.token);
+						eventAggregator.GetEvent<ControlChangedPreviewEvent>().Publish(evargs);
+					}
+				}, err => {
+					dbg.Error(err);
+				});
+		}
+		void NVAAnalyticsClick(NVALinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "AnalyticsClick", RegionNames.reg_property);
+			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.analytics);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			//TODO: Stub fix for #225 Remove this with plugin functionality
+			ILastChangedModule lmodule = new LastChangedModule();
+			ctx.RegisterInstance<ILastChangedModule>(lmodule);
+			//
+			StreamInfoHelper strinfo = new StreamInfoHelper();
+			strinfo.streamInfo = () => {
+				return Apm.Iterate(LoadStreamInfoNVA(evarg, strinfo));
+			};
+			ctx.RegisterInstance<IStreamInfoHelper>(strinfo);
+
+			Ctxdisp = ctx;
+
+			//ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
+			ctx.RegisterInstance<odm.ui.activities.AnalyticsView.AnalyticType>(odm.ui.activities.AnalyticsView.AnalyticType.ALL);
+
+			//evarg.controlToken
+
+			string token = null;
+			if (evarg.control != null)
+				token = evarg.control.engineConfigToken;
+
+			UIdisp = AnalyticsActivity
+				.Run(ctx, token)//evarg.profileToken)
+				.Subscribe(x => {
+					//TODO: handle return from activity
+				}, err => {
+					dbg.Error(err);
+				});
+
+		}
+		IEnumerable<FSharpAsync<Unit>> LoadStreamInfoNVA(NVALinkEventArgs args, StreamInfoHelper parent) {
+			StreamInfoArgs strInfoArgs = new StreamInfoArgs(args.session);
+			//strInfoArgs.encoderResolution = new Size(args.profile.VideoEncoderConfiguration.Resolution.Width, args.profile.VideoEncoderConfiguration.Resolution.Height);
+
+			StreamSetup strsetup = new StreamSetup() {
+				stream = StreamType.rtpUnicast,
+				transport = new Transport() {
+					protocol = AppDefaults.visualSettings.Transport_Type
+				},
+			};
+
+			strInfoArgs.streamSetup = strsetup;
+
+			yield return args.session.GetAnalyticsDeviceStreamUri(strsetup, args.control.token).Select(muri => {
+				strInfoArgs.streamUri = muri;
+
+				parent.args = strInfoArgs;
+				return (Unit)null;
+			});
+			var inputtoken = "";
+			try {
+				inputtoken = args.control.inputToken.First();
+			} catch (Exception err) {
+				dbg.Error(err);
+			}
+
+			yield return args.session.GetAnalyticsEngineInput(inputtoken).Select(inp => {
+				strInfoArgs.encoderResolution = new Size(inp.videoInput.resolution.width, inp.videoInput.resolution.height);
+				strInfoArgs.sourceResolution = new Size(inp.videoInput.resolution.width, inp.videoInput.resolution.height);
+				return (Unit)null;
+			});
+		}
+		void NVAInputsClick(NVALinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "NVAInputsClick", RegionNames.reg_property);
+			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.nvaInputs);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+			Ctxdisp = ctx;
+
+			EngineAnalyticsView.Start(container, column);
+			//UIdisp = ProfileManagementActivity
+			//    .Run(ctx, evarg.profileToken, evarg.token)
+			//    .ObserveOnCurrentDispatcher()
+			//    .Subscribe(x => {
+			//        if (x.IsSelect) {
+			//            var profTok = ((ProfileManagementActivityResult.Select)x).Item;
+			//            ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, profTok);
+			//            eventAggregator.GetEvent<ProfileChangedPreviewEvent>().Publish(evargs);
+			//        } else if (x.IsRefresh) {
+			//            ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, evarg.profileToken);
+			//            eventAggregator.GetEvent<ProfileChangedPreviewEvent>().Publish(evargs);
+			//        }
+			//    }, err => {
+			//        dbg.Error(err);
+			//    });
+		}
+
+		void NVAMetadataClick(NVALinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "MetadataClick", RegionNames.reg_property);
+			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.nvaMetadata);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			StreamInfoHelper strinfo = new StreamInfoHelper();
+			strinfo.streamInfo = () => {
+				return Apm.Iterate(LoadStreamInfoNVA(evarg, strinfo));
+			};
+			ctx.RegisterInstance<IStreamInfoHelper>(strinfo);
+
+			Ctxdisp = ctx;
+
+			StreamSetup ssetup = new StreamSetup() {
+				transport = new Transport() {
+					protocol = AppDefaults.visualSettings.Transport_Type
+				}
+			};
+
+			//EngineControlsView.Start(new EngineControlsView.Model(null, null), container, column);
+			UIdisp = NvaMetadataSettingsActivity
+				 .Run(ctx, evarg.control.token, evarg.control.engineConfigToken, ssetup)
+				 .ObserveOnCurrentDispatcher()
+				 .Subscribe(x => {
+				 }, err => {
+					 dbg.Error(err);
+				 });
+		}
+
+
+		void NVASettingsClick(NVALinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "NVASettingsClick", RegionNames.reg_property);
+			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.nvaSettings);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+			Ctxdisp = ctx;
+
+			UIdisp = NvaSimpleConfigureInputsActivity
+				.Run(ctx, evarg.control)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(x => {
+				}, err => {
+					dbg.Error(err);
+				});
+		}
+		#endregion NVALinks
+
 		#region ChannleLinks
 		void UpgradeStartedEvent(UpgradeEventArgs evargs) {
 			var view = container.Resolve<Upgrade>();
@@ -301,7 +529,7 @@ namespace odm.controllers {
 			Ctxdisp = ctx;
 
 			UIdisp = ProfileManagementActivity
-				.Run(ctx, evarg.profileToken, evarg.token)
+					 .Run(ctx, evarg.profile == null ? null : evarg.profile.token, evarg.token)
 				.ObserveOnCurrentDispatcher()
 				.Subscribe(x => {
 					if (x.IsSelect) {
@@ -309,7 +537,7 @@ namespace odm.controllers {
 						ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, profTok);
 						eventAggregator.GetEvent<ProfileChangedPreviewEvent>().Publish(evargs);
 					} else if (x.IsRefresh) {
-						ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, evarg.profileToken);
+						ProfileChangedEventArgs evargs = new ProfileChangedEventArgs(evarg.session, evarg.token, evarg.profile.token);
 						eventAggregator.GetEvent<ProfileChangedPreviewEvent>().Publish(evargs);
 					}
 				}, err => {
@@ -324,12 +552,22 @@ namespace odm.controllers {
 			ShowView(column, "LiveVideoClick", RegionNames.reg_property);
 			column.CreateBinding(ContentColumn.TitleProperty, LinkButtonsStrings.instance, x => x.liveVideo);
 			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			StreamInfoHelper strinfo = new StreamInfoHelper();
+			strinfo.streamInfo = () => {
+				return Apm.Iterate(LoadStreamInfoNVT(evarg, strinfo));
+			};
+			ctx.RegisterInstance<IStreamInfoHelper>(strinfo);
+
 			Ctxdisp = ctx;
 
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
 
+			string videoSourceToken = evarg.token;
+			string profToken = evarg.profile.token;
+
 			UIdisp = LiveVideoActivity
-				.Run(ctx, evarg.profileToken)
+				.Run(ctx, profToken, videoSourceToken)
 				.Subscribe(x => {
 					eventAggregator.GetEvent<VideoChangedEvent>().Publish(evarg);
 				}, err => {
@@ -377,11 +615,11 @@ namespace odm.controllers {
 
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
 
-			PtzInfo ptzInfo = new PtzInfo() { ProfileToken = evarg.profileToken };
+			PtzInfo ptzInfo = new PtzInfo() { ProfileToken = evarg.profile.token };
 			ctx.RegisterInstance<IPtzInfo>(ptzInfo);
 
 			UIdisp = PtzActivity
-				.Run(ctx, evarg.profileToken)
+				.Run(ctx, evarg.profile.token)
 				.Subscribe(x => {
 				}, err => {
 					dbg.Error(err);
@@ -403,19 +641,58 @@ namespace odm.controllers {
 			ctx.RegisterInstance<ILastChangedModule>(lmodule);
 			//
 
+			StreamInfoHelper strinfo = new StreamInfoHelper();
+			strinfo.streamInfo = () => {
+				return Apm.Iterate(LoadStreamInfoNVT(evarg, strinfo));
+			};
+			ctx.RegisterInstance<IStreamInfoHelper>(strinfo);
+
 			Ctxdisp = ctx;
 
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
 			ctx.RegisterInstance<odm.ui.activities.AnalyticsView.AnalyticType>(odm.ui.activities.AnalyticsView.AnalyticType.MODULE);
 
+			string token = null;
+			if (evarg.profile.videoAnalyticsConfiguration != null)
+				token = evarg.profile.videoAnalyticsConfiguration.token;
 			UIdisp = AnalyticsActivity
-				.Run(ctx, evarg.profileToken)
+				.Run(ctx, token)
 				.Subscribe(x => {
 					//TODO: handle return from activity
 				}, err => {
 					dbg.Error(err);
 				});
 		}
+		IEnumerable<FSharpAsync<Unit>> LoadStreamInfoNVT(ChannelLinkEventArgs args, StreamInfoHelper parent) {
+			StreamInfoArgs strInfoArgs = new StreamInfoArgs(args.session);
+			strInfoArgs.encoderResolution = new Size(args.profile.videoEncoderConfiguration.resolution.width, args.profile.videoEncoderConfiguration.resolution.height);
+
+			var strsetup = new StreamSetup() {
+				stream = StreamType.rtpUnicast,
+				transport = new Transport() {
+					protocol = AppDefaults.visualSettings.Transport_Type
+				}
+			};
+
+			strInfoArgs.streamSetup = strsetup;
+
+			yield return args.session.GetStreamUri(strsetup, args.profile.token).Select(muri => {
+				strInfoArgs.streamUri = muri.uri;
+
+				parent.args = strInfoArgs;
+				return (Unit)null;
+			});
+
+			yield return args.session.GetVideoSourceConfiguration(args.profile.videoSourceConfiguration.token).Select(conf => {
+				if (conf != null && conf.bounds != null)
+					strInfoArgs.sourceResolution = new Size(conf.bounds.width, conf.bounds.height);
+				else {
+					strInfoArgs.sourceResolution = new Size(720, 576);
+				}
+				return (Unit)null;
+			});
+		}
+
 		void RulesClick(ChannelLinkEventArgs evarg) {
 			ReleaseViewModels(RegionNames.reg_property);
 
@@ -429,13 +706,22 @@ namespace odm.controllers {
 			ctx.RegisterInstance<ILastChangedModule>(lmodule);
 			//
 
+			StreamInfoHelper strinfo = new StreamInfoHelper();
+			strinfo.streamInfo = () => {
+				return Apm.Iterate(LoadStreamInfoNVT(evarg, strinfo));
+			};
+			ctx.RegisterInstance<IStreamInfoHelper>(strinfo);
+
 			Ctxdisp = ctx;
 
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
 			ctx.RegisterInstance<odm.ui.activities.AnalyticsView.AnalyticType>(odm.ui.activities.AnalyticsView.AnalyticType.RULE);
 
+			string token = null;
+			if (evarg.profile.videoAnalyticsConfiguration != null)
+				token = evarg.profile.videoAnalyticsConfiguration.token;
 			UIdisp = AnalyticsActivity
-				.Run(ctx, evarg.profileToken)
+				.Run(ctx, token)
 				.Subscribe(x => {
 					//TODO: handle return from activity
 				}, err => {
@@ -454,7 +740,7 @@ namespace odm.controllers {
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
 
 			UIdisp = ImagingSettingsActivity
-				.Run(ctx, evarg.profileToken)
+				.Run(ctx, evarg.profile.token)
 				.Subscribe(x => {
 					eventAggregator.GetEvent<VideoChangedEvent>().Publish(evarg);
 				}, err => {
@@ -474,7 +760,7 @@ namespace odm.controllers {
 			ctx.RegisterInstance<IVideoInfo>(evarg.videoInfo);
 
 			UIdisp = VideoSettingsActivity
-						.Run(ctx, evarg.profileToken)
+						.Run(ctx, evarg.profile.token)
 						.Subscribe(x => {
 							eventAggregator.GetEvent<VideoChangedEvent>().Publish(evarg);
 						}, err => {
@@ -539,7 +825,7 @@ namespace odm.controllers {
 				.Subscribe(l => {
 					var args = new ChannelLinkEventArgs();
 					args.currentAccount = evarg.currentAccount;
-					args.profileToken = evarg.profileToken;
+					args.profile = evarg.profile;
 					args.session = evarg.session;
 					args.token = evarg.token;
 					args.videoInfo = evarg.videoInfo;
@@ -651,6 +937,31 @@ namespace odm.controllers {
 					dbg.Error(err);
 				});
 		}
+		void ReceiversClick(DeviceLinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "ReceiversClick", RegionNames.reg_property);
+
+			column.CreateBinding(ContentColumn.TitleProperty, LocalTitles.instance, x => x.receivers);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			var uri = evarg.session.deviceUri;
+			ctx.RegisterInstance<Uri>(uri);
+
+			Ctxdisp = ctx;
+
+			//ReceiversView review = new ReceiversView();
+			//review.Init(null);
+			//ShowView(review, "receiver_view", RegionNames.reg_property);
+
+			UIdisp = ReceiverManagementActivity
+				.Run(ctx)
+				.Subscribe(x => {
+				}, err => {
+					dbg.Error(err);
+				});
+		}
 		void DateTimeClick(DeviceLinkEventArgs evarg) {
 			ReleaseViewModels(RegionNames.reg_property);
 
@@ -695,6 +1006,42 @@ namespace odm.controllers {
 			}
 			ShowView(view, "digitalio_view", RegionNames.reg_property);
 		}
+		void ActionsClick(DeviceLinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "ActionsClick", RegionNames.reg_property);
+
+			column.CreateBinding(ContentColumn.TitleProperty, LocalTitles.instance, x => x.actions);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			Ctxdisp = ctx;
+
+			UIdisp = ActionManagementActivity
+				 .Run(ctx)
+				 .Subscribe(x => {
+				 }, err => {
+					 dbg.Error(err);
+				 });
+		}
+		void ActionTriggersClick(DeviceLinkEventArgs evarg) {
+			ReleaseViewModels(RegionNames.reg_property);
+
+			ContentColumn column = new ContentColumn();
+			ShowView(column, "ActionTriggersClick", RegionNames.reg_property);
+
+			column.CreateBinding(ContentColumn.TitleProperty, LocalTitles.instance, x => x.triggers);
+			var ctx = CreateActivityContext(RegionNames.reg_property, evarg.session, column);
+
+			Ctxdisp = ctx;
+
+			UIdisp = ActionTriggerManagementActivity
+				 .Run(ctx)
+				 .Subscribe(x => {
+				 }, err => {
+					 dbg.Error(err);
+				 });
+		}
 		void SystemLogClick(SysLogLinkEventArgs evarg) {
 			ReleaseViewModels(RegionNames.reg_property);
 
@@ -737,13 +1084,18 @@ namespace odm.controllers {
 			if (evArgs.devHolder == null) {
 				return;
 			}
-			var view = container.Resolve<DeviceView>();
-			var viewModel = view.DataContext as DeviceViewModel;
-			if (viewModel != null) {
-				viewModel.Init(evArgs.devHolder, evArgs.sessionFactory);
-			}
+			//var view = container.Resolve<DeviceView>();
+			//view.Init(evArgs.devHolder, evArgs.sessionFactory);
+
+			var view = container.Resolve<OnvifEntityPanel>();
+			view.Init(evArgs.devHolder, evArgs.sessionFactory, container);
+
+			//var viewModel = view.DataContext as DeviceViewModel;
+			//if (viewModel != null) {
+			//    viewModel.Init(evArgs.devHolder, evArgs.sessionFactory);
+			//}
 			ReleaseUI();
-			ShowView(view, "device_view", RegionNames.reg_device);
+			ShowView(view, RegionNames.reg_entity_view, RegionNames.reg_device);
 		}
 	}
 
@@ -758,9 +1110,9 @@ namespace odm.controllers {
 				return "device";
 			}
 		}
-		public static string reg_device_view {
+		public static string reg_entity_view {
 			get {
-				return "device_view";
+				return "onvif_entity_view";
 			}
 		}
 	}

@@ -33,9 +33,9 @@ namespace odm.localization {
 		public static IEnumerable<Language> AvailableLanguages {
 			get {
 				//yield return Default;
-				var langs = Directory
-					.GetFiles(Utils.MapPath("~/locales"), "*.xml")
-					.Select(x => new FileInfo(x))
+				var langs = Bootstrapper.specialFolders.locales
+					.GetFiles("*.xml")
+					//.Select(x => new FileInfo(x))
 					.Select(x => new Language() {
 						DisplayName = Path.GetFileNameWithoutExtension(x.Name),
 						m_FilePath = x.FullName

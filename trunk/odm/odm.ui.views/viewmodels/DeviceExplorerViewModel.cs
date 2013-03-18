@@ -7,7 +7,7 @@ namespace odm.ui.viewModels {
         public DeviceExplorerViewModel(IUnityContainer container):base(container) {
 
         }
-        public override void Load(INvtSession session, IAccount account) {
+        public override void Load(INvtSession session, Account account) {
             Current = States.Common;
         }
     }

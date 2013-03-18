@@ -99,7 +99,7 @@ namespace odm.ui.viewModels {
 		void VideoChangedEvent(ChannelLinkEventArgs args) {
 			if (args.token == videoSource.token) {
 				//StopVideoStreaming();
-				LoadFromToken(args.profileToken);
+				LoadFromToken(args.profile.token);
 			}
 		}
 
@@ -139,9 +139,9 @@ namespace odm.ui.viewModels {
 				.ObserveOnCurrentDispatcher()
 				.Subscribe(profiles => {
 					Profile prof = profiles.Where(x => {
-						if (x.VideoSourceConfiguration == null)
+						if (x.videoSourceConfiguration == null)
 							return false;
-						return x.VideoSourceConfiguration.SourceToken == chanTok;
+						return x.videoSourceConfiguration.sourceToken == chanTok;
 					}).FirstOrDefault();
 					if (prof == null)
 						defProfile = null;
@@ -263,34 +263,34 @@ namespace odm.ui.viewModels {
 			CallDefaultProfile(videoSource.token);
 		}
 		void CreateEmergencyButtons(string profToken) {
-			IAccount curAccount = AccountManager.CurrentAccount;
+			var curAccount = AccountManager.Instance.CurrentAccount;
 			Name = "No profile available. Video source name: " + profToken;
 			//Snapshot = doGetImageSourceFromResource("odm-ui-views", "images/snapshot.png");
 			Snapshot = Resources.snapshot.ToBitmapSource();
 			snapshotToolTip = "No image available";
-			Buttons.Add(new ProfilesButton(container.Resolve<EventAggregator>(), session, videoSource.token, profToken, curAccount, dataProcInfo));
+			Buttons.Add(new ProfilesButton(container.Resolve<EventAggregator>(), session, videoSource.token, null, curAccount, dataProcInfo));
 		}
 		void CreateButtons(Profile profile) {
-			IAccount curAccount = AccountManager.CurrentAccount;
+			var curAccount = AccountManager.Instance.CurrentAccount;
 
-			if (profile.VideoEncoderConfiguration != null) {
-				Buttons.Add(new LiveVideoButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
-				Buttons.Add(new VideoStreamingButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
+			if (profile.videoEncoderConfiguration != null) {
+				Buttons.Add(new LiveVideoButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
+				Buttons.Add(new VideoStreamingButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
 			}
-			if (devcap.Imaging != null && devcap.Imaging.XAddr != null && devcap.Imaging.XAddr != string.Empty)
-				Buttons.Add(new ImagingButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
+			if (devcap.imaging != null && devcap.imaging.xAddr != null && devcap.imaging.xAddr != string.Empty)
+				Buttons.Add(new ImagingButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
 
-			if (profile.VideoEncoderConfiguration != null) {
-				if (profile.VideoAnalyticsConfiguration != null && devcap.Analytics != null && devcap.Analytics.AnalyticsModuleSupport)
-					Buttons.Add(new AnalyticsButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
-				if (profile.VideoAnalyticsConfiguration != null && devcap.Analytics != null && devcap.Analytics.RuleSupport)
-					Buttons.Add(new RulesButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
-				if (profile.MetadataConfiguration != null)
+			if (profile.videoEncoderConfiguration != null) {
+				if (profile.videoAnalyticsConfiguration != null && devcap.analytics != null && devcap.analytics.analyticsModuleSupport)
+					Buttons.Add(new AnalyticsButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
+				if (profile.videoAnalyticsConfiguration != null && devcap.analytics != null && devcap.analytics.ruleSupport)
+					Buttons.Add(new RulesButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
+				if (profile.metadataConfiguration != null)
 					Buttons.Add(new MetadataButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
-				if (profile.PTZConfiguration != null)
-					Buttons.Add(new PTZButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
+				if (profile.ptzConfiguration != null)
+					Buttons.Add(new PTZButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
 			}
-			Buttons.Add(new ProfilesButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile.token, curAccount, dataProcInfo));
+			Buttons.Add(new ProfilesButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
 
 			//Buttons.Add(new UITestButton(container.Resolve<EventAggregator>(), session, videoSource.token, profile, curAccount, dataProcInfo));
 		}

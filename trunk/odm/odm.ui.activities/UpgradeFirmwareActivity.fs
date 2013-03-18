@@ -16,7 +16,7 @@ namespace odm.ui.activities
     open System.Reactive.Disposables
     open Microsoft.Practices.Unity
     //open Microsoft.Practices.Prism.Commands
-    open Microsoft.Practices.Prism.Events
+    //open Microsoft.Practices.Prism.Events
     
     open onvif.services
     open onvif.utils

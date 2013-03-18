@@ -171,27 +171,23 @@ namespace odm.ui.activities {
 			DependencyProperty.Register("IsStartExpanded", typeof(bool), typeof(ItemSelectorView), new PropertyMetadata((obj, evarg) => {
 				var visset = AppDefaults.visualSettings;
 				visset.ItemSelector_IsPropertiesExpanded = (bool)evarg.NewValue;
-				AppDefaults.SetVisualSettings(visset);
+				AppDefaults.UpdateVisualSettings(visset);
 			}));
 
+		void RefreshItemButtons(Model model) {
+			var selection = model.selection;
+			btnDelete.IsEnabled = selection != null && (selection.flags & ItemFlags.CanBeDeleted) != 0;
+			btnModify.IsEnabled = selection != null && (selection.flags & ItemFlags.CanBeModified) != 0;
+			btnSelect.IsEnabled = selection != null && (selection.flags & ItemFlags.CanBeSelected) != 0;
+		}
 		void BindData(Model model) {
 			ItemsList.CreateBinding(ListBox.SelectedItemProperty, model, x => x.selection, (m, v) => {
 				m.selection = v;
-
-				if ((v.flags & ItemFlags.CanBeDeleted) != ItemFlags.CanBeDeleted)
-					btnDelete.IsEnabled = false;
-				else
-					btnDelete.IsEnabled = true;
-				if ((v.flags & ItemFlags.CanBeModified) != ItemFlags.CanBeModified)
-					btnModify.IsEnabled = false;
-				else
-					btnModify.IsEnabled = true;
-				if ((v.flags & ItemFlags.CanBeSelected) != ItemFlags.CanBeSelected)
-					btnSelect.IsEnabled = false;
-				else
-					btnSelect.IsEnabled = true;
+				RefreshItemButtons(m);
 				InitDetails();
 			});
+			RefreshItemButtons(model);
+			
 			ItemsList.CreateBinding(ListBox.ItemsSourceProperty, model, x => x.items);
 
 			InitDetails();

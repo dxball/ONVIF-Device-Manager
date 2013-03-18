@@ -18,6 +18,9 @@ namespace odm.ui.controls.GraphEditor {
 	/// Interaction logic for RectangleEditor.xaml
 	/// </summary>
     public partial class RectangleEditor : UserControl {
+
+        public event EventHandler RectangleChanged = delegate { };
+
         public RectangleEditor() {
             InitializeComponent();
 
@@ -267,6 +270,8 @@ namespace odm.ui.controls.GraphEditor {
                 bottom.Y = bY;
 
                 Display();
+
+                RectangleChanged(this, EventArgs.Empty);
             }
         }
 
@@ -302,6 +307,8 @@ namespace odm.ui.controls.GraphEditor {
                 bottom.X = X;
 
                 Display();
+
+                RectangleChanged(this, EventArgs.Empty);
             }
         }
         void pointerDown_MouseDown(object sender, MouseButtonEventArgs e) {
@@ -331,6 +338,8 @@ namespace odm.ui.controls.GraphEditor {
                 top.X = X;
 
                 Display();
+
+                RectangleChanged(this, EventArgs.Empty);
             }
         }
         void pointerUp_MouseDown(object sender, MouseEventArgs e) {

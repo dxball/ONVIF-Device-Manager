@@ -27,12 +27,17 @@ namespace odm.ui.activities {
 		#region Activity definition
 		public static FSharpAsync<Result> Show(IUnityContainer container, Model model) {
 			return container.StartViewActivity<Result>(context => {
-				var view = new VideoPlayerView(model, context);
+                var view = new VideoPlayerView(model, context);
+
 				var presenter = container.Resolve<IViewPresenter>();
 				presenter.ShowView(view);
 			});
 		}
 		#endregion
+
+        public VideoPlayerView() {
+
+		}
 
 		private CompositeDisposable disposables = new CompositeDisposable();
 		private SerialDisposable renderSubscription = new SerialDisposable();
@@ -48,7 +53,7 @@ namespace odm.ui.activities {
 		}
 		IPlaybackSession playbackSession;
 		public LocalVideoPlayer Strings { get { return LocalVideoPlayer.instance; } }
-		private void Init(Model model) {
+		public void Init(Model model) {
 			OnCompleted += () => {
 				try {
 					disposables.Dispose();
@@ -75,7 +80,7 @@ namespace odm.ui.activities {
 			
 			if (model.isUriEnabled) {
 				uriString.Visibility = System.Windows.Visibility.Visible;
-				uriString.Text = model.mediaUri.Uri;
+				uriString.Text = model.mediaUri.uri;
 			} else {
 				uriString.Visibility = System.Windows.Visibility.Collapsed;
 			}
@@ -88,32 +93,37 @@ namespace odm.ui.activities {
 			else
 				Pause();
 		}
+
 		IPlayer player;
 		VideoBuffer videoBuff;
+        
 		void VideoStartup(Model model) {
 			player = new HostedPlayer();
-			videoBuff = new VideoBuffer(model.encoderResolution.Width, model.encoderResolution.Height);
+			videoBuff = new VideoBuffer(model.encoderResolution.width, model.encoderResolution.height);
 			player.SetVideoBuffer(videoBuff);
 			
-			var account = AccountManager.CurrentAccount;
+			var account = AccountManager.Instance.CurrentAccount;
 			UserNameToken utoken = null;
-			if(account != null && account.Account != null){
+			if(!account.IsAnonymous){
 				utoken = new UserNameToken(account.Name, account.Password);
 			}
 
+            if (model.metadataReceiver != null)
+                player.SetMetadataReciever(model.metadataReceiver);
+
 			MediaStreamInfo.Transport transp;
-			switch(model.streamSetup.Transport.Protocol){
-				case TransportProtocol.HTTP:
+			switch (model.streamSetup.transport.protocol) {
+				case TransportProtocol.http:
 					transp = MediaStreamInfo.Transport.Http;
 					break;
-				case TransportProtocol.RTSP:
+				case TransportProtocol.rtsp:
 					transp = MediaStreamInfo.Transport.Tcp;
 					break;
 				default:
 					transp = MediaStreamInfo.Transport.Udp;
 					break;
 			}
-			MediaStreamInfo mstrInfo = new MediaStreamInfo(model.mediaUri.Uri, transp, utoken);
+			MediaStreamInfo mstrInfo = new MediaStreamInfo(model.mediaUri.uri, transp, utoken);
 			disposables.Add(player.Play(mstrInfo, this));
 			InitPlayback(videoBuff);
 		}
@@ -346,14 +356,24 @@ namespace odm.ui.activities {
 	}
 
 	public class VideoPlayerActivityModel {
-		public VideoPlayerActivityModel(string profileToken, StreamSetup streamSetup, bool showStreamUrl) {
+		public VideoPlayerActivityModel(StreamSetup streamSetup, string profileToken, bool showStreamUrl, IMetadataReceiver metadataReceiver) { 
 			this.profileToken = profileToken;
 			this.streamSetup = streamSetup;
 			this.showStreamUrl = showStreamUrl;
+            this.metadataReceiver = metadataReceiver;
 		}
+
+        public VideoPlayerActivityModel(StreamSetup streamSetup, string profileToken, bool showStreamUrl)
+        {
+            this.profileToken = profileToken;
+            this.streamSetup = streamSetup;
+            this.showStreamUrl = showStreamUrl;
+        }
+        
 		public string profileToken { get; private set; }
 		public StreamSetup streamSetup { get; private set; }
 		public bool showStreamUrl { get; private set; }
+        public IMetadataReceiver metadataReceiver { get; private set; }
 	}
 	public interface IVideoPlayerActivity {
 		FSharpAsync<Unit> Run(IUnityContainer ctx, VideoPlayerActivityModel model);

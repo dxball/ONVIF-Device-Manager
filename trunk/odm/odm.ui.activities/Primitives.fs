@@ -34,17 +34,17 @@
         }
     end
 
-     type ErrorInfo() = class
-        static member Show(ctx:IUnityContainer, message:string) = async{
-            let disp = Application.Current.Dispatcher
-            do! Async.Sleep(200)
-            return! disp.InvokeAsync(fun ()->
-                //if (!disp.IsDisposed) {
-                let presenter = ctx.Resolve<IViewPresenter>()
-                let view = new ProgressView(message)
-                //disp.Add(presenter.ShowView(view));
-                presenter.ShowView(view)
-                //}
-            )
-        }
-    end
+//     type ErrorInfo() = class
+//        static member Show(ctx:IUnityContainer, message:string) = async{
+//            let disp = Application.Current.Dispatcher
+//            //do! Async.Sleep(200)
+//            return! disp.InvokeAsync(fun ()->
+//                //if (!disp.IsDisposed) {
+//                let presenter = ctx.Resolve<IViewPresenter>()
+//                let view = new ProgressView(message)
+//                //disp.Add(presenter.ShowView(view));
+//                presenter.ShowView(view)
+//                //}
+//            )
+//        }
+//    end

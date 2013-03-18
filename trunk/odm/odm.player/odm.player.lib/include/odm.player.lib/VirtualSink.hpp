@@ -1,5 +1,5 @@
 #pragma once
-#include "odm.player.lib/all.h"
+#include "odm.player.lib/core.h"
 
 namespace onvifmp{
 	using namespace std;

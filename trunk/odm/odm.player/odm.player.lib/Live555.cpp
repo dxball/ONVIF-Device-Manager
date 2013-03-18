@@ -1,4 +1,4 @@
-#include "odm.player.lib/Live555.hpp"
+#include "odm.player.lib/all.h"
 #include "GroupsockHelper.hh"
 
 namespace onvifmp{
@@ -51,7 +51,6 @@ namespace onvifmp{
 		}
 		
 		rtspClient->playMediaSession(*mediaSession);
-		//scheduler->scheduleDelayedTask(100*1000,Test::callback,&test);
 
 		//synchronize via fake GET_PARAMETER request
 		//if(rtspOptions.getParamSupported){
@@ -186,8 +185,9 @@ namespace onvifmp{
 			return false;
 		}
 
+		//rtspClient->fCurrentAuthenticator = mediaStreamInfo->authenticator;
 		auto options = rtspClient->sendOptionsCmd(mediaStreamInfo->url, nullptr, nullptr, mediaStreamInfo->authenticator, 5/*timeout in seconds*/);
-		rtspOptions.getParamSupported = (options!= nullptr && strtok(options, "GET_PARAMETER")!=nullptr);
+		rtspOptions.getParamSupported = (options!= nullptr && strstr(options, "GET_PARAMETER")!=nullptr);
 		
 		//fprintf(stderr, "options : %s\n", options);
 

@@ -51,11 +51,16 @@ namespace odm.ui.views.CustomAppro {
             sensitivityCaption.CreateBinding(Label.ContentProperty, Strings, x => x.sensitivity);
             isEnabled.CreateBinding(CheckBox.ContentProperty, Strings, x => x.isEnabled);
         }
-        public bool Init(IUnityContainer container, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr, odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr) {
-            this.modulDescr = modulDescr;
-            this.videoDescr = videoDescr;
-            this.container = container;
-            this.videoInfo = videoDescr.videoInfo;
+		public bool Init(IUnityContainer container, StreamInfoArgs args, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr) {
+			this.modulDescr = modulDescr;
+			this.container = container;
+
+			this.videoDescr = new ConfigureAnalyticView.AnalyticsVideoDescriptor() {
+				videoInfo = new VideoInfo() { MediaUri = args.streamUri, Resolution = new Size() { Width = args.sourceResolution.Width, Height = args.sourceResolution.Height } },
+				videoSourceResolution = new Size() { Width = args.encoderResolution.Width, Height = args.encoderResolution.Height }
+			};
+
+			this.videoInfo = videoDescr.videoInfo;
 
 
             try {
@@ -91,7 +96,7 @@ namespace odm.ui.views.CustomAppro {
                 dbg.Error(err);
             }
             try {
-				VideoStartup(videoInfo);
+				VideoStartup(args);
                 InitApproEditor();
             } catch (Exception err) {
                 dbg.Error(err);
@@ -101,16 +106,16 @@ namespace odm.ui.views.CustomAppro {
             return true;
         }
         void GetData() {
-            modulDescr.config.Parameters.SimpleItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.simpleItem.ForEach(x => {
+                switch (x.name) {
                     case "sensitivity":
-                        x.Value = DataConverter.IntToString((int)valueSensitivity.Value);
+                        x.value = DataConverter.IntToString((int)valueSensitivity.Value);
                         break;
                     case "region_mask":
-                        x.Value = DataConverter.IntToString(approEditor.MaskedValue);
+                        x.value = DataConverter.IntToString(approEditor.MaskedValue);
                         break;
                     case "enable":
-                        x.Value = DataConverter.BoolToString(isEnabled.IsChecked.Value);
+                        x.value = DataConverter.BoolToString(isEnabled.IsChecked.Value);
                         break;
                 }
             });
@@ -120,41 +125,56 @@ namespace odm.ui.views.CustomAppro {
             approEditor.Width = videoDescr.videoInfo.Resolution.Width;
             approEditor.Height = videoDescr.videoInfo.Resolution.Height;
             
-            modulDescr.config.Parameters.SimpleItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.simpleItem.ForEach(x => {
+                switch (x.name) {
                     case "sensitivity":
-                        valueSensitivity.Value = DataConverter.StringToInt(x.Value);
+                        valueSensitivity.Value = DataConverter.StringToInt(x.value);
                         break;
                     case "region_mask":
-                        approEditor.MaskedValue = DataConverter.StringToInt(x.Value);
+                        approEditor.MaskedValue = DataConverter.StringToInt(x.value);
                         break;
                     case "enable":
-                        isEnabled.IsChecked = DataConverter.StringToBool(x.Value);
+                        isEnabled.IsChecked = DataConverter.StringToBool(x.value);
                         break;
                 }
             });
         }
 		IPlaybackSession playbackSession;
 		VideoBuffer vidBuff;
-		void VideoStartup(IVideoInfo iVideo) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
+		void VideoStartup(StreamInfoArgs args) {//, string profToken) {
+			vidBuff = new VideoBuffer((int)args.sourceResolution.Width, (int)args.sourceResolution.Height);
 
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
+			//var playerAct = container.Resolve<IVideoPlayerActivity>();
+			////profileToken: profToken,
+			//var model = new VideoPlayerActivityModel(
+			//    showStreamUrl: false,
+			//    streamSetup: new StreamSetup() {
+			//        Stream = StreamType.RTPUnicast,
+			//        Transport = new Transport() {
+			//            Protocol = AppDefaults.visualSettings.Transport_Type,
+			//            Tunnel = null
+			//        }
+			//    }
+			//);
 
-			var model = new VideoPlayerActivityModel(
-				profileToken: videoDescr.profileToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
+			//disposables.Add(
+			//    container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			//);
+			VideoPlayerView playview = new VideoPlayerView();
 
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			player.Content = playview;
+
+			playview.Init(
+				new VideoPlayerView.Model(
+					"",
+					args.streamSetup,
+					new MediaUri() { uri = args.streamUri },
+					new VideoResolution() {
+						height = (int)args.sourceResolution.Height,
+						width = (int)args.sourceResolution.Width
+					},
+					false, 
+                    null)
 			);
 		}
 

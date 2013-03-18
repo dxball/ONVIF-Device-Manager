@@ -10,12 +10,6 @@
     <ClInclude Include="include\odm.player.lib\all.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\odm.player.lib\libapi.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\odm.player.lib\Live555.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\odm.player.lib\VideoRenderer.hpp">
       <Filter>include</Filter>
     </ClInclude>
@@ -40,8 +34,15 @@
     <ClInclude Include="include\odm.player.lib\VirtualSink.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include=".\include\odm.player.lib\core.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include=".\include\odm.player.lib\Live555.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Live555.cpp" />
+    <ClCompile Include=".\MetadataCollector.cpp" />
   </ItemGroup>
 </Project>

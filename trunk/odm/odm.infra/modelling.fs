@@ -42,14 +42,14 @@
         val mutable origin: LinkedList<'T>
         member this.AcceptChanges() = 
             this.origin <- 
-                if this.current = null then 
+                if this.current |> IsNull then 
                     null 
                 else 
                     new LinkedList<'T>(this.current)
 
         member this.RevertChanges() = 
             this.current <- 
-                if this.origin = null then 
+                if this.origin |> IsNull then 
                     null 
                 else 
                     new LinkedList<'T>(this.origin)
@@ -57,9 +57,9 @@
         member this.isModified = 
             if this.current = this.origin then
                 false
-            else if this.current = null then
+            else if this.current |> IsNull then
                 true
-            else if this.origin = null then
+            else if this.origin |> IsNull then
                 true
             else if this.origin.Count <> this.current.Count then
                 true

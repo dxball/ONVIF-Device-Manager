@@ -118,7 +118,7 @@
 			</Setter>
 		</Style>
 	</UserControl.Resources>
-    <l:ContentColumn Title="{Binding Titles.devicesList}">
+	<l:ContentColumn Title="{Binding Titles.devicesList}">
 		<l:ContentColumn.Header>
 			<StackPanel 
 				Margin="6,4,6,4" Orientation="Horizontal" 

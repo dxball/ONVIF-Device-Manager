@@ -19,8 +19,8 @@ namespace odm.ui.viewModels {
     public class SystemLogViewModel:ViewModelDeviceBase {
         public SystemLogViewModel(IUnityContainer container):base(container) {
             SysTypes = new ObservableCollection<SysLogType>();
-            SysTypes.Add(new SysLogType(SystemLogType.System));
-            SysTypes.Add(new SysLogType(SystemLogType.Access));
+            SysTypes.Add(DefaultSysLogType);
+            SysTypes.Add(new SysLogType(SystemLogType.access));
 
 			eventAggregator = container.Resolve<EventAggregator>();
         }
@@ -29,15 +29,13 @@ namespace odm.ui.viewModels {
 		public LocalButtons ButtonStrings { get { return LocalButtons.instance; } }
 
         public ObservableCollection<SysLogType> SysTypes { get; set; }
+        public static readonly SysLogType DefaultSysLogType = new SysLogType(SystemLogType.system);
 		EventAggregator eventAggregator;
 		SysLogDescriptor logDescr;
 
-		public void Init(INvtSession session, IAccount account, SysLogDescriptor slogdescr) {
-			base.Init(session, account);
-			logDescr = slogdescr;
-
-			if(logDescr!= null && logDescr.IsReceived)
-				InitData();
+		public void Init(INvtSession session, Account account, SysLogDescriptor slogdescr) {
+            logDescr = slogdescr;
+            base.Init(session, account);
 		}
 		void InitData() {
 			SystemLogString = logDescr.SystemLog;
@@ -47,9 +45,38 @@ namespace odm.ui.viewModels {
 			OnSave.RaiseCanExecuteChanged();
 		}
 
-        public override void Load(INvtSession session, IAccount account) {
+        public override void Load(INvtSession session, Account account) {
             CurrentSession = session;
-            Current = States.Common;
+
+            //show default log at startup
+            subscription.Add(CurrentSession
+                .GetSystemLog(SelectedType.type)
+                .ObserveOnCurrentDispatcher()
+                .Subscribe(syslog =>
+                {
+                    try
+                    {
+                        if (syslog == null)
+                            return;
+
+                        logDescr.FillData(syslog, SelectedType);
+                    }
+                    catch (Exception err)
+                    {
+                        dbg.Error(err);
+                    }
+                    finally
+                    {
+                        if (logDescr != null && logDescr.IsReceived)
+                            InitData();
+                        Current = States.Common;
+                    }
+                }, err =>
+                {
+                    dbg.Error(err);
+                    Current = States.Common;
+                }));
+
         }
 
         void GetLogString() {
@@ -60,14 +87,11 @@ namespace odm.ui.viewModels {
                 .ObserveOnCurrentDispatcher()
                 .Subscribe(syslog => {
 					try {
+                        if (syslog == null)
+                            throw new InvalidOperationException(LocalSystemLog.instance.syslogNotFound);
+
 						logDescr.FillData(syslog, SelectedType);
 						InitData();
-
-						//throw new Exception("test");
-						if (syslog == null) {
-							return;
-						}
-						
 						Current = States.Common;
 					} catch (Exception err) {
 						dbg.Error(err);
@@ -169,7 +193,7 @@ namespace odm.ui.viewModels {
 		public static readonly DependencyProperty LogInfoProperty = DependencyProperty.Register("LogInfo", typeof(string), typeof(SystemLogViewModel));
 
         public SysLogType SelectedType {get { return (SysLogType)GetValue(SelectedTypeProperty); }set { SetValue(SelectedTypeProperty, value); }}
-        public static readonly DependencyProperty SelectedTypeProperty = DependencyProperty.Register("SelectedType", typeof(SysLogType), typeof(SystemLogViewModel));
+        public static readonly DependencyProperty SelectedTypeProperty = DependencyProperty.Register("SelectedType", typeof(SysLogType), typeof(SystemLogViewModel), new PropertyMetadata(DefaultSysLogType));
 
         public string SystemLogString {get { return (string)GetValue(SystemLogStringProperty); }set { SetValue(SystemLogStringProperty, value); }}
         public static readonly DependencyProperty SystemLogStringProperty = DependencyProperty.Register("SystemLogString", typeof(string), typeof(SystemLogViewModel));

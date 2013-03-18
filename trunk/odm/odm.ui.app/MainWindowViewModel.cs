@@ -19,7 +19,7 @@ using utils;
 namespace odm.ui {
 	public class MainWindowViewModel : DependencyObject {
 		public MainWindowViewModel() {
-			var ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			var ver = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 			this.CreateBinding(TitleProperty, odm.ui.controls.CommonApplicationStrings.instance, x => {
 				return
 					String.Format("{0} v{1}.{2}.{3}", x.applicationName, ver.Major, ver.Minor, ver.Build);

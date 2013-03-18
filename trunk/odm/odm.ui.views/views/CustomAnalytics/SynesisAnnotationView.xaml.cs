@@ -32,7 +32,7 @@ namespace odm.ui.views.CustomAnalytics {
         }
         public void Apply() {
             try {
-                GetData(modulDescr.config.Parameters.SimpleItem, model);
+                GetData(modulDescr.config.parameters.simpleItem, model);
             } catch (Exception err) {
                 dbg.Error(err);
             }
@@ -139,68 +139,68 @@ namespace odm.ui.views.CustomAnalytics {
 			}
             public event PropertyChangedEventHandler PropertyChanged;
         }
-        void GetData(ItemListSimpleItem[] simpleItems, SynesisAnalyticsModel model) {
+        void GetData(ItemList.SimpleItem[] simpleItems, SynesisAnalyticsModel model) {
             simpleItems.ForEach(simple => {
-                switch (simple.Name) {
+                switch (simple.name) {
                     case "EnableMovingRects":
-                        simple.Value = DataConverter.BoolToString(model.EnableMovingRects);
+                        simple.value = DataConverter.BoolToString(model.EnableMovingRects);
                         break;
                     case "EnableSpeed":
-                        simple.Value = DataConverter.BoolToString(model.EnableSpeed);
+                        simple.value = DataConverter.BoolToString(model.EnableSpeed);
                         break;
                     case "EnableTimestamp":
-                        simple.Value = DataConverter.BoolToString(model.EnableTimestamp);
+                        simple.value = DataConverter.BoolToString(model.EnableTimestamp);
                         break;
                     case "EnableSystemInformation":
-                        simple.Value = DataConverter.BoolToString(model.EnableSystemInformation);
+                        simple.value = DataConverter.BoolToString(model.EnableSystemInformation);
                         break;
                     case "EnableChannelName":
-                        simple.Value = DataConverter.BoolToString(model.EnableChannelName);
+                        simple.value = DataConverter.BoolToString(model.EnableChannelName);
                         break;
                     case "EnableTracking":
-                        simple.Value = DataConverter.BoolToString(model.EnableTracking);
+                        simple.value = DataConverter.BoolToString(model.EnableTracking);
                         break;
                     case "EnableUserRegion":
-                        simple.Value = DataConverter.BoolToString(model.EnableUserRegion);
+                        simple.value = DataConverter.BoolToString(model.EnableUserRegion);
                         break;
                     case "EnableRules":
-                        simple.Value = DataConverter.BoolToString(model.EnableRules);
+                        simple.value = DataConverter.BoolToString(model.EnableRules); 
                         break;
                     case "EnableCalibrationResults":
-                        simple.Value = DataConverter.BoolToString(model.EnableCalibrationResults);
+                        simple.value = DataConverter.BoolToString(model.EnableCalibrationResults);
                         break;
                 }
             });
         }
-        void FillData(ItemListSimpleItem[] simpleItems, SynesisAnalyticsModel model) {
+        void FillData(ItemList.SimpleItem[] simpleItems, SynesisAnalyticsModel model) {
             simpleItems.ForEach(simple => {
-                switch (simple.Name) {
+                switch (simple.name) {
                     case "EnableMovingRects":
-                        model.EnableMovingRects = DataConverter.StringToBool(simple.Value);
+                        model.EnableMovingRects = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableSpeed":
-                        model.EnableSpeed = DataConverter.StringToBool(simple.Value);
+                        model.EnableSpeed = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableTimestamp":
-                        model.EnableTimestamp = DataConverter.StringToBool(simple.Value);
+                        model.EnableTimestamp = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableSystemInformation":
-                        model.EnableSystemInformation = DataConverter.StringToBool(simple.Value);
+                        model.EnableSystemInformation = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableChannelName":
-                        model.EnableChannelName = DataConverter.StringToBool(simple.Value);
+                        model.EnableChannelName = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableTracking":
-                        model.EnableTracking = DataConverter.StringToBool(simple.Value);
+                        model.EnableTracking = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableUserRegion":
-                        model.EnableUserRegion = DataConverter.StringToBool(simple.Value);
+                        model.EnableUserRegion = DataConverter.StringToBool(simple.value);
                         break;
                     case "EnableRules":
-                        model.EnableRules = DataConverter.StringToBool(simple.Value);
+                        model.EnableRules = DataConverter.StringToBool(simple.value); 
                         break;
                     case "EnableCalibrationResults":
-                        model.EnableCalibrationResults = DataConverter.StringToBool(simple.Value);
+                        model.EnableCalibrationResults = DataConverter.StringToBool(simple.value);
                         break;
                 }
             });
@@ -224,42 +224,62 @@ namespace odm.ui.views.CustomAnalytics {
         IUnityContainer container;
         IVideoInfo videoInfo;
         
-        public bool Init(IUnityContainer container, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr, odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr) {
-            this.modulDescr = modulDescr;
-            this.videoDescr = videoDescr;
-            this.container = container;
-            this.videoInfo = videoDescr.videoInfo;
+        public bool Init(IUnityContainer container, StreamInfoArgs args, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr) {
+			this.modulDescr = modulDescr;
+			this.container = container;
+
+			this.videoDescr = new ConfigureAnalyticView.AnalyticsVideoDescriptor() {
+				videoInfo = new VideoInfo() { MediaUri = args.streamUri, Resolution = new Size() {  Width = args.sourceResolution.Width, Height = args.sourceResolution.Height } },
+				videoSourceResolution = new Size() { Width = args.encoderResolution.Width, Height = args.encoderResolution.Height } 
+			};
+
 
             model = new SynesisAnalyticsModel();
             
-            FillData(modulDescr.config.Parameters.SimpleItem, model);
+            FillData(modulDescr.config.parameters.simpleItem, model);
             BindData();
-			VideoStartup(videoInfo);
+			VideoStartup(args);
             return true;
         }
 
 		IPlaybackSession playbackSession;
 		VideoBuffer vidBuff;
 		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
+		void VideoStartup(StreamInfoArgs args) {//, string profToken) {
+			vidBuff = new VideoBuffer((int)args.sourceResolution.Width, (int)args.sourceResolution.Height);
 
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
+			//var playerAct = container.Resolve<IVideoPlayerActivity>();
+			////profileToken: profToken,
+			//var model = new VideoPlayerActivityModel(
+			//    showStreamUrl: false,
+			//    streamSetup: new StreamSetup() {
+			//        Stream = StreamType.RTPUnicast,
+			//        Transport = new Transport() {
+			//            Protocol = AppDefaults.visualSettings.Transport_Type,
+			//            Tunnel = null
+			//        }
+			//    }
+			//);
 
-			var model = new VideoPlayerActivityModel(
-				profileToken: videoDescr.profileToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
+			//disposables.Add(
+			//    container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			//);
+			VideoPlayerView playview = new VideoPlayerView();
+			disposables.Add(playview);
+			
+			player.Child = playview;
 
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			playview.Init(
+				new VideoPlayerView.Model(
+					"",
+					args.streamSetup,
+					new MediaUri() { uri = args.streamUri },
+					new VideoResolution() {
+						height = (int)args.sourceResolution.Height,
+						width = (int)args.sourceResolution.Width
+					},
+					false,
+                    null)
 			);
 		}
 

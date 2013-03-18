@@ -51,6 +51,7 @@ namespace odm.hosting {
 				commandLineArgs = CommandLineArgs.Parse(args);
 				controllerUrl = commandLineArgs.GetParamAsString("controller-url");
 			} catch (Exception err) {
+				dbg.Break();
 				log.WriteError(err);
 				//log.WriteError("incorrect command line syntax, should be in format: odm-player-host.exe /server-pipe:<pipe-uri> /parent-pid:<parent process id>");
 				return;
@@ -68,16 +69,16 @@ namespace odm.hosting {
 					log.WriteInfo("sending bye to controller...");
 					controller.Bye();
 				} else {
-					log.WriteError("failed to connect to controller...");
+					dbg.Break(); log.WriteError("failed to connect to controller...");
 				}
 			} catch (Exception err) {
-				log.WriteError(err);
+				dbg.Break(); log.WriteError(err);
 				//log.WriteInfo(err.Message);
 			}
 			log.WriteInfo("host process terminated....");
 		}
 		static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e){
-			log.WriteError("unhandled exception was caught");
+			dbg.Break(); log.WriteError("Unhandled exception was caught: " + e.ExceptionObject);
 			Process.GetCurrentProcess().Kill();
 			//Exception exp = e.ExceptionObject as Exception;
 			//if (exp == null) return;
