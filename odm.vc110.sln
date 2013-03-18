@@ -86,7 +86,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "utils.fsharp.tests", "utils
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utils.fsharp.tests.launcher", "utils.tests\utils.fsharp.tests.launcher\utils.fsharp.tests.launcher.csproj", "{37E06805-AAEB-4834-8B03-054E98847BFF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "live555-v110", "libs\live555-2013.02.11\live555-v110.vcxproj", "{9819B4D5-2F85-4349-8159-E3A64CF97DC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "live555.v110", "libs\live555-2013.02.11\live555.v110.vcxproj", "{9819B4D5-2F85-4349-8159-E3A64CF97DC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
