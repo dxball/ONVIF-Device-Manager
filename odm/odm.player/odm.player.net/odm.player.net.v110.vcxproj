@@ -106,7 +106,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)libs\live555-2013.02.11\live555-v110.vcxproj">
+    <ProjectReference Include="$(SolutionDir)libs\live555-2013.02.11\live555.v110.vcxproj">
       <Project>{9819b4d5-2f85-4349-8159-e3a64cf97dc1}</Project>
     </ProjectReference>
     <ProjectReference Include="$(SolutionDir)utils\utils.common\utils.common.csproj">
