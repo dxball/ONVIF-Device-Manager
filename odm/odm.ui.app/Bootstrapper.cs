@@ -3,11 +3,11 @@ using System.Windows;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
 using Microsoft.Practices.Unity;
-using utils;
 using plugin_manager;
+using utils;
 
 namespace odm.ui {
-	class Bootstrapper : UnityBootstrapper {
+	class OdmBootstrapper : UnityBootstrapper {
 		protected override DependencyObject CreateShell() {
 			MainWindow mainWnd = new MainWindow();
 			//try {

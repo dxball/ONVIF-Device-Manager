@@ -33,98 +33,98 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationIcon>odm.ico</ApplicationIcon>
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
   <PropertyGroup>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ffmpegDir Condition="'$(Platform)' == 'x86'">..\..\libs\ffmpeg-git-a5c1a0c\win32\bin</ffmpegDir>
+    <ffmpegDir Condition="'$(Platform)' == 'x64'">..\..\libs\ffmpeg-git-a5c1a0c\x64\bin</ffmpegDir>
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <DebugSymbols Condition="'$(Configuration)' == 'Debug'">true</DebugSymbols>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+    <DebugType Condition="'$(Configuration)' == 'Debug'">full</DebugType>
+    <DebugType Condition="'$(Configuration)' == 'Release'">pdbonly</DebugType>
+    <Optimize Condition="'$(Configuration)' == 'Debug'">false</Optimize>
+    <Optimize Condition="'$(Configuration)' == 'Release'">true</Optimize>
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">DEBUG;TRACE</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'Release'">TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget Condition="'$(Platform)' == 'x86'">x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel Condition="'$(Configuration)' == 'Debug'">4</WarningLevel>
+    <WarningLevel Condition="'$(Configuration)' == 'Release'">3</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="FSharp.Core">
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Expression.Interactions">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.UnityExtensions">
+      <HintPath>..\..\packages\Prism.UnityExtensions.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\..\libs\prism4-desktop\libs\Unity\Microsoft.Practices.Unity.dll</HintPath>
+      <HintPath>..\..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="onvif.services, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.services.dll</HintPath>
-    </Reference>
-    <Reference Include="onvif.session, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.session.dll</HintPath>
-    </Reference>
-    <Reference Include="onvif.utils, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.utils.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Classic" />
     <Reference Include="PresentationCore" />
-    <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Deployment, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.dll</HintPath>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\packages\Rx-Core.2.0.20823\lib\Net40\System.Reactive.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Windows.Threading, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.Windows.Threading.dll</HintPath>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\packages\Rx-Interfaces.2.0.20823\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\packages\Rx-Linq.2.0.20823\lib\Net40\System.Reactive.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\packages\Rx-PlatformServices.2.0.20823\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reactive.Windows.Threading">
+      <HintPath>..\..\packages\Rx-WPF.2.0.20823\lib\Net40\System.Reactive.Windows.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Discovery, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,25 +140,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism.Interactivity\Prism.Interactivity.csproj">
-      <Project>{DE856812-A32C-4866-801E-AF396D711942}</Project>
-      <Name>Prism.Interactivity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism.MefExtensions\Prism.MefExtensions.Desktop.csproj">
-      <Project>{6ED61550-8E7A-42C6-9B30-380C6F97ED55}</Project>
-      <Name>Prism.MefExtensions.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism.UnityExtensions\Prism.UnityExtensions.Desktop.csproj">
-      <Project>{17831F3B-6B82-4916-BD2B-2CE2071EA622}</Project>
-      <Name>Prism.UnityExtensions.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism\Prism.Desktop.csproj">
-      <Project>{77138947-1D13-4E22-AEE0-5D0DD046CA34}</Project>
-      <Name>Prism.Desktop</Name>
+    <ProjectReference Include="..\odm.player\odm.player.net\odm.player.net.vcxproj">
+      <Project>{D3EEB24E-79A7-48B3-8D58-EDBABB68CF0A}</Project>
+      <Name>odm.player.net</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\libs\WPFToolkit.Extended-v1.5.0\WPFToolkit.Extended.csproj">
       <Project>{72E591D6-8F83-4D8C-8F67-9C325E623234}</Project>
       <Name>WPFToolkit.Extended</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.services\onvif.services.csproj">
+      <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
+      <Name>onvif.services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.session\onvif.session.fsproj">
+      <Project>{902A3FF3-E9BD-443D-8FC1-69AA42B5F76B}</Project>
+      <Name>onvif.session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.utils\onvif.utils.fsproj">
+      <Project>{55DED141-56C3-4DA9-BE07-03708D7A2275}</Project>
+      <Name>onvif.utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\utils\utils.bootstrapping\utils.bootstrapping.csproj">
+      <Project>{90b75c37-636e-40fd-9005-4fd885a83eb2}</Project>
+      <Name>utils.bootstrapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\utils\utils.common\utils.common.csproj">
+      <Project>{2faa440a-87d3-41ab-9931-25ac306a25ba}</Project>
+      <Name>utils.common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\utils\utils.fsharp\utils.fsharp.fsproj">
       <Project>{04196C86-66F6-4A9C-BE0B-90AA5353B1C6}</Project>
@@ -206,16 +214,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="..\..\build\AssemblyInfo.global.cs">
+    </Page>
+    <Compile Include="..\~cfg\AssemblyInfo.global.cs">
       <Link>Properties\AssemblyInfo.global.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="controllers\ContentController.cs" />
     <Compile Include="LoggerConig.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="modules\MainModule.cs" />
     <Compile Include="Settings.cs" />
@@ -320,10 +329,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\origin\PTZControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Themes\origin\ScrollBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -391,6 +396,40 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(ffmpegDir)\avcodec-54.dll">
+      <Link>3rd\avcodec-54.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\avdevice-54.dll">
+      <Link>3rd\avdevice-54.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\avfilter-2.dll">
+      <Link>3rd\avfilter-2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\avformat-54.dll">
+      <Link>3rd\avformat-54.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\avutil-51.dll">
+      <Link>3rd\avutil-51.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\postproc-52.dll">
+      <Link>3rd\postproc-52.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\swresample-0.dll">
+      <Link>3rd\swresample-0.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ffmpegDir)\swscale-2.dll">
+      <Link>3rd\swscale-2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -404,10 +443,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="AnalyticsView.xml" />
     <Content Include="custom-time-zones.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="..\odm.player\odm.player.host\odm.player.host.exe.config">
+      <Link>odm.player.host.exe.config</Link>
+    </None>
+    <None Include="3rd\-dir.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -416,38 +463,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avcodec-53.dll">
-      <Link>avcodec-53.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avdevice-53.dll">
-      <Link>avdevice-53.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avfilter-2.dll">
-      <Link>avfilter-2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avformat-53.dll">
-      <Link>avformat-53.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\avutil-51.dll">
-      <Link>avutil-51.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\postproc-51.dll">
-      <Link>postproc-51.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\swresample-0.dll">
-      <Link>swresample-0.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\libs\ffmpeg-git-f514695\win32\bin\swscale-2.dll">
-      <Link>swscale-2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="meta\info.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -475,10 +490,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="logs\player.log">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="odm.player.host.exe.config">
-      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\Settings.settings">

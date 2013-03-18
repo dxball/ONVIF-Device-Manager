@@ -61,10 +61,11 @@ namespace odm.ui {
 						vs.ShowVideoPlaybackStatistics = showVideoPlaybackStatisticsValue.IsChecked == true;
 						vs.Transport_Type = ((KeyValuePair<TransportProtocol, string>)transportTypes.SelectedValue).Key;
 						vs.OpenInExternalWebBrowser = webValue.IsChecked.Value;
+                        vs.EnableGraphicAnnotation = enableGraphicAnnotationValue.IsChecked.Value;
 
 						vs.UseOnlyCommonFilterView = enableOnlyDefValue.IsChecked.Value;
 
-						AppDefaults.SetVisualSettings(vs);
+						AppDefaults.UpdateVisualSettings(vs);
 
 
 						Success();
@@ -100,9 +101,9 @@ namespace odm.ui {
 			var vs = AppDefaults.visualSettings;
 
 			//transportCaption;
-			transportModesDict.Add(TransportProtocol.HTTP, "HTTP");
-			transportModesDict.Add(TransportProtocol.RTSP, "TCP");
-			transportModesDict.Add(TransportProtocol.UDP, "UDP");
+            transportModesDict.Add(TransportProtocol.http, "HTTP");
+            transportModesDict.Add(TransportProtocol.rtsp, "TCP");
+            transportModesDict.Add(TransportProtocol.udp, "UDP");
 
 			transportTypes.ItemsSource = transportModesDict;
 			transportTypes.SelectedValue = transportModesDict.SingleOrDefault(x => x.Key == vs.Transport_Type);
@@ -129,6 +130,8 @@ namespace odm.ui {
 			basePortValue.Value = vs.Base_Subscription_Port;
 
 			webValue.IsChecked = vs.OpenInExternalWebBrowser;
+            enableGraphicAnnotationValue.IsChecked = vs.EnableGraphicAnnotation;
+            
 			enableEventValue.IsChecked = vs.Events_IsEnabled;
 			collectEventsValue.IsChecked = vs.EventsCollect_IsEnabled;
 			enableSnapshotValue.IsChecked = vs.Snapshot_IsEnabled;
@@ -170,9 +173,11 @@ namespace odm.ui {
 			collectEventsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.collectEventsCaption);
 			enableCustomAnalyticsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableCustomAnalyticsCaption);
 			enableEventCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableEventCaption);
+            enableGraphicAnnotationCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.enableGraphicAnnotationCaption);
 			enableSnapshotCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableSnapshotCaption);
 			langCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.langCaption);
 			videoRenderingFpsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.videoRenderingFpsCaption);
+            enableOnlyDefMode.CreateBinding(TextBlock.TextProperty, Strings, x => x.enableOnlyDefModeCaption);
 			showVideoPlaybackStatisticsCaption.CreateBinding(TextBlock.TextProperty, Strings, x => x.showVideoPlaybackStatisticsCaption);
 			eventCaption.CreateBinding(GroupBox.HeaderProperty, Strings, x => x.eventCaption);
 			transportCaption.CreateBinding(TextBlock.TextProperty, Strings, x=>x.videotransport);

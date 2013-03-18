@@ -52,16 +52,16 @@
             let model = new CertificatesView.Model(
                 certificates = Seq.toArray(seq{
                     for cert in certificates do
-                        let cid = cert.CertificateID
+                        let cid = cert.certificateID
                         let enabled = 
                             (statuses |> Seq.tryPick (fun c -> 
-                                if (c.CertificateID = cid) then 
-                                    Some(c.Status)
+                                if (c.certificateID = cid) then 
+                                    Some(c.status)
                                 else
                                     None
                             )) = Some(true)
                         yield CertificatesView.Certificate.Create(
-                            data = cert.Certificate1.Data,
+                            data = cert.certificate.data,
                             cid = cid,
                             enabled = enabled
                         )
@@ -106,15 +106,15 @@
             let! cont = async{
                 try
                     let! filePath = OpenFileActivity.Run("Select certificate to upload", "Pem files (*.pem)|*.pem|All files (*.*)|*.*")
-                    if(filePath <> null) then
+                    if filePath |> NotNull then
                         use! progress = Progress.Show(ctx, "reading certificate...")
                         let cert = new Certificate()
                         let finfo = new FileInfo(filePath)
                         use fstream = finfo.OpenRead() 
                         let! data = fstream.AsyncRead(int(fstream.Length))
-                        cert.CertificateID <- finfo.Name
-                        cert.Certificate1 <- new BinaryData()
-                        cert.Certificate1.Data <- data
+                        cert.certificateID <- finfo.Name
+                        cert.certificate <- new BinaryData()
+                        cert.certificate.data <- data
                         let! res = CertificateUploadView.Show(ctx, new CertificateUploadView.Model(cert))
                         return! res.Handle(
                             upload = (fun ()-> async{
@@ -138,12 +138,12 @@
         member private this.Apply(model) = async{
             let! cont = async{
                 try
-                    if (model <> null && model.certificates <> null && model.certificates.Any(fun c-> c.isModified)) then
+                    if NotNull(model) && NotNull(model.certificates) && model.certificates.Any(fun c-> c.isModified) then
                         use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
                         let statuses = seq{
                             for cert in model.certificates -> new CertificateStatus(
-                                CertificateID = cert.cid,
-                                Status = cert.enabled
+                                certificateID = cert.cid,
+                                status = cert.enabled
                             )
                         }
                         do! dev.SetCertificatesStatus(statuses |> Seq.toArray)

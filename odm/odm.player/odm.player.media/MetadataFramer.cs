@@ -7,6 +7,7 @@ using System.IO.MemoryMappedFiles;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
 using System.IO;
+using utils;
 
 namespace odm.player {
 	public interface IMetadataReceiver{
@@ -21,6 +22,14 @@ namespace odm.player {
 		public void Invoke(TArg arg) {
 			action(arg);
 		}
+		public override object InitializeLifetimeService() {
+			//
+			// Returning null designates an infinite non-expiring lease.
+			// We must ensure that RemotingServices.Disconnect() is called 
+			// when it's no longer needed otherwise there will be a memory leak.
+			//
+			return null;
+		}
 	}
 
 	public class ActionByRef<TArg1, TArg2> : MarshalByRefObject {
@@ -30,6 +39,14 @@ namespace odm.player {
 		}
 		public void Invoke(TArg1 arg1, TArg2 arg2) {
 			action(arg1, arg2);
+		}
+		public override object InitializeLifetimeService() {
+			//
+			// Returning null designates an infinite non-expiring lease.
+			// We must ensure that RemotingServices.Disconnect() is called 
+			// when it's no longer needed otherwise there will be a memory leak.
+			//
+			return null;
 		}
 	}
 
@@ -103,7 +120,12 @@ namespace odm.player {
 					farmeOffset += size;
 				}
 				using (var stream = new MemoryStream(frame, 0, farmeOffset)) {
-					callback.Invoke(stream);
+					try {
+						callback.Invoke(stream);
+					} catch (Exception err) {
+						//swallow error
+						log.WriteError(err);
+					}
 				}
 				frame = null;
 				frameCapacity = 0;

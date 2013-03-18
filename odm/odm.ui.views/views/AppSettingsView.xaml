@@ -89,6 +89,13 @@
                     <ContentControl Grid.Row="4" Style="{StaticResource valueContainer}">
                         <CheckBox Name="webValue"/>
                     </ContentControl>
+
+                    <ContentControl Grid.Row="5" Style="{StaticResource captionContainer}">
+                        <TextBlock Name="enableGraphicAnnotationCaption" Text="Enable graphic annotation "/>
+                    </ContentControl>
+                    <ContentControl Grid.Row="5" Style="{StaticResource valueContainer}">
+                        <CheckBox Name="enableGraphicAnnotationValue"/>
+                    </ContentControl>
                 </Grid>
             </GroupBox>
             <GroupBox Name="eventCaption" Grid.Row="1" Header="Events settings:">

@@ -20,6 +20,9 @@
 	<!--<SolidColorBrush x:Key="Background" Color="#AAAA99"/>-->
 	<SolidColorBrush x:Key="Foreground" Color="Black"/>
 	<SolidColorBrush x:Key="BackgroundHighlight" Color="#FF595959"/>
+    <SolidColorBrush x:Key="BackgroundHeader" Color="#FF595959"/>
+    <SolidColorBrush x:Key="BackgroundHeaderSelected" Color="#FF494949"/>
+    <SolidColorBrush x:Key="BackgroundHeaderChecked" Color="#FF292929"/>
 	<SolidColorBrush x:Key="ForegroundHighlight" Color="White"/>
 	<SolidColorBrush x:Key="BackgroundPressed" Color="#FF3D3D3D"/>
 	<SolidColorBrush x:Key="ForegroundPressed" Color="White"/>

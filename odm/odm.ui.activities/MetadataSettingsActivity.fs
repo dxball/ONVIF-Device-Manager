@@ -34,18 +34,18 @@ namespace odm.ui.activities
 
     type MetadataSettingsActivity(ctx:IUnityContainer, profile:Profile, session:INvtSession, metaCfgOpts:MetadataConfigurationOptions) = class
         static let xmlns_wsnt = "http://docs.oasis-open.org/wsn/b-2"
-        let mutable metaCfg = profile.MetadataConfiguration
+        let mutable metaCfg = profile.metadataConfiguration
         let isPtzStatusSupported = 
-            if metaCfgOpts<> null && metaCfgOpts.PTZStatusFilterOptions <> null then
-                let opts = metaCfgOpts.PTZStatusFilterOptions
-                opts.ZoomStatusSupported || opts.PanTiltStatusSupported
+            if NotNull(metaCfgOpts) && NotNull(metaCfgOpts.ptzStatusFilterOptions) then
+                let opts = metaCfgOpts.ptzStatusFilterOptions
+                opts.zoomStatusSupported || opts.panTiltStatusSupported
             else 
                 false
         let isPtzPositionSupported = 
-            if metaCfgOpts<> null && metaCfgOpts.PTZStatusFilterOptions <> null then
-                let opts = metaCfgOpts.PTZStatusFilterOptions
-                (opts.PanTiltPositionSupportedSpecified && opts.PanTiltPositionSupported) || 
-                (opts.ZoomPositionSupportedSpecified && opts.ZoomPositionSupported)
+            if NotNull(metaCfgOpts) && NotNull(metaCfgOpts.ptzStatusFilterOptions) then
+                let opts = metaCfgOpts.ptzStatusFilterOptions
+                (opts.panTiltPositionSupportedSpecified && opts.panTiltPositionSupported) || 
+                (opts.zoomPositionSupportedSpecified && opts.zoomPositionSupported)
             else 
                 false
         let media = session :> IMediaAsync
@@ -63,8 +63,7 @@ namespace odm.ui.activities
             metaCfg <- newMetaCfg
             
             let! caps = device.GetCapabilities()
-            let isEventsSupported = 
-                not(caps.Events = null) && not(String.IsNullOrWhiteSpace(caps.Events.XAddr))
+            let! isEventsSupported = facade.IsEventsSupported()
             
             let! model = async{
                 if isEventsSupported then
@@ -91,38 +90,34 @@ namespace odm.ui.activities
                     )
             }
 
-            if metaCfg.AnalyticsSpecified then
-                model.includeAnalitycs <- metaCfg.Analytics
+            if metaCfg.analyticsSpecified then
+                model.includeAnalitycs <- metaCfg.analytics
             else
                 model.includeAnalitycs <- false
 
-            if metaCfg.PTZStatus <> null then
-                model.includePtzStatus <- metaCfg.PTZStatus.Status
-                model.includePtzPosition <- metaCfg.PTZStatus.Position
+            if metaCfg.ptzStatus |> NotNull then
+                model.includePtzStatus <- metaCfg.ptzStatus.status
+                model.includePtzPosition <- metaCfg.ptzStatus.position
             else
                 model.includePtzStatus <- false
                 model.includePtzPosition <- false
             
             //according [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration",
             //To get no events: Do not include the Events element.
-            if metaCfg.Events <> null then
+            if metaCfg.events |> NotNull then
                 model.includeEvents <- true //see [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration"
-                model.topicExpressionFilters <- 
-                    if metaCfg.Events.Filter = null || metaCfg.Events.Filter.Any = null then
-                        [||]
-                    else [|
-                        for x in metaCfg.Events.Filter.Any do
-                            if x.Name = XName.Get("TopicExpression", xmlns_wsnt) then
-                                yield x.Deserialize<TopicExpressionFilter>()
-                    |]
-                model.messageContentFilters <- 
-                    if metaCfg.Events = null || metaCfg.Events.Filter = null || metaCfg.Events.Filter.Any = null then
-                        [||]
-                    else [|
-                        for x in metaCfg.Events.Filter.Any do
-                            if x.Name = XName.Get("MessageContent", xmlns_wsnt) then
-                                yield x.Deserialize<MessageContentFilter>()
-                    |]
+                model.topicExpressionFilters <- [|
+                    let any = metaCfg.events |> IfNotNull(fun x->x.filter |> IfNotNull(fun x-> x.Any))
+                    for x in any |> SuppressNull [||] do
+                        if x.Name = XName.Get("TopicExpression", xmlns_wsnt) then
+                            yield x.Deserialize<TopicExpressionFilter>()
+                |]
+                model.messageContentFilters <- [|
+                    let any = metaCfg.events |> IfNotNull(fun x->x.filter |> IfNotNull(fun x-> x.Any))
+                    for x in any |> SuppressNull [||] do
+                        if x.Name = XName.Get("MessageContent", xmlns_wsnt) then
+                            yield x.Deserialize<MessageContentFilter>()
+                |]
             else
                 model.includeEvents <- false //see [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration"
                 model.topicExpressionFilters <- null
@@ -134,36 +129,35 @@ namespace odm.ui.activities
 
         let apply(model:MetadataSettingsView.Model) = async{
             
-            let! caps = session.GetCapabilities()
-
-            if caps.Analytics<>null && not(String.IsNullOrEmpty(caps.Analytics.XAddr)) then
-                metaCfg.AnalyticsSpecified <- true
-                metaCfg.Analytics <- model.includeAnalitycs
+            let! isAnalyticsSupported = facade.IsAnalyticsSupported()
+            if isAnalyticsSupported then
+                metaCfg.analyticsSpecified <- true
+                metaCfg.analytics <- model.includeAnalitycs
 
             if isPtzStatusSupported || isPtzPositionSupported then
-                metaCfg.PTZStatus <- new PTZFilter(
-                    Position = model.includePtzPosition,
-                    Status = model.includePtzStatus
+                metaCfg.ptzStatus <- new PTZFilter(
+                    position = model.includePtzPosition,
+                    status = model.includePtzStatus
                 )
             if model.includeEvents then
-                if metaCfg.Events = null then
-                    metaCfg.Events <- new EventSubscription()
+                if metaCfg.events |> IsNull then
+                    metaCfg.events <- new EventSubscription()
                 let filters = [|
-                    if model.messageContentFilters <> null then
+                    if model.messageContentFilters |> NotNull then
                         for x in model.messageContentFilters do
                             yield XmlExtensions.SerializeAsXElement(x)
 
-                    if model.topicExpressionFilters <> null then
+                    if model.topicExpressionFilters |> NotNull then
                         for x in model.topicExpressionFilters do
                             yield XmlExtensions.SerializeAsXElement(x)
                 |]
                 if filters.Length>0 then
-                    metaCfg.Events.Filter <- new FilterType()
-                    metaCfg.Events.Filter.Any <- filters
+                    metaCfg.events.filter <- new FilterType()
+                    metaCfg.events.filter.Any <- filters
                 else
-                    metaCfg.Events.Filter <- null //see [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration"
+                    metaCfg.events.filter <- null //see [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration"
             else
-                metaCfg.Events <- null //see [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration"
+                metaCfg.events <- null //see [ONVIF-Media-Service-Spec-v210] topic 5.21.27 "MetadataConfiguration"
 
             do! media.SetMetadataConfiguration(metaCfg, true)
             model.AcceptChanges()
@@ -234,7 +228,7 @@ namespace odm.ui.activities
                     let session = ctx.Resolve<INvtSession>()
                     let! act = async{
                         use! progress = Progress.Show(ctx, LocalDevice.instance.loading)
-                        let! metaCfgOpts = session.GetMetadataConfigurationOptions(profile.MetadataConfiguration.token, profile.token)
+                        let! metaCfgOpts = session.GetMetadataConfigurationOptions(profile.metadataConfiguration.token, profile.token)
                         return new MetadataSettingsActivity(ctx, profile, session, metaCfgOpts)
                     }
                     return act.Main()

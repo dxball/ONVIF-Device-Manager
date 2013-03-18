@@ -55,6 +55,7 @@ namespace odm.ui.core {
         public void Init(IChangeTrackable<IIdentificationModel> model) {
             this.CreateBinding(NameProperty, model.current, x => x.name);
             this.CreateBinding(LocationProperty, model.current, x => x.location);
+            this.CreateBinding(DeviceIconUriProperty, model.current, x => x.iconUri); 
             this.CreateBinding(FirmwareProperty, model.current, x => x.firmware);
 			//this.CreateBinding(AddressProperty, model.current, x => x.ip);//return session.deviceUri.Host;
 			if (session != null && session.deviceUri != null)

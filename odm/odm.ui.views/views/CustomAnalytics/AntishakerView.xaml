@@ -14,7 +14,7 @@
             <!--<CheckBox Name="enableDisplacement" Content="{Binding Strings.enableDisplacement, ElementName=ctrl}" IsEnabled="{Binding IsChecked, ElementName=useAntishaker}"/>-->
             <CheckBox Visibility="Collapsed" Name="enableOutputPictureShift" Content="{Binding Strings.enableOutputShift, ElementName=ctrl}" IsEnabled="{Binding IsChecked, ElementName=useAntishaker}"/>
         </StackPanel>
-        <Grid  IsEnabled="{Binding IsChecked, ElementName=useAntishaker}">
+        <Grid >
 			<Border x:Name="playerHolder" Margin="0" Background="Black"/>
 			<g:RectangleEditor x:Name="rectEditor" />
         </Grid>

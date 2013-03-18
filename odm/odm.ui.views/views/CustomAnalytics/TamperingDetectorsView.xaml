@@ -9,8 +9,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
         <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom">
-            <CheckBox Content="{Binding Strings.cameraRedirected, ElementName=ctrl}" IsEnabled="{Binding isCameraRedirectedEnabled, ElementName=ctrl}" Name="cameraRedirected" Height="16" Grid.Column="0" Grid.Row="0"/>
-            <CheckBox Content="{Binding Strings.cameraObstructed, ElementName=ctrl}" IsEnabled="{Binding isCameraObstructedEnabled, ElementName=ctrl}" Name="cameraObstructed" Height="16" Grid.Column="0" Grid.Row="1"/>
+            <ContentControl ToolTip="{Binding Strings.cameraRedirectedTip, ElementName=ctrl}">
+                <CheckBox Content="{Binding Strings.cameraRedirected, ElementName=ctrl}" IsEnabled="{Binding isCameraRedirectedEnabled, ElementName=ctrl}" Name="cameraRedirected" Height="16"/>
+            </ContentControl>
+            <ContentControl ToolTip="{Binding Strings.cameraObstructedTip, ElementName=ctrl}">
+                <CheckBox Content="{Binding Strings.cameraObstructed, ElementName=ctrl}" IsEnabled="{Binding isCameraObstructedEnabled, ElementName=ctrl}" Name="cameraObstructed" Height="16"/>
+            </ContentControl>
             <Rectangle DockPanel.Dock="Top" Margin="2,10,2,10" 
 				HorizontalAlignment="Left" MinWidth="350" VerticalAlignment="Stretch" 
 				Height="2"

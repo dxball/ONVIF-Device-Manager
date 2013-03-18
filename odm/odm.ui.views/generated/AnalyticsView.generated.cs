@@ -27,10 +27,9 @@ namespace odm.ui.activities {
 		public class Model{
 			
 			public Model(
-				Profile profile, XmlSchemaSet moduleSchemes, ConfigDescription[] moduleTypes, Config[] modules, XmlSchemaSet ruleSchemes, ConfigDescription[] ruleTypes, Config[] rules
+				XmlSchemaSet moduleSchemes, ConfigDescription[] moduleTypes, Config[] modules, XmlSchemaSet ruleSchemes, ConfigDescription[] ruleTypes, Config[] rules
 			){
 				
-				this.profile = profile;
 				this.moduleSchemes = moduleSchemes;
 				this.moduleTypes = moduleTypes;
 				this.modules = modules;
@@ -43,7 +42,6 @@ namespace odm.ui.activities {
 			
 
 			public static Model Create(
-				Profile profile,
 				XmlSchemaSet moduleSchemes,
 				ConfigDescription[] moduleTypes,
 				Config[] modules,
@@ -53,7 +51,6 @@ namespace odm.ui.activities {
 			){
 				var _this = new Model();
 				
-				_this.profile = profile;
 				_this.moduleSchemes = moduleSchemes;
 				_this.moduleTypes = moduleTypes;
 				_this.modules = modules;
@@ -63,7 +60,6 @@ namespace odm.ui.activities {
 				return _this;
 			}
 		
-			public Profile profile{get;private set;}
 			public XmlSchemaSet moduleSchemes{get;private set;}
 			public ConfigDescription[] moduleTypes{get;private set;}
 			public Config[] modules{get;private set;}

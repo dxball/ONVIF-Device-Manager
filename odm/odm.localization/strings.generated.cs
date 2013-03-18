@@ -15,6 +15,258 @@ using odm.localization;
 
 
 namespace odm.ui {
+	public partial class LocalEngineControlsInputsCreation: LocalizedStringsBase<LocalEngineControlsInputsCreation>{
+		
+
+
+		private const string s_input = @"Inputs:";
+		private string m_input=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControlsInputsCreation' and @namespace='odm.ui']/descendant::string[@name='input']/@value")]
+		public string input {
+			get { 
+				if( m_input == null){
+					return s_input;
+				}
+				return m_input; 
+			}
+			set { 
+				if( value != m_input){
+					m_input = value;
+					NotifyPropertyChanged("input");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui {
+	public partial class LocalEngineControlsUpdating: LocalizedStringsBase<LocalEngineControlsUpdating>{
+		
+
+
+		private const string s_controlname = @"Control name:";
+		private string m_controlname=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControlsUpdating' and @namespace='odm.ui']/descendant::string[@name='controlname']/@value")]
+		public string controlname {
+			get { 
+				if( m_controlname == null){
+					return s_controlname;
+				}
+				return m_controlname; 
+			}
+			set { 
+				if( value != m_controlname){
+					m_controlname = value;
+					NotifyPropertyChanged("controlname");
+				}
+			}  
+		}
+	
+
+
+		private const string s_vac = @"Video Analytics Configuration";
+		private string m_vac=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControlsUpdating' and @namespace='odm.ui']/descendant::string[@name='vac']/@value")]
+		public string vac {
+			get { 
+				if( m_vac == null){
+					return s_vac;
+				}
+				return m_vac; 
+			}
+			set { 
+				if( value != m_vac){
+					m_vac = value;
+					NotifyPropertyChanged("vac");
+				}
+			}  
+		}
+	
+
+
+		private const string s_configure = @"Configure Inputs";
+		private string m_configure=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControlsUpdating' and @namespace='odm.ui']/descendant::string[@name='configure']/@value")]
+		public string configure {
+			get { 
+				if( m_configure == null){
+					return s_configure;
+				}
+				return m_configure; 
+			}
+			set { 
+				if( value != m_configure){
+					m_configure = value;
+					NotifyPropertyChanged("configure");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui {
+	public partial class LocalEngineControlsVACSelection: LocalizedStringsBase<LocalEngineControlsVACSelection>{
+		
+
+
+		private const string s_vac = @"VAC";
+		private string m_vac=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControlsVACSelection' and @namespace='odm.ui']/descendant::string[@name='vac']/@value")]
+		public string vac {
+			get { 
+				if( m_vac == null){
+					return s_vac;
+				}
+				return m_vac; 
+			}
+			set { 
+				if( value != m_vac){
+					m_vac = value;
+					NotifyPropertyChanged("vac");
+				}
+			}  
+		}
+	
+
+
+		private const string s_details = @"Details";
+		private string m_details=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControlsVACSelection' and @namespace='odm.ui']/descendant::string[@name='details']/@value")]
+		public string details {
+			get { 
+				if( m_details == null){
+					return s_details;
+				}
+				return m_details; 
+			}
+			set { 
+				if( value != m_details){
+					m_details = value;
+					NotifyPropertyChanged("details");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui {
+	public partial class LocalEngineControl: LocalizedStringsBase<LocalEngineControl>{
+		
+
+
+		private const string s_name = @"Name";
+		private string m_name=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControl' and @namespace='odm.ui']/descendant::string[@name='name']/@value")]
+		public string name {
+			get { 
+				if( m_name == null){
+					return s_name;
+				}
+				return m_name; 
+			}
+			set { 
+				if( value != m_name){
+					m_name = value;
+					NotifyPropertyChanged("name");
+				}
+			}  
+		}
+	
+
+
+		private const string s_mode = @"Mode";
+		private string m_mode=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControl' and @namespace='odm.ui']/descendant::string[@name='mode']/@value")]
+		public string mode {
+			get { 
+				if( m_mode == null){
+					return s_mode;
+				}
+				return m_mode; 
+			}
+			set { 
+				if( value != m_mode){
+					m_mode = value;
+					NotifyPropertyChanged("mode");
+				}
+			}  
+		}
+	
+
+
+		private const string s_status = @"Status";
+		private string m_status=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControl' and @namespace='odm.ui']/descendant::string[@name='status']/@value")]
+		public string status {
+			get { 
+				if( m_status == null){
+					return s_status;
+				}
+				return m_status; 
+			}
+			set { 
+				if( value != m_status){
+					m_status = value;
+					NotifyPropertyChanged("status");
+				}
+			}  
+		}
+	
+
+
+		private const string s_vac = @"VAC";
+		private string m_vac=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControl' and @namespace='odm.ui']/descendant::string[@name='vac']/@value")]
+		public string vac {
+			get { 
+				if( m_vac == null){
+					return s_vac;
+				}
+				return m_vac; 
+			}
+			set { 
+				if( value != m_vac){
+					m_vac = value;
+					NotifyPropertyChanged("vac");
+				}
+			}  
+		}
+	
+
+
+		private const string s_details = @"Details";
+		private string m_details=null;
+		[XPath(@"/localized-strings/module[@name='LocalEngineControl' and @namespace='odm.ui']/descendant::string[@name='details']/@value")]
+		public string details {
+			get { 
+				if( m_details == null){
+					return s_details;
+				}
+				return m_details; 
+			}
+			set { 
+				if( value != m_details){
+					m_details = value;
+					NotifyPropertyChanged("details");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui {
 	public partial class LocalVideoPlayer: LocalizedStringsBase<LocalVideoPlayer>{
 		
 
@@ -185,6 +437,26 @@ namespace odm.ui {
 			}  
 		}
 	
+
+
+		private const string s_syslogNotFound = @"Log has not been found";
+		private string m_syslogNotFound=null;
+		[XPath(@"/localized-strings/module[@name='LocalSystemLog' and @namespace='odm.ui']/descendant::string[@name='syslogNotFound']/@value")]
+		public string syslogNotFound {
+			get { 
+				if( m_syslogNotFound == null){
+					return s_syslogNotFound;
+				}
+				return m_syslogNotFound; 
+			}
+			set { 
+				if( value != m_syslogNotFound){
+					m_syslogNotFound = value;
+					NotifyPropertyChanged("syslogNotFound");
+				}
+			}  
+		}
+	
 	}
 
 }
@@ -209,6 +481,46 @@ namespace odm.ui {
 				if( value != m_title){
 					m_title = value;
 					NotifyPropertyChanged("title");
+				}
+			}  
+		}
+	
+
+
+		private const string s_imagingSettings = @"Imaging Settings";
+		private string m_imagingSettings=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='imagingSettings']/@value")]
+		public string imagingSettings {
+			get { 
+				if( m_imagingSettings == null){
+					return s_imagingSettings;
+				}
+				return m_imagingSettings; 
+			}
+			set { 
+				if( value != m_imagingSettings){
+					m_imagingSettings = value;
+					NotifyPropertyChanged("imagingSettings");
+				}
+			}  
+		}
+	
+
+
+		private const string s_autoFocusMode = @"Focus Mode";
+		private string m_autoFocusMode=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='autoFocusMode']/@value")]
+		public string autoFocusMode {
+			get { 
+				if( m_autoFocusMode == null){
+					return s_autoFocusMode;
+				}
+				return m_autoFocusMode; 
+			}
+			set { 
+				if( value != m_autoFocusMode){
+					m_autoFocusMode = value;
+					NotifyPropertyChanged("autoFocusMode");
 				}
 			}  
 		}
@@ -515,6 +827,106 @@ namespace odm.ui {
 	
 
 
+		private const string s_focusSettings = @"Focus Settings";
+		private string m_focusSettings=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='focusSettings']/@value")]
+		public string focusSettings {
+			get { 
+				if( m_focusSettings == null){
+					return s_focusSettings;
+				}
+				return m_focusSettings; 
+			}
+			set { 
+				if( value != m_focusSettings){
+					m_focusSettings = value;
+					NotifyPropertyChanged("focusSettings");
+				}
+			}  
+		}
+	
+
+
+		private const string s_focusPosition = @"Position";
+		private string m_focusPosition=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='focusPosition']/@value")]
+		public string focusPosition {
+			get { 
+				if( m_focusPosition == null){
+					return s_focusPosition;
+				}
+				return m_focusPosition; 
+			}
+			set { 
+				if( value != m_focusPosition){
+					m_focusPosition = value;
+					NotifyPropertyChanged("focusPosition");
+				}
+			}  
+		}
+	
+
+
+		private const string s_status = @"State";
+		private string m_status=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='status']/@value")]
+		public string status {
+			get { 
+				if( m_status == null){
+					return s_status;
+				}
+				return m_status; 
+			}
+			set { 
+				if( value != m_status){
+					m_status = value;
+					NotifyPropertyChanged("status");
+				}
+			}  
+		}
+	
+
+
+		private const string s_statusSuccess = @"OK";
+		private string m_statusSuccess=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='statusSuccess']/@value")]
+		public string statusSuccess {
+			get { 
+				if( m_statusSuccess == null){
+					return s_statusSuccess;
+				}
+				return m_statusSuccess; 
+			}
+			set { 
+				if( value != m_statusSuccess){
+					m_statusSuccess = value;
+					NotifyPropertyChanged("statusSuccess");
+				}
+			}  
+		}
+	
+
+
+		private const string s_statusWaiting = @"Waiting...";
+		private string m_statusWaiting=null;
+		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='statusWaiting']/@value")]
+		public string statusWaiting {
+			get { 
+				if( m_statusWaiting == null){
+					return s_statusWaiting;
+				}
+				return m_statusWaiting; 
+			}
+			set { 
+				if( value != m_statusWaiting){
+					m_statusWaiting = value;
+					NotifyPropertyChanged("statusWaiting");
+				}
+			}  
+		}
+	
+
+
 		private const string s_auto = @"Auto";
 		private string m_auto=null;
 		[XPath(@"/localized-strings/module[@name='LocalImaging' and @namespace='odm.ui']/descendant::string[@name='auto']/@value")]
@@ -643,7 +1055,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_config = @"Metadata configuration";
+		private const string s_config = @"Filters";
 		private string m_config=null;
 		[XPath(@"/localized-strings/module[@name='LocalMetadata' and @namespace='odm.ui']/descendant::string[@name='config']/@value")]
 		public string config {
@@ -2491,6 +2903,26 @@ namespace odm.ui {
 	
 
 
+		private const string s_enableGraphicAnnotationCaption = @"Enable graphic annotation ";
+		private string m_enableGraphicAnnotationCaption=null;
+		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='enableGraphicAnnotationCaption']/@value")]
+		public string enableGraphicAnnotationCaption {
+			get { 
+				if( m_enableGraphicAnnotationCaption == null){
+					return s_enableGraphicAnnotationCaption;
+				}
+				return m_enableGraphicAnnotationCaption; 
+			}
+			set { 
+				if( value != m_enableGraphicAnnotationCaption){
+					m_enableGraphicAnnotationCaption = value;
+					NotifyPropertyChanged("enableGraphicAnnotationCaption");
+				}
+			}  
+		}
+	
+
+
 		private const string s_enableSnapshotCaption = @"Enable snapshots ";
 		private string m_enableSnapshotCaption=null;
 		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='enableSnapshotCaption']/@value")]
@@ -2629,6 +3061,26 @@ namespace odm.ui {
 			}  
 		}
 	
+
+
+		private const string s_enableOnlyDefModeCaption = @"Use extended filter editor ";
+		private string m_enableOnlyDefModeCaption=null;
+		[XPath(@"/localized-strings/module[@name='LocalAppSettings' and @namespace='odm.ui']/descendant::string[@name='enableOnlyDefModeCaption']/@value")]
+		public string enableOnlyDefModeCaption {
+			get { 
+				if( m_enableOnlyDefModeCaption == null){
+					return s_enableOnlyDefModeCaption;
+				}
+				return m_enableOnlyDefModeCaption; 
+			}
+			set { 
+				if( value != m_enableOnlyDefModeCaption){
+					m_enableOnlyDefModeCaption = value;
+					NotifyPropertyChanged("enableOnlyDefModeCaption");
+				}
+			}  
+		}
+	
 	}
 
 }
@@ -2639,7 +3091,7 @@ namespace odm.ui {
 		
 
 
-		private const string s_loginCaption = @"Login";
+		private const string s_loginCaption = @"Name";
 		private string m_loginCaption=null;
 		[XPath(@"/localized-strings/module[@name='LocalAccount' and @namespace='odm.ui']/descendant::string[@name='loginCaption']/@value")]
 		public string loginCaption {
@@ -2673,6 +3125,86 @@ namespace odm.ui {
 				if( value != m_passwordCaption){
 					m_passwordCaption = value;
 					NotifyPropertyChanged("passwordCaption");
+				}
+			}  
+		}
+	
+
+
+		private const string s_loginButton = @"Log in";
+		private string m_loginButton=null;
+		[XPath(@"/localized-strings/module[@name='LocalAccount' and @namespace='odm.ui']/descendant::string[@name='loginButton']/@value")]
+		public string loginButton {
+			get { 
+				if( m_loginButton == null){
+					return s_loginButton;
+				}
+				return m_loginButton; 
+			}
+			set { 
+				if( value != m_loginButton){
+					m_loginButton = value;
+					NotifyPropertyChanged("loginButton");
+				}
+			}  
+		}
+	
+
+
+		private const string s_logoutButton = @"Log out";
+		private string m_logoutButton=null;
+		[XPath(@"/localized-strings/module[@name='LocalAccount' and @namespace='odm.ui']/descendant::string[@name='logoutButton']/@value")]
+		public string logoutButton {
+			get { 
+				if( m_logoutButton == null){
+					return s_logoutButton;
+				}
+				return m_logoutButton; 
+			}
+			set { 
+				if( value != m_logoutButton){
+					m_logoutButton = value;
+					NotifyPropertyChanged("logoutButton");
+				}
+			}  
+		}
+	
+
+
+		private const string s_remember = @"Remember";
+		private string m_remember=null;
+		[XPath(@"/localized-strings/module[@name='LocalAccount' and @namespace='odm.ui']/descendant::string[@name='remember']/@value")]
+		public string remember {
+			get { 
+				if( m_remember == null){
+					return s_remember;
+				}
+				return m_remember; 
+			}
+			set { 
+				if( value != m_remember){
+					m_remember = value;
+					NotifyPropertyChanged("remember");
+				}
+			}  
+		}
+	
+
+
+		private const string s_loggedAs = @"You logged in as";
+		private string m_loggedAs=null;
+		[XPath(@"/localized-strings/module[@name='LocalAccount' and @namespace='odm.ui']/descendant::string[@name='loggedAs']/@value")]
+		public string loggedAs {
+			get { 
+				if( m_loggedAs == null){
+					return s_loggedAs;
+				}
+				return m_loggedAs; 
+			}
+			set { 
+				if( value != m_loggedAs){
+					m_loggedAs = value;
+					NotifyPropertyChanged("loggedAs");
 				}
 			}  
 		}
@@ -2861,6 +3393,66 @@ namespace odm.ui {
 				if( value != m_identificationAndStatus){
 					m_identificationAndStatus = value;
 					NotifyPropertyChanged("identificationAndStatus");
+				}
+			}  
+		}
+	
+
+
+		private const string s_receivers = @"Receivers";
+		private string m_receivers=null;
+		[XPath(@"/localized-strings/module[@name='LocalTitles' and @namespace='odm.ui']/descendant::string[@name='receivers']/@value")]
+		public string receivers {
+			get { 
+				if( m_receivers == null){
+					return s_receivers;
+				}
+				return m_receivers; 
+			}
+			set { 
+				if( value != m_receivers){
+					m_receivers = value;
+					NotifyPropertyChanged("receivers");
+				}
+			}  
+		}
+	
+
+
+		private const string s_actions = @"Actions";
+		private string m_actions=null;
+		[XPath(@"/localized-strings/module[@name='LocalTitles' and @namespace='odm.ui']/descendant::string[@name='actions']/@value")]
+		public string actions {
+			get { 
+				if( m_actions == null){
+					return s_actions;
+				}
+				return m_actions; 
+			}
+			set { 
+				if( value != m_actions){
+					m_actions = value;
+					NotifyPropertyChanged("actions");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggers = @"Triggers";
+		private string m_triggers=null;
+		[XPath(@"/localized-strings/module[@name='LocalTitles' and @namespace='odm.ui']/descendant::string[@name='triggers']/@value")]
+		public string triggers {
+			get { 
+				if( m_triggers == null){
+					return s_triggers;
+				}
+				return m_triggers; 
+			}
+			set { 
+				if( value != m_triggers){
+					m_triggers = value;
+					NotifyPropertyChanged("triggers");
 				}
 			}  
 		}
@@ -3635,6 +4227,26 @@ namespace odm.ui {
 	
 
 
+		private const string s_continue1 = @"Continue";
+		private string m_continue1=null;
+		[XPath(@"/localized-strings/module[@name='LocalButtons' and @namespace='odm.ui']/descendant::string[@name='continue1']/@value")]
+		public string continue1 {
+			get { 
+				if( m_continue1 == null){
+					return s_continue1;
+				}
+				return m_continue1; 
+			}
+			set { 
+				if( value != m_continue1){
+					m_continue1 = value;
+					NotifyPropertyChanged("continue1");
+				}
+			}  
+		}
+	
+
+
 		private const string s_abort = @"Abort";
 		private string m_abort=null;
 		[XPath(@"/localized-strings/module[@name='LocalButtons' and @namespace='odm.ui']/descendant::string[@name='abort']/@value")]
@@ -3889,6 +4501,26 @@ namespace odm.ui {
 				if( value != m_background){
 					m_background = value;
 					NotifyPropertyChanged("background");
+				}
+			}  
+		}
+	
+
+
+		private const string s_refresh = @"Refresh";
+		private string m_refresh=null;
+		[XPath(@"/localized-strings/module[@name='LocalButtons' and @namespace='odm.ui']/descendant::string[@name='refresh']/@value")]
+		public string refresh {
+			get { 
+				if( m_refresh == null){
+					return s_refresh;
+				}
+				return m_refresh; 
+			}
+			set { 
+				if( value != m_refresh){
+					m_refresh = value;
+					NotifyPropertyChanged("refresh");
 				}
 			}  
 		}
@@ -4339,20 +4971,80 @@ namespace odm.ui {
 		
 
 
-		private const string s_ports = @"Ports:";
-		private string m_ports=null;
-		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='ports']/@value")]
-		public string ports {
+		private const string s_portsHttp = @"HTTP ports:";
+		private string m_portsHttp=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='portsHttp']/@value")]
+		public string portsHttp {
 			get { 
-				if( m_ports == null){
-					return s_ports;
+				if( m_portsHttp == null){
+					return s_portsHttp;
 				}
-				return m_ports; 
+				return m_portsHttp; 
 			}
 			set { 
-				if( value != m_ports){
-					m_ports = value;
-					NotifyPropertyChanged("ports");
+				if( value != m_portsHttp){
+					m_portsHttp = value;
+					NotifyPropertyChanged("portsHttp");
+				}
+			}  
+		}
+	
+
+
+		private const string s_portsHttps = @"HTTPS ports:";
+		private string m_portsHttps=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='portsHttps']/@value")]
+		public string portsHttps {
+			get { 
+				if( m_portsHttps == null){
+					return s_portsHttps;
+				}
+				return m_portsHttps; 
+			}
+			set { 
+				if( value != m_portsHttps){
+					m_portsHttps = value;
+					NotifyPropertyChanged("portsHttps");
+				}
+			}  
+		}
+	
+
+
+		private const string s_portsRtsp = @"RTSP ports:";
+		private string m_portsRtsp=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='portsRtsp']/@value")]
+		public string portsRtsp {
+			get { 
+				if( m_portsRtsp == null){
+					return s_portsRtsp;
+				}
+				return m_portsRtsp; 
+			}
+			set { 
+				if( value != m_portsRtsp){
+					m_portsRtsp = value;
+					NotifyPropertyChanged("portsRtsp");
+				}
+			}  
+		}
+	
+
+
+		private const string s_hostName = @"Host name:";
+		private string m_hostName=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='hostName']/@value")]
+		public string hostName {
+			get { 
+				if( m_hostName == null){
+					return s_hostName;
+				}
+				return m_hostName; 
+			}
+			set { 
+				if( value != m_hostName){
+					m_hostName = value;
+					NotifyPropertyChanged("hostName");
 				}
 			}  
 		}
@@ -4539,6 +5231,26 @@ namespace odm.ui {
 	
 
 
+		private const string s_discoveryMode = @"ONVIF discovery mode:";
+		private string m_discoveryMode=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='discoveryMode']/@value")]
+		public string discoveryMode {
+			get { 
+				if( m_discoveryMode == null){
+					return s_discoveryMode;
+				}
+				return m_discoveryMode; 
+			}
+			set { 
+				if( value != m_discoveryMode){
+					m_discoveryMode = value;
+					NotifyPropertyChanged("discoveryMode");
+				}
+			}  
+		}
+	
+
+
 		private const string s_applyindNtp = @"Applying new ntp settings...";
 		private string m_applyindNtp=null;
 		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='applyindNtp']/@value")]
@@ -4673,6 +5385,166 @@ namespace odm.ui {
 				if( value != m_applyindIp){
 					m_applyindIp = value;
 					NotifyPropertyChanged("applyindIp");
+				}
+			}  
+		}
+	
+
+
+		private const string s_on = @"On";
+		private string m_on=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='on']/@value")]
+		public string on {
+			get { 
+				if( m_on == null){
+					return s_on;
+				}
+				return m_on; 
+			}
+			set { 
+				if( value != m_on){
+					m_on = value;
+					NotifyPropertyChanged("on");
+				}
+			}  
+		}
+	
+
+
+		private const string s_off = @"Off";
+		private string m_off=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='off']/@value")]
+		public string off {
+			get { 
+				if( m_off == null){
+					return s_off;
+				}
+				return m_off; 
+			}
+			set { 
+				if( value != m_off){
+					m_off = value;
+					NotifyPropertyChanged("off");
+				}
+			}  
+		}
+	
+
+
+		private const string s_enable = @"Enable";
+		private string m_enable=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='enable']/@value")]
+		public string enable {
+			get { 
+				if( m_enable == null){
+					return s_enable;
+				}
+				return m_enable; 
+			}
+			set { 
+				if( value != m_enable){
+					m_enable = value;
+					NotifyPropertyChanged("enable");
+				}
+			}  
+		}
+	
+
+
+		private const string s_disable = @"Disable";
+		private string m_disable=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='disable']/@value")]
+		public string disable {
+			get { 
+				if( m_disable == null){
+					return s_disable;
+				}
+				return m_disable; 
+			}
+			set { 
+				if( value != m_disable){
+					m_disable = value;
+					NotifyPropertyChanged("disable");
+				}
+			}  
+		}
+	
+
+
+		private const string s_fromDhcp = @"DHCP";
+		private string m_fromDhcp=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='fromDhcp']/@value")]
+		public string fromDhcp {
+			get { 
+				if( m_fromDhcp == null){
+					return s_fromDhcp;
+				}
+				return m_fromDhcp; 
+			}
+			set { 
+				if( value != m_fromDhcp){
+					m_fromDhcp = value;
+					NotifyPropertyChanged("fromDhcp");
+				}
+			}  
+		}
+	
+
+
+		private const string s_manual = @"Manual";
+		private string m_manual=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='manual']/@value")]
+		public string manual {
+			get { 
+				if( m_manual == null){
+					return s_manual;
+				}
+				return m_manual; 
+			}
+			set { 
+				if( value != m_manual){
+					m_manual = value;
+					NotifyPropertyChanged("manual");
+				}
+			}  
+		}
+	
+
+
+		private const string s_discoverable = @"Discoverable";
+		private string m_discoverable=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='discoverable']/@value")]
+		public string discoverable {
+			get { 
+				if( m_discoverable == null){
+					return s_discoverable;
+				}
+				return m_discoverable; 
+			}
+			set { 
+				if( value != m_discoverable){
+					m_discoverable = value;
+					NotifyPropertyChanged("discoverable");
+				}
+			}  
+		}
+	
+
+
+		private const string s_nonDiscoverable = @"Non-discoverable";
+		private string m_nonDiscoverable=null;
+		[XPath(@"/localized-strings/module[@name='LocalNetworkSettings' and @namespace='odm.ui']/descendant::string[@name='nonDiscoverable']/@value")]
+		public string nonDiscoverable {
+			get { 
+				if( m_nonDiscoverable == null){
+					return s_nonDiscoverable;
+				}
+				return m_nonDiscoverable; 
+			}
+			set { 
+				if( value != m_nonDiscoverable){
+					m_nonDiscoverable = value;
+					NotifyPropertyChanged("nonDiscoverable");
 				}
 			}  
 		}
@@ -5123,7 +5995,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_colProperty = @"Property Operation";
+		private const string s_colProperty = @"Operation";
 		private string m_colProperty=null;
 		[XPath(@"/localized-strings/module[@name='LocalEvents' and @namespace='odm.ui']/descendant::string[@name='colProperty']/@value")]
 		public string colProperty {
@@ -5137,6 +6009,46 @@ namespace odm.ui {
 				if( value != m_colProperty){
 					m_colProperty = value;
 					NotifyPropertyChanged("colProperty");
+				}
+			}  
+		}
+	
+
+
+		private const string s_colSource = @"Source";
+		private string m_colSource=null;
+		[XPath(@"/localized-strings/module[@name='LocalEvents' and @namespace='odm.ui']/descendant::string[@name='colSource']/@value")]
+		public string colSource {
+			get { 
+				if( m_colSource == null){
+					return s_colSource;
+				}
+				return m_colSource; 
+			}
+			set { 
+				if( value != m_colSource){
+					m_colSource = value;
+					NotifyPropertyChanged("colSource");
+				}
+			}  
+		}
+	
+
+
+		private const string s_colKey = @"Key";
+		private string m_colKey=null;
+		[XPath(@"/localized-strings/module[@name='LocalEvents' and @namespace='odm.ui']/descendant::string[@name='colKey']/@value")]
+		public string colKey {
+			get { 
+				if( m_colKey == null){
+					return s_colKey;
+				}
+				return m_colKey; 
+			}
+			set { 
+				if( value != m_colKey){
+					m_colKey = value;
+					NotifyPropertyChanged("colKey");
 				}
 			}  
 		}
@@ -5679,7 +6591,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_btnSoftResetTooltip = @"All parameters are set to their factory default value, except basic network settings like IP address, subnet and gateway or DHCP settings";
+		private const string s_btnSoftResetTooltip = @"All parameters are set to their factory default values, except basic network settings like IP address, subnet and gateway or DHCP settings";
 		private string m_btnSoftResetTooltip=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='btnSoftResetTooltip']/@value")]
 		public string btnSoftResetTooltip {
@@ -5699,7 +6611,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_btnHardResetTooltip = @"All parameters are set to their factory default value";
+		private const string s_btnHardResetTooltip = @"All parameters are set to their factory default values";
 		private string m_btnHardResetTooltip=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='btnHardResetTooltip']/@value")]
 		public string btnHardResetTooltip {
@@ -5719,7 +6631,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_factorySoftSuccess = @"Factory default settings have been applied successfully. Please wait when it will appear in device list.";
+		private const string s_factorySoftSuccess = @"Factory default settings except basic network settings like IP address, subnet and gateway or DHCP settings have been applied successfully. Device is being rebooted. Please wait while it appears in the device list.";
 		private string m_factorySoftSuccess=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='factorySoftSuccess']/@value")]
 		public string factorySoftSuccess {
@@ -5739,7 +6651,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_factoryHardSuccess = @"Factory default settings have been applied successfully. Device is being rebooted. Please wait when it will appear in device list.";
+		private const string s_factoryHardSuccess = @"Factory default settings have been applied successfully. Device is being rebooted. Please wait while it appears in the device list.";
 		private string m_factoryHardSuccess=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='factoryHardSuccess']/@value")]
 		public string factoryHardSuccess {
@@ -5759,7 +6671,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_rebootSuccess = @"Device are being rebooted. Please wait when device will appear in device list.";
+		private const string s_rebootSuccess = @"Device is being rebooted. Please wait while it appears in the device list.";
 		private string m_rebootSuccess=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='rebootSuccess']/@value")]
 		public string rebootSuccess {
@@ -5779,7 +6691,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_waitWhileAppear = @" Please wait when device will appear in device list.";
+		private const string s_waitWhileAppear = @" Please wait while the device appears in the device list.";
 		private string m_waitWhileAppear=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='waitWhileAppear']/@value")]
 		public string waitWhileAppear {
@@ -5799,7 +6711,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_resetting = @"resetting ...";
+		private const string s_resetting = @"Resetting...";
 		private string m_resetting=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='resetting']/@value")]
 		public string resetting {
@@ -5819,7 +6731,7 @@ namespace odm.ui {
 	
 
 
-		private const string s_rebooting = @"rebooting...";
+		private const string s_rebooting = @"Rebooting...";
 		private string m_rebooting=null;
 		[XPath(@"/localized-strings/module[@name='LocalMaintenance' and @namespace='odm.ui']/descendant::string[@name='rebooting']/@value")]
 		public string rebooting {
@@ -6641,6 +7553,46 @@ namespace odm.ui {
 			}  
 		}
 	
+
+
+		private const string s_validity = @"Validity";
+		private string m_validity=null;
+		[XPath(@"/localized-strings/module[@name='LocalSequrity' and @namespace='odm.ui']/descendant::string[@name='validity']/@value")]
+		public string validity {
+			get { 
+				if( m_validity == null){
+					return s_validity;
+				}
+				return m_validity; 
+			}
+			set { 
+				if( value != m_validity){
+					m_validity = value;
+					NotifyPropertyChanged("validity");
+				}
+			}  
+		}
+	
+
+
+		private const string s_serialNumber = @"Serial number";
+		private string m_serialNumber=null;
+		[XPath(@"/localized-strings/module[@name='LocalSequrity' and @namespace='odm.ui']/descendant::string[@name='serialNumber']/@value")]
+		public string serialNumber {
+			get { 
+				if( m_serialNumber == null){
+					return s_serialNumber;
+				}
+				return m_serialNumber; 
+			}
+			set { 
+				if( value != m_serialNumber){
+					m_serialNumber = value;
+					NotifyPropertyChanged("serialNumber");
+				}
+			}  
+		}
+	
 	}
 
 }
@@ -7161,6 +8113,26 @@ namespace odm.ui.controls {
 				if( value != m_apply){
 					m_apply = value;
 					NotifyPropertyChanged("apply");
+				}
+			}  
+		}
+	
+
+
+		private const string s_continue1 = @"Continue";
+		private string m_continue1=null;
+		[XPath(@"/localized-strings/module[@name='SaveCancelStrings' and @namespace='odm.ui.controls']/descendant::string[@name='continue1']/@value")]
+		public string continue1 {
+			get { 
+				if( m_continue1 == null){
+					return s_continue1;
+				}
+				return m_continue1; 
+			}
+			set { 
+				if( value != m_continue1){
+					m_continue1 = value;
+					NotifyPropertyChanged("continue1");
 				}
 			}  
 		}
@@ -8093,6 +9065,106 @@ namespace odm.ui.controls {
 			}  
 		}
 	
+
+
+		private const string s_nvaControls = @"Controls";
+		private string m_nvaControls=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='nvaControls']/@value")]
+		public string nvaControls {
+			get { 
+				if( m_nvaControls == null){
+					return s_nvaControls;
+				}
+				return m_nvaControls; 
+			}
+			set { 
+				if( value != m_nvaControls){
+					m_nvaControls = value;
+					NotifyPropertyChanged("nvaControls");
+				}
+			}  
+		}
+	
+
+
+		private const string s_nvaAnalytics = @"Analytics";
+		private string m_nvaAnalytics=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='nvaAnalytics']/@value")]
+		public string nvaAnalytics {
+			get { 
+				if( m_nvaAnalytics == null){
+					return s_nvaAnalytics;
+				}
+				return m_nvaAnalytics; 
+			}
+			set { 
+				if( value != m_nvaAnalytics){
+					m_nvaAnalytics = value;
+					NotifyPropertyChanged("nvaAnalytics");
+				}
+			}  
+		}
+	
+
+
+		private const string s_nvaInputs = @"Inputs";
+		private string m_nvaInputs=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='nvaInputs']/@value")]
+		public string nvaInputs {
+			get { 
+				if( m_nvaInputs == null){
+					return s_nvaInputs;
+				}
+				return m_nvaInputs; 
+			}
+			set { 
+				if( value != m_nvaInputs){
+					m_nvaInputs = value;
+					NotifyPropertyChanged("nvaInputs");
+				}
+			}  
+		}
+	
+
+
+		private const string s_nvaMetadata = @"Metadata";
+		private string m_nvaMetadata=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='nvaMetadata']/@value")]
+		public string nvaMetadata {
+			get { 
+				if( m_nvaMetadata == null){
+					return s_nvaMetadata;
+				}
+				return m_nvaMetadata; 
+			}
+			set { 
+				if( value != m_nvaMetadata){
+					m_nvaMetadata = value;
+					NotifyPropertyChanged("nvaMetadata");
+				}
+			}  
+		}
+	
+
+
+		private const string s_nvaSettings = @"Settings";
+		private string m_nvaSettings=null;
+		[XPath(@"/localized-strings/module[@name='LinkButtonsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='nvaSettings']/@value")]
+		public string nvaSettings {
+			get { 
+				if( m_nvaSettings == null){
+					return s_nvaSettings;
+				}
+				return m_nvaSettings; 
+			}
+			set { 
+				if( value != m_nvaSettings){
+					m_nvaSettings = value;
+					NotifyPropertyChanged("nvaSettings");
+				}
+			}  
+		}
+	
 	}
 
 }
@@ -8633,6 +9705,26 @@ namespace odm {
 				if( value != m_sErrorNotAuthorized){
 					m_sErrorNotAuthorized = value;
 					NotifyPropertyChanged("sErrorNotAuthorized");
+				}
+			}  
+		}
+	
+
+
+		private const string s_sErrorNameNotUnique = @"Name '{0}' has been already taken.";
+		private string m_sErrorNameNotUnique=null;
+		[XPath(@"/localized-strings/module[@name='ExceptionStrings' and @namespace='odm']/descendant::string[@name='sErrorNameNotUnique']/@value")]
+		public string sErrorNameNotUnique {
+			get { 
+				if( m_sErrorNameNotUnique == null){
+					return s_sErrorNameNotUnique;
+				}
+				return m_sErrorNameNotUnique; 
+			}
+			set { 
+				if( value != m_sErrorNameNotUnique){
+					m_sErrorNameNotUnique = value;
+					NotifyPropertyChanged("sErrorNameNotUnique");
 				}
 			}  
 		}
@@ -9923,6 +11015,26 @@ namespace odm.ui.controls {
 	
 
 
+		private const string s_timeSettings = @"Time settings:";
+		private string m_timeSettings=null;
+		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='timeSettings']/@value")]
+		public string timeSettings {
+			get { 
+				if( m_timeSettings == null){
+					return s_timeSettings;
+				}
+				return m_timeSettings; 
+			}
+			set { 
+				if( value != m_timeSettings){
+					m_timeSettings = value;
+					NotifyPropertyChanged("timeSettings");
+				}
+			}  
+		}
+	
+
+
 		private const string s_autoAdjustString = @"Automatically adjust for daylight saving time changes.";
 		private string m_autoAdjustString=null;
 		[XPath(@"/localized-strings/module[@name='PropertyTimeZoneStrings' and @namespace='odm.ui.controls']/descendant::string[@name='autoAdjustString']/@value")]
@@ -10761,6 +11873,274 @@ namespace odm.ui.controls {
 				if( value != m_details){
 					m_details = value;
 					NotifyPropertyChanged("details");
+				}
+			}  
+		}
+	
+	}
+
+}
+	
+
+namespace odm.ui.activities {
+	public partial class ActionEngineStrings: LocalizedStringsBase<ActionEngineStrings>{
+		
+
+
+		private const string s_actionToken = @"Token";
+		private string m_actionToken=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='actionToken']/@value")]
+		public string actionToken {
+			get { 
+				if( m_actionToken == null){
+					return s_actionToken;
+				}
+				return m_actionToken; 
+			}
+			set { 
+				if( value != m_actionToken){
+					m_actionToken = value;
+					NotifyPropertyChanged("actionToken");
+				}
+			}  
+		}
+	
+
+
+		private const string s_actionName = @"Name";
+		private string m_actionName=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='actionName']/@value")]
+		public string actionName {
+			get { 
+				if( m_actionName == null){
+					return s_actionName;
+				}
+				return m_actionName; 
+			}
+			set { 
+				if( value != m_actionName){
+					m_actionName = value;
+					NotifyPropertyChanged("actionName");
+				}
+			}  
+		}
+	
+
+
+		private const string s_actionType = @"Type";
+		private string m_actionType=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='actionType']/@value")]
+		public string actionType {
+			get { 
+				if( m_actionType == null){
+					return s_actionType;
+				}
+				return m_actionType; 
+			}
+			set { 
+				if( value != m_actionType){
+					m_actionType = value;
+					NotifyPropertyChanged("actionType");
+				}
+			}  
+		}
+	
+
+
+		private const string s_actionSimpleItems = @"Simple Parameters";
+		private string m_actionSimpleItems=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='actionSimpleItems']/@value")]
+		public string actionSimpleItems {
+			get { 
+				if( m_actionSimpleItems == null){
+					return s_actionSimpleItems;
+				}
+				return m_actionSimpleItems; 
+			}
+			set { 
+				if( value != m_actionSimpleItems){
+					m_actionSimpleItems = value;
+					NotifyPropertyChanged("actionSimpleItems");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerToken = @"Token";
+		private string m_triggerToken=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerToken']/@value")]
+		public string triggerToken {
+			get { 
+				if( m_triggerToken == null){
+					return s_triggerToken;
+				}
+				return m_triggerToken; 
+			}
+			set { 
+				if( value != m_triggerToken){
+					m_triggerToken = value;
+					NotifyPropertyChanged("triggerToken");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerTopicExpression = @"Topic filter";
+		private string m_triggerTopicExpression=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerTopicExpression']/@value")]
+		public string triggerTopicExpression {
+			get { 
+				if( m_triggerTopicExpression == null){
+					return s_triggerTopicExpression;
+				}
+				return m_triggerTopicExpression; 
+			}
+			set { 
+				if( value != m_triggerTopicExpression){
+					m_triggerTopicExpression = value;
+					NotifyPropertyChanged("triggerTopicExpression");
+				}
+			}  
+		}
+	
+
+
+		private const string s_addTriggerTopicExprPart = @"Add";
+		private string m_addTriggerTopicExprPart=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='addTriggerTopicExprPart']/@value")]
+		public string addTriggerTopicExprPart {
+			get { 
+				if( m_addTriggerTopicExprPart == null){
+					return s_addTriggerTopicExprPart;
+				}
+				return m_addTriggerTopicExprPart; 
+			}
+			set { 
+				if( value != m_addTriggerTopicExprPart){
+					m_addTriggerTopicExprPart = value;
+					NotifyPropertyChanged("addTriggerTopicExprPart");
+				}
+			}  
+		}
+	
+
+
+		private const string s_addTriggerTopicExprPartTooltip = @"Add an alternative topic";
+		private string m_addTriggerTopicExprPartTooltip=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='addTriggerTopicExprPartTooltip']/@value")]
+		public string addTriggerTopicExprPartTooltip {
+			get { 
+				if( m_addTriggerTopicExprPartTooltip == null){
+					return s_addTriggerTopicExprPartTooltip;
+				}
+				return m_addTriggerTopicExprPartTooltip; 
+			}
+			set { 
+				if( value != m_addTriggerTopicExprPartTooltip){
+					m_addTriggerTopicExprPartTooltip = value;
+					NotifyPropertyChanged("addTriggerTopicExprPartTooltip");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerContentExpression = @"Content filter";
+		private string m_triggerContentExpression=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerContentExpression']/@value")]
+		public string triggerContentExpression {
+			get { 
+				if( m_triggerContentExpression == null){
+					return s_triggerContentExpression;
+				}
+				return m_triggerContentExpression; 
+			}
+			set { 
+				if( value != m_triggerContentExpression){
+					m_triggerContentExpression = value;
+					NotifyPropertyChanged("triggerContentExpression");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerAvailableActions = @"Available Actions";
+		private string m_triggerAvailableActions=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerAvailableActions']/@value")]
+		public string triggerAvailableActions {
+			get { 
+				if( m_triggerAvailableActions == null){
+					return s_triggerAvailableActions;
+				}
+				return m_triggerAvailableActions; 
+			}
+			set { 
+				if( value != m_triggerAvailableActions){
+					m_triggerAvailableActions = value;
+					NotifyPropertyChanged("triggerAvailableActions");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerIncludedActions = @"Scheduled Actions";
+		private string m_triggerIncludedActions=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerIncludedActions']/@value")]
+		public string triggerIncludedActions {
+			get { 
+				if( m_triggerIncludedActions == null){
+					return s_triggerIncludedActions;
+				}
+				return m_triggerIncludedActions; 
+			}
+			set { 
+				if( value != m_triggerIncludedActions){
+					m_triggerIncludedActions = value;
+					NotifyPropertyChanged("triggerIncludedActions");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerAddAction = @"Add >";
+		private string m_triggerAddAction=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerAddAction']/@value")]
+		public string triggerAddAction {
+			get { 
+				if( m_triggerAddAction == null){
+					return s_triggerAddAction;
+				}
+				return m_triggerAddAction; 
+			}
+			set { 
+				if( value != m_triggerAddAction){
+					m_triggerAddAction = value;
+					NotifyPropertyChanged("triggerAddAction");
+				}
+			}  
+		}
+	
+
+
+		private const string s_triggerRemoveAction = @"< Del";
+		private string m_triggerRemoveAction=null;
+		[XPath(@"/localized-strings/module[@name='ActionEngineStrings' and @namespace='odm.ui.activities']/descendant::string[@name='triggerRemoveAction']/@value")]
+		public string triggerRemoveAction {
+			get { 
+				if( m_triggerRemoveAction == null){
+					return s_triggerRemoveAction;
+				}
+				return m_triggerRemoveAction; 
+			}
+			set { 
+				if( value != m_triggerRemoveAction){
+					m_triggerRemoveAction = value;
+					NotifyPropertyChanged("triggerRemoveAction");
 				}
 			}  
 		}
@@ -12159,6 +13539,26 @@ namespace odm.ui.controls {
 	
 
 
+		private const string s_cameraRedirectedTip = @"To enable this detector you should also enable Antishaker";
+		private string m_cameraRedirectedTip=null;
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='cameraRedirectedTip']/@value")]
+		public string cameraRedirectedTip {
+			get { 
+				if( m_cameraRedirectedTip == null){
+					return s_cameraRedirectedTip;
+				}
+				return m_cameraRedirectedTip; 
+			}
+			set { 
+				if( value != m_cameraRedirectedTip){
+					m_cameraRedirectedTip = value;
+					NotifyPropertyChanged("cameraRedirectedTip");
+				}
+			}  
+		}
+	
+
+
 		private const string s_imageTooDark = @"Image too dark";
 		private string m_imageTooDark=null;
 		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='imageTooDark']/@value")]
@@ -12193,6 +13593,26 @@ namespace odm.ui.controls {
 				if( value != m_cameraObstructed){
 					m_cameraObstructed = value;
 					NotifyPropertyChanged("cameraObstructed");
+				}
+			}  
+		}
+	
+
+
+		private const string s_cameraObstructedTip = @"To enable this detector you should also enable Object Tracker";
+		private string m_cameraObstructedTip=null;
+		[XPath(@"/localized-strings/module[@name='PropertyTamperingDetectorsStrings' and @namespace='odm.ui.controls']/descendant::string[@name='cameraObstructedTip']/@value")]
+		public string cameraObstructedTip {
+			get { 
+				if( m_cameraObstructedTip == null){
+					return s_cameraObstructedTip;
+				}
+				return m_cameraObstructedTip; 
+			}
+			set { 
+				if( value != m_cameraObstructedTip){
+					m_cameraObstructedTip = value;
+					NotifyPropertyChanged("cameraObstructedTip");
 				}
 			}  
 		}
@@ -12495,7 +13915,7 @@ namespace odm.ui.controls {
 		
 
 
-		private const string s_enableRule = @"Enable moving in region";
+		private const string s_enableRule = @"Motion";
 		private string m_enableRule=null;
 		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='enableRule']/@value")]
 		public string enableRule {
@@ -12755,7 +14175,7 @@ namespace odm.ui.controls {
 	
 
 
-		private const string s_running = @"Running faster than ";
+		private const string s_running = @"Speeding over ";
 		private string m_running=null;
 		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='running']/@value")]
 		public string running {
@@ -12789,6 +14209,26 @@ namespace odm.ui.controls {
 				if( value != m_speed){
 					m_speed = value;
 					NotifyPropertyChanged("speed");
+				}
+			}  
+		}
+	
+
+
+		private const string s_speed_kmh = @" km/h";
+		private string m_speed_kmh=null;
+		[XPath(@"/localized-strings/module[@name='PropertyRuleEngineStrings' and @namespace='odm.ui.controls']/descendant::string[@name='speed_kmh']/@value")]
+		public string speed_kmh {
+			get { 
+				if( m_speed_kmh == null){
+					return s_speed_kmh;
+				}
+				return m_speed_kmh; 
+			}
+			set { 
+				if( value != m_speed_kmh){
+					m_speed_kmh = value;
+					NotifyPropertyChanged("speed_kmh");
 				}
 			}  
 		}

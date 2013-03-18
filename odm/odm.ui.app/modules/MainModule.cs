@@ -34,6 +34,9 @@ namespace odm.ui {
             //pmanager.RegisterVideoSettingsPlugin(new IncotexPlugin());
             //container.RegisterInstance<IPluginManager>(pmanager);
 			container.RegisterInstance<IVideoPlayerActivity>(VideoPlayerActivity.Create());
+			
+			//TODO: Synesis specific mode to be removed in plugins
+			container.RegisterInstance<odm.ui.core.IConfiguratorFactory>(new odm.ui.core.ConfiguratorFactory());
 
 			regionManager.RegisterViewWithRegion("deviceslist", typeof(DeviceListView));
 			regionManager.RegisterViewWithRegion("mainframe", typeof(DeviceExplorerView));
@@ -51,6 +54,5 @@ namespace odm.ui {
 		protected virtual void Dispose(bool disposing) {
 		}
 	}
-
 
 }

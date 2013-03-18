@@ -1,4 +1,5 @@
-#include "odm.player.lib/all.h"
+#include "odm.player.lib/core.h"
+#include "odm.player.lib/Live555.hpp"
 
 //#include "liveMedia.hh"
 //#include "BasicUsageEnvironment.hh"
@@ -6,6 +7,15 @@
 
 #include <Windows.h>
 #include<vcclr.h>
+
+#include <string>
+//#include <map>
+#include <deque>
+#include <memory>
+#include <functional>
+#include <algorithm>
+
+#include "odm.player.lib/Live555.hpp"
 
 namespace odm{
 	namespace player{
@@ -33,6 +43,14 @@ namespace odm{
 			
 			virtual void Close(){
 				real->Dispose();
+			}
+			virtual Object^ InitializeLifetimeService() override{
+				//
+				// Returning null designates an infinite non-expiring lease.
+				// We must ensure that RemotingServices.Disconnect() is called 
+				// when it's no longer needed otherwise there will be a memory leak.
+				//
+				return nullptr;
 			}
 		};
 
@@ -169,7 +187,7 @@ namespace odm{
 			MetadataCallback_t^ metadataCallback;
 			//void*, int, int, int
 			void MetadataCallback(void* buffer, int size, bool markerBit, int seqNum){
-				Console::WriteLine("MetadataCallback");
+				//Console::WriteLine("MetadataCallback");
 				if(metadataReceiver != nullptr){
 					try{
 						metadataReceiver->ProcessMetadata(IntPtr(buffer), size, markerBit, seqNum);

@@ -1,5 +1,6 @@
 #pragma once
-#include "odm.player.lib/all.h"
+#include "odm.player.lib/core.h"
+#include "odm.player.lib/MetadataCollector.hpp"
 
 namespace onvifmp{
 	using namespace std;

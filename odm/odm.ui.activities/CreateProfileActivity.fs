@@ -35,7 +35,7 @@ namespace odm.ui.activities
     |Aborted
 
     type CreateProfileActivity(ctx:IUnityContainer, vsToken:string) = class
-        do if vsToken=null then raise( new ArgumentNullException("vsToken") )
+        do if vsToken |> IsNull then raise( new ArgumentNullException("vsToken") )
         let session = ctx.Resolve<INvtSession>()
         let facade = new OdmSession(session)
         
@@ -47,8 +47,8 @@ namespace odm.ui.activities
             let! vscs = async{
                 try
                     let! vscs = session.GetVideoSourceConfigurations()
-                    if vscs <> null then
-                        return vscs |> Seq.filter (fun vsc->vsc.SourceToken = vsToken) |> Seq.toArray
+                    if vscs |> NotNull then
+                        return vscs |> Seq.filter (fun vsc->vsc.sourceToken = vsToken) |> Seq.toArray
                     else
                         return [||]
                 with err ->
@@ -58,10 +58,7 @@ namespace odm.ui.activities
             let! ascs = async{
                 try
                     let! ascs = session.GetAudioSourceConfigurations()
-                    if ascs <> null then
-                        return ascs
-                    else
-                        return [||]
+                    return ascs |> SuppressNull [||]
                 with err ->
                     dbg.Error(err)
                     return [||]
@@ -89,20 +86,20 @@ namespace odm.ui.activities
         }
 
         let create(model:ProfileCreationView.Model) = async{
-            if model.profName = null then failwith "invalid profile name"
-            if model.videoSrcCfg = null ||  model.videoSrcCfg.token = null then failwith "invalid video source configuration"
+            if model.profName |> IsNull then failwith "invalid profile name"
+            if IsNull(model.videoSrcCfg) || IsNull(model.videoSrcCfg.token) then failwith "invalid video source configuration"
 
             let profToken = model.profToken
                 
             let! profile = session.CreateProfile(model.profName, profToken)
             
-            if model.isVideoSrcCfgEnabled && model.videoSrcCfg <> null then
+            if model.isVideoSrcCfgEnabled && NotNull(model.videoSrcCfg) then
                 do! session.AddVideoSourceConfiguration(profile.token, model.videoSrcCfg.token)
-                profile.VideoSourceConfiguration <- model.videoSrcCfg
+                profile.videoSourceConfiguration <- model.videoSrcCfg
 
-            if model.isAudioSrcCfgEnabled && model.audioSrcCfg <> null then
+            if model.isAudioSrcCfgEnabled && NotNull(model.audioSrcCfg) then
                 do! session.AddAudioSourceConfiguration(profile.token, model.audioSrcCfg.token)
-                profile.AudioSourceConfiguration <- model.audioSrcCfg
+                profile.audioSourceConfiguration <- model.audioSrcCfg
 
             return profile
         }
@@ -190,18 +187,14 @@ namespace odm.ui.activities
                     }
                     let items = Seq.toList(seq{
                         for i in model.videoSrcCfgs do
-                            let name = 
-                                if String.IsNullOrWhiteSpace(i.Name) then
-                                    i.token
-                                else
-                                    i.Name
+                            let name = i.GetName()
                             let details = 
-                                let vs = videoSrcs |> Seq.tryFind (fun vs->vs.token = i.SourceToken)
+                                let vs = videoSrcs |> Seq.tryFind (fun vs->vs.token = i.sourceToken)
                                 match vs with
                                 |Some vs -> GetVscDetails(i,Seq.singleton vs)
                                 |None -> GetVscDetails(i,null)
                             
-                            yield (i, new ItemSelectorView.Item(name,details |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable))
+                            yield (i, new ItemSelectorView.Item(name, details |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable))
                     })
                     let m = new ItemSelectorView.Model(
                         items = (
@@ -239,23 +232,19 @@ namespace odm.ui.activities
                     }
                     let items = Seq.toList(seq{
                         for i in model.audioSrcCfgs do
-                            let name = 
-                                if String.IsNullOrWhiteSpace(i.Name) then
-                                    i.token
-                                else
-                                    i.Name
+                            let name = i.GetName()
                             let details = seq{
                                 let createProp(name, value) = new ItemSelectorView.ItemProp(name, value)
                                         
-                                yield createProp("name", i.Name)
+                                yield createProp("name", i.name)
                                 yield createProp("token", i.token)
-                                yield createProp("source token", i.SourceToken)
-                                match audioSrcs |> Seq.tryFind (fun x-> x.token = i.SourceToken) with
+                                yield createProp("source token", i.sourceToken)
+                                match audioSrcs |> Seq.tryFind (fun x-> x.token = i.sourceToken) with
                                 | Some audioSrc ->
-                                    yield createProp("channels", audioSrc.Channels.ToString())                                                    
+                                    yield createProp("channels", audioSrc.channels.ToString())                                                    
                                 | None -> ()
                             }
-                            yield (i, new ItemSelectorView.Item(name,details |> Seq.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable))
+                            yield (i, new ItemSelectorView.Item(name, details |> Seq.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable))
                     })
                     let m = new ItemSelectorView.Model(
                         items = (

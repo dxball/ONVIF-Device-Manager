@@ -39,84 +39,80 @@
     <Reference Include="Accessibility">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\..\libs\prism4-desktop\libs\Unity\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="onvif.discovery, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.discovery.dll</HintPath>
-    </Reference>
-    <Reference Include="onvif.services, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.services.dll</HintPath>
-    </Reference>
-    <Reference Include="onvif.session, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.session.dll</HintPath>
-    </Reference>
-    <Reference Include="onvif.utils, Version=1.8.5280.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\onvif\onvif.utils.dll</HintPath>
+    <Reference Include="FSharp.Core">
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Classic" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Windows.Threading, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libs\rx-v1.0.10621sp1\.NETFramework\v4.0\System.Reactive.Windows.Threading.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="Microsoft.Expression.Interactions">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.UnityExtensions">
+      <HintPath>..\..\packages\Prism.UnityExtensions.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\packages\Rx-Core.2.0.20823\lib\Net40\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\packages\Rx-Interfaces.2.0.20823\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\packages\Rx-Linq.2.0.20823\lib\Net40\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\packages\Rx-PlatformServices.2.0.20823\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Windows.Threading">
+      <HintPath>..\..\packages\Rx-WPF.2.0.20823\lib\Net40\System.Reactive.Windows.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\build\AssemblyInfo.global.cs">
+    <Compile Include="..\~cfg\AssemblyInfo.global.cs">
       <Link>Properties\AssemblyInfo.global.cs</Link>
     </Compile>
     <Compile Include="activities\ModalDialogContext.cs" />
     <Compile Include="activities\NavigationContext.cs" />
     <Compile Include="activities\ViewPresenter.cs" />
     <Compile Include="AppDefaults.cs" />
+    <Compile Include="controls\BtnListBox.cs" />
     <Compile Include="controls\DateTimeControl.xaml.cs">
       <DependentUpon>DateTimeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="controls\DeviceEngineControl.cs" />
     <Compile Include="controls\ExpressionDefaultEditor.xaml.cs">
       <DependentUpon>ExpressionDefaultEditor.xaml</DependentUpon>
     </Compile>
@@ -135,10 +131,15 @@
     </Compile>
     <Compile Include="controls\ImageButton.cs" />
     <Compile Include="controls\NumericEditor.cs" />
+    <Compile Include="controls\PasswordBoxAssistant.cs" />
+    <Compile Include="controls\RadioExpanderControl.xaml.cs">
+      <DependentUpon>RadioExpanderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="controls\XmlParser.cs" />
     <Compile Include="controls\XmlParserFactory.cs" />
     <Compile Include="BackgroundTaskManager.cs" />
     <Compile Include="core\ActivityHelper.cs" />
+    <Compile Include="core\ConfiguratorFactory.cs" />
     <Compile Include="core\ScopesHolder.cs" />
     <Compile Include="core\TLSManager.cs" />
     <Compile Include="dialogs\ManualTZ.xaml.cs">
@@ -154,27 +155,51 @@
       <DependentUpon>SetAnalyticsName.xaml</DependentUpon>
     </Compile>
     <Compile Include="EmbeddedResource.generated.cs" />
+    <Compile Include="generated\ActionModifyView.generated.cs" />
+    <Compile Include="generated\ActionsView.generated.cs" />
+    <Compile Include="generated\ActionTriggerModifyView.generated.cs" />
+    <Compile Include="generated\ActionTriggersView.generated.cs" />
+    <Compile Include="generated\AnalyticsLiveVideoView.generated.cs" />
+    <Compile Include="generated\AnalyticsMetadataSettingsView.generated.cs" />
     <Compile Include="generated\AnalyticsSetNameView.generated.cs" />
+    <Compile Include="generated\AnalyticsView.generated.cs" />
     <Compile Include="generated\CertificatesView.generated.cs" />
     <Compile Include="generated\CertificateUploadView.generated.cs" />
     <Compile Include="generated\ConfigureAnalyticView.generated.cs" />
+    <Compile Include="generated\EngineAnalyticsSetNameView.generated.cs" />
+    <Compile Include="generated\EngineAnalyticsView.generated.cs" />
+    <Compile Include="generated\EngineControlInputModifyView.generated.cs" />
+    <Compile Include="generated\EngineControlsAddReceiverView.generated.cs" />
+    <Compile Include="generated\EngineControlsCreationView.generated.cs" />
+    <Compile Include="generated\EngineControlSimpleInputModifyView.generated.cs" />
+    <Compile Include="generated\EngineControlsInputsCreationView.generated.cs" />
+    <Compile Include="generated\EngineControlsUpdatingView.generated.cs" />
+    <Compile Include="generated\EngineControlsVACSelectionView.generated.cs" />
+    <Compile Include="generated\EngineControlsView.generated.cs" />
+    <Compile Include="generated\EngineInputsView.generated.cs" />
+    <Compile Include="generated\EngineSettingsView.generated.cs" />
     <Compile Include="generated\ErrorView.generated.cs" />
     <Compile Include="generated\IdentificationView.generated.cs" />
     <Compile Include="generated\ImagingSettingsView.generated.cs" />
     <Compile Include="generated\InfoView.generated.cs" />
+    <Compile Include="generated\ItemSelectorView.generated.cs" />
     <Compile Include="generated\LiveVideoView.generated.cs" />
     <Compile Include="generated\MaintenanceView.generated.cs" />
     <Compile Include="generated\MetadataSettingsView.generated.cs" />
+    <Compile Include="generated\NetworkSettingsView.generated.cs" />
     <Compile Include="generated\ProfileCreationView.generated.cs" />
     <Compile Include="generated\ProfileUpdatingView.generated.cs" />
     <Compile Include="generated\ProgressView.generated.cs" />
     <Compile Include="generated\PtzView.generated.cs" />
+    <Compile Include="generated\ReceiverModifyView.generated.cs" />
+    <Compile Include="generated\ReceiversView.generated.cs" />
     <Compile Include="generated\TimeSettingsView.generated.cs" />
     <Compile Include="generated\UpgradeFirmwareView.generated.cs" />
     <Compile Include="generated\UserCreationView.generated.cs" />
     <Compile Include="generated\UserManagementView.generated.cs" />
     <Compile Include="generated\UserUpdatingView.generated.cs" />
     <Compile Include="generated\VideoPlayerView.generated.cs" />
+    <Compile Include="generated\VideoSettingsView.generated.cs" />
     <Compile Include="pluginmanager\PluginManager.cs" />
     <Compile Include="core\ViewActivity.cs" />
     <Compile Include="controls.utils.ListItem.cs" />
@@ -184,7 +209,6 @@
     <Compile Include="controls\DeviceChannelControl.cs" />
     <Compile Include="controls\DirectionRoseControl.cs" />
     <Compile Include="controls\ControlNumericTextBox.cs" />
-    <Compile Include="controls\ControlPTZ.cs" />
     <Compile Include="controls\ControlVbDirection.cs" />
     <Compile Include="controls\ControlXMLView.cs" />
     <Compile Include="controls\CustomWindow.cs" />
@@ -226,7 +250,7 @@
     <Compile Include="controls\XmlViewer.xaml.cs">
       <DependentUpon>XmlViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="core\AccountDescriptor.cs" />
+    <Compile Include="core\AccountManager.cs" />
     <Compile Include="core\CustomCommands.cs" />
     <Compile Include="core\DataProcessInfo.cs" />
     <Compile Include="core\DeviceDescriptionHolder.cs" />
@@ -238,10 +262,6 @@
       <DependentUpon>Upgrade.xaml</DependentUpon>
     </Compile>
     <Compile Include="dialogs\UpgradeViewModel.cs" />
-    <Compile Include="generated\AnalyticsView.generated.cs" />
-    <Compile Include="generated\ItemSelectorView.generated.cs" />
-    <Compile Include="generated\NetworkSettingsView.generated.cs" />
-    <Compile Include="generated\VideoSettingsView.generated.cs" />
     <Compile Include="links\ButtonBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -254,38 +274,135 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="viewmodels\AccountManagerViewModel.cs" />
     <Compile Include="viewmodels\AnalyticsViewModel.cs" />
     <Compile Include="viewmodels\ChannelViewModel.cs" />
     <Compile Include="viewmodels\DeviceExplorerViewModel.cs" />
     <Compile Include="viewmodels\DeviceListViewModel.cs" />
-    <Compile Include="viewmodels\DeviceViewModel.cs" />
     <Compile Include="viewmodels\DigitalIOViewModel.cs" />
     <Compile Include="viewmodels\ProfilesViewModel.cs" />
     <Compile Include="viewmodels\PTZViewModel.cs" />
     <Compile Include="viewmodels\SystemLogViewModel.cs" />
     <Compile Include="viewmodels\ViewModelBase.cs" />
-    <Compile Include="views\AccountManagerView.xaml.cs">
-      <DependentUpon>AccountManagerView.xaml</DependentUpon>
+    <Compile Include="views\AuthView.xaml.cs">
+      <DependentUpon>AuthView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\AnalogueOutView.xaml.cs">
+    <Compile Include="views\KeyValuePairsBlock.xaml.cs">
+      <DependentUpon>KeyValuePairsBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\Metadata\BaseNotificationMessageProcessor.cs" />
+    <Compile Include="views\Metadata\AbandonedItemAlarmMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\MetadataProcessor.cs" />
+    <Compile Include="views\Metadata\MotionAlarmMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\SceneMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\TamperingDeterctorAlarmMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\TripwireAlarmMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\LoiteringAlarmMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\VAAlarmView.xaml.cs">
+      <DependentUpon>VAAlarmView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\Metadata\RegionMotionAlarmMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\EventMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\VAEntitiesHolder.cs" />
+    <Compile Include="views\Metadata\VAObject.cs" />
+    <Compile Include="views\Metadata\VAObjectSnapshot.cs" />
+    <Compile Include="views\Metadata\VAObjectView.xaml.cs">
+      <DependentUpon>VAObjectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\Metadata\ObjectMotionMetadataProcessor.cs" />
+    <Compile Include="views\Metadata\SerializationExtensions.cs" />
+    <Compile Include="views\SectionDevice\ActionsView.xaml.cs">
+      <DependentUpon>ActionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionDevice\AnalogueOutView.xaml.cs">
       <DependentUpon>AnalogueOutView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\CertificateUploadView.xaml.cs">
+    <Compile Include="views\SectionDevice\CertificateUploadView.xaml.cs">
       <DependentUpon>CertificateUploadView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\CertificatesView.xaml.cs">
+    <Compile Include="views\SectionDevice\CertificatesView.xaml.cs">
       <DependentUpon>CertificatesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\DevicePageView.xaml.cs">
-      <DependentUpon>DevicePageView.xaml</DependentUpon>
+    <Compile Include="views\SectionDevice\ActionModifyView.xaml.cs">
+      <DependentUpon>ActionModifyView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\PtzView.xaml.cs">
+    <Compile Include="views\SectionDevice\ActionTriggersView.xaml.cs">
+      <DependentUpon>ActionTriggersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionDevice\ActionTriggerModifyView.xaml.cs">
+      <DependentUpon>ActionTriggerModifyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\AnalyticsLiveVideoView.xaml.cs">
+      <DependentUpon>AnalyticsLiveVideoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineAnalyticsSetNameView.xaml.cs">
+      <DependentUpon>EngineAnalyticsSetNameView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineAnalyticsView.xaml.cs">
+      <DependentUpon>EngineAnalyticsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlsCreationView.xaml.cs">
+      <DependentUpon>EngineControlsCreationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlsAddReceiverView.xaml.cs">
+      <DependentUpon>EngineControlsAddReceiverView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlSimpleInputModifyView.xaml.cs">
+      <DependentUpon>EngineControlSimpleInputModifyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlsInputsCreationView.xaml.cs">
+      <DependentUpon>EngineControlsInputsCreationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlsUpdatingView.xaml.cs">
+      <DependentUpon>EngineControlsUpdatingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlsVACSelectionView.xaml.cs">
+      <DependentUpon>EngineControlsVACSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlsView.xaml.cs">
+      <DependentUpon>EngineControlsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineControlInputModifyView.xaml.cs">
+      <DependentUpon>EngineControlInputModifyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineInputsView.xaml.cs">
+      <DependentUpon>EngineInputsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EngineSettingsView.xaml.cs">
+      <DependentUpon>EngineSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\EnginesView.xaml.cs">
+      <DependentUpon>EnginesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\OnvifEntityPanel.xaml.cs">
+      <DependentUpon>OnvifEntityPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\AnalyticsMetadataSettingsView.xaml.cs">
+      <DependentUpon>AnalyticsMetadataSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\PtzView.xaml.cs">
       <DependentUpon>PtzView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="views\RestoreBatchTaskView.xaml.cs">
+    <Compile Include="views\SectionDevice\ReceiversModifyView.xaml.cs">
+      <DependentUpon>ReceiversModifyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionDevice\ReceiversView.xaml.cs">
+      <DependentUpon>ReceiversView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionDevice\RestoreBatchTaskView.xaml.cs">
       <DependentUpon>RestoreBatchTaskView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVA\SectionAnalytics.xaml.cs">
+      <DependentUpon>SectionAnalytics.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionPanel.xaml.cs">
+      <DependentUpon>SectionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\SectionSources.xaml.cs">
+      <DependentUpon>SectionSources.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\SourceView.xaml.cs">
+      <DependentUpon>SourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\UpgradeBatchTaskView.xaml.cs">
       <DependentUpon>UpgradeBatchTaskView.xaml</DependentUpon>
@@ -293,16 +410,16 @@
     <Compile Include="views\CommonAnalytics\CommonAnalytics.xaml.cs">
       <DependentUpon>CommonAnalytics.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\ConfigureAnalyticView.xaml.cs">
+    <Compile Include="views\SectionNVT\ConfigureAnalyticView.xaml.cs">
       <DependentUpon>ConfigureAnalyticView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\ProfileUpdatingView.xaml.cs">
+    <Compile Include="views\SectionNVT\ProfileUpdatingView.xaml.cs">
       <DependentUpon>ProfileUpdatingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\AnalyticsView.xaml.cs">
+    <Compile Include="views\SectionNVT\AnalyticsView.xaml.cs">
       <DependentUpon>AnalyticsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\AnalyticsSetNameView.xaml.cs">
+    <Compile Include="views\SectionNVT\AnalyticsSetNameView.xaml.cs">
       <DependentUpon>AnalyticsSetNameView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\AboutView.xaml.cs">
@@ -314,31 +431,31 @@
     <Compile Include="views\BackgroundTasksView.xaml.cs">
       <DependentUpon>BackgroundTasksView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\PolicyEditorView.xaml.cs">
+    <Compile Include="views\SectionDevice\PolicyEditorView.xaml.cs">
       <DependentUpon>PolicyEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\ErrorView.xaml.cs">
       <DependentUpon>ErrorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\UpgradeFirmwareView.xaml.cs">
+    <Compile Include="views\SectionDevice\UpgradeFirmwareView.xaml.cs">
       <DependentUpon>UpgradeFirmwareView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\UserUpdatingView.xaml.cs">
+    <Compile Include="views\SectionDevice\UserUpdatingView.xaml.cs">
       <DependentUpon>UserUpdatingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\UserCreationView.xaml.cs">
+    <Compile Include="views\SectionDevice\UserCreationView.xaml.cs">
       <DependentUpon>UserCreationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\UserManagementView.xaml.cs">
+    <Compile Include="views\SectionDevice\UserManagementView.xaml.cs">
       <DependentUpon>UserManagementView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\CustomAppro\ApproAnalyticsConfigView.xaml.cs">
       <DependentUpon>ApproAnalyticsConfigView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\MetadataSettingsView.xaml.cs">
+    <Compile Include="views\SectionNVT\MetadataSettingsView.xaml.cs">
       <DependentUpon>MetadataSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\ImagingSettingsView.xaml.cs">
+    <Compile Include="views\SectionNVT\ImagingSettingsView.xaml.cs">
       <DependentUpon>ImagingSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\CustomAnalytics\AntishakerView.xaml.cs">
@@ -378,13 +495,13 @@
     <Compile Include="views\ItemSelectorView.xaml.cs">
       <DependentUpon>ItemSelectorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\ProfileCreationView.xaml.cs">
+    <Compile Include="views\SectionNVT\ProfileCreationView.xaml.cs">
       <DependentUpon>ProfileCreationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\TimeSettingsView.xaml.cs">
+    <Compile Include="views\SectionDevice\TimeSettingsView.xaml.cs">
       <DependentUpon>TimeSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\DeviceEventsView.xaml.cs">
+    <Compile Include="views\SectionDevice\DeviceEventsView.xaml.cs">
       <DependentUpon>DeviceEventsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\DeviceExplorerView.xaml.cs">
@@ -393,35 +510,35 @@
     <Compile Include="views\DeviceListView.xaml.cs">
       <DependentUpon>DeviceListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\DeviceView.xaml.cs">
-      <DependentUpon>DeviceView.xaml</DependentUpon>
+    <Compile Include="views\SectionDevice\SectionDevice.xaml.cs">
+      <DependentUpon>SectionDevice.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\DigitalIOView.xaml.cs">
+    <Compile Include="views\SectionDevice\DigitalIOView.xaml.cs">
       <DependentUpon>DigitalIOView.xaml</DependentUpon>
     </Compile>
     <Compile Include="core\events.cs" />
-    <Compile Include="views\IdentificationView.xaml.cs">
+    <Compile Include="views\SectionDevice\IdentificationView.xaml.cs">
       <DependentUpon>IdentificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\InfoView.xaml.cs">
       <DependentUpon>InfoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\LiveVideoView.xaml.cs">
+    <Compile Include="views\SectionNVT\LiveVideoView.xaml.cs">
       <DependentUpon>LiveVideoView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\MaintenanceView.xaml.cs">
+    <Compile Include="views\SectionDevice\MaintenanceView.xaml.cs">
       <DependentUpon>MaintenanceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\NetworkSettingsView.xaml.cs">
+    <Compile Include="views\SectionDevice\NetworkSettingsView.xaml.cs">
       <DependentUpon>NetworkSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\ProgressView.xaml.cs">
       <DependentUpon>ProgressView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\PropertyRelayControl.xaml.cs">
+    <Compile Include="views\SectionDevice\PropertyRelayControl.xaml.cs">
       <DependentUpon>PropertyRelayControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\SystemLogView.xaml.cs">
+    <Compile Include="views\SectionDevice\SystemLogView.xaml.cs">
       <DependentUpon>SystemLogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\ToolBarView.xaml.cs">
@@ -430,10 +547,13 @@
     <Compile Include="views\VideoPlayerView.xaml.cs">
       <DependentUpon>VideoPlayerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\VideoSettingsView.xaml.cs">
+    <Compile Include="views\SectionNVT\VideoSettingsView.xaml.cs">
       <DependentUpon>VideoSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="views\WebPageView.xaml.cs">
+    <Compile Include="views\SectionNVT\VideoSourcesView.xaml.cs">
+      <DependentUpon>VideoSourcesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionDevice\WebPageView.xaml.cs">
       <DependentUpon>WebPageView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -462,6 +582,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="controls\RadioExpanderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="dialogs\ManualTZ.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -478,31 +602,147 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\AccountManagerView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="views\AnalogueOutView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="views\CertificateUploadView.xaml">
+    <Page Include="views\AuthView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="views\CertificatesView.xaml">
+    <Page Include="views\KeyValuePairsBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="views\DevicePageView.xaml">
+    <Page Include="views\Resources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\PtzView.xaml">
+    <Page Include="views\Metadata\VAAlarmView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="views\Metadata\VAObjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="views\RestoreBatchTaskView.xaml">
+    <Page Include="views\SectionDevice\ActionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\AnalogueOutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="views\SectionDevice\CertificateUploadView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\CertificatesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\ActionModifyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="views\SectionDevice\ActionTriggersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="views\SectionDevice\ActionTriggerModifyView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="views\SectionNVA\AnalyticsLiveVideoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineAnalyticsSetNameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineAnalyticsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlsCreationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlsAddReceiverView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlSimpleInputModifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlsInputsCreationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlsUpdatingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlsVACSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineControlInputModifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineInputsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EngineSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\EnginesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\OnvifEntityPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\AnalyticsMetadataSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="views\SectionNVT\PtzView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\ReceiversModifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\ReceiversView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\RestoreBatchTaskView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVA\SectionAnalytics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVT\SectionSources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionNVT\SourceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -514,19 +754,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="views\ConfigureAnalyticView.xaml">
+    <Page Include="views\SectionNVT\ConfigureAnalyticView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="views\ProfileUpdatingView.xaml">
+    <Page Include="views\SectionNVT\ProfileUpdatingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\AnalyticsView.xaml">
+    <Page Include="views\SectionNVT\AnalyticsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\AnalyticsSetNameView.xaml">
+    <Page Include="views\SectionNVT\AnalyticsSetNameView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -542,7 +782,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\PolicyEditorView.xaml">
+    <Page Include="views\SectionDevice\PolicyEditorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -550,19 +790,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\UpgradeFirmwareView.xaml">
+    <Page Include="views\SectionDevice\UpgradeFirmwareView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\UserUpdatingView.xaml">
+    <Page Include="views\SectionDevice\UserUpdatingView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\UserCreationView.xaml">
+    <Page Include="views\SectionDevice\UserCreationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\UserManagementView.xaml">
+    <Page Include="views\SectionDevice\UserManagementView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -570,11 +810,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="views\MetadataSettingsView.xaml">
+    <Page Include="views\SectionNVT\MetadataSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\ImagingSettingsView.xaml">
+    <Page Include="views\SectionNVT\ImagingSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -618,15 +858,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\ProfileCreationView.xaml">
+    <Page Include="views\SectionNVT\ProfileCreationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\TimeSettingsView.xaml">
+    <Page Include="views\SectionDevice\TimeSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\DeviceEventsView.xaml">
+    <Page Include="views\SectionDevice\DeviceEventsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -638,15 +878,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\DeviceView.xaml">
+    <Page Include="views\SectionDevice\SectionDevice.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\DigitalIOView.xaml">
+    <Page Include="views\SectionDevice\DigitalIOView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\IdentificationView.xaml">
+    <Page Include="views\SectionDevice\IdentificationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -654,15 +894,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\LiveVideoView.xaml">
+    <Page Include="views\SectionNVT\LiveVideoView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\MaintenanceView.xaml">
+    <Page Include="views\SectionDevice\MaintenanceView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\NetworkSettingsView.xaml">
+    <Page Include="views\SectionDevice\NetworkSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -670,11 +910,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\PropertyRelayControl.xaml">
+    <Page Include="views\SectionDevice\PropertyRelayControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\SystemLogView.xaml">
+    <Page Include="views\SectionDevice\SystemLogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -686,7 +926,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\VideoSettingsView.xaml">
+    <Page Include="views\SectionNVT\VideoSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -738,7 +978,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="views\WebPageView.xaml">
+    <Page Include="views\SectionNVT\VideoSourcesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="views\SectionDevice\WebPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -752,25 +996,29 @@
       <Project>{72E591D6-8F83-4D8C-8F67-9C325E623234}</Project>
       <Name>WPFToolkit.Extended</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.discovery\onvif.discovery.fsproj">
+      <Project>{6AF1CA5F-AE7C-4041-A49C-F1112BFF27B7}</Project>
+      <Name>onvif.discovery</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.services\onvif.services.csproj">
+      <Project>{3CB4F764-648F-4AA3-9E85-91992337D3EA}</Project>
+      <Name>onvif.services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.session\onvif.session.fsproj">
+      <Project>{902A3FF3-E9BD-443D-8FC1-69AA42B5F76B}</Project>
+      <Name>onvif.session</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\onvif\onvif.utils\onvif.utils.fsproj">
+      <Project>{55DED141-56C3-4DA9-BE07-03708D7A2275}</Project>
+      <Name>onvif.utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\utils\utils.async\utils.async.csproj">
+      <Project>{ca45551a-6a4e-4e3d-af2e-e081f209bb14}</Project>
+      <Name>utils.async</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\utils\utils.fsharp\utils.fsharp.fsproj">
       <Project>{04196C86-66F6-4A9C-BE0B-90AA5353B1C6}</Project>
       <Name>utils.fsharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism.Interactivity\Prism.Interactivity.csproj">
-      <Project>{DE856812-A32C-4866-801E-AF396D711942}</Project>
-      <Name>Prism.Interactivity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism.MefExtensions\Prism.MefExtensions.Desktop.csproj">
-      <Project>{6ED61550-8E7A-42C6-9B30-380C6F97ED55}</Project>
-      <Name>Prism.MefExtensions.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism.UnityExtensions\Prism.UnityExtensions.Desktop.csproj">
-      <Project>{17831F3B-6B82-4916-BD2B-2CE2071EA622}</Project>
-      <Name>Prism.UnityExtensions.Desktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\libs\prism4-desktop\Prism\Prism.Desktop.csproj">
-      <Project>{77138947-1D13-4E22-AEE0-5D0DD046CA34}</Project>
-      <Name>Prism.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\odm.infra\odm.infra.fsproj">
       <Project>{A13DCAE1-F908-431B-94BA-9CCE4C11D496}</Project>
@@ -831,6 +1079,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -854,26 +1103,33 @@
     </Activity>
     <Activity Include="IdentificationView.xml" />
     <Activity Include="TimeSettingsView.xml" />
-    <Activity Include="PtzView.xml" />
+    <Activity Include="PtzView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
     <Activity Include="LiveVideoView.xml">
       <SubType>Designer</SubType>
     </Activity>
     <Activity Include="MaintenanceView.xml" />
     <Activity Include="ConfigureAnalyticView.xml" />
-    <Activity Include="AnalyticsSetNameView.xml" />
+    <Activity Include="AnalyticsSetNameView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
     <Activity Include="MetadataSettingsView.xml">
       <SubType>Designer</SubType>
     </Activity>
     <Activity Include="UserManagementView.xml" />
     <Activity Include="UserUpdatingView.xml" />
     <Activity Include="UserCreationView.xml" />
-    <Activity Include="ImagingSettingsView.xml" />
+    <Activity Include="ImagingSettingsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>odm.ui</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="xml2html\XMLToHTML.xsl" />
     <EmbeddedResource Include="xml2html\XSLTHtml20.xslt" />
@@ -952,8 +1208,67 @@
     <None Include="images\system-installer.png" />
   </ItemGroup>
   <ItemGroup>
+    <Activity Include="ReceiversView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="ReceiverModifyView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineInputsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineSettingsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineAnalyticsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineControlsCreationView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineControlsUpdatingView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineAnalyticsSetNameView.xml" />
+    <Activity Include="EngineControlsInputsCreationView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineControlsVACSelectionView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineControlsAddReceiverView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="AnalyticsLiveVideoView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineControlInputModifyView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="EngineControlSimpleInputModifyView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="AnalyticsMetadataSettingsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="ActionsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="ActionModifyView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="ActionTriggersView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
+    <Activity Include="ActionTriggerModifyView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
     <Content Include="images\wheel_zoom.cur" />
+    <Activity Include="EngineControlsView.xml">
+      <SubType>Designer</SubType>
+    </Activity>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- 
 		To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,6 +17,7 @@ using Microsoft.CSharp;
 using System.IO;
 using System.CodeDom;
 using onvif.services;
+using System.Xml.Linq;
 
 namespace odm.ui.controls {
     public class XmlParserFactory {
@@ -34,22 +35,22 @@ namespace odm.ui.controls {
 		List<itemDescr> InitSimpleItems() {
 			List<itemDescr> simpleItemsList = new List<itemDescr>();
 
-			description.Parameters.SimpleItemDescription.ForEach(x => {
+			description.parameters.simpleItemDescription.ForEach(x => {
 				XmlSchemaType xsdType = XmlSchemaType.GetBuiltInSimpleType(XmlTypeCode.String);
-				if (x.Type.Namespace == XmlSchema.Namespace) {
-					xsdType = XmlSchemaType.GetBuiltInSimpleType(x.Type);
+				if (x.type.Namespace == XmlSchema.Namespace) {
+					xsdType = XmlSchemaType.GetBuiltInSimpleType(x.type);
 				} else {
-					if (schema.GlobalTypes.Contains(x.Type)) {
+					if (schema.GlobalTypes.Contains(x.type)) {
 						schema.GlobalTypes.Values.ForEach(sc => {
 							var obj = (XmlSchemaObject)sc;
 
 						});
 					}
 				}
-				simpleItemsList.Add(new itemDescr() { xtype = xsdType, xname = x.Name });
+				simpleItemsList.Add(new itemDescr() { xtype = xsdType, xname = x.name });
 			});
 			simpleItemsList.ForEach(x => {
-				if (config.Parameters != null && config.Parameters.SimpleItem != null && config.Parameters.SimpleItem.FirstOrDefault(si => si.Name == x.xname) != null) {
+				if (config.parameters != null && config.parameters.simpleItem != null && config.parameters.simpleItem.FirstOrDefault(si => si.name == x.xname) != null) {
 					x.isPresent = true;
 				} else
 					x.isPresent = false;
@@ -64,16 +65,16 @@ namespace odm.ui.controls {
 			var simplelist = InitSimpleItems();
 
 			simplelist.Where(x => x.isPresent).ForEach(x => {
-				var sitem = config.Parameters.SimpleItem.FirstOrDefault(si => si.Name == x.xname);
+				var sitem = config.parameters.simpleItem.FirstOrDefault(si => si.name == x.xname);
 				if (sitem != null) {
-					spanel.Children.Add(GetSimpleEditorCtrl(x.xtype, sitem.Name, sitem));
+					spanel.Children.Add(GetSimpleEditorCtrl(x.xtype, sitem.name, sitem));
 				}
 			});
 			simplelist.Where(x => !x.isPresent).ForEach(x => {
-				global::onvif.services.ItemListSimpleItem sitem = new global::onvif.services.ItemListSimpleItem();
-				sitem = new global::onvif.services.ItemListSimpleItem();
-				sitem.Name = x.xname;
-				sitem.Value = "";
+				var sitem = new ItemList.SimpleItem() {
+					name = x.xname,
+					value = ""
+				};
 
 				FrameworkElement elem = GetSimpleEditorCtrl(x.xtype, x.xname, sitem);
 
@@ -87,28 +88,28 @@ namespace odm.ui.controls {
 					o.isPresent = v;
 					if (v) {
 						elem.IsEnabled = true;
-						if (config.Parameters != null && config.Parameters.SimpleItem != null) {
-							var items = config.Parameters.SimpleItem;
-							config.Parameters.SimpleItem = items.Append(sitem).ToArray();
+						if (config.parameters != null && config.parameters.simpleItem != null) {
+							var items = config.parameters.simpleItem;
+							config.parameters.simpleItem = items.Append(sitem).ToArray();
 						} else {
-							if (config.Parameters == null) {
-								config.Parameters = new global::onvif.services.ItemList();
+							if (config.parameters == null) {
+								config.parameters = new global::onvif.services.ItemList();
 							}
-							config.Parameters.SimpleItem = new global::onvif.services.ItemListSimpleItem[] { sitem };
+							config.parameters.simpleItem = new ItemList.SimpleItem[] { sitem };
 						}
 					} else {
 						elem.IsEnabled = false;
-						if (config.Parameters.SimpleItem.Contains(sitem)) {
-							int count = config.Parameters.SimpleItem.Count();
-							global::onvif.services.ItemListSimpleItem[] arr = new global::onvif.services.ItemListSimpleItem[count - 1];
+						if (config.parameters.simpleItem.Contains(sitem)) {
+							int count = config.parameters.simpleItem.Count();
+							var arr = new ItemList.SimpleItem[count - 1];
 							int cnt = 0;
 							for (int i = 0; i < count; i++) {
-								if (config.Parameters.SimpleItem[i] != sitem) {
-									arr[cnt] = config.Parameters.SimpleItem[i];
+								if (config.parameters.simpleItem[i] != sitem) {
+									arr[cnt] = config.parameters.simpleItem[i];
 									cnt++;
 								}
 							}
-							config.Parameters.SimpleItem = arr;
+							config.parameters.simpleItem = arr;
 						}
 					}
 				});
@@ -122,7 +123,7 @@ namespace odm.ui.controls {
 
 			return spanel;
 		}
-		FrameworkElement GetSimpleEditorCtrl(XmlSchemaType xtype, string name, global::onvif.services.ItemListSimpleItem sitem) {
+		FrameworkElement GetSimpleEditorCtrl(XmlSchemaType xtype, string name, ItemList.SimpleItem sitem) {
 			StackPanel spanel = new StackPanel();
 			spanel.Orientation = Orientation.Horizontal;
 
@@ -139,72 +140,101 @@ namespace odm.ui.controls {
 			spanel.Children.Add(GetTypeEditor(xtype, sitem));
 			return spanel;
 		}
-		FrameworkElement GetTypeEditor(XmlSchemaType xtype, global::onvif.services.ItemListSimpleItem sitem) {
+		FrameworkElement CreateTextEditor(ItemList.SimpleItem sitem) {
+			var tedit = new TextBox() {
+				Text = sitem.value,
+				MinWidth = 50,
+				VerticalAlignment = VerticalAlignment.Center
+			};
+			tedit.SetUpdateTrigger(
+				TextBox.TextProperty,
+				(string v) => {
+					sitem.value = v;
+				}
+			);
+			return tedit;
+		}
+		FrameworkElement GetTypeEditor(XmlSchemaType xtype, ItemList.SimpleItem sitem) {
 			FrameworkElement felement = null;
 			if (XmlSchemaType.IsDerivedFrom(xtype, XmlSchemaType.GetBuiltInSimpleType(XmlTypeCode.Boolean), XmlSchemaDerivationMethod.All)) {
-				CheckBox chBox = new CheckBox();
-				chBox.Margin = new Thickness(3);
-				chBox.CreateBinding(CheckBox.IsCheckedProperty, sitem, x => {
-					bool val = false;
-					bool.TryParse(sitem.Value, out val);
-					return val;
-				}, (o, v) => {
-					o.Value = v.ToString();
-				});
-				felement = chBox;
+				try {
+					var val = XmlConvert.ToBoolean(sitem.value);
+					felement = new CheckBox() {
+						IsChecked = val,
+						Margin = new Thickness(3)
+					};
+					felement.SetUpdateTrigger(
+						CheckBox.IsCheckedProperty,
+						(bool v) => {
+							sitem.value = XmlConvert.ToString(v);
+						}
+					);
+				} catch {
+					felement = CreateTextEditor(sitem);
+				}
 			} else if (XmlSchemaType.IsDerivedFrom(xtype, XmlSchemaType.GetBuiltInSimpleType(XmlTypeCode.Integer), XmlSchemaDerivationMethod.All)) {
-				IntegerUpDown numUp = new IntegerUpDown();
-				numUp.Margin = new Thickness(3);
-				numUp.Increment = 1;
-				numUp.VerticalAlignment = VerticalAlignment.Center;
-				numUp.MinWidth = 50;
-				numUp.CreateBinding(IntegerUpDown.ValueProperty, sitem, x => {
-					int val = 0;
-					int.TryParse(sitem.Value, out val);
-					return val;
-				}, (o, v) => {
-					o.Value = v.ToString();
-				});
-				felement = numUp;
+				try {
+					var val = XmlConvert.ToInt32(sitem.value);
+					felement = new IntegerUpDown() {
+						Value = val,
+						Margin = new Thickness(3),
+						Increment = 1,
+						VerticalAlignment = VerticalAlignment.Center,
+						MinWidth = 50
+					};
+					felement.SetUpdateTrigger(
+						IntegerUpDown.ValueProperty,
+						(int v) => {
+							sitem.value = v.ToString();
+						}
+					);
+				} catch {
+					felement = CreateTextEditor(sitem);
+				}
 			} else if (XmlSchemaType.IsDerivedFrom(xtype, XmlSchemaType.GetBuiltInSimpleType(XmlTypeCode.Float), XmlSchemaDerivationMethod.All)) {
-				DoubleUpDown numUpf = new DoubleUpDown();
-				numUpf.Margin = new Thickness(3);
-				numUpf.Increment = 0.1;
-				numUpf.FormatString = "F1";
-				numUpf.VerticalAlignment = VerticalAlignment.Center;
-				numUpf.MinWidth = 50;
-				numUpf.CreateBinding(DoubleUpDown.ValueProperty, sitem, x => {
-					float val = 0;
-					float.TryParse(sitem.Value, out val);
-					return val;
-				}, (o, v) => {
-					o.Value = v.ToString();
-				});
-				felement = numUpf;
+				try {
+					var val = XmlConvert.ToDouble(sitem.value);
+					felement = new DoubleUpDown() {
+						Value = val,
+						CultureInfo = System.Globalization.CultureInfo.InvariantCulture,
+						Margin = new Thickness(3),
+						Increment = 0.1,
+						FormatString = "F1",
+						VerticalAlignment = VerticalAlignment.Center,
+						MinWidth = 50
+					};
+					felement.SetUpdateTrigger(
+						DoubleUpDown.ValueProperty,
+						(double v) => {
+							sitem.value = v.ToString();
+						}
+					);
+				} catch {
+					felement = CreateTextEditor(sitem);
+				}
 			} else if (XmlSchemaType.IsDerivedFrom(xtype, XmlSchemaType.GetBuiltInSimpleType(XmlTypeCode.Double), XmlSchemaDerivationMethod.All)) {
-				DoubleUpDown numUpd = new DoubleUpDown();
-				numUpd.Margin = new Thickness(3);
-				numUpd.Increment = 0.01;
-				numUpd.FormatString = "F2";
-				numUpd.VerticalAlignment = VerticalAlignment.Center;
-				numUpd.MinWidth = 50;
-				numUpd.CreateBinding(DoubleUpDown.ValueProperty, sitem, x => {
-					double val = 0;
-					double.TryParse(sitem.Value, out val);
-					return val;
-				}, (o, v) => {
-					o.Value = v.ToString();
-				});
-				felement = numUpd;
+				try {
+					var val = XmlConvert.ToDouble(sitem.value);
+					felement = new DoubleUpDown() {
+						Value = val,
+						CultureInfo = System.Globalization.CultureInfo.InvariantCulture,
+						Margin = new Thickness(3),
+						Increment = 0.1,
+						FormatString = "F2",
+						VerticalAlignment = VerticalAlignment.Center,
+						MinWidth = 50
+					};
+					felement.SetUpdateTrigger(
+						DoubleUpDown.ValueProperty,
+						(double v) => {
+							sitem.value = v.ToString();
+						}
+					);
+				} catch {
+					felement = CreateTextEditor(sitem);
+				}
 			} else {
-				TextBox tbox = new TextBox();
-				tbox.Margin = new Thickness(3);
-				tbox.CreateBinding(TextBox.TextProperty, sitem, x => x.Value, (o, v) => {
-					o.Value = v;
-				});
-				tbox.MinWidth = 50;
-				tbox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-				felement = tbox;
+				felement = CreateTextEditor(sitem);
 			}
 
 			return felement;
@@ -289,6 +319,7 @@ namespace odm.ui.controls {
 					break;
 				case "float":
 					DoubleUpDown doubleUp = new DoubleUpDown();
+					doubleUp.CultureInfo = System.Globalization.CultureInfo.InvariantCulture;
 					doubleUp.Margin = new Thickness(3);
 					doubleUp.Increment = 0.01f;
 					doubleUp.FormatString = "F3";
@@ -296,10 +327,15 @@ namespace odm.ui.controls {
 					doubleUp.MinWidth = 50;
 					doubleUp.CreateBinding(DoubleUpDown.ValueProperty, element, x => {
 						float val = 0;
-						float.TryParse(element.Value, out val);
+						//float.TryParse(element.Value, out val);
+						try {
+							val = XmlConvert.ToSingle(element.Value);
+						}catch(Exception err){
+							dbg.Error(err);
+						}
 						return val;
 					}, (o, v) => {
-						o.Value = v.ToString();
+						o.Value = XmlConvert.ToString(v);
 					});
 					felem = doubleUp;
 					break;
@@ -328,14 +364,14 @@ namespace odm.ui.controls {
 			}
 			return felem;
 		}
-        List<FrameworkElement> InitElementItems() {
+		List<FrameworkElement> InitElementItems() {
 			List<FrameworkElement> elementsList = new List<FrameworkElement>();
 			
 			//parse schema
 			xsdParse.Parse(schema);
 					
 			//parse top elements in XML data
-			config.Parameters.ElementItem.ForEach(elemItem => {
+			config.parameters.elementItem.ForEach(elemItem => {
 				//for each of top elements: (AntishakerCrop; MarkerCalibration; ...)
 				var telem = ParseXmlItem(elemItem);
 				xmlElements.Add(telem);
@@ -395,9 +431,9 @@ namespace odm.ui.controls {
 			}
 		}
 
-		elementDescr ParseXmlItem(ItemListElementItem elemItem) {
-			var element = elemItem.Any as XmlElement;
-			elementDescr elem = new elementDescr() { Name = element.Name, XmlElement = element };
+		elementDescr ParseXmlItem(ItemList.ElementItem elemItem) {
+			var element = elemItem.any;
+			elementDescr elem = new elementDescr() { Name = element.LocalName, XmlElement = element };
 
 			ParseElementDescr(elem);
 			

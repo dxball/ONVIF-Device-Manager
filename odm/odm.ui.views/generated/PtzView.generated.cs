@@ -22,25 +22,16 @@ namespace odm.ui.activities {
 		
 		#region Model definition
 		
-		public interface IModelAccessor{
-			PTZNode currentNode{get;set;}
-			
-		}
-		public class Model: IModelAccessor, INotifyPropertyChanged{
+		public class Model{
 			
 			public Model(
-				string profToken, PTZPreset[] presets, PTZNode[] nodes, float tiltMin, float tiltMax, float panMin, float panMax, float zoomMin, float zoomMax
+				string profToken, PTZPreset[] presets, PTZNode currentNode, PTZConfiguration currentPtzConfig
 			){
 				
 				this.profToken = profToken;
 				this.presets = presets;
-				this.nodes = nodes;
-				this.tiltMin = tiltMin;
-				this.tiltMax = tiltMax;
-				this.panMin = panMin;
-				this.panMax = panMax;
-				this.zoomMin = zoomMin;
-				this.zoomMax = zoomMax;
+				this.currentNode = currentNode;
+				this.currentPtzConfig = currentPtzConfig;
 			}
 			private Model(){
 			}
@@ -49,99 +40,22 @@ namespace odm.ui.activities {
 			public static Model Create(
 				string profToken,
 				PTZPreset[] presets,
-				PTZNode[] nodes,
 				PTZNode currentNode,
-				float tiltMin,
-				float tiltMax,
-				float panMin,
-				float panMax,
-				float zoomMin,
-				float zoomMax
+				PTZConfiguration currentPtzConfig
 			){
 				var _this = new Model();
 				
 				_this.profToken = profToken;
 				_this.presets = presets;
-				_this.nodes = nodes;
-				_this.tiltMin = tiltMin;
-				_this.tiltMax = tiltMax;
-				_this.panMin = panMin;
-				_this.panMax = panMax;
-				_this.zoomMin = zoomMin;
-				_this.zoomMax = zoomMax;
-				_this.origin.currentNode = currentNode;
-				_this.RevertChanges();
-				
+				_this.currentNode = currentNode;
+				_this.currentPtzConfig = currentPtzConfig;
 				return _this;
 			}
 		
-				private SimpleChangeTrackable<PTZNode> m_currentNode;
-				public string profToken{get;private set;}
-				public PTZPreset[] presets{get;private set;}
-				public PTZNode[] nodes{get;private set;}
-				public float tiltMin{get;private set;}
-				public float tiltMax{get;private set;}
-				public float panMin{get;private set;}
-				public float panMax{get;private set;}
-				public float zoomMin{get;private set;}
-				public float zoomMax{get;private set;}
-
-			private class OriginAccessor: IModelAccessor {
-				private Model m_model;
-				public OriginAccessor(Model model) {
-					m_model = model;
-				}
-				PTZNode IModelAccessor.currentNode {
-					get {return m_model.m_currentNode.origin;}
-					set {m_model.m_currentNode.origin = value;}
-				}
-				
-			}
-			public event PropertyChangedEventHandler PropertyChanged;
-			private void NotifyPropertyChanged(string propertyName){
-				var prop_changed = this.PropertyChanged;
-				if (prop_changed != null) {
-					prop_changed(this, new PropertyChangedEventArgs(propertyName));
-				}
-			}
-			
-			public PTZNode currentNode  {
-				get {return m_currentNode.current;}
-				set {
-					if(m_currentNode.current != value) {
-						m_currentNode.current = value;
-						NotifyPropertyChanged("currentNode");
-					}
-				}
-			}
-			
-			public void AcceptChanges() {
-				m_currentNode.AcceptChanges();
-				
-			}
-
-			public void RevertChanges() {
-				this.current.currentNode= this.origin.currentNode;
-				
-			}
-
-			public bool isModified {
-				get {
-					if(m_currentNode.isModified)return true;
-					
-					return false;
-				}
-			}
-
-			public IModelAccessor current {
-				get {return this;}
-				
-			}
-
-			public IModelAccessor origin {
-				get {return new OriginAccessor(this);}
-				
-			}
+			public string profToken{get;private set;}
+			public PTZPreset[] presets{get;private set;}
+			public PTZNode currentNode{get;private set;}
+			public PTZConfiguration currentPtzConfig{get;private set;}
 		}
 			
 		#endregion

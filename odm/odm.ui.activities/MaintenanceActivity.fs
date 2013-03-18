@@ -15,7 +15,7 @@ namespace odm.ui.activities
     open System.Reactive.Disposables
     open Microsoft.Practices.Unity
     //open Microsoft.Practices.Prism.Commands
-    open Microsoft.Practices.Prism.Events
+    //open Microsoft.Practices.Prism.Events
 
     open onvif.services
     open onvif.utils
@@ -80,8 +80,8 @@ namespace odm.ui.activities
                     return res.Handle(
                         backup = (fun backupPath-> this.Backup(model, backupPath)),
                         restore = (fun backupPath-> this.Restore(model, backupPath)),
-                        softReset = (fun ()-> this.Reset(model, FactoryDefaultType.Soft)),
-                        hardReset = (fun ()-> this.Reset(model, FactoryDefaultType.Hard)),
+                        softReset = (fun ()-> this.Reset(model, FactoryDefaultType.soft)),
+                        hardReset = (fun ()-> this.Reset(model, FactoryDefaultType.hard)),
                         reboot = (fun ()-> this.Reboot(model)),
                         upgrade = (fun firmwarePath-> this.Upgrade(model, firmwarePath)),
                         close = (fun ()-> this.Complete())
@@ -101,12 +101,18 @@ namespace odm.ui.activities
                 do! Async.SwitchToThreadPool()
                 use zip = Package.Open(backupPath, FileMode.Create)
                 for file in files do
-                    let uri = PackUriHelper.CreatePartUri(new Uri(file.Name, UriKind.Relative))
+                    let uri = PackUriHelper.CreatePartUri(new Uri(file.name, UriKind.Relative))
                     if zip.PartExists(uri) then
                         zip.DeletePart(uri)
-                    let part = zip.CreatePart(uri, "")
-                    use ps = part.GetStream()
-                    do! ps.AsyncWrite(file.Data.Include, 0, file.Data.Include.GetLength(0))
+                    let contentType = 
+                        if NotNull(file.data) && NotNull(file.data.contentType) then
+                            file.data.contentType
+                        else
+                            ""
+                    let part = zip.CreatePart(uri, contentType)
+                    if NotNull(file.data) && NotNull(file.data.Include) then
+                        use ps = part.GetStream()
+                        do! ps.AsyncWrite(file.data.Include, 0, file.data.Include.GetLength(0))
             with err ->
                 do! show_error(err)
 
@@ -119,13 +125,14 @@ namespace odm.ui.activities
                 use ctx = new ModalDialogContext() :> IUnityContainer
                 try
                     let! msg = async{
-                        use! progress = Progress.Show(ctx, LocalMaintenance.instance.rebooting)
+                        use! progress = Progress.Show(ctx, "restoring system...")
                         do! facade.RestoreSystem(backupPath)
                         return LocalMaintenance.instance.restoreSuccess;
                     }
                     do! InfoView.Show(ctx, msg) |> Async.Ignore
                 with err ->
-                    do! show_error(err)
+                    dbg.Error(err)
+                    do! ErrorView.Show(ctx, err) |> Async.Ignore
             })
             return! this.Main()
         }
@@ -138,7 +145,7 @@ namespace odm.ui.activities
                     let! msg = async{
                         use! progress = Progress.Show(ctx, LocalMaintenance.instance.resetting)
                         do! dev.SetSystemFactoryDefault(resetType)
-                        if resetType = FactoryDefaultType.Soft then
+                        if resetType = FactoryDefaultType.soft then
                             return LocalMaintenance.instance.factorySoftSuccess; 
                         else
                             return LocalMaintenance.instance.factoryHardSuccess; 

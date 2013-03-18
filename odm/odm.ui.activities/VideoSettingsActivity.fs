@@ -31,7 +31,7 @@ namespace odm.ui.activities
 
 
     type VideoSettingsActivity(ctx:IUnityContainer, profToken:string) = class
-        do if profToken=null then raise( new ArgumentNullException("profToken") )
+        do if profToken |> IsNull then raise( new ArgumentNullException("profToken") )
         let session = ctx.Resolve<INvtSession>()
         let facade = new OdmSession(session)
         
@@ -50,23 +50,23 @@ namespace odm.ui.activities
             //TODO: show modal dialog to chose VSC, in case if the profile doesn't have one
             //TODO: show modal dialog to chose VEC, in case if the profile doesn't have one
             
-            let vec  = profile.VideoEncoderConfiguration
+            let vec  = profile.videoEncoderConfiguration
             let! options = session.GetVideoEncoderConfigurationOptions(vec.token, profile.token)
             
-            let resolution = vec.Resolution
+            let resolution = vec.resolution
             let framerate = 
-                if vec.RateControl <> null then
-                    vec.RateControl.FrameRateLimit
+                if vec.rateControl |> NotNull then
+                    vec.rateControl.frameRateLimit
                 else
                     -1
             let encodingInterval = 
-                if vec.RateControl <> null then
-                    vec.RateControl.EncodingInterval
+                if vec.rateControl |> NotNull then
+                    vec.rateControl.encodingInterval
                 else
                     -1
             let bitrate = 
-                if vec.RateControl <> null then
-                    vec.RateControl.BitrateLimit
+                if vec.rateControl |> NotNull then
+                    vec.rateControl.bitrateLimit
                 else
                     -1
 
@@ -91,91 +91,87 @@ namespace odm.ui.activities
 //            })
 
             let frameRateRanges = Seq.toList(seq{
-                if options.H264 <> null then
-                    yield options.H264.FrameRateRange
-                if options.JPEG <> null then
-                    yield options.JPEG.FrameRateRange
-                if options.MPEG4 <> null then
-                    yield options.MPEG4.FrameRateRange
+                if options.h264 |> NotNull then
+                    yield options.h264.frameRateRange
+                if options.jpeg |> NotNull then
+                    yield options.jpeg.frameRateRange
+                if options.mpeg4 |> NotNull then
+                    yield options.mpeg4.frameRateRange
             })
 
             let encIntervalRanges = Seq.toList(seq{
-                if options.H264 <> null then
-                    yield options.H264.EncodingIntervalRange
-                if options.JPEG <> null then
-                    yield options.JPEG.EncodingIntervalRange
-                if options.MPEG4 <> null then
-                    yield options.MPEG4.EncodingIntervalRange
+                if options.h264 |> NotNull then
+                    yield options.h264.encodingIntervalRange
+                if options.jpeg |> NotNull then
+                    yield options.jpeg.encodingIntervalRange
+                if options.mpeg4 |> NotNull then
+                    yield options.mpeg4.encodingIntervalRange
             })
             
             let govLengthRanges = Seq.toList(seq{
-                if options.H264 <> null then
-                    yield options.H264.GovLengthRange
-                if options.MPEG4 <> null then
-                    yield options.MPEG4.GovLengthRange
+                if options.h264 |> NotNull then
+                    yield options.h264.govLengthRange
+                if options.mpeg4 |> NotNull then
+                    yield options.mpeg4.govLengthRange
             })
             let govLength = 
-                if vec.Encoding = VideoEncoding.H264 && vec.H264<>null then
-                    vec.H264.GovLength
-                elif vec.Encoding = VideoEncoding.MPEG4 && vec.MPEG4 <>null then
-                    vec.MPEG4.GovLength
+                if vec.encoding = VideoEncoding.h264 && NotNull(vec.h264) then
+                    vec.h264.govLength
+                elif vec.encoding = VideoEncoding.mpeg4 && NotNull(vec.mpeg4) then
+                    vec.mpeg4.govLength
                 else
                     -1
 
             let bitrateRanges = Seq.toList(seq{
-                if options.Extension<>null && options.Extension.Any<>null then
+                if NotNull(options.extension) && NotNull(options.extension.any) then
                     let tt = @"http://www.onvif.org/ver10/schema"
-                    for x in options.Extension.Any |> Seq.filter (fun x->x.NamespaceURI = tt) do
+                    for x in options.extension.any |> Seq.filter (fun x->x.NamespaceURI = tt) do
                         if x.Name = @"JPEG" then
-                            yield x.Deserialize<JpegOptions2>().BitrateRange
+                            yield x.Deserialize<JpegOptions2>().bitrateRange
                         elif x.Name = @"MPEG4" then
-                            yield x.Deserialize<Mpeg4Options2>().BitrateRange
+                            yield x.Deserialize<Mpeg4Options2>().bitrateRange
                         elif x.Name = @"H264" then
-                            yield x.Deserialize<H264Options2>().BitrateRange
+                            yield x.Deserialize<H264Options2>().bitrateRange
             })
             
-            let quality = vec.Quality
-            let qualityRange = 
-                if options.QualityRange<>null then
-                    options.QualityRange
-                else
-                    new IntRange(Min = -1, Max= -1)
+            let quality = vec.quality
+            let qualityRange = options.qualityRange |> SuppressNull (new IntRange(min = -1, max= -1))
             
             let (minFrameRate, maxFrameRate) = 
                 if frameRateRanges.Length > 0 then
-                    let min = frameRateRanges |> Seq.map (fun x->x.Min) |> Seq.min
-                    let max = frameRateRanges |> Seq.map (fun x->x.Max) |> Seq.max
+                    let min = frameRateRanges |> Seq.map (fun x->x.min) |> Seq.min
+                    let max = frameRateRanges |> Seq.map (fun x->x.max) |> Seq.max
                     (min, max)
                 else
                     (framerate, framerate)
 
             let (minEncodingInterval, maxEncodingInterval) = 
                 if encIntervalRanges.Length > 0 then
-                    let min = encIntervalRanges |> Seq.map (fun x->x.Min) |> Seq.min
-                    let max = encIntervalRanges |> Seq.map (fun x->x.Max) |> Seq.max
+                    let min = encIntervalRanges |> Seq.map (fun x->x.min) |> Seq.min
+                    let max = encIntervalRanges |> Seq.map (fun x->x.max) |> Seq.max
                     (min, max)
                 else
                     (encodingInterval, encodingInterval)
 
             let (minBitrate, maxBitrate) = 
                 if bitrateRanges.Length > 0 then
-                    let min = bitrateRanges |> Seq.map (fun x->x.Min) |> Seq.min
-                    let max = bitrateRanges |> Seq.map (fun x->x.Max) |> Seq.max
+                    let min = bitrateRanges |> Seq.map (fun x->x.min) |> Seq.min
+                    let max = bitrateRanges |> Seq.map (fun x->x.max) |> Seq.max
                     (min, max)
                 else
                     (0, Int32.MaxValue)
 
             let (minGovLength, maxGovLength) = 
                 if govLengthRanges.Length > 0 then
-                    let min = govLengthRanges |> Seq.map (fun x->x.Min) |> Seq.min
-                    let max = govLengthRanges |> Seq.map (fun x->x.Max) |> Seq.max
+                    let min = govLengthRanges |> Seq.map (fun x->x.min) |> Seq.min
+                    let max = govLengthRanges |> Seq.map (fun x->x.max) |> Seq.max
                     (min, max)
                 else
                     (govLength, govLength)
             
             let model = new VideoSettingsView.Model(
-                minQuality = qualityRange.Min,
-                maxQuality = qualityRange.Max,
+                minQuality = qualityRange.min,
+                maxQuality = qualityRange.max,
                 minBitrate = minBitrate,
                 maxBitrate = maxBitrate,
                 minEncodingInterval = minEncodingInterval,
@@ -190,7 +186,7 @@ namespace odm.ui.activities
                 profToken = profToken
             )
             
-            model.encoder <- vec.Encoding
+            model.encoder <- vec.encoding
             model.resolution <- resolution
             model.frameRate <- float(framerate)
             model.govLength <- govLength
@@ -207,7 +203,7 @@ namespace odm.ui.activities
             //let! profiles = session.GetProfiles()
             //let profile = profiles |> Seq.find (fun p-> p.token = profToken)
             let! profile = session.GetProfile(profToken)
-            let vec = profile.VideoEncoderConfiguration
+            let vec = profile.videoEncoderConfiguration
 //            
 //            do! session.RemoveVideoEncoderConfiguration(profile.token)
 //            profile.VideoEncoderConfiguration <- null
@@ -215,46 +211,46 @@ namespace odm.ui.activities
             //let! vecs = session.GetCompatibleVideoEncoderConfigurations(profile.token)
             
             let! options = session.GetVideoEncoderConfigurationOptions(vec.token, null)
-            let qualityMin = float32(options.QualityRange.Min)
-            let qualityMax = float32(options.QualityRange.Max)
+            let qualityMin = float32(options.qualityRange.min)
+            let qualityMax = float32(options.qualityRange.max)
             //let quality = Math.Min(qualityMax, Math.Max(model.quality, qualityMin))
             let quality = model.quality |> Math.Coerce qualityMin qualityMax
             
-            vec.Encoding <- model.encoder
-            vec.Quality <- quality
-            vec.Resolution <- model.resolution
+            vec.encoding <- model.encoder
+            vec.quality <- quality
+            vec.resolution <- model.resolution
                 
             let inline CoerceGovLength (options:^TOpt) = 
-                let range = (^TOpt: (member GovLengthRange:IntRange)(options))
-                if range <> null then
-                    Math.Coerce (range.Min) (range.Max)
+                let range = (^TOpt: (member govLengthRange:IntRange)(options))
+                if range |> NotNull then
+                    Math.Coerce (range.min) (range.max)
                 else
                     (fun(v)->v)
 
-            let inline tryConfig(opts:^TOpt) = 
-                if options<>null then
-                    let resolutions = (^TOpt: (member ResolutionsAvailable:VideoResolution[])(opts))
+            let inline validateConfig(opts:^TOpt) = 
+                if options |> NotNull then
+                    let resolutions = (^TOpt: (member resolutionsAvailable:VideoResolution[])(opts))
                     if resolutions |> Array.exists (fun x->x=model.resolution) then
-                        if vec.RateControl = null then
-                            vec.RateControl <- new VideoRateControl()
-                        let frameRateRange = (^TOpt: (member FrameRateRange:IntRange)(opts))
-                        let frameRateMin = frameRateRange.Min
-                        let frameRateMax = frameRateRange.Max
+                        if vec.rateControl |> IsNull then
+                            vec.rateControl <- new VideoRateControl()
+                        let frameRateRange = (^TOpt: (member frameRateRange:IntRange)(opts))
+                        let frameRateMin = frameRateRange.min
+                        let frameRateMax = frameRateRange.max
                         let frameRate = int(model.frameRate) |> Math.Coerce frameRateMin frameRateMax 
-                        vec.RateControl.FrameRateLimit <- frameRate
-                        vec.RateControl.BitrateLimit <- int(model.bitrate)
+                        vec.rateControl.frameRateLimit <- frameRate
+                        vec.rateControl.bitrateLimit <- int(model.bitrate)
 
-                        let encodingIntervalRange = (^TOpt: (member EncodingIntervalRange:IntRange)(opts))
-                        let encodingIntervalMin = encodingIntervalRange.Min
-                        let encodingIntervalMax = encodingIntervalRange.Max
+                        let encodingIntervalRange = (^TOpt: (member encodingIntervalRange:IntRange)(opts))
+                        let encodingIntervalMin = encodingIntervalRange.min
+                        let encodingIntervalMax = encodingIntervalRange.max
                         let encodingInterval = model.encodingInterval |> Math.Coerce encodingIntervalMin encodingIntervalMax 
-                        vec.RateControl.EncodingInterval <- encodingInterval
-                        if model.encoder = VideoEncoding.H264 then
-                            if vec.H264 = null then vec.H264 <- new H264Configuration()
-                            vec.H264.GovLength <- model.govLength |> CoerceGovLength(options.H264)
-                        elif model.encoder = VideoEncoding.MPEG4 then
-                            if vec.MPEG4 = null then vec.MPEG4 <- new Mpeg4Configuration()
-                            vec.MPEG4.GovLength <- model.govLength |> CoerceGovLength(options.MPEG4)
+                        vec.rateControl.encodingInterval <- encodingInterval
+                        if model.encoder = VideoEncoding.h264 then
+                            if vec.h264 |> IsNull then vec.h264 <- new H264Configuration()
+                            vec.h264.govLength <- model.govLength |> CoerceGovLength(options.h264)
+                        elif model.encoder = VideoEncoding.mpeg4 then
+                            if vec.mpeg4 |> IsNull then vec.mpeg4 <- new Mpeg4Configuration()
+                            vec.mpeg4.govLength <- model.govLength |> CoerceGovLength(options.mpeg4)
                         true
                     else
                         false
@@ -264,9 +260,9 @@ namespace odm.ui.activities
 
             let isVecConfigured =
                 match model.encoder with
-                |VideoEncoding.H264 -> tryConfig(options.H264)
-                |VideoEncoding.JPEG -> tryConfig(options.JPEG)
-                |VideoEncoding.MPEG4 -> tryConfig(options.MPEG4)
+                |VideoEncoding.h264 -> validateConfig(options.h264)
+                |VideoEncoding.jpeg -> validateConfig(options.jpeg)
+                |VideoEncoding.mpeg4 -> validateConfig(options.mpeg4)
                 |_ -> raise (new ArgumentException(LocalVideoSettings.instance.errorEncoder))
             
             if isVecConfigured then 

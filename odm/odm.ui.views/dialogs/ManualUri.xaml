@@ -28,8 +28,9 @@
         </Grid.RowDefinitions>
         <Label Content="URI: " Grid.Column="0" Grid.Row="0"/>
         <TextBox Text="{Binding devUri, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" MinWidth="150" MaxWidth="400" Grid.Column="1" Grid.Row="0"/>
+        <TextBlock Name="valueErrorInfo" Text="Invalid Uri" Grid.Column="0" Grid.ColumnSpan="2"  Margin="8,2,2,2" Foreground="Red" Grid.Row="1"/>
 		<StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
-			<Button Content="{Binding ButtonName}" Click="Button_Click" Margin="2"/>
+			<Button Name="btnApply" Content="{Binding ButtonName}" Click="Button_Click" Margin="2"/>
 			<Button Name="btnCancel" Click="btnCancel_Click" Margin="0,2,2,2" Content="{Binding Buttons.cancel, ElementName=root}"/>
 		</StackPanel>
     </Grid>

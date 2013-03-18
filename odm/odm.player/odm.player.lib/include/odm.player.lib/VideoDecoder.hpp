@@ -8,7 +8,7 @@ namespace onvifmp{
 		typedef function<shared_ptr<VideoDecoder> (VirtualSink* sink)> Factory;
 		static Factory Create(CodecID codecId, const char* sporps){
 			return ([=](VirtualSink* sink)->shared_ptr<VideoDecoder>{
-				avcodec_init();
+				//avcodec_init();
 				av_register_all();
 				avcodec_register_all();
 

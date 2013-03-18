@@ -18,17 +18,17 @@ namespace odm.ui.viewModels {
         public ViewModelDeviceBase(IUnityContainer container)
             : base(container) {
         }
-        public virtual void Init(INvtSession session, IAccount account) {
+        public virtual void Init(INvtSession session, Account account) {
             base.CurrentSession = session;
             Load(session, account);
         }
-        public abstract void Load(INvtSession session, IAccount account);
+        public abstract void Load(INvtSession session, Account account);
     }
     public abstract class ViewModelChannelBase : ViewModelBase {
         public ViewModelChannelBase(IUnityContainer container):base(container) {
 
         }
-        public virtual void Init(INvtSession session, String chanToken, string profileToken, IAccount account, IVideoInfo videoInfo) {
+        public virtual void Init(INvtSession session, String chanToken, string profileToken, Account account, IVideoInfo videoInfo) {
             base.CurrentSession = session;
             this.ChannelToken = chanToken;
             this.profileToken = profileToken;
@@ -70,7 +70,7 @@ namespace odm.ui.viewModels {
         public IVideoInfo VideoInfo { get; protected set; }
         public String ChannelToken;
 		public string profileToken;
-		public abstract void Load(INvtSession session, String chanToken, string profileToken, IAccount account, IVideoInfo videoInfo);
+		public abstract void Load(INvtSession session, String chanToken, string profileToken, Account account, IVideoInfo videoInfo);
     }
 	public abstract class ViewModelBase :DependencyObject, IDisposable, INotifyPropertyChanged{
         public ViewModelBase(IUnityContainer container) {
@@ -83,7 +83,7 @@ namespace odm.ui.viewModels {
         }
         public IUnityContainer container;
         public INvtSession CurrentSession;
-        public IAccount CurrentAccount;
+        public Account CurrentAccount;
 
         public readonly Dispatcher dispatch;
         public CompositeDisposable subscription;

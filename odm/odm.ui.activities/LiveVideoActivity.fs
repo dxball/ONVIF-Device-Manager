@@ -29,8 +29,9 @@ namespace odm.ui.activities
 //    open odm.ui.dialogs
 
 
-    type LiveVideoActivity(ctx:IUnityContainer, profToken:string) = class
-        do if profToken=null then raise( new ArgumentNullException("profToken") )
+    type LiveVideoActivity(ctx:IUnityContainer, profToken:string, videoSourceToken:string) = class
+        do if profToken |> IsNull then raise( new ArgumentNullException("profToken") )
+        do if videoSourceToken |> IsNull then raise( new ArgumentNullException("videoSourceToken") )
         let session = ctx.Resolve<INvtSession>()
         let facade = new OdmSession(session)
         
@@ -42,8 +43,23 @@ namespace odm.ui.activities
         member private this.Main() = async{
             let! cont = async{
                 try
+                    let session = ctx.Resolve<INvtSession>()
+                    let! profile = session.GetProfile(profToken)
+                    let vec = 
+                        if profile.videoEncoderConfiguration |> NotNull then
+                            profile.videoEncoderConfiguration
+                        else
+                            failwith "the profile has no video encoder configuration"
+
+                    let videoSourceConfToken = if profile.videoSourceConfiguration |> NotNull then profile.videoSourceConfiguration.token else null
+                    let videoAnalyticsConfToken = if profile.videoAnalyticsConfiguration |> NotNull then profile.videoAnalyticsConfiguration.token else null
+
                     let model = new LiveVideoView.Model(
-                        profToken = profToken
+                        videoSourceToken = videoSourceToken,
+                        profToken = profToken,
+                        videoSourceConfToken = videoSourceConfToken,
+                        videoAnalyticsConfToken = videoAnalyticsConfToken,
+                        encoderResolution = vec.resolution
                     )
                     return this.ShowForm(model)
                 with err -> 
@@ -72,7 +88,7 @@ namespace odm.ui.activities
             return result
         }
         
-        static member Run(ctx:IUnityContainer, profToken:string) = 
-            let act = new LiveVideoActivity(ctx, profToken)
+        static member Run(ctx:IUnityContainer, profToken:string, videoSourceToken:string) = 
+            let act = new LiveVideoActivity(ctx, profToken, videoSourceToken)
             act.Main()
     end

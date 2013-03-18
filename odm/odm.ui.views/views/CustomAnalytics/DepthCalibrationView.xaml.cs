@@ -208,7 +208,7 @@ namespace odm.ui.views.CustomAnalytics {
 			//this.player = player;
 			playerHolder.Child = player;
 		}
-        public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
+        public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo){//, string profToken) {
             this.model = model;
             this.container = container;
             this.videoInfo = videoInfo;

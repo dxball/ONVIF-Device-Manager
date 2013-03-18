@@ -55,7 +55,7 @@
     end
 
     type ConfigureProfileActivity(ctx:IUnityContainer, profile:Profile) = class
-        do if profile=null then raise( new ArgumentNullException("profile") )
+        do if profile |> IsNull then raise( new ArgumentNullException("profile") )
         let session = ctx.Resolve<INvtSession>()
         let facade = new OdmSession(session)
         
@@ -65,55 +65,53 @@
         }
 
         let load() = async{
-            let! caps = session.GetCapabilities()
+            //let! caps = session.GetCapabilities()
             let! vecs, aecs, vacs, metcs, ptzcs = Async.Parallel(
                 async{
-                    if profile.VideoSourceConfiguration = null then
-                        return [||]
-                    else
+                    if profile.videoSourceConfiguration |> NotNull then
                         let! vecs = session.GetCompatibleVideoEncoderConfigurations(profile.token)
-                        if vecs<> null then 
-                            return vecs
-                        else 
-                            return [||]
+                        return vecs |> SuppressNull [||]
+                    else
+                        return [||]
                 },
                 async{
-                    if profile.AudioSourceConfiguration = null then
-                        return [||]
-                    else
+                    if profile.audioSourceConfiguration |> NotNull then
                         let! aecs = session.GetCompatibleAudioEncoderConfigurations(profile.token)
-                        if aecs<> null then 
-                            return aecs
-                        else 
-                            return [||]
+                        return aecs |> SuppressNull [||]
+                    else
+                        return [||]
                 },
                 async{
-                    if caps.Analytics=null || caps.Analytics.XAddr=null then
-                        return [||]
-                    else
+                    let! isAnalyticsSupported = facade.IsAnalyticsSupported()
+                    if isAnalyticsSupported then
                         let! vacs = session.GetCompatibleVideoAnalyticsConfigurations(profile.token)
-                        if vacs<> null then 
-                            return vacs
-                        else 
-                            return [||]
+                        return vacs |> SuppressNull [||]
+                    else
+                        return [||]
                 },
                 async{
                     let! metcs = session.GetCompatibleMetadataConfigurations(profile.token)
-                    if metcs<> null then 
-                        return metcs
-                    else 
-                        return [||]
+                    return metcs |> SuppressNull [||]
                 },
                 async{
-                    if caps.PTZ = null || caps.PTZ.XAddr = null then
-                        return [||]
+                    let! ptzcs = async{
+                        let! isPtzSupported = facade.IsPtzSupported()
+                        if not(isPtzSupported) then
+                            return null
+                        else
+                            try
+                                let ptz = session :> IPtzAsync 
+                                return! ptz.GetConfigurations()
+                            with err->
+                                dbg.Error(err)
+                                return null
+                    }
+                    if ptzcs |> NotNull then
+                        return ptzcs
+                    elif profile.ptzConfiguration |> NotNull then
+                        return [|profile.ptzConfiguration|]
                     else
-                        let ptz = session :> IPtzAsync 
-                        let! ptzcs = ptz.GetConfigurations()
-                        if ptzcs<> null then 
-                            return ptzcs
-                        else 
-                            return [||]
+                        return [||]
                 }
             )
             
@@ -125,10 +123,10 @@
                 ptzCfgs = ptzcs
             )
             //model.videoEncCfgs <- vecs
-            model.isVideoEncCfgEnabled <- profile.VideoEncoderConfiguration <> null
+            model.isVideoEncCfgEnabled <- NotNull(profile.videoEncoderConfiguration)
             model.videoEncCfg <- 
-                if profile.VideoEncoderConfiguration <> null then
-                    let cfgToken = profile.VideoEncoderConfiguration.token
+                if profile.videoEncoderConfiguration |> NotNull then
+                    let cfgToken = profile.videoEncoderConfiguration.token
                     match vecs |> Seq.tryFind (fun x -> x.token = cfgToken) with
                     | None -> null
                     | Some x -> x
@@ -138,10 +136,10 @@
                     null
             
             //model.audioEncCfgs <- aecs
-            model.isAudioEncCfgEnabled <- profile.AudioEncoderConfiguration <> null
+            model.isAudioEncCfgEnabled <- NotNull(profile.audioEncoderConfiguration)
             model.audioEncCfg <- 
-                if profile.AudioEncoderConfiguration <> null then
-                    let cfgToken = profile.AudioEncoderConfiguration.token
+                if profile.audioEncoderConfiguration |> NotNull then
+                    let cfgToken = profile.audioEncoderConfiguration.token
                     match aecs |> Seq.tryFind (fun x -> x.token = cfgToken) with
                     | None -> null
                     | Some x -> x
@@ -151,10 +149,10 @@
                     null
             
             //model.analyticsCfgs <- vacs
-            model.isAnalyticsCfgEnabled <- profile.VideoAnalyticsConfiguration <> null
+            model.isAnalyticsCfgEnabled <- NotNull(profile.videoAnalyticsConfiguration)
             model.analyticsCfg <- 
-                if profile.VideoAnalyticsConfiguration <> null then
-                    let cfgToken = profile.VideoAnalyticsConfiguration.token
+                if profile.videoAnalyticsConfiguration |> NotNull then
+                    let cfgToken = profile.videoAnalyticsConfiguration.token
                     match vacs |> Seq.tryFind (fun x -> x.token = cfgToken) with
                     | None -> null
                     | Some x -> x
@@ -164,10 +162,10 @@
                     null
             
             //model.metaCfgs <- metcs
-            model.isMetaCfgEnabled <- profile.MetadataConfiguration <> null
+            model.isMetaCfgEnabled <- NotNull(profile.metadataConfiguration)
             model.metaCfg <- 
-                if profile.MetadataConfiguration <> null then
-                    let cfgToken = profile.MetadataConfiguration.token
+                if profile.metadataConfiguration |> NotNull then
+                    let cfgToken = profile.metadataConfiguration.token
                     match metcs |> Seq.tryFind (fun x -> x.token = cfgToken) with
                     | None -> null
                     | Some x -> x
@@ -177,10 +175,10 @@
                     null
             
             //model.ptzCfgs <- ptzcs
-            model.isPtzCfgEnabled <- profile.PTZConfiguration <> null
+            model.isPtzCfgEnabled <- NotNull(profile.ptzConfiguration)
             model.ptzCfg <- 
-                if profile.PTZConfiguration <> null then
-                    let cfgToken = profile.PTZConfiguration.token
+                if profile.ptzConfiguration |> NotNull then
+                    let cfgToken = profile.ptzConfiguration.token
                     match ptzcs |> Seq.tryFind (fun x -> x.token = cfgToken) with
                     | None -> null
                     | Some x -> x
@@ -195,40 +193,40 @@
 
         let configure(model:ProfileUpdatingView.Model) = async{
 
-            if model.isVideoEncCfgEnabled && model.videoEncCfg <> null then
+            if model.isVideoEncCfgEnabled && NotNull(model.videoEncCfg) then
                 do! session.AddVideoEncoderConfiguration(profile.token, model.videoEncCfg.token)
-                profile.VideoEncoderConfiguration <- model.videoEncCfg
-            elif not(model.isVideoEncCfgEnabled) && profile.VideoEncoderConfiguration <> null then
+                profile.videoEncoderConfiguration <- model.videoEncCfg
+            elif not(model.isVideoEncCfgEnabled) && NotNull(profile.videoEncoderConfiguration) then
                 do! session.RemoveVideoEncoderConfiguration(profile.token)
-                profile.VideoEncoderConfiguration <- null
+                profile.videoEncoderConfiguration <- null
             
-            if model.isAudioEncCfgEnabled && model.audioEncCfg <> null then
+            if model.isAudioEncCfgEnabled && NotNull(model.audioEncCfg) then
                 do! session.AddAudioEncoderConfiguration(profile.token, model.audioEncCfg.token)
-                profile.AudioEncoderConfiguration <- model.audioEncCfg
-            elif not(model.isAudioEncCfgEnabled) && profile.AudioEncoderConfiguration <> null then
+                profile.audioEncoderConfiguration <- model.audioEncCfg
+            elif not(model.isAudioEncCfgEnabled) && NotNull(profile.audioEncoderConfiguration) then
                 do! session.RemoveAudioEncoderConfiguration(profile.token)
-                profile.AudioEncoderConfiguration <- null
+                profile.audioEncoderConfiguration <- null
             
-            if model.isAnalyticsCfgEnabled && model.analyticsCfg <> null then
+            if model.isAnalyticsCfgEnabled && NotNull(model.analyticsCfg) then
                 do! session.AddVideoAnalyticsConfiguration(profile.token, model.analyticsCfg.token)
-                profile.VideoAnalyticsConfiguration <- model.analyticsCfg
-            elif not(model.isAnalyticsCfgEnabled) && profile.VideoAnalyticsConfiguration <> null then
+                profile.videoAnalyticsConfiguration <- model.analyticsCfg
+            elif not(model.isAnalyticsCfgEnabled) && NotNull(profile.videoAnalyticsConfiguration) then
                 do! session.RemoveVideoAnalyticsConfiguration(profile.token)
-                profile.VideoAnalyticsConfiguration <- null
+                profile.videoAnalyticsConfiguration <- null
             
-            if model.isMetaCfgEnabled && model.metaCfg <> null then
+            if model.isMetaCfgEnabled && NotNull(model.metaCfg) then
                 do! session.AddMetadataConfiguration(profile.token, model.metaCfg.token)
-                profile.MetadataConfiguration <- model.metaCfg
-            elif not(model.isMetaCfgEnabled) && profile.MetadataConfiguration <> null then
+                profile.metadataConfiguration <- model.metaCfg
+            elif not(model.isMetaCfgEnabled) && NotNull(profile.metadataConfiguration) then
                 do! session.RemoveMetadataConfiguration(profile.token)
-                profile.MetadataConfiguration <- null
+                profile.metadataConfiguration <- null
             
-            if model.isPtzCfgEnabled && model.ptzCfg <> null then
+            if model.isPtzCfgEnabled && NotNull(model.ptzCfg) then
                 do! session.AddPTZConfiguration(profile.token, model.ptzCfg.token)
-                profile.PTZConfiguration <- model.ptzCfg
-            elif not(model.isPtzCfgEnabled) && profile.PTZConfiguration <> null then
+                profile.ptzConfiguration <- model.ptzCfg
+            elif not(model.isPtzCfgEnabled) && NotNull(profile.ptzConfiguration) then
                 do! session.RemovePTZConfiguration(profile.token)
-                profile.PTZConfiguration <- null 
+                profile.ptzConfiguration <- null 
             
             model.AcceptChanges()
             return ()
@@ -287,7 +285,7 @@
                 try
                     let items = Seq.toList(seq{
                         for vec in model.videoEncCfgs do
-                            let item = new ItemSelectorView.Item(vec.ToString(), GetVecDetails(vec) |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
+                            let item = new ItemSelectorView.Item(vec.GetName(), GetVecDetails(vec) |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
                             yield (vec, item)
                     })
 
@@ -322,7 +320,7 @@
                 try
                     let items = Seq.toList(seq{
                         for aec in model.audioEncCfgs do
-                            let item = new ItemSelectorView.Item(aec.ToString(), GetAecDetails(aec) |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
+                            let item = new ItemSelectorView.Item(aec.GetName(), GetAecDetails(aec) |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
                             yield (aec, item)
                     })
                     let itemsModel = new SelectItemModel<AudioEncoderConfiguration>(items, model.audioEncCfg)
@@ -340,7 +338,7 @@
                         let item = res.AsSelect().item
                         match itemsModel.GetEntityFromItem(item) with
                         | Some entity -> model.audioEncCfg <- entity
-                        | None -> ()                                
+                        | None -> ()
                     return this.ShowForm(model)
                 with err ->
                     do! show_error(err)
@@ -354,7 +352,7 @@
                 try
                     let items = Seq.toList(seq{
                         for meta in model.metaCfgs do
-                            let item = new ItemSelectorView.Item(meta.ToString(), GetMetaDetails(meta) |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
+                            let item = new ItemSelectorView.Item(meta.GetName(), GetMetaDetails(meta) |> List.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
                             yield (meta, item)
 
                     })
@@ -390,7 +388,7 @@
                     }
                     let items = Seq.toList(seq{
                         for ptz in model.ptzCfgs do
-                            let item = new ItemSelectorView.Item(ptz.ToString(), GetPtzDetails(ptz, nodes) |> Seq.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
+                            let item = new ItemSelectorView.Item(ptz.GetName(), GetPtzDetails(ptz, nodes) |> Seq.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable)
                             yield (ptz, item)
                     })
                     let itemsModel = new SelectItemModel<PTZConfiguration>(items, model.ptzCfg)
@@ -420,14 +418,10 @@
         member private this.SelectAnalytics(model) = async{
             let! cont = async{
                 try
-                    let! nodes = async{
-                        use! progress = Progress.Show(ctx, LocalDevice.instance.loading)
-                        return! session.GetNodes()
-                    }
                     let items = Seq.toList(seq{
                         for analytics in model.analyticsCfgs do
                             let details = GetVacDetails(analytics)
-                            yield (analytics, new ItemSelectorView.Item(analytics.ToString(), details |> Seq.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable))
+                            yield (analytics, new ItemSelectorView.Item(analytics.GetName(), details |> Seq.toArray, ItemSelectorView.ItemFlags.AllOperationsAvailable))
                     })
                     let itemsModel = new SelectItemModel<VideoAnalyticsConfiguration>(items, model.analyticsCfg)
                     let! res = 

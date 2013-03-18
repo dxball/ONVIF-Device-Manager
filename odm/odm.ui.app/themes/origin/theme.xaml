@@ -21,12 +21,11 @@
 		<ResourceDictionary Source="Slider.xaml"/>
 		<ResourceDictionary Source="DirectionRoseControl.xaml"/>
 		<ResourceDictionary Source="XMLViewControl.xaml"/>
-		<ResourceDictionary Source="PTZControl.xaml"/>
 		<ResourceDictionary Source="DialogWindow.xaml"/>
 		<ResourceDictionary Source="ListBox.xaml"/>
 		<ResourceDictionary Source="EventGridView.xaml"/>
         <ResourceDictionary Source="Expander.xaml"/>
-        <ResourceDictionary Source="NumericEditor.xaml"/> 
+        <ResourceDictionary Source="NumericEditor.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 	<Style x:Key="{x:Type Application}"/>

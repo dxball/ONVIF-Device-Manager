@@ -26,7 +26,7 @@
 					<ColumnDefinition Width="auto"/>
 				</Grid.ColumnDefinitions>
                 <ListBox Name="ItemsList" Margin="0" MinHeight="100" MinWidth="100"  ItemsSource="{Binding items}" SelectedItem="{Binding SelectedItem, ElementName=ctrl}"/>
-                    <Grid Grid.Column="2">
+                <Grid Grid.Column="2">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="10"/>

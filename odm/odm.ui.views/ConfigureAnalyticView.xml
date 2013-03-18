@@ -4,7 +4,6 @@
 	<use clr-ns="System.Xml.Schema"/>
 	<use clr-ns="onvif.services"/>
 	<model>
-		<prop name="profile" clr-type="Profile" read-only="true"/>
 		<prop name="schemes" clr-type="XmlSchemaSet" read-only="true"/>
 		<prop name="config" clr-type="Config" read-only="true"/>
 		<prop name="configDescription" clr-type="ConfigDescription" read-only="true"/>

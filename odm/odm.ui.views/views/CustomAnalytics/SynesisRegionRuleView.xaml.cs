@@ -69,52 +69,52 @@ namespace odm.ui.views.CustomAnalytics {
         }
 
         void GetElementItems() {
-            modulDescr.config.Parameters.ElementItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.elementItem.ForEach(x => {
+                switch (x.name) {
                     case "DirectionAlarm":
-                        x.Any = model.DirectionAlarm.Serialize();
+                        x.any = model.DirectionAlarm.Serialize();
                         break;
                     case "LoiteringAlarm":
-                        x.Any = model.LoiteringAlarm.Serialize();
+								x.any = model.LoiteringAlarm.Serialize();
                         break;
                     case "Points":
                         ScalePointsOutput(model.Points);
-                        x.Any = model.Points.Serialize();
+								x.any = model.Points.Serialize();
                         break;
                     case "SpeedAlarm":
-                        x.Any = model.SpeedAlarm.Serialize();
+								x.any = model.SpeedAlarm.Serialize();
                         break;
                     case "AbandonedItemAlarm":
-                        x.Any = model.AbandonedItemAlarm.Serialize();
+								x.any = model.AbandonedItemAlarm.Serialize();
                         break;
                     case "RegionMotionAlarm":
-                        x.Any = model.RegionMotionAlarm.Serialize();
+								x.any = model.RegionMotionAlarm.Serialize();
                         break;
                 }
             });
         }
 
-        void FillElementItems(ItemListElementItem[] elementItems, SynesisRegionRuleModel model) {
+        void FillElementItems(ItemList.ElementItem[] elementItems, SynesisRegionRuleModel model) {
             elementItems.ForEach(x => {
-                switch (x.Name) {
+                switch (x.name) {
                     case "DirectionAlarm":
-                        model.DirectionAlarm = x.Any.Deserialize<synesis.DirectionAlarm>();
+                        model.DirectionAlarm = x.any.Deserialize<synesis.DirectionAlarm>();
                         break;
                     case "LoiteringAlarm":
-                        model.LoiteringAlarm = x.Any.Deserialize<synesis.LoiteringAlarm>();
+                        model.LoiteringAlarm = x.any.Deserialize<synesis.LoiteringAlarm>();
                         break;
                     case "Points":
-                        model.Points = x.Any.Deserialize<synesis.RegionPoints>();
+                        model.Points = x.any.Deserialize<synesis.RegionPoints>();
                         ScalePointsInput(model.Points);
                         break;
                     case "SpeedAlarm":
-                        model.SpeedAlarm = x.Any.Deserialize<synesis.SpeedAlarm>();
+                        model.SpeedAlarm = x.any.Deserialize<synesis.SpeedAlarm>();
                         break;
                     case "AbandonedItemAlarm":
-                        model.AbandonedItemAlarm = x.Any.Deserialize<synesis.AbandonedItemAlarm>();
+                        model.AbandonedItemAlarm = x.any.Deserialize<synesis.AbandonedItemAlarm>();
                         break;
                     case "RegionMotionAlarm":
-                        model.RegionMotionAlarm = x.Any.Deserialize<synesis.RegionMotionAlarm>();
+                        model.RegionMotionAlarm = x.any.Deserialize<synesis.RegionMotionAlarm>();
                         break;
                 }
             });
@@ -143,7 +143,7 @@ namespace odm.ui.views.CustomAnalytics {
                 GetRose();
 
                 model.SpeedAlarm.Time = (int)valueRunningTime.Value;
-                model.RegionMotionAlarm.Enabled = enableMoving.IsChecked.Value;
+                model.RegionMotionAlarm.Enabled = enableMoving.IsChecked.Value; 
                 model.LoiteringAlarm.Time = (int)valueLoiteringTime.Value;
                 model.AbandonedItemAlarm.Enabled = enableAbandoning.IsChecked.Value;
                 model.SpeedAlarm.Enabled = enableRunning.IsChecked.Value;
@@ -155,7 +155,7 @@ namespace odm.ui.views.CustomAnalytics {
 
                 //valueLoiteringTime.Value = model.LoiteringRule.Time;
 
-                model.SpeedAlarm.Speed = (float)valueRunningSpeed.Value;
+                model.SpeedAlarm.Speed = (float)valueRunningSpeed.Value * 1000f / 3600f; // to m/s
 
                 var plist = regeditor.GetRegion();
                 List<synesis.Point> synesisPoints = new List<synesis.Point>();
@@ -190,7 +190,7 @@ namespace odm.ui.views.CustomAnalytics {
                 enableLoitering.IsChecked = model.LoiteringAlarm.Enabled;
                 enableDirectionMoving.IsChecked = model.DirectionAlarm.Enabled;
                 enableAbandoning.IsChecked = model.AbandonedItemAlarm.Enabled;
-                enableMoving.IsChecked = model.RegionMotionAlarm.Enabled;
+                enableMoving.IsChecked = model.RegionMotionAlarm.Enabled; 
                 
                 valueDirectionMoving.Increment = 0.1;
                 valueDirectionMoving.FormatString = "F2";
@@ -207,7 +207,7 @@ namespace odm.ui.views.CustomAnalytics {
                 valueRunningSpeed.Increment = 0.1;
                 valueRunningSpeed.FormatString = "F2";
                 valueRunningSpeed.Minimum = 0;
-                valueRunningSpeed.Value = model.SpeedAlarm.Speed;
+                valueRunningSpeed.Value = model.SpeedAlarm.Speed * 3600f / 1000f; // to km/h
 
                 valueRunningTime.Value = model.SpeedAlarm.Time;
 
@@ -225,11 +225,16 @@ namespace odm.ui.views.CustomAnalytics {
             }
         }
 
-        public bool Init(IUnityContainer container, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr, odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr) {
-            this.modulDescr = modulDescr;
-            this.videoDescr = videoDescr;
-            this.container = container;
-            this.videoInfo = videoDescr.videoInfo;
+		public bool Init(IUnityContainer container, StreamInfoArgs args, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr) {
+			this.modulDescr = modulDescr;
+			this.container = container;
+
+			this.videoDescr = new ConfigureAnalyticView.AnalyticsVideoDescriptor() {
+				videoInfo = new VideoInfo() { MediaUri = args.streamUri, Resolution = new Size() { Width = args.sourceResolution.Width, Height = args.sourceResolution.Height } },
+				videoSourceResolution = new Size() { Width = args.encoderResolution.Width, Height = args.encoderResolution.Height }
+			};
+
+			this.videoInfo = videoDescr.videoInfo;
 
             videoSourceSize = new Size(videoDescr.videoSourceResolution.Width, videoDescr.videoSourceResolution.Height);
             videoEncoderSize = new Size(videoDescr.videoInfo.Resolution.Width, videoDescr.videoInfo.Resolution.Height);
@@ -237,14 +242,14 @@ namespace odm.ui.views.CustomAnalytics {
             model = new SynesisRegionRuleModel();
 
             try{
-                FillElementItems(modulDescr.config.Parameters.ElementItem, model);
+                FillElementItems(modulDescr.config.parameters.elementItem, model);
             } catch (Exception err) {
                 dbg.Error(err);
                 return false;
             }
             try{
                 BindData();
-				VideoStartup(videoInfo);
+				VideoStartup(args);
             } catch (Exception err) {
                 dbg.Error(err);
                 return false;
@@ -254,25 +259,41 @@ namespace odm.ui.views.CustomAnalytics {
 		IPlaybackSession playbackSession;
 		VideoBuffer vidBuff;
 		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
+		void VideoStartup(StreamInfoArgs args) {//, string profToken) {
+			vidBuff = new VideoBuffer((int)args.sourceResolution.Width, (int)args.sourceResolution.Height);
 
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
+			//var playerAct = container.Resolve<IVideoPlayerActivity>();
+			////profileToken: profToken,
+			//var model = new VideoPlayerActivityModel(
+			//    showStreamUrl: false,
+			//    streamSetup: new StreamSetup() {
+			//        Stream = StreamType.RTPUnicast,
+			//        Transport = new Transport() {
+			//            Protocol = AppDefaults.visualSettings.Transport_Type,
+			//            Tunnel = null
+			//        }
+			//    }
+			//);
 
-			var model = new VideoPlayerActivityModel(
-				profileToken: videoDescr.profileToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
+			//disposables.Add(
+			//    container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			//);
+			VideoPlayerView playview = new VideoPlayerView();
+			disposables.Add(playview);
 
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			player.Child = playview;
+
+			playview.Init(
+				new VideoPlayerView.Model(
+					"",
+					args.streamSetup,
+					new MediaUri() { uri = args.streamUri },
+					new VideoResolution() {
+						height = (int)args.sourceResolution.Height,
+						width = (int)args.sourceResolution.Width
+					},
+					false, 
+                    null)
 			);
 		}
 

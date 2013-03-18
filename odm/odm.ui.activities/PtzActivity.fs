@@ -30,7 +30,7 @@
 //    open odm.ui.dialogs
 
     type PtzActivity private(ctx:IUnityContainer, profToken:string) = class
-        do if profToken=null then raise( new ArgumentNullException("profToken") )
+        do if profToken |> IsNull then raise( new ArgumentNullException("profToken") )
         let session = ctx.Resolve<INvtSession>()
         let ptz = session :> IPtzAsync
         let facade = new OdmSession(session)
@@ -41,36 +41,86 @@
         }
 
         let load() = async{
-            
-            let! profile, nodes, presets = Async.Parallel(
+            let! profile, presets = Async.Parallel(
                 session.GetProfile(profToken),
-                ptz.GetNodes(),
-                ptz.GetPresets(profToken)
+                //ptz.GetNodes(),
+                async{
+                    try
+                        return! ptz.GetPresets(profToken)
+                    with err->
+                        dbg.Error(err)
+                        return [||]
+                }
             )
             
-            let cfg = profile.PTZConfiguration
-            
-            let! node = 
-                if cfg<>null then
-                    ptz.GetNode(cfg.NodeToken)
-                else
-                    async{return null}
+            let cfg = profile.ptzConfiguration
+            let! node = async{
+                if cfg |> NotNull then
+                    try
+                        //FIX: D-Link DSC-2230 doesn't support GetNode request
+                        return! ptz.GetNode(cfg.nodeToken)
+                    with err->
+                        dbg.Error(err)
+                        return new PTZNode( 
+                            token = cfg.nodeToken,
+                            name = cfg.nodeToken,
+                            supportedPTZSpaces = new PTZSpaces(
+                                absolutePanTiltPositionSpace = [|new Space2DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace",
+                                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
+                                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
+                                )|],
+                                absoluteZoomPositionSpace = [|new Space1DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace",
+                                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
+                                )|],
+                                relativePanTiltTranslationSpace = [|new Space2DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace",
+                                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
+                                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
+                                )|],
+                                relativeZoomTranslationSpace = [|new Space1DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace",
+                                    xRange = new FloatRange(min = -1.0f, max = 1.0f)
+                                )|],
+                                continuousPanTiltVelocitySpace = [|new Space2DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace",
+                                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
+                                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
+                                )|],
+                                continuousZoomVelocitySpace = [|new Space1DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace",
+                                    xRange = new FloatRange(min = -1.0f, max = 1.0f)
+                                )|],
+                                panTiltSpeedSpace = [|new Space1DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace",
+                                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
+                                )|],
+                                zoomSpeedSpace = [|new Space1DDescription(
+                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace",
+                                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
+                                )|]
+                            ),
+                            homeSupported = false,
+                            maximumNumberOfPresets = 0,
+                            auxiliaryCommands = null,
+                            extension = null,
+                            fixedHomePosition = false,
+                            fixedHomePositionSpecified = false
+                        )
 
+                else
+                    return null
+            }
+            
             let model = new PtzView.Model(
                 profToken = profile.token,
-                panMin = -1.0f,
-                panMax = 1.0f,
-                tiltMin = -1.0f,
-                tiltMax = 1.0f,
-                zoomMin = 0.0f,
-                zoomMax = 1.0f,
-                nodes = nodes,
+                currentNode = node,
+                currentPtzConfig = cfg,
+                //nodes = nodes,
                 presets = presets
             )
-
-            model.currentNode <- node
-
-            model.AcceptChanges()
+            //model.AcceptChanges()
             return model
         }
 

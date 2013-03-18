@@ -33,7 +33,7 @@ namespace odm.ui {
 					ToolBarView.AppSettingsCommand,
 					(s, a) => {
 						var evarg = new DeviceLinkEventArgs();
-						evarg.currentAccount = AccountManager.CurrentAccount;
+						evarg.currentAccount = AccountManager.Instance.CurrentAccount;
 						evarg.session = null;
 						eventAggregator.GetEvent<AppSettingsClick>().Publish(true);
 					}
@@ -44,7 +44,7 @@ namespace odm.ui {
                     ToolBarView.AccountSettingsCommand,
                     (s, a) => {
                         var evarg = new DeviceLinkEventArgs();
-                        evarg.currentAccount = AccountManager.CurrentAccount;
+                        evarg.currentAccount = AccountManager.Instance.CurrentAccount;
                         evarg.session = null;
                         eventAggregator.GetEvent<AccountManagerClick>().Publish(evarg);
                     }
@@ -56,7 +56,7 @@ namespace odm.ui {
 					ToolBarView.BackgroundTasksCommand,
 					(s, a) => {
                         var evarg = new DeviceLinkEventArgs();
-                        evarg.currentAccount = AccountManager.CurrentAccount;
+                        evarg.currentAccount = AccountManager.Instance.CurrentAccount;
                         evarg.session = null;
                         eventAggregator.GetEvent<BackgroundTasksClick>().Publish(true);
 					}
@@ -68,24 +68,16 @@ namespace odm.ui {
 					  ToolBarView.AboutCommand,
 					  (s, a) => {
 						  var evarg = new DeviceLinkEventArgs();
-						  evarg.currentAccount = AccountManager.CurrentAccount;
+						  evarg.currentAccount = AccountManager.Instance.CurrentAccount;
 						  evarg.session = null;
 						  eventAggregator.GetEvent<AboutClick>().Publish(evarg);
 					  }
 				 )
 			);
             
-            Accounts = new ObservableCollection<IAccount>();
-
+            
 			InitializeComponent();
-
-			eventAggregator.GetEvent<InitAccounts>().Subscribe(ret => {
-                //IsNotApply = true;
-				InitAccounts(ret);
-			});
-
-            InitLocalization();
-			InitAccounts();
+            auth.Content = new AuthView(container); // TODO how to pass the container?
 		}
         void InitLocalization() {
             IEnumerable<odm.localization.Language> langs = odm.localization.Language.AvailableLanguages;
@@ -102,7 +94,7 @@ namespace odm.ui {
         
 		public LocalDevice Strings { get { return LocalDevice.instance; } }
 		public LocalTitles Titles { get { return LocalTitles.instance; } }
-		IAccount anonymous;
+		Account anonymous;
 		bool isNotApply;
 		bool IsNotApply {
 			get { 
@@ -113,45 +105,9 @@ namespace odm.ui {
 			}
 		}
 		IEventAggregator eventAggregator;
-		public ObservableCollection<IAccount> Accounts { get; set; }
 		
-		void InitAccounts(InitAccountEventArgs args) {
-			Accounts.Clear();
-
-			anonymous = new AccountDescriptor(new odmAccount() { Name = "<Anonymous>" });
-			Accounts.Add(anonymous);
-			AccountManager.Load().ForEach(x => Accounts.Add(x));
-
-			IsNotApply = !args.needrefresh;
-			
-			try {
-				if (args.currentAccount == null || Accounts.Where(ac => ac.Name == args.currentAccount.Name && ac.Password == args.currentAccount.Password).First() == null)
-					CurrentAccount = anonymous;
-				else
-					CurrentAccount = Accounts.Where(ac => ac.Name == args.currentAccount.Name && ac.Password == args.currentAccount.Password).First();      
-			} catch (Exception err) {
-			    dbg.Error(err);
-			}
-		}
-		void InitAccounts() {
-			IsNotApply = true;
-			Accounts.Clear();
-
-			anonymous = new AccountDescriptor(new odmAccount() { Name = "<Anonymous>" });
-			Accounts.Add(anonymous);
-			AccountManager.Load().ForEach(x => Accounts.Add(x));
-
-			try {
-				var curracc = AccountManager.CurrentAccount;
-				if (curracc == null || Accounts.Where(ac => ac.Name == curracc.Name && ac.Password == curracc.Password).FirstOrDefault() == null)
-					CurrentAccount = anonymous;
-				else
-					CurrentAccount = Accounts.Where(ac => ac.Name == curracc.Name && ac.Password == curracc.Password).FirstOrDefault();         
-  			} catch (Exception err) {
-				dbg.Error(err);
-			}
-		}
-		void OnAccountApply() {
+		
+		/*void OnAccountApply() {
 			if (CurrentAccount == anonymous) {
 				AccountManager.SetCurrent(new DefAccountDescriptor());
 			} else {
@@ -159,32 +115,19 @@ namespace odm.ui {
 			}
 			//AccountManager.SetCurrent(CurrentAccount);
 			eventAggregator.GetEvent<Refresh>().Publish(true);
-		}
+		}*/
 
 		#region Commands
 		void InitCommands() {
-			ApplyClick = new DelegateCommand(() => {
+			/*ApplyClick = new DelegateCommand(() => {
 				OnAccountApply();
-			});
+			});*/
 		}
 
-		public DelegateCommand ApplyClick {
-			get { return (DelegateCommand)GetValue(ApplyClickProperty); }
-			set { SetValue(ApplyClickProperty, value); }
-		}
+		
 		public static readonly DependencyProperty ApplyClickProperty =
 			 DependencyProperty.Register("ApplyClick", typeof(DelegateCommand), typeof(ToolBarView));
 
 		#endregion
-
-       // IAccount SystemAccount;
-		public IAccount CurrentAccount {get { return (IAccount)GetValue(CurrentAccountProperty); }set { SetValue(CurrentAccountProperty, value); }}
-		public static readonly DependencyProperty CurrentAccountProperty =
-			 DependencyProperty.Register("CurrentAccount", typeof(IAccount), typeof(ToolBarView), new PropertyMetadata((obj, evarg) => {
-				 var vm = ((ToolBarView)obj);
-				 if (!vm.IsNotApply)
-					 vm.OnAccountApply();
-				 vm.IsNotApply = false;
-			 }));
 	}
 }

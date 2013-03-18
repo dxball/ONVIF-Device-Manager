@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Runtime.Remoting;
+using System.Threading;
 using odm.hosting;
 using utils;
 
 namespace odm.player {
 
-	public class HostedPlayer : IPlayer{
+	public class HostedPlayer : IPlayer {
 		PlayerTask playerTask = new PlayerTask();
 		PlayerHost playerHost = null;
 
@@ -22,7 +24,7 @@ namespace odm.player {
 			private IPlaybackController playbackController = null;
 			private IPlaybackSession playbackSession;
 			public PlayerTask playerTask = null;
-			public PlayerHost(PlayerTask playerTask){
+			public PlayerHost(PlayerTask playerTask) {
 				playbackController = playerTask.playbackController;
 				playerTask.playbackController = this;
 				this.playerTask = playerTask;
@@ -75,13 +77,13 @@ namespace odm.player {
 			}
 
 			bool IHostController.isAlive() {
-				return playbackController!=null;
+				return playbackController != null;
 			}
 
 			protected virtual void Dispose(bool disposing) {
 				if (disposing) {
 					IPlaybackController playbackController = null;
-					IPlaybackSession playbackSession = null; 
+					IPlaybackSession playbackSession = null;
 					lock (syn) {
 						playbackSession = this.playbackSession;
 						playbackController = this.playbackController;
@@ -91,7 +93,7 @@ namespace odm.player {
 					if (playbackController != null) {
 						playbackController.Shutdown();
 					}
-					if(playbackSession != null){
+					if (playbackSession != null) {
 						try {
 							playbackSession.Close();
 						} catch (Exception err) {
@@ -99,13 +101,13 @@ namespace odm.player {
 						}
 					}
 				}
-				
+
 			}
-			public void Dispose(){
+			public void Dispose() {
 				Dispose(true);
 				GC.SuppressFinalize(this);
 			}
-			~PlayerHost(){
+			~PlayerHost() {
 				Dispose(false);
 			}
 
@@ -130,7 +132,7 @@ namespace odm.player {
 									d.Dispose();
 									Process.GetCurrentProcess().Kill();
 								}
-							} catch(Exception err) {
+							} catch (Exception err) {
 								dbg.Error(err);
 								Process.GetCurrentProcess().Kill();
 							}
@@ -146,16 +148,16 @@ namespace odm.player {
 		public IDisposable Play(MediaStreamInfo mediaStreamInfo, IPlaybackController playbackController) {
 			//fix url
 			var url = new Uri(mediaStreamInfo.url);
-			if (url==null || !url.IsAbsoluteUri){
+			if (url == null || !url.IsAbsoluteUri) {
 				throw new Exception("Invalid playback url");
 			}
 			if (mediaStreamInfo.transport != MediaStreamInfo.Transport.Http) {
 				if (String.Compare(url.Scheme, "rtsp", true) != 0) {
 					throw new Exception("Invalid playback url");
 				}
-			} else if(String.Compare(url.Scheme, "rtsp", true) != 0) {
+			} else if (String.Compare(url.Scheme, "rtsp", true) != 0) {
 				int defPort;
-				if (String.Compare(url.Scheme, Uri.UriSchemeHttp, true) == 0 ) {
+				if (String.Compare(url.Scheme, Uri.UriSchemeHttp, true) == 0) {
 					defPort = 80;
 				} else if (String.Compare(url.Scheme, Uri.UriSchemeHttps, true) == 0) {
 					defPort = 443;
@@ -170,50 +172,59 @@ namespace odm.player {
 				url = ub.Uri;
 				mediaStreamInfo = new MediaStreamInfo(url.ToString(), mediaStreamInfo.transport, mediaStreamInfo.userNameToken);
 			}
-			
+
 			var disposable = new SingleAssignmentDisposable();
 			playerTask.mediaStreamInfo = mediaStreamInfo;
 			playerTask.playbackController = playbackController;
-			if(playerHost!=null){
+			if (playerHost != null) {
 				playerHost.Dispose();
 				RemotingServices.Disconnect(playerHost);
 				playerHost = null;
 			}
-			
+
 			playerHost = new PlayerHost(playerTask);
 			RemotingServices.Marshal(playerHost);
 			var ipcChannel = AppHosting.SetupChannel();
 			var hostControllerUri = RemotingServices.GetObjectUri(playerHost);
 			var hostControllerUrl = ipcChannel.GetUrlsForUri(hostControllerUri).First();
-			
+
 			//start player host process
 			var hostProcessArgs = new CommandLineArgs();
 			var t = Uri.EscapeDataString(hostControllerUrl);
-			hostProcessArgs.Add("controller-url", new string[] { hostControllerUrl }.ToList());
-			var hostProcess = Process.Start(new ProcessStartInfo() {
+			hostProcessArgs.Add("controller-url", new List<string> { hostControllerUrl });
+
+			var pi = new ProcessStartInfo() {
 				FileName = Assembly.GetExecutingAssembly().Location,
 				UseShellExecute = false,
-				Arguments = String.Join(" ", hostProcessArgs.Format())
-			});
-			hostProcess.Exited += (s, o) => {
-				//Console.WriteLine("host process exited!!!");
+				Arguments = String.Join(" ", hostProcessArgs.Format()),
 			};
-			hostProcess.EnableRaisingEvents = true;
+			pi.EnvironmentVariables["PATH"] = String.Join("; ", Bootstrapper.specialFolders.dlls.Select(sfd => sfd.directory.FullName).Append(pi.EnvironmentVariables["PATH"]));
+
+			StartHostProcess(pi);
 			return Disposable.Create(() => {
-				if (playerHost != null) {
-					playerHost.Dispose();
-					RemotingServices.Disconnect(playerHost);
-					playerHost = null;
-				}
-				//try {
-				//    hostProcess.Kill();
-				//} catch (Exception err) {
-				//    dbg.Error(err);
-				//}
+				Dispose();
 			});
 		}
-	
-		public void SetVideoBuffer(VideoBuffer videoBuffer){
+
+		Process hostProcess;
+		Timer startHostProcessTimer;
+		volatile bool unexpectedTermination = true;
+		private void StartHostProcess(ProcessStartInfo pi) {
+			if (hostProcess != null)
+				hostProcess.Dispose();
+			hostProcess = Process.Start(pi);
+
+			hostProcess.Exited += (s, o) => {
+				if (unexpectedTermination) {
+					if (startHostProcessTimer != null)
+						startHostProcessTimer.Dispose();
+					startHostProcessTimer = new Timer((state) => StartHostProcess(pi), null, TimeSpan.FromSeconds(1.5), TimeSpan.FromMilliseconds(-1));
+				}
+			};
+			hostProcess.EnableRaisingEvents = true;
+		}
+
+		public void SetVideoBuffer(VideoBuffer videoBuffer) {
 			playerTask.videoBuffer = videoBuffer;
 		}
 
@@ -225,11 +236,13 @@ namespace odm.player {
 			playerTask.metadataReceiver = metadataReceiver;
 		}
 
-		public void Dispose(){
+		public void Dispose() {
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 		protected virtual void Dispose(bool disposing) {
+			unexpectedTermination = false;
+
 			if (playerHost != null) {
 				RemotingServices.Disconnect(playerHost);
 				playerHost.Dispose();
@@ -238,6 +251,10 @@ namespace odm.player {
 			if (disposing) {
 				playerTask = null;
 			}
+			if (startHostProcessTimer != null)
+				startHostProcessTimer.Dispose();
+			if (hostProcess != null)
+				hostProcess.Dispose();
 		}
 		~HostedPlayer() {
 			Dispose(false);

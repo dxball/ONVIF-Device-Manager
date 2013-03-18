@@ -27,10 +27,9 @@ namespace odm.ui.activities {
 		public class Model{
 			
 			public Model(
-				Profile profile, XmlSchemaSet schemes, Config config, ConfigDescription configDescription
+				XmlSchemaSet schemes, Config config, ConfigDescription configDescription
 			){
 				
-				this.profile = profile;
 				this.schemes = schemes;
 				this.config = config;
 				this.configDescription = configDescription;
@@ -40,21 +39,18 @@ namespace odm.ui.activities {
 			
 
 			public static Model Create(
-				Profile profile,
 				XmlSchemaSet schemes,
 				Config config,
 				ConfigDescription configDescription
 			){
 				var _this = new Model();
 				
-				_this.profile = profile;
 				_this.schemes = schemes;
 				_this.config = config;
 				_this.configDescription = configDescription;
 				return _this;
 			}
 		
-			public Profile profile{get;private set;}
 			public XmlSchemaSet schemes{get;private set;}
 			public Config config{get;private set;}
 			public ConfigDescription configDescription{get;private set;}

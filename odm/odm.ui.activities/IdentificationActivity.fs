@@ -56,36 +56,37 @@
             )
 
             let nicInfs = Seq.toArray(seq{
-                if nics <> null then
+                if nics |> NotNull then
                     for nic in nics do
-                        if nic.Enabled && nic.IPv4 <> null && nic.IPv4.Config <> null then
-                            let nic_cfg = nic.IPv4.Config
+                        if nic.enabled && NotNull(nic.iPv4) && NotNull(nic.iPv4.config) then
+                            let nic_cfg = nic.iPv4.config
                             let mac = 
-                                if nic.Info <> null then
-                                    nic.Info.HwAddress.Replace(':', '-').ToUpper()
+                                if nic.info |> NotNull then
+                                    nic.info.hwAddress.Replace(':', '-').ToUpper()
                                 else
                                     null
-                            if nic_cfg.DHCP && nic_cfg.FromDHCP <> null then
-                                yield (mac, [|nic_cfg.FromDHCP|])
-                            elif not nic_cfg.DHCP && nic_cfg.Manual<>null && nic_cfg.Manual.Count()>0 then
-                                yield (mac, nic_cfg.Manual)
+                            if nic_cfg.dhcp && NotNull(nic_cfg.fromDHCP) then
+                                yield (mac, [|nic_cfg.fromDHCP|])
+                            elif not nic_cfg.dhcp && NotNull(nic_cfg.manual) && nic_cfg.manual.Count()>0 then
+                                yield (mac, nic_cfg.manual)
             })
 
             let ips = seq{
                 for (mac, addrs) in nicInfs do
                     yield! seq{ 
                         for addr in addrs do
-                            if addr<>null && not(String.IsNullOrWhiteSpace(addr.Address)) then
-                                yield addr.Address.Trim()
+                            let a = addr |> IfNotNull (fun x->x.address)
+                            if not(String.IsNullOrWhiteSpace(a)) then
+                                yield a.Trim()
                     }
                    
-                if zeroConf<>null && zeroConf.Addresses <> null then
-                    yield! zeroConf.Addresses |> Seq.filter(fun x-> not(String.IsNullOrEmpty(x)))
+                if NotNull(zeroConf) && NotNull(zeroConf.addresses) then
+                    yield! zeroConf.addresses |> Seq.filter(fun x-> not(String.IsNullOrEmpty(x)))
             }
 
             let onvifVersion = 
-                if caps.Device<>null && caps.Device.System<>null && caps.Device.System.SupportedVersions<> null then
-                    caps.Device.System.SupportedVersions.Max()
+                if NotNull(caps.device) && NotNull(caps.device.system) && NotNull(caps.device.system.supportedVersions) then
+                    caps.device.system.supportedVersions.Max()
                 else
                     null
 
@@ -101,8 +102,8 @@
                 onvifVersion = onvifVersion
             )
             
-            model.origin.name <- ScopeHelper.GetName(scopes |> Seq.map (fun x->x.ScopeItem))
-            model.origin.location <- ScopeHelper.GetLocation(scopes |> Seq.map (fun x->x.ScopeItem))
+            model.origin.name <- ScopeHelper.GetName(scopes |> Seq.map (fun x->x.scopeItem))
+            model.origin.location <- ScopeHelper.GetLocation(scopes |> Seq.map (fun x->x.scopeItem))
             
             model.RevertChanges()
             return model
@@ -121,8 +122,8 @@
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
-                                    |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Fixed)
-                                    |> Seq.forall (fun x -> not(x.ScopeItem.StartsWith(ScopeHelper.onvifNameScope)))
+                                    |> Seq.filter (fun x -> x.scopeDef = ScopeDefinition.``fixed``)
+                                    |> Seq.forall (fun x -> not(x.scopeItem.StartsWith(ScopeHelper.onvifNameScope)))
                             if use_onvif_scope then
                                 ScopeHelper.onvifNameScope
                             else 
@@ -135,15 +136,15 @@
                         let prefix = 
                             let use_onvif_scope = 
                                 scopes 
-                                    |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Fixed)
-                                    |> Seq.forall (fun x -> not(x.ScopeItem.StartsWith(ScopeHelper.onvifLocationScope)))
+                                    |> Seq.filter (fun x -> x.scopeDef = ScopeDefinition.``fixed``)
+                                    |> Seq.forall (fun x -> not(x.scopeItem.StartsWith(ScopeHelper.onvifLocationScope)))
                             if use_onvif_scope then
                                 ScopeHelper.onvifLocationScope
                             else 
                                 ScopeHelper.odmLocationScope
                         //let value = String.Concat(prefix, Uri.EscapeDataString(model.current.location))
                         let values = seq{
-                            if model.location <> null then
+                            if model.location |> NotNull then
                                 for x in model.location.Split([|';'|]) do
                                     let v = x.Trim()
                                     if not(String.IsNullOrEmpty(v)) then
@@ -156,8 +157,8 @@
                 let filter (x:string) = changed_scopes |> Seq.forall (fun (prefix, value) -> not(x.StartsWith(prefix)))
                 
                 yield! scopes
-                    |> Seq.filter (fun x -> x.ScopeDef = ScopeDefinition.Configurable)
-                    |> Seq.map (fun x -> x.ScopeItem)
+                    |> Seq.filter (fun x -> x.scopeDef = ScopeDefinition.configurable)
+                    |> Seq.map (fun x -> x.scopeItem)
                     |> Seq.filter filter
                 
                 yield! changed_scopes |> Seq.map (fun (prefix, value) -> String.Concat(prefix, value))

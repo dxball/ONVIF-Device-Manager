@@ -58,16 +58,16 @@ namespace odm.ui.views {
 
 	public class DeviceLinkEventArgs {
         public INvtSession session;
-        public IAccount currentAccount;
+        public Account currentAccount;
     }
     public class BatchTaskEventArgs {
         public INvtSession session;
-        public IAccount currentAccount;
+        public Account currentAccount;
         public List<DeviceDescriptionHolder> Devices;
     }
 	public class SysLogLinkEventArgs {
 		public INvtSession session;
-		public IAccount currentAccount;
+		public Account currentAccount;
 		public SysLogDescriptor sysLog;
 	}
 
@@ -77,8 +77,8 @@ namespace odm.ui.views {
 			Name = typeNames.ContainsKey(type) ? typeNames[type] : "";
 		}
 		Dictionary<global::onvif.services.SystemLogType, string> typeNames = new Dictionary<SystemLogType, string>() { 
-			{ global::onvif.services.SystemLogType.Access, "Access" }, 
-			{ global::onvif.services.SystemLogType.System, "System" } 
+			{ global::onvif.services.SystemLogType.access, "Access" }, 
+			{ global::onvif.services.SystemLogType.system, "System" } 
 		};
 		public SystemLogType type;
 		public string Name { get; set; }
@@ -95,8 +95,8 @@ namespace odm.ui.views {
 		public void FillData(global::onvif.services.SystemLog log, SysLogType slogType) {
 			arriveTime = System.DateTime.Now;
 			LogType = slogType;
-			Attachment = log.Binary;
-			SystemLog = log.String;
+			Attachment = log.binary;
+			SystemLog = log.@string;
 
 			IsReceived = true;
 		}
@@ -141,18 +141,22 @@ namespace odm.ui.views {
 	}
 	public class SystemLogReceived : CompositePresentationEvent<SysLogDescriptor> { }
 
+	#region commonDevice
 	public class WebPageClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class IdentificationClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
+	public class ReceiversClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class DateTimeClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class MaintenanceClick : CompositePresentationEvent<MaintenanceLinkEventArgs> { }
     public class SystemLogClick : CompositePresentationEvent<SysLogLinkEventArgs> { }
     public class DigitalIOClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
+    public class ActionsClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
+    public class ActionTriggersClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class DeviceEventsClick : CompositePresentationEvent<DeviceEventsEventArgs> { }
 	public class AddEventsFilterClick : CompositePresentationEvent<DeviceEventsEventArgs> { }
     public class NetworkClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class XMLExplorerClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
 	public class UserManagerClick : CompositePresentationEvent<UserManagementEventArgs> { }
-    public class SequrityClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
+    public class SecurityClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class AccountManagerClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class AppSettingsClick : CompositePresentationEvent<bool> { }
     public class UpgradeButchClick : CompositePresentationEvent<bool> { }
@@ -162,9 +166,11 @@ namespace odm.ui.views {
     public class BackgroundTasksClick : CompositePresentationEvent<bool> { }
     public class AboutClick : CompositePresentationEvent<DeviceLinkEventArgs> { }
     public class Refresh : CompositePresentationEvent<bool> { }
-	
+	public class ReleaseUI : CompositePresentationEvent<bool> { }
+	#endregion commonDevice
+
 	public class InitAccountEventArgs {
-		public IAccount currentAccount;
+		public Account currentAccount;
 		public bool needrefresh;
 	}
 	public class InitAccounts : CompositePresentationEvent<InitAccountEventArgs> { }
@@ -174,14 +180,14 @@ namespace odm.ui.views {
         public INvtSession session;
         public String token;
         public string profileToken;
-        public IAccount currentAccount;
+        public Account currentAccount;
         public IVideoInfo videoInfo;
     }
     public class ChannelLinkEventArgs {
         public INvtSession session;
         public String token;
-        public string profileToken;
-		public IAccount currentAccount;
+        public Profile profile;
+		public Account currentAccount;
         public IVideoInfo videoInfo;
     }
 	public class UITestEventArgs {
@@ -189,12 +195,13 @@ namespace odm.ui.views {
 		public INvtSession session;
 		public String token;
 		public string profileToken;
-		public IAccount currentAccount;
+		public Account currentAccount;
 		public IVideoInfo videoInfo;
 	}
 	public class UITestClick : CompositePresentationEvent<UITestEventArgs> { }
 
-    public class ProfilesClick : CompositePresentationEvent<ChannelLinkEventArgs> { }
+	#region Channels
+	public class ProfilesClick : CompositePresentationEvent<ChannelLinkEventArgs> { }
     public class PTZClick : CompositePresentationEvent<ChannelLinkEventArgs> { }
     public class AnalyticsClick : CompositePresentationEvent<ChannelLinkEventArgs> { }
     public class RulesClick : CompositePresentationEvent<ChannelLinkEventArgs> { }
@@ -205,8 +212,39 @@ namespace odm.ui.views {
     public class ImagingClick : CompositePresentationEvent<ChannelLinkEventArgs> { }
 
     public class VideoChangedEvent : CompositePresentationEvent<ChannelLinkEventArgs> { }
+	#endregion Channels
 
-    public class ProfileChangedEventArgs{
+	#region NVAEvents
+	public class NVALinkEventArgs {
+		public INvtSession session;
+		public AnalyticsEngine engine;
+		public AnalyticsEngineControl control;
+		public Account currentAccount;
+		public IVideoInfo videoInfo;
+	}
+	public class ControlChangedEventArgs {
+		public ControlChangedEventArgs(INvtSession session, AnalyticsEngine engine, string controlToken) {
+			this.session = session;
+			this.engine = engine;
+			this.controlToken = controlToken;
+		}
+		public INvtSession session;
+		public string controlToken;
+		public AnalyticsEngine engine;
+	}
+	public class ControlChangedPreviewEvent : CompositePresentationEvent<ControlChangedEventArgs> { }
+	public class ControlChangedEvent : CompositePresentationEvent<ControlChangedEventArgs> { }
+
+	public class NVALiveVideoClick : CompositePresentationEvent<NVALinkEventArgs> { }
+	public class NVAControlsClick : CompositePresentationEvent<NVALinkEventArgs> { }
+	public class NVAAnalyticsClick : CompositePresentationEvent<NVALinkEventArgs> { }
+	public class NVAInputsClick : CompositePresentationEvent<NVALinkEventArgs> { }
+    public class NVAMetadataClick : CompositePresentationEvent<NVALinkEventArgs> { }
+	public class NVASettingsClick : CompositePresentationEvent<NVALinkEventArgs> { }
+
+	#endregion NVAEvents
+
+	public class ProfileChangedEventArgs{
         public ProfileChangedEventArgs(INvtSession session, String vsToken, string profToken) {
             this.session = session;
 	        this.vsToken = vsToken;

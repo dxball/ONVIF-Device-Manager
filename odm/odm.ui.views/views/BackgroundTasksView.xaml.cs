@@ -91,7 +91,7 @@ namespace odm.ui {
 					AddUpgradeBatchCommand,
 					(s, a) => {
 						var evarg = new DeviceLinkEventArgs();
-						evarg.currentAccount = AccountManager.CurrentAccount;
+						evarg.currentAccount = AccountManager.Instance.CurrentAccount;
 						evarg.session = null;
 						eventAggregator.GetEvent<UpgradeButchClick>().Publish(true);
 					}
@@ -102,7 +102,7 @@ namespace odm.ui {
 					AddRestoreBatchCommand,
 					(s, a) => {
 						var evarg = new DeviceLinkEventArgs();
-						evarg.currentAccount = AccountManager.CurrentAccount;
+						evarg.currentAccount = AccountManager.Instance.CurrentAccount;
 						evarg.session = null;
 						eventAggregator.GetEvent<RestoreButchClick>().Publish(true);
 					}

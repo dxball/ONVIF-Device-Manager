@@ -38,7 +38,7 @@ namespace odm.ui.views.CustomAnalytics {
 			//this.player = player;
 			playerHolder.Child = player;
 		}
-		public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo, string profToken) {
+		public void Init(IUnityContainer container, odm.ui.views.CustomAnalytics.SynesisAnalyticsConfigView.SynesisAnalyticsModel model, IVideoInfo videoInfo){//, string profToken) {
 			this.model = model;
 			this.videoInfo = videoInfo;
 			this.container = container;
@@ -54,6 +54,8 @@ namespace odm.ui.views.CustomAnalytics {
 				m.UseAntishaker = v;
 				IsModuleEnabled = m.UseAntishaker;
 			});
+            rectEditor.RectangleChanged += rectEditor_RectangleChanged;
+
 			//enableDisplacement.CreateBinding(CheckBox.IsCheckedProperty, model, x => x.CameraRedirected, (m, v) => {
 			//    m.CameraRedirected = v;
 			//});
@@ -61,6 +63,11 @@ namespace odm.ui.views.CustomAnalytics {
 				m.ShiftOutputPicture = v;
 			});
 		}
+
+        void rectEditor_RectangleChanged(object sender, EventArgs e)
+        {
+            model.UseAntishaker = true;
+        }
 
 		Rect FromSynesisAntishaker(synesis.AntishakerCrop rct) {
 			Rect srct = new Rect();
@@ -99,6 +106,7 @@ namespace odm.ui.views.CustomAnalytics {
 		}
 		
 		public void Dispose() {
+            rectEditor.RectangleChanged -= rectEditor_RectangleChanged;
 			//disposables.Dispose();
 		}
 

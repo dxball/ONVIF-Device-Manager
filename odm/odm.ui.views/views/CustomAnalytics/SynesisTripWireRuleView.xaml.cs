@@ -61,18 +61,18 @@ namespace odm.ui.views.CustomAnalytics {
         }
 
         void GetSimpleItems() {
-            modulDescr.config.Parameters.SimpleItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.simpleItem.ForEach(x => {
+                switch (x.name) {
                     case "Direction":
                         switch (model.TripDirection) { 
                             case controls.GraphEditor.TripWireEditor.TripWireDirection.FromBoth:
-                                x.Value = "FromBoth";
+                                x.value = "FromBoth";
                                 break;
                             case controls.GraphEditor.TripWireEditor.TripWireDirection.FromLeft:
-                                x.Value = "FromLeft";
+                                x.value = "FromLeft";
                                 break;
                             case controls.GraphEditor.TripWireEditor.TripWireDirection.FromRight:
-                                x.Value = "FromRight";
+                                x.value = "FromRight";
                                 break;
                         }
                         break;
@@ -80,10 +80,10 @@ namespace odm.ui.views.CustomAnalytics {
             });
         }
         void GetElementItems() {
-            modulDescr.config.Parameters.ElementItem.ForEach(x => {
-                switch (x.Name) {
+            modulDescr.config.parameters.elementItem.ForEach(x => {
+                switch (x.name) {
                     case "Points":
-                        x.Any = model.TripPoints.Serialize();
+								x.any = model.TripPoints.Serialize();
                         break;
                     //case "Direction":
                     //    ScalePointsOutput(model.TripPoints);
@@ -92,11 +92,11 @@ namespace odm.ui.views.CustomAnalytics {
                 }
             });
         }
-        void FillSimpleItems(ItemListSimpleItem[] simpleItems, SynesisTripWireRuleModel model) {
+        void FillSimpleItems(ItemList.SimpleItem[] simpleItems, SynesisTripWireRuleModel model) {
             simpleItems.ForEach(x => {
-                switch (x.Name) {
+                switch (x.name) {
                     case "Direction":
-                        switch (x.Value) { 
+                        switch (x.value) { 
                             case "FromLeft":
                                 model.TripDirection = controls.GraphEditor.TripWireEditor.TripWireDirection.FromLeft;
                                 break;
@@ -113,11 +113,11 @@ namespace odm.ui.views.CustomAnalytics {
             });
         }
 
-        void FillElementItems(ItemListElementItem[] elementItems, SynesisTripWireRuleModel model) {
+        void FillElementItems(ItemList.ElementItem[] elementItems, SynesisTripWireRuleModel model) {
             elementItems.ForEach(x => {
-                switch (x.Name) {
+                switch (x.name) {
                     case "Points":
-                        model.TripPoints = x.Any.Deserialize<synesis.TripWirePoints>();
+                        model.TripPoints = x.any.Deserialize<synesis.TripWirePoints>();
                         ScalePointsInput(model.TripPoints);
                         break;
                     //case "Direction":
@@ -174,11 +174,16 @@ namespace odm.ui.views.CustomAnalytics {
             }
         }
 
-        public bool Init(IUnityContainer container, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr, odm.ui.activities.ConfigureAnalyticView.AnalyticsVideoDescriptor videoDescr) {
-            this.modulDescr = modulDescr;
-            this.videoDescr = videoDescr;
-            this.container = container;
-            this.videoInfo = videoDescr.videoInfo;
+		public bool Init(IUnityContainer container, StreamInfoArgs args, odm.ui.activities.ConfigureAnalyticView.ModuleDescriptor modulDescr) {
+			this.modulDescr = modulDescr;
+			this.container = container;
+
+			this.videoDescr = new ConfigureAnalyticView.AnalyticsVideoDescriptor() {
+				videoInfo = new VideoInfo() { MediaUri = args.streamUri, Resolution = new Size() { Width = args.sourceResolution.Width, Height = args.sourceResolution.Height } },
+				videoSourceResolution = new Size() { Width = args.encoderResolution.Width, Height = args.encoderResolution.Height }
+			};
+
+			this.videoInfo = videoDescr.videoInfo;
 
             videoSourceSize = new Size(videoDescr.videoSourceResolution.Width, videoDescr.videoSourceResolution.Height);
             videoEncoderSize = new Size(videoDescr.videoInfo.Resolution.Width, videoDescr.videoInfo.Resolution.Height);
@@ -186,13 +191,13 @@ namespace odm.ui.views.CustomAnalytics {
             model = new SynesisTripWireRuleModel();
 
             try {
-                FillSimpleItems(modulDescr.config.Parameters.SimpleItem, model);
+                FillSimpleItems(modulDescr.config.parameters.simpleItem, model);
             } catch (Exception err) {
                 dbg.Error(err);
                 return false;
             }
             try{
-                FillElementItems(modulDescr.config.Parameters.ElementItem, model);
+                FillElementItems(modulDescr.config.parameters.elementItem, model);
             } catch (Exception err) {
                 dbg.Error(err);
                 return false;
@@ -200,7 +205,7 @@ namespace odm.ui.views.CustomAnalytics {
 
             try{
                 BindData();
-				VideoStartup(videoInfo);
+				VideoStartup(args);
             } catch (Exception err) {
                 dbg.Error(err);
                 return false;
@@ -210,25 +215,41 @@ namespace odm.ui.views.CustomAnalytics {
 		IPlaybackSession playbackSession;
 		VideoBuffer vidBuff;
 		CompositeDisposable disposables;
-		void VideoStartup(IVideoInfo iVideo) {
-			vidBuff = new VideoBuffer((int)iVideo.Resolution.Width, (int)iVideo.Resolution.Height);
+		void VideoStartup(StreamInfoArgs args) {//, string profToken) {
+			vidBuff = new VideoBuffer((int)args.sourceResolution.Width, (int)args.sourceResolution.Height);
 
-			var playerAct = container.Resolve<IVideoPlayerActivity>();
+			//var playerAct = container.Resolve<IVideoPlayerActivity>();
+			////profileToken: profToken,
+			//var model = new VideoPlayerActivityModel(
+			//    showStreamUrl: false,
+			//    streamSetup: new StreamSetup() {
+			//        Stream = StreamType.RTPUnicast,
+			//        Transport = new Transport() {
+			//            Protocol = AppDefaults.visualSettings.Transport_Type,
+			//            Tunnel = null
+			//        }
+			//    }
+			//);
 
-			var model = new VideoPlayerActivityModel(
-				profileToken: videoDescr.profileToken,
-				showStreamUrl: false,
-				streamSetup: new StreamSetup() {
-					Stream = StreamType.RTPUnicast,
-					Transport = new Transport() {
-						Protocol = AppDefaults.visualSettings.Transport_Type,
-						Tunnel = null
-					}
-				}
-			);
+			//disposables.Add(
+			//    container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			//);
+			VideoPlayerView playview = new VideoPlayerView();
+			disposables.Add(playview);
 
-			disposables.Add(
-				container.RunChildActivity(player, model, (c, m) => playerAct.Run(c, m))
+			player.Child = playview;
+
+			playview.Init(
+				new VideoPlayerView.Model(
+					"",
+					args.streamSetup,
+					new MediaUri() { uri = args.streamUri },
+					new VideoResolution() {
+						height = (int)args.sourceResolution.Height,
+						width = (int)args.sourceResolution.Width
+					},
+					false, 
+                    null)
 			);
 		}
 

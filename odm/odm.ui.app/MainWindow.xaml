@@ -13,8 +13,7 @@
 	Height="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowHeight, Mode=TwoWay}"
 	WindowState="{Binding Source={x:Static Member=prop:Settings.Default}, Path=MainWindowState, Mode=TwoWay}"
 	Icon="{StaticResource ResourceKey='images.odm_icon'}" 
-	VisualTextRenderingMode="Aliased"
-	TextOptions.TextRenderingMode="Aliased"
+	TextOptions.TextRenderingMode="ClearType"
 	TextOptions.TextFormattingMode="Display"
 	SnapsToDevicePixels="True" IsEnabled="True">
 

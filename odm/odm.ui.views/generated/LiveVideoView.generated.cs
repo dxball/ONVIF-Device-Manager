@@ -17,6 +17,7 @@ using System.Windows.Input;
 using odm.infra;
 namespace odm.ui.activities {
 	using global::onvif.services;
+	using global::odm.player;
 	
 	public partial class LiveVideoView{
 		
@@ -25,25 +26,41 @@ namespace odm.ui.activities {
 		public class Model{
 			
 			public Model(
-				string profToken
+				string videoSourceToken, string profToken, string videoSourceConfToken, string videoAnalyticsConfToken, VideoResolution encoderResolution
 			){
 				
+				this.videoSourceToken = videoSourceToken;
 				this.profToken = profToken;
+				this.videoSourceConfToken = videoSourceConfToken;
+				this.videoAnalyticsConfToken = videoAnalyticsConfToken;
+				this.encoderResolution = encoderResolution;
 			}
 			private Model(){
 			}
 			
 
 			public static Model Create(
-				string profToken
+				string videoSourceToken,
+				string profToken,
+				string videoSourceConfToken,
+				string videoAnalyticsConfToken,
+				VideoResolution encoderResolution
 			){
 				var _this = new Model();
 				
+				_this.videoSourceToken = videoSourceToken;
 				_this.profToken = profToken;
+				_this.videoSourceConfToken = videoSourceConfToken;
+				_this.videoAnalyticsConfToken = videoAnalyticsConfToken;
+				_this.encoderResolution = encoderResolution;
 				return _this;
 			}
 		
+			public string videoSourceToken{get;private set;}
 			public string profToken{get;private set;}
+			public string videoSourceConfToken{get;private set;}
+			public string videoAnalyticsConfToken{get;private set;}
+			public VideoResolution encoderResolution{get;private set;}
 		}
 			
 		#endregion

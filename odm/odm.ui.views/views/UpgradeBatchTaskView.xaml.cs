@@ -228,14 +228,11 @@ namespace odm.ui.views {
 			});
 		}
         System.Net.NetworkCredential LoadCurrentAccount() {
-            var acc = AccountManager.CurrentAccount;
-            System.Net.NetworkCredential account = new System.Net.NetworkCredential();
-            if (acc == null)
-                account = null;
-            else {
-                account.UserName = acc.Name;
-                account.Password = acc.Password;
-            }
+            var acc = AccountManager.Instance.CurrentAccount;
+            System.Net.NetworkCredential account = null;
+            if (!acc.IsAnonymous)
+                account = new System.Net.NetworkCredential() { UserName = acc.Name, Password = acc.Password };
+            
             return account;
         }
         void StartUpgrade(BatchItem bitem, string binPath){

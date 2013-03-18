@@ -109,8 +109,8 @@
                 <Image Source="/odm.ui.views;component/images/restore.png"></Image>
             </Button>
         </StackPanel>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="taskItems" MinHeight="100" MaxHeight="500" ItemsSource="{x:Static Member=l:BackgroundTaskManager.tasks}">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" MinHeight="100" MaxHeight="500">
+            <ItemsControl x:Name="taskItems" ItemsSource="{x:Static Member=l:BackgroundTaskManager.tasks}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type l:IBackgroundTask}">
                         <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,0,3" CornerRadius="3">

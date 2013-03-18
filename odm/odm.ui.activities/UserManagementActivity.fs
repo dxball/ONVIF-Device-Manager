@@ -29,7 +29,6 @@
         let dev = session :> IDeviceAsync
         
         let show_error(err:Exception) = async{
-            dbg.Error(err)
             do! ErrorView.Show(ctx, err) |> Async.Ignore
         }
         
@@ -38,11 +37,7 @@
             let model = new UserManagementView.Model(
                 users = users
             )
-            model.selection <- 
-                if users<>null then
-                    users.FirstOrDefault()
-                else
-                    null
+            model.selection <- users |> IfNotNull(fun x->x.FirstOrDefault())
             model.AcceptChanges()
             return model
         }
@@ -57,6 +52,7 @@
                     }
                     return this.ShowForm(model)
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -76,6 +72,7 @@
                         close = (fun (model)->this.Complete())
                     )
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.ShowForm(model)
             }
@@ -88,9 +85,12 @@
                     let creationModel = new UserCreationView.Model(
                         defaultUserName = "user",
                         defaultPassword = null,
-                        defaultUserLevel = UserLevel.Administrator,
+                        defaultUserLevel = UserLevel.administrator,
                         existingUsers = (
-                            model.users |> Seq.map(fun u-> u.Username) |> Seq.toArray
+                            if model.users |> NotNull then 
+                                model.users |> Seq.map(fun u-> u.username) |> Seq.toArray
+                            else
+                                null
                         )
                     )
                     let! res = UserCreationView.Show(ctx, creationModel)
@@ -98,9 +98,9 @@
                         apply = (fun username password userLevel-> async{
                             use! progress = Progress.Show(ctx, LocalDevice.instance.creating)
                             let user = new User()
-                            user.Username <- username
-                            user.Password <- password
-                            user.UserLevel <- userLevel
+                            user.username <- username
+                            user.password <- password
+                            user.userLevel <- userLevel
                             do! dev.CreateUsers([|user|])
                             return async{
                                 do! InfoView.Show(ctx, LocalUserManagement.instance.createSuccess) |> Async.Ignore
@@ -112,6 +112,7 @@
                         })
                     )
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -122,23 +123,23 @@
             let! cont = async{
                 try
                     let updatingModel = new UserUpdatingView.Model(
-                        name = model.selection.Username
+                        name = model.selection.username
                     )
-                    updatingModel.level <- model.selection.UserLevel
+                    updatingModel.level <- model.selection.userLevel
                     updatingModel.password <- 
-                        if String.IsNullOrEmpty(model.selection.Password) then
+                        if String.IsNullOrEmpty(model.selection.password) then
                             null
                         else
-                            model.selection.Password
+                            model.selection.password
                     updatingModel.AcceptChanges()
                     let! res = UserUpdatingView.Show(ctx, updatingModel)
                     return! res.Handle(
                         apply = (fun (model)-> async{
                             use! progress = Progress.Show(ctx, LocalDevice.instance.applying)
                             let user = new User()
-                            user.Username <- model.name
-                            user.Password <- model.password
-                            user.UserLevel <- model.level
+                            user.username <- model.name
+                            user.password <- model.password
+                            user.userLevel <- model.level
                             do! dev.SetUser([|user|])
                             return async{
                                 do! InfoView.Show(ctx, LocalUserManagement.instance.changeSuccess) |> Async.Ignore
@@ -150,6 +151,7 @@
                         })
                     )
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -159,9 +161,9 @@
         member private this.DeleteUser(model) = async{
             let! cont = async{
                 try
-                    if model.selection<>null then
+                    if model.selection |> NotNull then
                         use! progress = Progress.Show(ctx, LocalDevice.instance.loading)
-                        do! dev.DeleteUsers([|model.selection.Username|])
+                        do! dev.DeleteUsers([|model.selection.username|])
                         return async{
                             do! InfoView.Show(ctx, LocalUserManagement.instance.deleteSuccess) |> Async.Ignore
                             return! this.Main()
@@ -169,6 +171,7 @@
                     else
                         return this.ShowForm(model)
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -182,7 +185,7 @@
                     use fstream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)
                     let! bytes = fstream.AsyncRead(int(fstream.Length))
                     let data = new BinaryData()
-                    data.Data <- bytes
+                    data.data <- bytes
                     do! dev.SetAccessPolicy(data)
                     return this.ShowForm(model)
 //                    let! res = OpenFileActivity.Run("Policy files (*.pan)|*.pan")
@@ -203,6 +206,7 @@
 //                                return this.ShowForm(model)
 //                            }
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }
@@ -214,9 +218,9 @@
                 try
                     use! progress = Progress.Show(ctx, LocalDevice.instance.downloading)
                     let! data = dev.GetAccessPolicy()
-                    if data<>null && data.Data <> null then
+                    if NotNull(data) && NotNull(data.data) then
                         use fstream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read)
-                        do! fstream.AsyncWrite(data.Data)
+                        do! fstream.AsyncWrite(data.data)
                     return this.ShowForm(model)
 //                    let! res = SaveFileActivity.Run("Policy files|*.pan")
 //                    return!
@@ -235,6 +239,7 @@
 //                                return this.ShowForm(model)
 //                            }
                 with err -> 
+                    dbg.Error(err)
                     do! show_error(err)
                     return this.Main()
             }

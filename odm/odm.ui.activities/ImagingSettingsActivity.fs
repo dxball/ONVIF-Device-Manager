@@ -32,7 +32,7 @@ namespace odm.ui.activities
 
     //TODO:get rid of extra dependencies, use videoSourceToken instead of profToken
     type ImagingSettingsActivity(ctx:IUnityContainer, profToken:string) = class
-        do if profToken=null then raise( new ArgumentNullException("profToken") )
+        do if profToken |> IsNull then raise( new ArgumentNullException("profToken") )
         let session = ctx.Resolve<INvtSession>()
         let img = session :> IImagingAsync
         let facade = new OdmSession(session)
@@ -45,15 +45,36 @@ namespace odm.ui.activities
         let load() = async{
             
             let! profile = session.GetProfile(profToken)
-            let videoSourceToken = profile.VideoSourceConfiguration.SourceToken
-            let! options, settings = Async.Parallel(
-                img.GetOptions(videoSourceToken),
-                img.GetImagingSettings(videoSourceToken)
+            let videoSourceToken = profile.videoSourceConfiguration.sourceToken
+            let! options, settings, moveOptions = Async.Parallel(
+                async{
+                    try
+                        return! img.GetOptions(videoSourceToken)
+                    with err ->
+                        dbg.Error(err)
+                        return null
+                },
+                async{
+                    try
+                        return! img.GetImagingSettings(videoSourceToken)
+                    with err ->
+                        dbg.Error(err)
+                        return null
+                },
+                async{
+                    try
+                        return! img.GetMoveOptions(videoSourceToken)
+                    with err ->
+                        dbg.Error(err)
+                        return null
+                }
             )
             
             let model = new ImagingSettingsView.Model(
                 profToken = profile.token,
-                options = options
+                sourceToken = profile.videoSourceConfiguration.sourceToken,
+                options = options,
+                moveOptions = moveOptions
             )
             model.settings <- settings
             model.AcceptChanges()
@@ -63,7 +84,7 @@ namespace odm.ui.activities
         let apply_changes(model:ImagingSettingsView.Model) = async{
             let settings = model.current.settings
             let! profile = session.GetProfile(profToken)
-            let videoSourceToken = profile.VideoSourceConfiguration.SourceToken
+            let videoSourceToken = profile.videoSourceConfiguration.sourceToken
             do! img.SetImagingSettings(videoSourceToken, settings, true)
         }
         

@@ -7,7 +7,7 @@ namespace odm.ui.viewmodels {
             : base(container) {
 
 	    }
-        public override void Load(odm.core.INvtSession session, string chanToken, string profileToken, core.IAccount account, core.IVideoInfo videoInfo) {
+        public override void Load(odm.core.INvtSession session, string chanToken, string profileToken, core.Account account, core.IVideoInfo videoInfo) {
             Current = States.Common;
         }
     }

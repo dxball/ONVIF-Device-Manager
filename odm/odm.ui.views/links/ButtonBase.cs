@@ -16,18 +16,63 @@ using utils;
 using odm.ui.viewModels;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Reactive.Disposables;
+using System.Windows.Controls.Primitives;
 
 namespace odm.ui.links {
-	public class ButtonBase :Button{
-        public ButtonBase(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount) {
+	public class LinkButtonSwitch : DependencyObject, IDisposable {
+		public LinkButtonSwitch(IEventAggregator eventAggregator) {
+			this.eventAggregator = eventAggregator;
+			var RefreshSubscription = eventAggregator.GetEvent<RefreshSelection>().Subscribe(RefreshSelection, false);
+			disposables.Add(Disposable.Create(() => {
+				eventAggregator.GetEvent<RefreshSelection>().Unsubscribe(RefreshSubscription);
+			}));
+		}
+		
+		IEventAggregator eventAggregator;
+		CompositeDisposable disposables = new CompositeDisposable();
+
+		public Action ClearSelection;
+
+		void RefreshSelection(object sender) {
+			if (sender != this) {
+				if (ClearSelection != null)
+					ClearSelection();
+			}
+		}
+
+		public ButtonBase SelectedButton { get { return (ButtonBase)GetValue(SelectedButtonProperty); } set { SetValue(SelectedButtonProperty, value); } }
+		public static readonly DependencyProperty SelectedButtonProperty =
+			DependencyProperty.Register("SelectedButton", typeof(ButtonBase), typeof(LinkButtonSwitch), new FrameworkPropertyMetadata(null, (obj, ev) => {
+				if (ev.NewValue == null) {
+					return;
+				}
+				try {
+					var btn = ev.NewValue as ButtonBase;
+					btn.ButtonClick();
+				} catch (Exception err) {
+					//swallow error
+					log.WriteError("button click handler raise exception: " + err.Message);
+					dbg.Break();
+				}
+				var vm = (LinkButtonSwitch)obj;
+				vm.eventAggregator.GetEvent<RefreshSelection>().Publish(obj);
+			}));
+
+
+		public void Dispose() {
+			disposables.Dispose();
+		}
+	}
+	public class ButtonBase : ToggleButton{
+        public ButtonBase(IEventAggregator eventAggregator, INvtSession session, Account currentAccount) {
 			this.eventAggregator = eventAggregator;
 			this.session = session;
             this.currentAccount = currentAccount;
 			InitCommands();
-
+		
 			this.Cursor = Cursors.Hand;
 		}
-
 		#region Commands
 		void InitCommands() {
 			BtnClick = new DelegateCommand(() => {
@@ -50,7 +95,7 @@ namespace odm.ui.links {
 
 		protected IEventAggregator eventAggregator;
 		protected INvtSession session;
-        protected IAccount currentAccount;
+        protected Account currentAccount;
 
 		public string LinkName {get { return (string)GetValue(LinkNameProperty); }set { SetValue(LinkNameProperty, value); }}
 		public static readonly DependencyProperty LinkNameProperty = DependencyProperty.Register("LinkName", typeof(string), typeof(ButtonBase));
@@ -66,19 +111,19 @@ namespace odm.ui.links {
 
 	}
     public class ChannelButtonBase : ButtonBase{
-        public ChannelButtonBase(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount, String channelToken, string profileToken, IVideoInfo videoInfo)
+        public ChannelButtonBase(IEventAggregator eventAggregator, INvtSession session, Account currentAccount, String channelToken, Profile profile, IVideoInfo videoInfo)
             : base(eventAggregator, session, currentAccount) {
             this.channelToken = channelToken;
-            this.profileToken = profileToken;
+            this.profile = profile;
             this.videoInfo = videoInfo;
 	    }
         protected String channelToken;
-		protected string profileToken;
+		protected Profile profile;
         protected IVideoInfo videoInfo;
         protected ChannelLinkEventArgs GetEventArg(){
             var evArg = new ChannelLinkEventArgs();
             evArg.currentAccount = currentAccount;
-            evArg.profileToken = profileToken;
+            evArg.profile = profile;
             evArg.session = session;
             evArg.token = channelToken;
             evArg.videoInfo = videoInfo;
@@ -86,7 +131,7 @@ namespace odm.ui.links {
         }
     }
     public class DeviceButtonBase : ButtonBase{
-        public DeviceButtonBase(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public DeviceButtonBase(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
 	    }
         protected DeviceLinkEventArgs GetEventArg(){
@@ -96,11 +141,121 @@ namespace odm.ui.links {
             return evArg;
         }
     }
+	public class NVAButtonBase : ButtonBase{
+		public NVAButtonBase(IEventAggregator eventAggregator, INvtSession session, Account currentAccount, AnalyticsEngine engine, AnalyticsEngineControl control, IVideoInfo videoInfo = null)
+            : base(eventAggregator, session, currentAccount) {
+            this.engine = engine;
+            this.control = control;
+            this.videoInfo = videoInfo;
+	    }
+        protected AnalyticsEngine engine;
+		protected AnalyticsEngineControl control;
+        protected IVideoInfo videoInfo;
+        protected NVALinkEventArgs GetEventArg(){
+            var evArg = new NVALinkEventArgs();
+            evArg.currentAccount = currentAccount;
+            evArg.control = control;
+            evArg.session = session;
+            evArg.engine = engine;
+            evArg.videoInfo = videoInfo;
+            return evArg;
+        }
+    }
+	#region NVAButtons
+	public class NVALiveVideoButton : NVAButtonBase {
+		public NVALiveVideoButton(IEventAggregator eventAggregator, INvtSession session, AnalyticsEngine engine, AnalyticsEngineControl control, Account currentAccount, IVideoInfo videoInfo = null)
+			: base(eventAggregator, session, currentAccount, engine, control, videoInfo) {
+			Init();
+		}
+		public override void ButtonClick() {
+			eventAggregator.GetEvent<NVALiveVideoClick>().Publish(GetEventArg());
+		}
+		void Init() {
+			this.CreateBinding(LinkNameProperty, Titles, x => x.liveVideo);
+		}
 
-    #region ChannelsButtons
-    public class AnalyticsButton : ChannelButtonBase {
-        public AnalyticsButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+	}
+	public class NVAControlsButton : NVAButtonBase {
+		public NVAControlsButton(IEventAggregator eventAggregator, INvtSession session, AnalyticsEngine engine, AnalyticsEngineControl control, Account currentAccount, IVideoInfo videoInfo=null)
+			: base(eventAggregator, session, currentAccount, engine, control, videoInfo) {
+			Init();
+		}
+		public override void ButtonClick() {
+			eventAggregator.GetEvent<NVAControlsClick>().Publish(GetEventArg());
+		}
+		void Init() {
+			this.CreateBinding(LinkNameProperty, Titles, x => x.nvaControls);
+		}
+
+		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+	}
+	public class NVAAnalyticsButton : NVAButtonBase {
+		public NVAAnalyticsButton(IEventAggregator eventAggregator, INvtSession session, AnalyticsEngine engine, AnalyticsEngineControl control, Account currentAccount, IVideoInfo videoInfo = null)
+			: base(eventAggregator, session, currentAccount, engine, control, videoInfo) {
+			Init();
+		}
+		public override void ButtonClick() {
+			eventAggregator.GetEvent<NVAAnalyticsClick>().Publish(GetEventArg());
+		}
+		void Init() {
+			this.CreateBinding(LinkNameProperty, Titles, x => x.nvaAnalytics);
+		}
+
+		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+	}
+	public class NVAInputsButton : NVAButtonBase {
+		public NVAInputsButton(IEventAggregator eventAggregator, INvtSession session, AnalyticsEngine engine, AnalyticsEngineControl control, Account currentAccount, IVideoInfo videoInfo = null)
+			: base(eventAggregator, session, currentAccount, engine, control, videoInfo) {
+			Init();
+		}
+		public override void ButtonClick() {
+			eventAggregator.GetEvent<NVAInputsClick>().Publish(GetEventArg());
+		}
+		void Init() {
+			this.CreateBinding(LinkNameProperty, Titles, x => x.nvaInputs);
+		}
+
+		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+	}
+    public class NVAMetadataButton : NVAButtonBase
+    {
+        public NVAMetadataButton(IEventAggregator eventAggregator, INvtSession session, AnalyticsEngine engine, AnalyticsEngineControl control, Account currentAccount, IVideoInfo videoInfo = null)
+            : base(eventAggregator, session, currentAccount, engine, control, videoInfo)
+        {
+            Init();
+        }
+        public override void ButtonClick()
+        {
+            eventAggregator.GetEvent<NVAMetadataClick>().Publish(GetEventArg());
+        }
+        void Init()
+        {
+            this.CreateBinding(LinkNameProperty, Titles, x => x.nvaMetadata);
+        }
+
+        public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+    }
+	public class NVASettingsButton : NVAButtonBase {
+		public NVASettingsButton(IEventAggregator eventAggregator, INvtSession session, AnalyticsEngine engine, AnalyticsEngineControl control, Account currentAccount, IVideoInfo videoInfo = null)
+			: base(eventAggregator, session, currentAccount, engine, control, videoInfo) {
+			Init();
+		}
+		public override void ButtonClick() {
+			eventAggregator.GetEvent<NVASettingsClick>().Publish(GetEventArg());
+		}
+		void Init() {
+			this.CreateBinding(LinkNameProperty, Titles, x => x.nvaSettings);
+		}
+
+		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+	}
+	#endregion NVAButtons
+
+	#region ChannelsButtons
+	public class AnalyticsButton : ChannelButtonBase {
+        public AnalyticsButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -113,8 +268,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class RulesButton : ChannelButtonBase {
-        public RulesButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+        public RulesButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -127,8 +282,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class PTZButton : ChannelButtonBase {
-		public PTZButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+		public PTZButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -141,8 +296,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class ProfilesButton : ChannelButtonBase {
-		public ProfilesButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+		public ProfilesButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -155,8 +310,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class LiveVideoButton : ChannelButtonBase {
-		public LiveVideoButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+		public LiveVideoButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -169,8 +324,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class VideoStreamingButton : ChannelButtonBase {
-		public VideoStreamingButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+		public VideoStreamingButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -183,8 +338,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class ImagingButton : ChannelButtonBase {
-		public ImagingButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, string profileToken, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profileToken, videoInfo) {
+		public ImagingButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
             Init();
         }
         public override void ButtonClick() {
@@ -197,8 +352,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class MetadataButton : ChannelButtonBase {
-		public MetadataButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, IAccount currentAccount, IVideoInfo videoInfo)
-            : base(eventAggregator, session, currentAccount, channelToken, profile.token, videoInfo) {
+		public MetadataButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+            : base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
                 this.profile = profile;
             Init();
         }
@@ -207,7 +362,7 @@ namespace odm.ui.links {
         MetadataEventArgs GetMetaEventArg() {
             var evArg = new MetadataEventArgs();
             evArg.currentAccount = currentAccount;
-            evArg.profileToken = profileToken;
+            evArg.profileToken = profile.token;
             evArg.profile = profile;
             evArg.session = session;
             evArg.token = channelToken;
@@ -224,8 +379,8 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
 	public class UITestButton : ChannelButtonBase {
-		public UITestButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, IAccount currentAccount, IVideoInfo videoInfo)
-			: base(eventAggregator, session, currentAccount, channelToken, profile.token, videoInfo) {
+		public UITestButton(IEventAggregator eventAggregator, INvtSession session, String channelToken, Profile profile, Account currentAccount, IVideoInfo videoInfo)
+			: base(eventAggregator, session, currentAccount, channelToken, profile, videoInfo) {
 			this.profile = profile;
 			Init();
 		}
@@ -234,7 +389,7 @@ namespace odm.ui.links {
 		UITestEventArgs GetTestEventArg() {
 			var evArg = new UITestEventArgs();
 			evArg.currentAccount = currentAccount;
-			evArg.profileToken = profileToken;
+			evArg.profileToken = profile.token;
 			evArg.profile = profile;
 			evArg.session = session;
 			evArg.token = channelToken;
@@ -254,12 +409,12 @@ namespace odm.ui.links {
 
     #region DeviceButtons
     public class SequrityButton : DeviceButtonBase {
-        public SequrityButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public SequrityButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
             Init();
         }
         public override void ButtonClick() {
-            eventAggregator.GetEvent<SequrityClick>().Publish(GetEventArg());
+            eventAggregator.GetEvent<SecurityClick>().Publish(GetEventArg());
         }
         void Init() {
             this.CreateBinding(LinkNameProperty, Titles, x => x.sequrity);
@@ -268,7 +423,7 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class UserManagerButton : DeviceButtonBase {
-		public UserManagerButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount, string DevModel, string Manufact)
+		public UserManagerButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount, string DevModel, string Manufact)
 			: base(eventAggregator, session, currentAccount) {
 			this.devName = DevModel;
 			this.manufact = Manufact;
@@ -294,7 +449,7 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
 	public class WebPageButton : DeviceButtonBase {
-		public WebPageButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+		public WebPageButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
 			: base(eventAggregator, session, currentAccount) {
 			Init();
 		}
@@ -318,7 +473,7 @@ namespace odm.ui.links {
 		public LocalTitles Titles { get { return LocalTitles.instance; } }
 	}
 	public class IdentificationButton : DeviceButtonBase {
-        public IdentificationButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public IdentificationButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
 			: base(eventAggregator, session, currentAccount) {
 			Init();
 		}
@@ -331,9 +486,23 @@ namespace odm.ui.links {
 		
 		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
 	}
+	public class ReceiversButton : DeviceButtonBase {
+		public ReceiversButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
+			: base(eventAggregator, session, currentAccount) {
+			Init();
+		}
+		public override void ButtonClick() {
+			eventAggregator.GetEvent<ReceiversClick>().Publish(GetEventArg());
+		}
+		void Init() {
+			this.CreateBinding(LinkNameProperty, LocalTitles.instance, x => x.receivers);
+		}
+
+		public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+	}
     public class DateTimeButton : DeviceButtonBase
     {
-        public DateTimeButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public DateTimeButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
             Init();
         }
@@ -347,7 +516,7 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class DigitalIOButton : DeviceButtonBase {
-        public DigitalIOButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public DigitalIOButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
             Init();
         }
@@ -360,8 +529,36 @@ namespace odm.ui.links {
 
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
+    public class ActionsButton : DeviceButtonBase {
+        public ActionsButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
+            : base(eventAggregator, session, currentAccount) {
+            Init();
+        }
+        public override void ButtonClick() {
+            eventAggregator.GetEvent<ActionsClick>().Publish(GetEventArg());
+        }
+        void Init() {
+            this.CreateBinding(LinkNameProperty, LocalTitles.instance, x => x.actions);
+        }
+
+        public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+    }
+    public class ActionTriggersButton : DeviceButtonBase {
+        public ActionTriggersButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
+            : base(eventAggregator, session, currentAccount) {
+            Init();
+        }
+        public override void ButtonClick() {
+            eventAggregator.GetEvent<ActionTriggersClick>().Publish(GetEventArg());
+        }
+        void Init() {
+            this.CreateBinding(LinkNameProperty, LocalTitles.instance, x => x.triggers);
+        }
+
+        public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
+    }
     public class DeviceEventsButton : DeviceButtonBase {
-        public DeviceEventsButton(IEventAggregator eventAggregator, ObservableCollection<FilterExpression> filters, EventsStorage events, INvtSession session, IAccount currentAccount)
+        public DeviceEventsButton(IEventAggregator eventAggregator, ObservableCollection<FilterExpression> filters, EventsStorage events, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
             Init();
             this.events = events;
@@ -385,7 +582,7 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class MaintenanceButton : DeviceButtonBase{
-        public MaintenanceButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount, global::onvif.services.Capabilities caps, string DevModel, string Manufact)
+        public MaintenanceButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount, global::onvif.services.Capabilities caps, string DevModel, string Manufact)
             : base(eventAggregator, session, currentAccount) {
                 this.caps = caps;
 				this.devName = DevModel;
@@ -414,7 +611,7 @@ namespace odm.ui.links {
         public LinkButtonsStrings Titles { get { return LinkButtonsStrings.instance; } }
     }
     public class SystemLogButton : DeviceButtonBase {
-        public SystemLogButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount, SysLogDescriptor slog)
+        public SystemLogButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount, SysLogDescriptor slog)
             : base(eventAggregator, session, currentAccount) {
 				this.slog = slog;
 				Init();
@@ -440,7 +637,7 @@ namespace odm.ui.links {
     }
     public class NetworkButton : DeviceButtonBase
     {
-        public NetworkButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public NetworkButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
             Init();
         }
@@ -455,7 +652,7 @@ namespace odm.ui.links {
     }
     public class XMLExplorerButton : DeviceButtonBase
     {
-        public XMLExplorerButton(IEventAggregator eventAggregator, INvtSession session, IAccount currentAccount)
+        public XMLExplorerButton(IEventAggregator eventAggregator, INvtSession session, Account currentAccount)
             : base(eventAggregator, session, currentAccount) {
             Init();
         }

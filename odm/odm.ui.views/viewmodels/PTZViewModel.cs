@@ -31,7 +31,7 @@ namespace odm.ui.viewModels {
 		public string profileToken;
 		public IUnityContainer container;
 		public INvtSession CurrentSession;
-		public IAccount CurrentAccount;
+		public Account CurrentAccount;
 
 		public readonly Dispatcher dispatch;
 		public CompositeDisposable subscription;
@@ -90,12 +90,12 @@ namespace odm.ui.viewModels {
         void InitData(PtzView.Model  model) {
             Nodes.Clear();
             Presets.Clear();
-            model.nodes.ForEach(x => { Nodes.Add(x); });
-            this.CreateBinding(SelectedNodeProperty, model, x => { 
-                return x.currentNode;
-            }, (m, v) => {
-                m.currentNode = v;
-            });
+            //model.nodes.ForEach(x => { Nodes.Add(x); });
+			//this.CreateBinding(SelectedNodeProperty, model, x => { 
+			//    return x.currentNode;
+			//}, (m, v) => {
+			//    m.currentNode = v;
+			//});
             model.presets.ForEach(x => { Presets.Add(x); });
         }
 
@@ -103,71 +103,71 @@ namespace odm.ui.viewModels {
             InitData(model);
         }
 
-        public void Load(INvtSession session, String chanToken, string profileToken, IAccount account, IVideoInfo videoInfo) {
+        public void Load(INvtSession session, String chanToken, string profileToken, Account account, IVideoInfo videoInfo) {
         }
         #region ContinuesProcess
 		public void MoveUpContinues() {
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = 0;
-            speed.PanTilt.y = 1;
-            speed.Zoom.x = 0;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = 0;
+            speed.panTilt.y = 1;
+            speed.zoom.x = 0;
 
             MoveContinues(speed);
         }
 		public void MoveDownContinues() {
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = 0;
-            speed.PanTilt.y = -1;
-            speed.Zoom.x = 0;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = 0;
+            speed.panTilt.y = -1;
+            speed.zoom.x = 0;
 
             MoveContinues(speed);
         }
 		public void MoveRightContinues() {
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = 1;
-            speed.PanTilt.y = 0;
-            speed.Zoom.x = 0;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = 1;
+            speed.panTilt.y = 0;
+            speed.zoom.x = 0;
 
             MoveContinues(speed);
         }
 		public void MoveLeftContinues() {
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = -1;
-            speed.PanTilt.y = 0;
-            speed.Zoom.x = 0;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = -1;
+            speed.panTilt.y = 0;
+            speed.zoom.x = 0;
 
             MoveContinues(speed);
         }
 		public void ZoomOutContinues() {
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = 0;
-            speed.PanTilt.y = 0;
-            speed.Zoom.x = -1;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = 0;
+            speed.panTilt.y = 0;
+            speed.zoom.x = -1;
 
             MoveContinues(speed);
         }
 		public void ZoomInContinues() {
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = 0;
-            speed.PanTilt.y = 0;
-            speed.Zoom.x = 1;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = 0;
+            speed.panTilt.y = 0;
+            speed.zoom.x = 1;
 
             MoveContinues(speed);
         }
 		public void MoveContinues(PTZSpeed speed) {
-            CurrentSession.ContinuousMove(profileToken, speed, global::onvif.services.Duration.FromSeconds(10))
+            CurrentSession.ContinuousMove(profileToken, speed, global::onvif.services.XsDuration.FromSeconds(10))
                 .ObserveOnCurrentDispatcher()
                 .Subscribe(unit => {
 
@@ -241,11 +241,11 @@ namespace odm.ui.viewModels {
 
         public void ButtonGoHome() {
             PTZSpeed speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.PanTilt.x = 1;
-            speed.PanTilt.y = 1;
-            speed.Zoom = new Vector1D();
-            speed.Zoom.x = 1;
+            speed.panTilt = new Vector2D();
+            speed.panTilt.x = 1;
+            speed.panTilt.y = 1;
+            speed.zoom = new Vector1D();
+            speed.zoom.x = 1;
             try {
                 CurrentSession.GotoHomePosition(profileToken, speed).ObserveOnCurrentDispatcher().Subscribe(unit => { }, err => { dbg.Error(err); });
             } catch (Exception err) {
@@ -330,11 +330,11 @@ namespace odm.ui.viewModels {
             if (SelectedPreset == null)
                 return;
             var speed = new PTZSpeed();
-            speed.PanTilt = new Vector2D();
-            speed.Zoom = new Vector1D();
-            speed.PanTilt.x = 1;
-            speed.PanTilt.y = 1;
-            speed.Zoom.x = 1;
+            speed.panTilt = new Vector2D();
+            speed.zoom = new Vector1D();
+            speed.panTilt.x = 1;
+            speed.panTilt.y = 1;
+            speed.zoom.x = 1;
             try {
                 CurrentSession.GotoPreset(profileToken, SelectedPreset.token, speed)
                     .ObserveOnCurrentDispatcher()
@@ -874,41 +874,41 @@ namespace odm.ui.viewModels {
 			string profToken;
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveLeft(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.x = -val;
+                position.panTilt = new Vector2D();
+                position.panTilt.x = -val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.x = 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.x = 1;
                 return session.AbsoluteMove(profToken, position, speed);
             }
 
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveRight(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.x = val;
+                position.panTilt = new Vector2D();
+                position.panTilt.x = val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.x = 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.x = 1;
                 return session.AbsoluteMove(profToken, position, speed);
             }
 
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveUp(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.y = -val;
+                position.panTilt = new Vector2D();
+                position.panTilt.y = -val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.y = 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.y = 1;
                 return session.AbsoluteMove(profToken, position, speed);
             }
 
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveDown(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.y = val;
+                position.panTilt = new Vector2D();
+                position.panTilt.y = val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.y= 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.y= 1;
                 return session.AbsoluteMove(profToken, position, speed);
             }
         }
@@ -921,41 +921,41 @@ namespace odm.ui.viewModels {
 			string profToken;
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveLeft(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.x = -val;
+                position.panTilt = new Vector2D();
+                position.panTilt.x = -val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.x = 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.x = 1;
                 return session.RelativeMove(profToken, position, speed);
             }
 
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveRight(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.x = val;
+                position.panTilt = new Vector2D();
+                position.panTilt.x = val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.x = 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.x = 1;
                 return session.RelativeMove(profToken, position, speed);
             }
 
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveUp(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.y = -val;
+                position.panTilt = new Vector2D();
+                position.panTilt.y = -val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.y = 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.y = 1;
                 return session.RelativeMove(profToken, position, speed);
             }
 
             public FSharpAsync<Microsoft.FSharp.Core.Unit> MoveDown(int val) {
                 PTZVector position = new PTZVector();
-                position.PanTilt = new Vector2D();
-                position.PanTilt.y = val;
+                position.panTilt = new Vector2D();
+                position.panTilt.y = val;
                 PTZSpeed speed = new PTZSpeed();
-                speed.PanTilt = new Vector2D();
-                speed.PanTilt.y= 1;
+                speed.panTilt = new Vector2D();
+                speed.panTilt.y= 1;
                 return session.RelativeMove(profToken, position, speed);
             }
         }
