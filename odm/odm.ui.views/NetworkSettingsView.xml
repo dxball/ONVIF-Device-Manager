@@ -25,6 +25,10 @@
 		<option name="Apply">
 			<param name="model" clr-type="Model"/>
 		</option>
+		<option name="ValidationFailed">
+			<param name="model" clr-type="Model"/>
+			<param name="err"  clr-type="Exception"/>
+		</option>
 		<option name="Close"/>
 	</result>
 </activity>

@@ -65,6 +65,7 @@
     <Compile Include="..\~cfg\AssemblyInfo.global.cs">
       <Link>Properties\AssemblyInfo.global.cs</Link>
     </Compile>
+    <Compile Include="onvif.types.cs" />
     <Compile Include="MulticastCapabilitiesBindingElement.cs" />
     <Compile Include="OnvifFactory.cs" />
     <Compile Include="onvif.services.cs" />

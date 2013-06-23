@@ -21,6 +21,7 @@ using System.Timers;
 using System.Linq;
 using odm.onvif;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace odm.ui.activities {
 	/// <summary>
@@ -39,7 +40,14 @@ namespace odm.ui.activities {
 
 		#endregion
 
+		enum PTZMoveModes {
+			Absolute,
+			Relative,
+			Continuous
+		}
+
 		Model model;
+		PTZMoveModes moveMode = (PTZMoveModes)(-1);
 		//ObservableCollection<PTZNode> Nodes;
 		public ObservableCollection<PTZPreset> Presets { get; private set; }
 
@@ -50,64 +58,34 @@ namespace odm.ui.activities {
 		public Account CurrentAccount;
 		public String ChannelToken;
 		public string profileToken;
+		PtzVec<RelMov> relMov;
+		PtzVec<ContMov> contMov;
+		PtzVec<AbsMov> absMov;
 
-		enum PTZMoveModes {
-			Absolute,
-			Relative,
-			Continuous
-		}
-		PTZMoveModes moveMode = (PTZMoveModes)(-1);
-		void SetMoveMode(PTZMoveModes mode, bool set) {
-			if (this.moveMode == mode && set)
+		void SetMoveMode(PTZMoveModes mode, bool set = true) {
+			if ((this.moveMode != mode) ^ set) {
 				return;
-
-			if (set) {
-				this.moveMode = mode;
-
-				if (mode == PTZMoveModes.Absolute) {
-					absPanTiltControls.Visibility = Visibility.Visible;
-					absZoomControls.Visibility = Visibility.Visible;
-					absoluteMovePanel.Visibility = Visibility.Visible;
-
-					relPanTiltControls.Visibility = Visibility.Collapsed;
-					relZoomControls.Visibility = Visibility.Collapsed;
-					relativeMovePanel.Visibility = Visibility.Collapsed;
-
-					contPanTiltControls.Visibility = Visibility.Collapsed;
-					contZoomControls.Visibility = Visibility.Collapsed;
-					continuousMovePanel.Visibility = Visibility.Collapsed;
-
-					tglbtnAbsoluteMove.IsChecked = true;
-				} else if (mode == PTZMoveModes.Relative) {
-					absPanTiltControls.Visibility = Visibility.Collapsed;
-					absZoomControls.Visibility = Visibility.Collapsed;
-					absoluteMovePanel.Visibility = Visibility.Collapsed;
-
-					relPanTiltControls.Visibility = Visibility.Visible;
-					relZoomControls.Visibility = Visibility.Visible;
-					relativeMovePanel.Visibility = Visibility.Visible;
-
-					contPanTiltControls.Visibility = Visibility.Collapsed;
-					contZoomControls.Visibility = Visibility.Collapsed;
-					continuousMovePanel.Visibility = Visibility.Collapsed;
-
-					tglbtnRelativeMove.IsChecked = true;
-				} else if (mode == PTZMoveModes.Continuous) {
-					absPanTiltControls.Visibility = Visibility.Collapsed;
-					absZoomControls.Visibility = Visibility.Collapsed;
-					absoluteMovePanel.Visibility = Visibility.Collapsed;
-
-					relPanTiltControls.Visibility = Visibility.Collapsed;
-					relZoomControls.Visibility = Visibility.Collapsed;
-					relativeMovePanel.Visibility = Visibility.Collapsed;
-
-					contPanTiltControls.Visibility = Visibility.Visible;
-					contZoomControls.Visibility = Visibility.Visible;
-					continuousMovePanel.Visibility = Visibility.Visible;
-
-					tglbtnContinuousMove.IsChecked = true;
-				}
 			}
+
+			bool absOn = (mode == PTZMoveModes.Absolute) && set;
+			absPanTiltControls.Visibility =
+				absZoomControls.Visibility =
+					absoluteMovePanel.Visibility = absOn ? Visibility.Visible : Visibility.Collapsed;
+			tglbtnAbsoluteMove.IsChecked = absOn;
+
+			bool relOn = (mode == PTZMoveModes.Relative) && set;
+			relPanTiltControls.Visibility =
+				relZoomControls.Visibility =
+					relativeMovePanel.Visibility = relOn ? Visibility.Visible : Visibility.Collapsed;
+			tglbtnRelativeMove.IsChecked = relOn;
+
+			bool contOn = (mode == PTZMoveModes.Continuous) && set;
+			contPanTiltControls.Visibility =
+				contZoomControls.Visibility =
+					continuousMovePanel.Visibility = contOn ? Visibility.Visible : Visibility.Collapsed;
+			tglbtnContinuousMove.IsChecked = contOn;
+
+			this.moveMode = set ? mode : (PTZMoveModes)(-1);
 		}
 
 		private void Init(Model model) {
@@ -130,58 +108,9 @@ namespace odm.ui.activities {
 			VideoStartup();
 
 			InitData();
-			InitCapabilities();
 			BindData();
 			Localize();
 
-
-			if (defContPanTiltVelSpace != null || defContZoomVelSpace != null)
-				SetMoveMode(PTZMoveModes.Continuous, true);
-			else if (defRelPanTiltTranslSpace != null || defRelZoomTranslSpace != null)
-				SetMoveMode(PTZMoveModes.Relative, true);
-			else if (defAbsPanTiltPosSpace != null || defAbsZoomPosSpace != null)
-				SetMoveMode(PTZMoveModes.Absolute, true);
-		}
-
-		void InitCapabilities() {
-			if (defAbsPanTiltPosSpace == null && defAbsZoomPosSpace == null)
-				tglbtnAbsoluteMove.Visibility = Visibility.Collapsed;
-			if (defRelPanTiltTranslSpace == null && defRelZoomTranslSpace == null)
-				tglbtnRelativeMove.Visibility = Visibility.Collapsed;
-			if (defContPanTiltVelSpace == null && defContZoomVelSpace == null)
-				tglbtnContinuousMove.Visibility = Visibility.Collapsed;
-
-			if (defAbsPanTiltPosSpace == null || defPanTiltSpeedSpace == null) {
-				absPanTiltControls.IsEnabled = false;
-				sliderAbsPanValue.IsEnabled = false;
-				sliderAbsTiltValue.IsEnabled = false;
-				sliderAbsPanTiltSpeed.IsEnabled = false;
-			}
-			if (defAbsZoomPosSpace == null || defZoomSpeedSpace == null) {
-				absZoomControls.IsEnabled = false;
-				sliderAbsZoomValue.IsEnabled = false;
-				sliderAbsZoomSpeed.IsEnabled = false;
-			}
-			if (defRelPanTiltTranslSpace == null || defPanTiltSpeedSpace == null) {
-				relPanTiltControls.IsEnabled = false;
-				sliderRelPanValue.IsEnabled = false;
-				sliderRelTiltValue.IsEnabled = false;
-				sliderRelPanTiltSpeed.IsEnabled = false;
-			}
-			if (defRelZoomTranslSpace == null || defZoomSpeedSpace == null) {
-				relZoomControls.IsEnabled = false;
-				sliderRelZoomValue.IsEnabled = false;
-				sliderRelZoomSpeed.IsEnabled = false;
-			}
-			if (defContPanTiltVelSpace == null) {
-				contPanTiltControls.IsEnabled = false;
-				sliderContPanVelocity.IsEnabled = false;
-				sliderContTiltVelocity.IsEnabled = false;
-			}
-			if (defContZoomVelSpace == null) {
-				contZoomControls.IsEnabled = false;
-				sliderContZoomVelocity.IsEnabled = false;
-			}
 		}
 
 		public LocalPTZ Strings { get { return LocalPTZ.instance; } }
@@ -191,114 +120,123 @@ namespace odm.ui.activities {
 
 		#region Spaces
 
-		Space2DDescription defAbsPanTiltPosSpace;
-		Space1DDescription defAbsZoomPosSpace;
-		Space2DDescription defRelPanTiltTranslSpace;
-		Space1DDescription defRelZoomTranslSpace;
-		Space2DDescription defContPanTiltVelSpace;
-		Space1DDescription defContZoomVelSpace;
-		Space1DDescription defPanTiltSpeedSpace;
-		Space1DDescription defZoomSpeedSpace;
+		public struct PtzSpacesConfig {
+			public Space2DDescription absPanTiltPosition;
+			public Space1DDescription absZoomPosition;
+			public Space2DDescription relPanTiltTranslation;
+			public Space1DDescription relZoomTranslation;
+			public Space2DDescription contPanTiltVelocity;
+			public Space1DDescription contZoomVelocity;
+			public Space1DDescription absRelPanTiltSpeed;
+			public Space1DDescription absRelZoomSpeed;
+			public static T GetDefaultSpace<T>(T[] supported, Func<T, string> getUri, string def) where T : class {
+				if (supported == null || supported.Length == 0 || String.IsNullOrEmpty(def)) {
+					return null;
+				}
+				return supported.FirstOrDefault(s => getUri(s) == def);
+			}
+			public void Setup(PTZConfiguration config, PTZSpaces spaces) {
+				absPanTiltPosition = GetDefaultSpace(
+					spaces.absolutePanTiltPositionSpace, s => s.uri,
+					config.defaultAbsolutePantTiltPositionSpace
+				);
 
-		void InitDefaultPTZSpaces() {
-			if (model.currentNode != null && model.currentNode.supportedPTZSpaces != null) {
-				var spaces = model.currentNode.supportedPTZSpaces;
+				absZoomPosition = GetDefaultSpace(
+					spaces.absoluteZoomPositionSpace, s => s.uri,
+					config.defaultAbsoluteZoomPositionSpace
+				);
 
-				defAbsPanTiltPosSpace = spaces.absolutePanTiltPositionSpace == null ? null : spaces.absolutePanTiltPositionSpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace".Equals(s.uri));
-				defAbsZoomPosSpace = spaces.absoluteZoomPositionSpace == null ? null : spaces.absoluteZoomPositionSpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace".Equals(s.uri));
-				defRelPanTiltTranslSpace = spaces.relativePanTiltTranslationSpace == null ? null : spaces.relativePanTiltTranslationSpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace".Equals(s.uri));
-				defRelZoomTranslSpace = spaces.relativeZoomTranslationSpace == null ? null : spaces.relativeZoomTranslationSpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace".Equals(s.uri));
-				defContPanTiltVelSpace = spaces.continuousPanTiltVelocitySpace == null ? null : spaces.continuousPanTiltVelocitySpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace".Equals(s.uri));
-				defContZoomVelSpace = spaces.continuousZoomVelocitySpace == null ? null : spaces.continuousZoomVelocitySpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace".Equals(s.uri));
+				relPanTiltTranslation = GetDefaultSpace(
+					spaces.relativePanTiltTranslationSpace, s => s.uri,
+					config.defaultRelativePanTiltTranslationSpace
+				);
 
-				defPanTiltSpeedSpace = spaces.panTiltSpeedSpace == null ? null : spaces.panTiltSpeedSpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace".Equals(s.uri));
-				defZoomSpeedSpace = spaces.zoomSpeedSpace == null ? null : spaces.zoomSpeedSpace.FirstOrDefault(s => @"http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace".Equals(s.uri));
+				relZoomTranslation = GetDefaultSpace(
+					spaces.relativeZoomTranslationSpace, s => s.uri,
+					config.defaultRelativeZoomTranslationSpace
+				);
+
+				contPanTiltVelocity = GetDefaultSpace(
+					spaces.continuousPanTiltVelocitySpace, s => s.uri,
+					config.defaultContinuousPanTiltVelocitySpace
+				);
+
+				contZoomVelocity = GetDefaultSpace(
+					spaces.continuousZoomVelocitySpace, s => s.uri,
+					config.defaultContinuousZoomVelocitySpace
+				);
+
+				absRelPanTiltSpeed = GetDefaultSpace(
+					spaces.panTiltSpeedSpace, s => s.uri,
+					config.IfNotNull(c => c.defaultPTZSpeed.IfNotNull(s => s.panTilt.IfNotNull(v => v.space)))
+				);
+
+				absRelZoomSpeed = GetDefaultSpace(
+					spaces.zoomSpeedSpace, s => s.uri,
+					config.IfNotNull(c => c.defaultPTZSpeed.IfNotNull(s => s.zoom.IfNotNull(v => v.space)))
+				);
 			}
 		}
-
+		PtzSpacesConfig ptzSpacesConfig;
+		PTZConfiguration ptzConfig;
 		#endregion Spaces
 
 		void InitData() {
-			InitDefaultPTZSpaces();
+			//InitDefaultPTZSpaces();
 
 			//Nodes.Clear();
 			Presets.Clear();
-			//model.nodes.ForEach(x => { Nodes.Add(x); });
-
-			//this.CreateBinding(SelectedNodeProperty, model, x => {
-			//    return x.currentNode;
-			//}, (m, v) => {
-			//    m.currentNode = v;
-			//});
 			model.presets.ForEach(x => { Presets.Add(x); });
-		}
-
-		void BindData() {
-			//CommonData
 			valuePresetName.CreateBinding(TextBox.TextProperty, this, x => x.PresetName, (m, v) => { m.PresetName = v; });
 			valuePresetsList.ItemsSource = Presets;
 			valuePresetsList.CreateBinding(ListBox.SelectedItemProperty, this, x => x.SelectedPreset, (m, v) => m.SelectedPreset = v);
+
+			var node = model.node;
+			if (node == null) {
+				return;
+			}
+			var supportedPtzSpaces = node.supportedPTZSpaces;
+			if (supportedPtzSpaces == null) {
+				return;
+			}
+			ptzConfig = model.profile.ptzConfiguration;
+			if (ptzConfig == null) {
+				return;
+			}
+			ptzSpacesConfig.Setup(ptzConfig, supportedPtzSpaces);
+		}
+		
+		void BindData() {
+			//CommonData
+			//valuePresetName.CreateBinding(TextBox.TextProperty, this, x => x.PresetName, (m, v) => { m.PresetName = v; });
+			//valuePresetsList.ItemsSource = Presets;
+			//valuePresetsList.CreateBinding(ListBox.SelectedItemProperty, this, x => x.SelectedPreset, (m, v) => m.SelectedPreset = v);
 			//ReloadPresets();
 
 			captionErrorMessage.CreateBinding(TextBlock.TextProperty, this, x => x.ErrorMessage);
 
-			if (defAbsPanTiltPosSpace != null && defPanTiltSpeedSpace != null) {
-				sliderAbsPanValue.Minimum = defAbsPanTiltPosSpace.xRange.min;
-				sliderAbsPanValue.Maximum = defAbsPanTiltPosSpace.xRange.max;
-				sliderAbsPanValue.Value = (defAbsPanTiltPosSpace.xRange.min + defAbsPanTiltPosSpace.xRange.max) / 2.0;
+			// setup controls for absolute movements
 
-				sliderAbsTiltValue.Minimum = defAbsPanTiltPosSpace.xRange.min;
-				sliderAbsTiltValue.Maximum = defAbsPanTiltPosSpace.xRange.max;
-				sliderAbsTiltValue.Value = (defAbsPanTiltPosSpace.xRange.min + defAbsPanTiltPosSpace.xRange.max) / 2.0;
+			//var absPanTiltPositon = model.status.IfNotNull(s => s.position.IfNotNull(p => p.panTilt));
+			//var absZoomPositon = model.status.IfNotNull(s => s.position.IfNotNull(p => p.zoom));
+			
+			relMov = Ptz.Vec(ax => RelMov.Setup(ax, this));
+			contMov = Ptz.Vec(ax => ContMov.Setup(ax, this));
+			absMov = Ptz.Vec(ax => AbsMov.Setup(ax, this));
+			var hasRelativeMovements = relMov.ToSeq().Any(x => x.value != null);
+			var hasContinuousMovements = contMov.ToSeq().Any(x => x.value != null);
+			var hasAbsoluteMovements = absMov.ToSeq().Any(x => x.value != null);
+			
+			tglbtnAbsoluteMove.Visibility = hasAbsoluteMovements ? Visibility.Visible : Visibility.Collapsed;
+			tglbtnRelativeMove.Visibility = hasRelativeMovements ? Visibility.Visible : Visibility.Collapsed;
+			tglbtnContinuousMove.Visibility = hasContinuousMovements ? Visibility.Visible : Visibility.Collapsed;
 
-				sliderAbsPanTiltSpeed.Minimum = defPanTiltSpeedSpace.xRange.min;
-				sliderAbsPanTiltSpeed.Maximum = defPanTiltSpeedSpace.xRange.max;
-				sliderAbsPanTiltSpeed.Value = defPanTiltSpeedSpace.xRange.max;
-			}
-			if (defAbsZoomPosSpace != null && defZoomSpeedSpace != null) {
-				sliderAbsZoomValue.Minimum = defAbsZoomPosSpace.xRange.min;
-				sliderAbsZoomValue.Maximum = defAbsZoomPosSpace.xRange.max;
-				sliderAbsZoomValue.Value = defAbsZoomPosSpace.xRange.max;
-
-				sliderAbsZoomSpeed.Minimum = defZoomSpeedSpace.xRange.min;
-				sliderAbsZoomSpeed.Maximum = defZoomSpeedSpace.xRange.max;
-				sliderAbsZoomSpeed.Value = defZoomSpeedSpace.xRange.max;
-			}
-			if (defRelPanTiltTranslSpace != null && defPanTiltSpeedSpace != null) {
-				sliderRelPanValue.Minimum = 0;// defRelPanTiltTranslSpace.XRange.Min;
-				sliderRelPanValue.Maximum = defRelPanTiltTranslSpace.xRange.max;
-				sliderRelPanValue.Value = defRelPanTiltTranslSpace.xRange.max / 10.0;
-
-				sliderRelTiltValue.Minimum = 0;// defRelPanTiltTranslSpace.XRange.Min;
-				sliderRelTiltValue.Maximum = defRelPanTiltTranslSpace.xRange.max;
-				sliderRelTiltValue.Value = defRelPanTiltTranslSpace.xRange.max / 10.0;
-
-				sliderRelPanTiltSpeed.Minimum = defPanTiltSpeedSpace.xRange.min;
-				sliderRelPanTiltSpeed.Maximum = defPanTiltSpeedSpace.xRange.max;
-				sliderRelPanTiltSpeed.Value = defPanTiltSpeedSpace.xRange.max;
-			}
-			if (defRelZoomTranslSpace != null && defZoomSpeedSpace != null) {
-				sliderRelZoomValue.Minimum = 0;// defRelZoomTranslSpace.XRange.Min;
-				sliderRelZoomValue.Maximum = defRelZoomTranslSpace.xRange.max;
-				sliderRelZoomValue.Value = defRelZoomTranslSpace.xRange.max / 10.0;
-
-				sliderRelZoomSpeed.Minimum = defZoomSpeedSpace.xRange.min;
-				sliderRelZoomSpeed.Maximum = defZoomSpeedSpace.xRange.max;
-				sliderRelZoomSpeed.Value = defZoomSpeedSpace.xRange.max;
-			}
-			if (defContPanTiltVelSpace != null) {
-				sliderContPanVelocity.Minimum = 0; // defContPanTiltVelSpace.XRange.Min;
-				sliderContPanVelocity.Maximum = defContPanTiltVelSpace.xRange.max;
-				sliderContPanVelocity.Value = defContPanTiltVelSpace.xRange.max / 2.0;
-
-				sliderContTiltVelocity.Minimum = 0; // defContPanTiltVelSpace.XRange.Min;
-				sliderContTiltVelocity.Maximum = defContPanTiltVelSpace.xRange.max;
-				sliderContTiltVelocity.Value = defContPanTiltVelSpace.xRange.max / 2.0;
-			}
-			if (defContZoomVelSpace != null) {
-				sliderContZoomVelocity.Minimum = 0; // defContZoomVelSpace.XRange.Min;
-				sliderContZoomVelocity.Maximum = defContZoomVelSpace.xRange.max;
-				sliderContZoomVelocity.Value = defContZoomVelSpace.xRange.max / 2.0;
+			if (hasContinuousMovements) {
+				SetMoveMode(PTZMoveModes.Continuous);
+			} else if (hasRelativeMovements) {
+				SetMoveMode(PTZMoveModes.Relative);
+			} else if (hasAbsoluteMovements) {
+				SetMoveMode(PTZMoveModes.Absolute);
 			}
 
 
@@ -348,10 +286,11 @@ namespace odm.ui.activities {
 			});
 		}
 		void SetErrorMessage(string text) {
-			if (ErrorMessage == "")
+			if (ErrorMessage == "") {
 				ErrorMessage = text;
-			else
+			} else {
 				ErrorMessage = ErrorMessage + System.Environment.NewLine + text;
+			}
 
 			errorTmr.Interval = 5000;
 
@@ -419,17 +358,23 @@ namespace odm.ui.activities {
 			}
 		}
 		void GoHome(object sender, RoutedEventArgs e) {
-			PTZSpeed speed = new PTZSpeed() {
-				panTilt = new Vector2D() {
-					x = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max,
-					y = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max
-				},
-				zoom = new Vector1D() {
-					x = defZoomSpeedSpace == null ? 0 : defZoomSpeedSpace.xRange.max
-				}
-			};
+			// This operation moves the PTZ unit to its home position. 
+			// If the speed parameter is omitted, the default speed of the corresponding PTZ configuration shall be used. 
+			// The speed parameter can only be specified when speed spaces are available for the PTZ node.
+			// The command is non-blocking and can be interrupted by other move commands.
+
+			//PTZSpeed speed = new PTZSpeed() {
+			//	panTilt = new Vector2D() {
+			//		x = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max,
+			//		y = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max
+			//	},
+			//	zoom = new Vector1D() {
+			//		x = defZoomSpeedSpace == null ? 0 : defZoomSpeedSpace.xRange.max
+			//	}
+			//};
 			try {
-				subscription.Add(CurrentSession.GotoHomePosition(profileToken, speed).ObserveOnCurrentDispatcher().Subscribe(unit => { }, err => { dbg.Error(err); }));
+				// TODO: get rid of memory leak
+				subscription.Add(CurrentSession.GotoHomePosition(profileToken, null).ObserveOnCurrentDispatcher().Subscribe(unit => { }, err => { dbg.Error(err); }));
 			} catch (Exception err) {
 				dbg.Error(err);
 				SetErrorMessage(err.Message);
@@ -437,21 +382,27 @@ namespace odm.ui.activities {
 		}
 
 		void GoTo(object sender, RoutedEventArgs e) {
-			if (SelectedPreset == null)
+			if (SelectedPreset == null) {
 				return;
+			}
+			// The GotoPreset operation recalls a previously set preset. 
+			// If the speed parameter is omitted, the default speed of the corresponding PTZ configuration shall be used. 
+			// The speed parameter can only be specified when speed spaces are available for the PTZ node. 
+			// The GotoPreset command is a non-blocking operation and can be interrupted by other move commands.
 
-			PTZSpeed speed = new PTZSpeed() {
-				panTilt = new Vector2D() {
-					x = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max,
-					y = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max
-				},
-				zoom = new Vector1D() {
-					x = defZoomSpeedSpace == null ? 0 : defZoomSpeedSpace.xRange.max
-				}
-			};
+			//PTZSpeed speed = new PTZSpeed() {
+			//	panTilt = new Vector2D() {
+			//		x = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max,
+			//		y = defPanTiltSpeedSpace == null ? 0 : defPanTiltSpeedSpace.xRange.max
+			//	},
+			//	zoom = new Vector1D() {
+			//		x = defZoomSpeedSpace == null ? 0 : defZoomSpeedSpace.xRange.max
+			//	}
+			//};
 
 			try {
-				subscription.Add(CurrentSession.GotoPreset(profileToken, SelectedPreset.token, speed)
+				// TODO: get rid of memory leak
+				subscription.Add(CurrentSession.GotoPreset(profileToken, SelectedPreset.token, null)
 					 .ObserveOnCurrentDispatcher()
 					 .Subscribe(unit => {
 					 }, err => {
@@ -504,253 +455,315 @@ namespace odm.ui.activities {
 
 		#endregion Presets
 
+		
 
 		#region Absolute Move
 
-		public void MoveAbsolute(PTZSpeed speed, PTZVector translat) {
-			subscription.Add(CurrentSession.AbsoluteMove(profileToken, translat, null)
-				 .ObserveOnCurrentDispatcher()
-				 .Subscribe(unit => {
-
-				 }, err => {
-					 //dbg.Error(err);
-					 SetErrorMessage(err.Message);
-				 }));
+		public void MoveAbsolute(PTZVector position, PTZSpeed speed) {
+			CurrentSession
+				.AbsoluteMove(profileToken, position, speed)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(unit => {}, err => SetErrorMessage(err.Message));
+		}
+		public void MoveAbsolute(Vector2D panTilt, Vector2D speed) {
+			MoveAbsolute(
+				new PTZVector() { panTilt = panTilt, zoom=null},
+				speed != null ? new PTZSpeed(){panTilt = speed} : null
+			);
+		}
+		public void MoveAbsolute(Vector1D zoom, Vector1D speed) {
+			MoveAbsolute(
+				new PTZVector() { panTilt = null, zoom = zoom },
+				speed != null ? new PTZSpeed(){zoom = speed } : null
+			);
 		}
 
+		Vector2D GetAbsPanTiltSpeed() {
+			var pan = absMov.pan.IfNotNull(p=>p.speed);
+			var tilt = absMov.tilt.IfNotNull(p => p.speed);
+			switch ((pan != null ? 2 : 0) | (tilt != null ? 1 : 0)) {
+				case 0: // both not supported 
+					return null;
+				case 1: // only pan not supported
+					if (tilt.val == tilt.def) {
+						return null;
+					} else {
+						return new Vector2D() { x = float.NaN, y = tilt.val };
+					}
+				case 2: // only tilt not supported
+					if (pan.val == pan.def) {
+						return null;
+					} else {
+						return new Vector2D() { x = pan.val, y = float.NaN };
+					}
+				case 3: // both supported
+					if (pan.val == pan.def && tilt.val == tilt.def) {
+						return null;
+					} else {
+						return new Vector2D() { x = pan.val, y = tilt.val };
+					}
+				default: // impossible
+					return null;
+			}
+		}
 
-		float AbsPanValue {
-			get { return (float)sliderAbsPanValue.Value; }
-			set { sliderAbsPanValue.Value = (float)value; }
-		}
-		float AbsTiltValue {
-			get { return (float)sliderAbsTiltValue.Value; }
-			set { sliderAbsTiltValue.Value = (float)value; }
-		}
-		float AbsZoomValue {
-			get { return (float)sliderAbsZoomValue.Value; }
-			set { sliderAbsZoomValue.Value = (float)value; }
-		}
-		float AbsPanTiltSpeed {
-			get { return (float)sliderAbsPanTiltSpeed.Value; }
-			set { sliderAbsPanTiltSpeed.Value = (float)value; }
-		}
-		float AbsZoomSpeed {
-			get { return (float)sliderAbsZoomSpeed.Value; }
-			set { sliderAbsZoomSpeed.Value = (float)value; }
-		}
-
-		PTZSpeed CreateAbsPtzSpeed() {
-			return new PTZSpeed() {
-				panTilt = new Vector2D() {
-					x = 0,
-					y = 0,
-					space = defPanTiltSpeedSpace == null ? null : defPanTiltSpeedSpace.uri
-				},
-				zoom = new Vector1D() {
-					x = 0,
-					space = defZoomSpeedSpace == null ? null : defZoomSpeedSpace.uri
-				}
+		Vector1D GetAbsZoomSpeed() {
+			var zoom = absMov.zoom.IfNotNull(p => p.speed);
+			if (zoom == null || zoom.val == zoom.def) {
+				// zoom not supported or defaults
+				return null;
+			}
+			return new Vector1D() {
+				x = zoom.val,
+				space = null
 			};
 		}
 
-		PTZVector CreateAbsPtzVector() {
+		PTZSpeed GetAbsPtzSpeed() {
+			var panTiltSpeed = GetAbsPanTiltSpeed();
+			var zoomSpeed = GetAbsZoomSpeed();
+			if (panTiltSpeed == null && zoomSpeed == null) {
+				return null;
+			}
+			return new PTZSpeed() {
+				panTilt = panTiltSpeed,
+				zoom = zoomSpeed
+			};
+		}
+
+		Vector2D GetAbsPanTiltPosition() {
+			var pan = absMov.pan;
+			var tilt = absMov.tilt;
+			if (pan == null && tilt == null) {
+				// both pan & tilt positions are not supported 
+				return null;
+			}
+			// if one of pan or tilt isn't supported we will issue NAN as it value
+			return new Vector2D() {
+				x = pan != null ? pan.pos : float.NaN,
+				y = tilt != null ? tilt.pos : float.NaN,
+				space = null
+			};
+		}
+
+		Vector1D GetAbsZoomPosition() {
+			var zoom = absMov.zoom;
+			if (zoom == null) {
+				// zoom position is not supported 
+				return null;
+			}
+			return new Vector1D() {
+				x = zoom.pos,
+				space = null
+			};
+		}
+
+		PTZVector GetAbsPtzPosition() {
+			var panTilt = GetAbsPanTiltPosition();
+			var zoom = GetAbsZoomPosition();
+			if (panTilt == null && zoom == null) {
+				return null;
+			}
 			return new PTZVector() {
-				panTilt = new Vector2D() {
-					x = 0,
-					y = 0,
-					space = defAbsPanTiltPosSpace == null ? null : defAbsPanTiltPosSpace.uri
-				},
-				zoom = new Vector1D() {
-					x = 0,
-					space = defAbsZoomPosSpace == null ? null : defAbsZoomPosSpace.uri
-				}
+				panTilt = panTilt,
+				zoom = zoom
 			};
 		}
 
 		void AbsoluteMove_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateAbsPtzSpeed();
-			speed.panTilt.x = AbsPanTiltSpeed;
-			speed.panTilt.y = AbsPanTiltSpeed;
-			speed.zoom.x = AbsZoomSpeed;
-
-			var vector = CreateAbsPtzVector();
-			vector.panTilt.x = AbsPanValue;
-			vector.panTilt.y = AbsTiltValue;
-			vector.zoom.x = AbsZoomValue;
-
-			MoveAbsolute(speed, vector);
+			var speed = GetAbsPtzSpeed();
+			var position = GetAbsPtzPosition();
+			MoveAbsolute(position, speed);
 		}
 
 		#endregion Absolute Move
 
 		#region Relative Move
 
-		public void MoveRelative(PTZSpeed speed, PTZVector translat) {
-			subscription.Add(CurrentSession.RelativeMove(profileToken, translat, speed)
-				 .ObserveOnCurrentDispatcher()
-				 .Subscribe(unit => {
-
-				 }, err => {
-					 //dbg.Error(err);
-					 SetErrorMessage(err.Message);
-				 }));
+		public void MoveRelative(PTZVector translation, PTZSpeed speed) {
+			CurrentSession
+				.RelativeMove(profileToken, translation, speed)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(
+					unit => {}, 
+					err => {
+						//dbg.Error(err);
+						SetErrorMessage(err.Message);
+					}
+				);
 		}
-
-
-		float RelPanValue {
-			get { return (float)sliderRelPanValue.Value; }
-			set { sliderRelPanValue.Value = (float)value; }
-		}
-		float RelTiltValue {
-			get { return (float)sliderRelTiltValue.Value; }
-			set { sliderRelTiltValue.Value = (float)value; }
-		}
-		float RelZoomValue {
-			get { return (float)sliderRelZoomValue.Value; }
-			set { sliderRelZoomValue.Value = (float)value; }
-		}
-		float RelPanTiltSpeed {
-			get { return (float)sliderRelPanTiltSpeed.Value; }
-			set { sliderRelPanTiltSpeed.Value = (float)value; }
-		}
-		float RelZoomSpeed {
-			get { return (float)sliderRelZoomSpeed.Value; }
-			set { sliderRelZoomSpeed.Value = (float)value; }
-		}
-
-		PTZSpeed CreateRelPtzSpeed() {
-			return new PTZSpeed() {
-				panTilt = new Vector2D() {
-					x = 0,
-					y = 0,
-					space = defPanTiltSpeedSpace == null ? null : defPanTiltSpeedSpace.uri
-				},
-				zoom = new Vector1D() {
-					x = 0,
-					space = defZoomSpeedSpace == null ? null : defZoomSpeedSpace.uri
-				}
+		
+		Vector2D GetRelPanTiltTranslation(int panDir, int tiltDir) {
+			var pan = relMov.pan;
+			var tilt = relMov.tilt;
+			if (pan == null && tilt == null) {
+				return null;
+			}
+			return new Vector2D() {
+				x = pan != null ? (panDir == 0 ? pan.origin : pan.GetVal(panDir<0)) : float.NaN,
+				y = tilt != null ? (tiltDir == 0 ? tilt.origin : tilt.GetVal(tiltDir<0)) : float.NaN,
+				space = null
 			};
 		}
 
-		PTZVector CreateRelPtzVector() {
+		Vector1D GetRelZoomTranslation(int zoomDir) {
+			var zoom = relMov.zoom;
+			if (zoom == null) {
+				return null;
+			}
+			return new Vector1D() {
+				x = (zoomDir == 0 ? zoom.origin : zoom.GetVal(zoomDir < 0)),
+				space = null
+			};
+		}
+
+		PTZVector GetRelPtzTranslation(int panDir, int tiltDir, int zoomDir) {
+			var panTilt = GetRelPanTiltTranslation(panDir, tiltDir);
+			var zoom = GetRelZoomTranslation(zoomDir);
+			if (panTilt == null && zoom == null) {
+				return null;
+			}
 			return new PTZVector() {
-				panTilt = new Vector2D() {
-					x = 0,
-					y = 0,
-					space = defRelPanTiltTranslSpace == null ? null : defRelPanTiltTranslSpace.uri
-				},
-				zoom = new Vector1D() {
-					x = 0,
-					space = defRelZoomTranslSpace == null ? null : defRelZoomTranslSpace.uri
-				}
+				panTilt = panTilt,
+				zoom = zoom
+			};
+		}
+
+
+		Vector2D GetRelPanTiltSpeed() {
+			var pan = relMov.pan.IfNotNull(p => p.speed);
+			var tilt = relMov.tilt.IfNotNull(p => p.speed);
+			switch ((pan != null ? 2 : 0) | (tilt != null ? 1 : 0)) {
+				case 0: // both not supported 
+					return null;
+				case 1: // only pan not supported
+					if (tilt.val == tilt.def) {
+						return null;
+					} else {
+						return new Vector2D() { x = float.NaN, y = tilt.val };
+					}
+				case 2: // only tilt not supported
+					if (pan.val == pan.def) {
+						return null;
+					} else {
+						return new Vector2D() { x = pan.val, y = float.NaN };
+					}
+				case 3: // both supported
+					if (pan.val == pan.def && tilt.val == tilt.def) {
+						return null;
+					} else {
+						return new Vector2D() { x = pan.val, y = tilt.val };
+					}
+				default: // impossible
+					return null;
+			}
+		}
+
+		Vector1D GetRelZoomSpeed() {
+			var zoom = relMov.zoom.IfNotNull(p => p.speed);
+			if (zoom == null || zoom.val == zoom.def) {
+				// zoom not supported or defaults
+				return null;
+			}
+			return new Vector1D() {
+				x = zoom.val,
+				space = null
 			};
 		}
 
 		void RelUp_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.panTilt.y = RelPanTiltSpeed;
-			speed.zoom = null;
-
-			var translat = CreateRelPtzVector();
-			translat.panTilt.y = Math.Abs(RelTiltValue);
-			translat.zoom = null;
-
-			MoveRelative(speed, translat);
+			var panTilt = GetRelPanTiltTranslation(0, 1);
+			if (panTilt != null) {
+				var speed = GetRelPanTiltSpeed();
+				MoveRelative(
+					new PTZVector() { panTilt = panTilt}, 
+					speed != null ? new PTZSpeed() { panTilt = speed } : null
+				);
+			}
 		}
 
 		void RelDown_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.panTilt.y = RelPanTiltSpeed;
-			speed.zoom = null;
+			var panTilt = GetRelPanTiltTranslation(0, -1);
+			if (panTilt != null) {
+				var speed = GetRelPanTiltSpeed();
+				MoveRelative(
+					new PTZVector() { panTilt = panTilt },
+					speed != null ? new PTZSpeed() { panTilt = speed } : null
+				);
+			}
+		}
 
-			var translat = CreateRelPtzVector();
-			translat.panTilt.y = -1 * Math.Abs(RelTiltValue);
-			translat.zoom = null;
-
-			MoveRelative(speed, translat);
+		void RelRight_Click(object sender, RoutedEventArgs e) {
+			var panTilt = GetRelPanTiltTranslation(1, 0);
+			if (panTilt != null) {
+				var speed = GetRelPanTiltSpeed();
+				MoveRelative(
+					new PTZVector() { panTilt = panTilt },
+					speed != null ? new PTZSpeed() { panTilt = speed } : null
+				);
+			}
 		}
 
 		void RelLeft_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.panTilt.x = RelPanTiltSpeed;
-			speed.zoom = null;
-
-			var translat = CreateRelPtzVector();
-			translat.panTilt.x = -1 * Math.Abs(RelPanValue);
-			translat.zoom = null;
-
-			MoveRelative(speed, translat);
-		}
-		void RelRight_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.panTilt.x = RelPanTiltSpeed;
-			speed.zoom = null;
-
-			var translat = CreateRelPtzVector();
-			translat.panTilt.x = Math.Abs(RelPanValue);
-			translat.zoom = null;
-
-			MoveRelative(speed, translat);
+			var panTilt = GetRelPanTiltTranslation(-1, 0);
+			if (panTilt != null) {
+				var speed = GetRelPanTiltSpeed();
+				MoveRelative(
+					new PTZVector() { panTilt = panTilt },
+					speed != null ? new PTZSpeed() { panTilt = speed } : null
+				);
+			}
 		}
 
 		void RelZoomPlus_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.zoom.x = RelZoomSpeed;
-			speed.panTilt = null;
-
-			var translat = CreateRelPtzVector();
-			translat.zoom.x = Math.Abs(RelZoomValue);
-			translat.panTilt = null;
-
-			MoveRelative(speed, translat);
+			var zoom = GetRelZoomTranslation(1);
+			if (zoom != null) {
+				var speed = GetRelZoomSpeed();
+				MoveRelative(
+					new PTZVector() { zoom = zoom },
+					speed != null ? new PTZSpeed() { zoom = speed } : null
+				);
+			}
 		}
 
 
 		void RelZoomMinus_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.zoom.x = RelZoomSpeed;
-			speed.panTilt = null;
-
-			var translat = CreateRelPtzVector();
-			translat.zoom.x = -1 * Math.Abs(RelZoomValue);
-			translat.panTilt = null;
-
-			MoveRelative(speed, translat);
+			var zoom = GetRelZoomTranslation(-1);
+			if (zoom != null) {
+				var speed = GetRelZoomSpeed();
+				MoveRelative(
+					new PTZVector() { zoom = zoom },
+					speed != null ? new PTZSpeed() { zoom = speed } : null
+				);
+			}
 		}
 
-		void RelativeMove_Click(object sender, RoutedEventArgs e) {
-			var speed = CreateRelPtzSpeed();
-			speed.panTilt.x = RelPanTiltSpeed;
-			speed.panTilt.y = RelPanTiltSpeed;
-			speed.zoom.x = RelZoomSpeed;
-
-			var translat = CreateRelPtzVector();
-			translat.panTilt.x = RelPanValue;
-			translat.panTilt.y = RelTiltValue;
-			translat.zoom.x = RelZoomValue;
-
-			MoveRelative(speed, translat);
-		}
 
 		#endregion Relative Move
 
 
 		#region Continuous Move
 
-		public void MoveContinuous(PTZSpeed speed) {
-			subscription.Add(CurrentSession.ContinuousMove(profileToken, speed, null)
-				 .ObserveOnCurrentDispatcher()
-				 .Subscribe(unit => {
-
-				 }, err => {
-					 //dbg.Error(err);
-					 SetErrorMessage(err.Message);
-				 }));
+		public void MoveContinuous(Vector2D panTilt, Vector1D zoom) {
+			CurrentSession
+				.ContinuousMove(
+					profileToken, 
+					new PTZSpeed() { panTilt = panTilt, zoom = zoom }, 
+					null
+				)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(
+					unit => { },
+					err => {
+						//dbg.Error(err);
+						SetErrorMessage(err.Message);
+					}
+				);
 		}
 
 		public void StopZoom() {
-			subscription.Add(CurrentSession.Stop(profileToken, false, true)
+			subscription.Add(
+				CurrentSession.Stop(profileToken, false, true)
 			.ObserveOnCurrentDispatcher()
 			.Subscribe(unit => {
 			}, err => {
@@ -759,8 +772,9 @@ namespace odm.ui.activities {
 			}));
 		}
 
-		public void StopMovement() {
-			subscription.Add(CurrentSession.Stop(profileToken, true, false)
+		public void StopPanTilt() {
+			subscription.Add(
+				CurrentSession.Stop(profileToken, true, false)
 				 .ObserveOnCurrentDispatcher()
 				 .Subscribe(unit => {
 				 }, err => {
@@ -769,97 +783,88 @@ namespace odm.ui.activities {
 				 }));
 		}
 
-
-		float ContPanVelocity {
-			get { return (float)sliderContPanVelocity.Value; }
-			set { sliderContPanVelocity.Value = (float)value; }
-		}
-		float ContTiltVelocity {
-			get { return (float)sliderContTiltVelocity.Value; }
-			set { sliderContTiltVelocity.Value = (float)value; }
-		}
-		float ContZoomVelocity {
-			get { return (float)sliderContZoomVelocity.Value; }
-			set { sliderContZoomVelocity.Value = (float)value; }
-		}
-
-		void ContinuousUp_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			StopMovement();
-		}
-
-
-		PTZSpeed CreateContPtzSpeed() {
-			return new PTZSpeed() {
-				panTilt = new Vector2D() {
-					x = 0,
-					y = 0,
-					space = defContPanTiltVelSpace == null ? null : defContPanTiltVelSpace.uri
-				},
-				zoom = new Vector1D() {
-					x = 0,
-					space = defContZoomVelSpace == null ? null : defContZoomVelSpace.uri
-				}
+		Vector2D GetContPanTiltVelocity(int panDir, int tiltDir) {
+			var pan = contMov.pan;
+			var tilt = contMov.tilt;
+			if (pan == null && tilt == null) {
+				return null;
+			}
+			return new Vector2D() {
+				x = pan != null ? (panDir == 0 ? pan.origin : pan.GetVal(panDir < 0)) : float.NaN,
+				y = tilt != null ? (tiltDir == 0 ? tilt.origin : tilt.GetVal(tiltDir < 0)) : float.NaN,
+				space = null
 			};
 		}
 
-		void ContinuousUp_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			var speed = CreateContPtzSpeed();
-			speed.panTilt.y = Math.Abs(ContTiltVelocity);
-			speed.zoom = null;
-
-			MoveContinuous(speed);
+		Vector1D GetContZoomVelocity(int zoomDir) {
+			var zoom = contMov.zoom;
+			if (zoom == null) {
+				return null;
+			}
+			return new Vector1D() {
+				x = (zoomDir == 0 ? zoom.origin : zoom.GetVal(zoomDir < 0)),
+				space = null
+			};
 		}
+
+		void ContinuousUp_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			StopPanTilt();
+		}
+		void ContinuousUp_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			var panTilt = GetContPanTiltVelocity(0, 1);
+			if (panTilt != null) {
+				MoveContinuous(panTilt, null);
+			}
+		}
+
 		void ContinuousDown_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			StopMovement();
+			StopPanTilt();
 		}
 		void ContinuousDown_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			var speed = CreateContPtzSpeed();
-			speed.panTilt.y = -1 * Math.Abs(ContTiltVelocity);
-			speed.zoom = null;
+			var panTilt = GetContPanTiltVelocity(0, -1);
+			if (panTilt != null) {
+				MoveContinuous(panTilt, null);
+			}
+		}
 
-			MoveContinuous(speed);
-		}
-		void ContinuousLeft_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			StopMovement();
-		}
-		void ContinuousLeft_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			var speed = CreateContPtzSpeed();
-			speed.panTilt.x = -1 * Math.Abs(ContPanVelocity);
-			speed.zoom = null;
-
-			MoveContinuous(speed);
-		}
 		void ContinuousRight_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			StopMovement();
+			StopPanTilt();
 		}
 		void ContinuousRight_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			var speed = CreateContPtzSpeed();
-			speed.panTilt.x = Math.Abs(ContPanVelocity);
-			speed.zoom = null;
-
-			MoveContinuous(speed);
+			var panTilt = GetContPanTiltVelocity(1, 0);
+			if (panTilt != null) {
+				MoveContinuous(panTilt, null);
+			}
 		}
 
+		void ContinuousLeft_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			StopPanTilt();
+		}
+		void ContinuousLeft_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			var panTilt = GetContPanTiltVelocity(-1, 0);
+			if (panTilt != null) {
+				MoveContinuous(panTilt, null);
+			}
+		}
+
+		void ContinuousZoomPlus_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			StopZoom();
+		}
+		void ContinuousZoomPlus_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			var zoom = GetContZoomVelocity(1);
+			if (zoom != null) {
+				MoveContinuous(null, zoom);
+			}
+		}
 
 		void ContinuousZoomMinus_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
 			StopZoom();
 		}
 		void ContinuousZoomMinus_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			var speed = CreateContPtzSpeed();
-			speed.zoom.x = -1 * Math.Abs(ContZoomVelocity);
-			speed.panTilt = null;
-
-			MoveContinuous(speed);
-		}
-		void ContinuousZoomPlus_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			StopZoom();
-		}
-		void ContinuousZoomPlus_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			var speed = CreateContPtzSpeed();
-			speed.zoom.x = Math.Abs(ContZoomVelocity);
-			speed.panTilt = null;
-
-			MoveContinuous(speed);
+			var zoom = GetContZoomVelocity(-1);
+			if (zoom != null) {
+				MoveContinuous(null, zoom);
+			}
 		}
 
 		#endregion Continuous Move
@@ -872,15 +877,15 @@ namespace odm.ui.activities {
 			var playerAct = activityContext.container.Resolve<IVideoPlayerActivity>();
 
 			var playerModel = new VideoPlayerActivityModel(
-				 profileToken: model.profToken,
-				 showStreamUrl: false,
-				 streamSetup: new StreamSetup() {
-					 stream = StreamType.rtpUnicast,
-					 transport = new Transport() {
-						 protocol = AppDefaults.visualSettings.Transport_Type,
-						 tunnel = null
-					 }
-				 }
+				streamSetup: new StreamSetup() {
+					stream = StreamType.rtpUnicast,
+					transport = new Transport() {
+						protocol = AppDefaults.visualSettings.Transport_Type,
+						tunnel = null
+					}
+				},
+				profile: model.profile,
+				showStreamUrl: false
 			);
 
 			disposables.Add(

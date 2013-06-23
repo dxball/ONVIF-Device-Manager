@@ -10,17 +10,26 @@ namespace utils {
 
         readonly Action<object> _execute;
         readonly Func<object, bool> _canExecute;
+		readonly Action<Exception> _onerror;
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null) {
+		public RelayCommand(Action<object> execute, Action<Exception> onErr, Func<object, bool> canExecute = null) {
             if (execute == null)
                 throw new ArgumentNullException("execute");
+			if (onErr == null)
+				throw new ArgumentNullException("on error");
 
             this._execute = execute;
             this._canExecute = canExecute;
+			this._onerror = onErr;
         }
 
         public bool CanExecute(object parameter) {
-            return _canExecute == null ? true : _canExecute(parameter);
+			try {
+				return _canExecute == null ? true : _canExecute(parameter);
+			} catch (Exception err) {
+				_onerror(err);
+				return false;
+			}
         }
 
         public event EventHandler CanExecuteChanged {
@@ -29,8 +38,13 @@ namespace utils {
         }
 
         public void Execute(object parameter) {
-            if (_canExecute == null || _canExecute(parameter))
-                _execute(parameter);
+			if (_canExecute == null || CanExecute(parameter)) {
+				try {
+					_execute(parameter);
+				} catch (Exception err) {
+					_onerror(err);
+				}
+			}
         }
 
         public static void InvalidateCanExecute()

@@ -402,6 +402,7 @@ namespace odm.ui.activities {
 			public abstract T Handle<T>(
 				
 				Func<Model,T> apply,
+				Func<Model,Exception,T> validationFailed,
 				Func<T> close
 			);
 	
@@ -421,10 +422,39 @@ namespace odm.ui.activities {
 				public override T Handle<T>(
 				
 					Func<Model,T> apply,
+					Func<Model,Exception,T> validationFailed,
 					Func<T> close
 				){
 					return apply(
 						model
+					);
+				}
+	
+			}
+			
+			public bool IsValidationFailed(){
+				return AsValidationFailed() != null;
+			}
+			public virtual ValidationFailed AsValidationFailed(){ return null; }
+			public class ValidationFailed : Result {
+				public ValidationFailed(Model model,Exception err){
+					
+					this.model = model;
+					
+					this.err = err;
+					
+				}
+				public Model model{ get; set; }public Exception err{ get; set; }
+				public override ValidationFailed AsValidationFailed(){ return this; }
+				
+				public override T Handle<T>(
+				
+					Func<Model,T> apply,
+					Func<Model,Exception,T> validationFailed,
+					Func<T> close
+				){
+					return validationFailed(
+						model,err
 					);
 				}
 	
@@ -444,6 +474,7 @@ namespace odm.ui.activities {
 				public override T Handle<T>(
 				
 					Func<Model,T> apply,
+					Func<Model,Exception,T> validationFailed,
 					Func<T> close
 				){
 					return close(
@@ -457,6 +488,7 @@ namespace odm.ui.activities {
 		#endregion
 
 		public ICommand ApplyCommand{ get; private set; }
+		public ICommand ValidationFailedCommand{ get; private set; }
 		public ICommand CloseCommand{ get; private set; }
 		
 		IActivityContext<Result> activityContext = null;

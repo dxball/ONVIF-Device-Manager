@@ -104,7 +104,7 @@ namespace odm.ui.views
 
         protected override TamperingDetectorAlarmSnapshot Parse(TopicExpressionType topic, Message message)
         {
-            if (message.Source == null || message.Source.simpleItem == null)
+            if (message.source == null || message.source.simpleItem == null)
                 throw new InvalidOperationException();
 
             string topicText = topic.Any[0].InnerText;
@@ -112,7 +112,7 @@ namespace odm.ui.views
 
             bool state = false;
             
-            var data = message.Data;
+            var data = message.data;
             if (data.simpleItem != null)
             {
                 foreach (var si in data.simpleItem)

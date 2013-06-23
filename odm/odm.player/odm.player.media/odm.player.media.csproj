@@ -34,6 +34,7 @@
     <WarningLevel Condition="'$(Configuration)' == 'Release'">3</WarningLevel>
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">DEBUG;TRACE;$(DefineConstants)</DefineConstants>
     <DefineConstants Condition="'$(Configuration)' == 'Release'">TRACE;$(DefineConstants)</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

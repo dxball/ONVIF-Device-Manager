@@ -118,7 +118,7 @@ namespace odm.ui.activities
                     )
                 with err -> 
                     do! show_error(err)
-                    return this.ShowForm(model)
+                    return this.Main()
             }
             return! cont
         }
@@ -133,7 +133,7 @@ namespace odm.ui.activities
                     return this.Main()
                 with err ->
                     do! show_error(err)
-                    return this.Main()
+                    return this.ShowForm(model)
             }
             return! cont
         }

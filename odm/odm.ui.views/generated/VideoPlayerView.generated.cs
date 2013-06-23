@@ -26,10 +26,9 @@ namespace odm.ui.activities {
 		public class Model{
 			
 			public Model(
-				string profileToken, StreamSetup streamSetup, MediaUri mediaUri, VideoResolution encoderResolution, bool isUriEnabled, IMetadataReceiver metadataReceiver
+				StreamSetup streamSetup, MediaUri mediaUri, VideoResolution encoderResolution, bool isUriEnabled, IMetadataReceiver metadataReceiver
 			){
 				
-				this.profileToken = profileToken;
 				this.streamSetup = streamSetup;
 				this.mediaUri = mediaUri;
 				this.encoderResolution = encoderResolution;
@@ -41,7 +40,6 @@ namespace odm.ui.activities {
 			
 
 			public static Model Create(
-				string profileToken,
 				StreamSetup streamSetup,
 				MediaUri mediaUri,
 				VideoResolution encoderResolution,
@@ -50,7 +48,6 @@ namespace odm.ui.activities {
 			){
 				var _this = new Model();
 				
-				_this.profileToken = profileToken;
 				_this.streamSetup = streamSetup;
 				_this.mediaUri = mediaUri;
 				_this.encoderResolution = encoderResolution;
@@ -59,7 +56,6 @@ namespace odm.ui.activities {
 				return _this;
 			}
 		
-			public string profileToken{get;private set;}
 			public StreamSetup streamSetup{get;private set;}
 			public MediaUri mediaUri{get;private set;}
 			public VideoResolution encoderResolution{get;private set;}

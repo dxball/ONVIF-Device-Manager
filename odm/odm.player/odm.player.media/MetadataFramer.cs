@@ -52,11 +52,11 @@ namespace odm.player {
 
 	[Serializable]
 	public class MetadataFramer : IMetadataReceiver {
-		bool initialized = false;
-		int expectedSeqNum = 0;
-		Byte[] frame = null;
-		int frameCapacity = 0;
-		int farmeOffset = 0;
+		//bool initialized = false;
+		//int expectedSeqNum = 0;
+		//Byte[] frame = null;
+		//int frameCapacity = 0;
+		//int farmeOffset = 0;
 		ActionByRef<Stream> callback = null;
 
 		public MetadataFramer(Action<Stream> callback) {
@@ -65,61 +65,61 @@ namespace odm.player {
 
 		//OdmPlayer.MetadataCallback metadataHandler = (buffer, size, markerBit, seqNum) => 
 
-		public void ProcessMetadata(IntPtr buffer, int size, bool markerBit, int seqNum) {
-			if (!initialized) {
-				if (markerBit) {
-					expectedSeqNum = seqNum + 1;
-					initialized = true;
-				}
-				return;
-			}
-			if (expectedSeqNum != seqNum) {
-				//metadata corrupted
-				if (!markerBit) {
-					initialized = false;
-					frame = null;
-					return;
-				}
-				expectedSeqNum = seqNum + 1;
-				return;
-			}
-			expectedSeqNum = seqNum + 1;
-			if (!markerBit) {
-				if (frame == null) {
-					frameCapacity = 2 * size;
-					frame = new Byte[frameCapacity];
-					farmeOffset = size;
-					Marshal.Copy(buffer, frame, 0, size);
-				} else {
-					//ensure capacity
-					if (frameCapacity < farmeOffset + size) {
-						//reallocate array
-						frameCapacity = (farmeOffset + size) * 2;
-						var newFrame = new byte[frameCapacity];
-						frame.CopyTo(newFrame, 0);
-						frame = newFrame;
-					}
-					Marshal.Copy(buffer, frame, farmeOffset, size);
-					farmeOffset += size;
-				}
-			} else {
-				if (frame == null) {
-					frame = new Byte[size];
-					farmeOffset = size;
-					frameCapacity = size;
-					Marshal.Copy(buffer, frame, 0, size);
-				} else {
-					//ensure capacity
-					if (frameCapacity < farmeOffset + size) {
-						frameCapacity = (farmeOffset + size) * 2;
-						var newFrame = new byte[frameCapacity];
-						frame.CopyTo(newFrame, 0);
-						frame = newFrame;
-					}
-					Marshal.Copy(buffer, frame, farmeOffset, size);
-					farmeOffset += size;
-				}
-				using (var stream = new MemoryStream(frame, 0, farmeOffset)) {
+		public unsafe void ProcessMetadata(IntPtr buffer, int size, bool markerBit, int seqNum) {
+			//if (!initialized) {
+			//	if (markerBit) {
+			//		expectedSeqNum = seqNum + 1;
+			//		initialized = true;
+			//	}
+			//	return;
+			//}
+			//if (expectedSeqNum != seqNum) {
+			//	//metadata corrupted
+			//	if (!markerBit) {
+			//		initialized = false;
+			//		frame = null;
+			//		return;
+			//	}
+			//	expectedSeqNum = seqNum + 1;
+			//	return;
+			//}
+			//expectedSeqNum = seqNum + 1;
+			//if (!markerBit) {
+			//	if (frame == null) {
+			//		frameCapacity = 2 * size;
+			//		frame = new Byte[frameCapacity];
+			//		farmeOffset = size;
+			//		Marshal.Copy(buffer, frame, 0, size);
+			//	} else {
+			//		//ensure capacity
+			//		if (frameCapacity < farmeOffset + size) {
+			//			//reallocate array
+			//			frameCapacity = (farmeOffset + size) * 2;
+			//			var newFrame = new byte[frameCapacity];
+			//			frame.CopyTo(newFrame, 0);
+			//			frame = newFrame;
+			//		}
+			//		Marshal.Copy(buffer, frame, farmeOffset, size);
+			//		farmeOffset += size;
+			//	}
+			//} else {
+			//	if (frame == null) {
+			//		frame = new Byte[size];
+			//		farmeOffset = size;
+			//		frameCapacity = size;
+			//		Marshal.Copy(buffer, frame, 0, size);
+			//	} else {
+			//		//ensure capacity
+			//		if (frameCapacity < farmeOffset + size) {
+			//			frameCapacity = (farmeOffset + size) * 2;
+			//			var newFrame = new byte[frameCapacity];
+			//			frame.CopyTo(newFrame, 0);
+			//			frame = newFrame;
+			//		}
+			//		Marshal.Copy(buffer, frame, farmeOffset, size);
+			//		farmeOffset += size;
+			//	}
+				using (var stream = new UnmanagedMemoryStream((byte*)buffer, size)) {
 					try {
 						callback.Invoke(stream);
 					} catch (Exception err) {
@@ -127,10 +127,10 @@ namespace odm.player {
 						log.WriteError(err);
 					}
 				}
-				frame = null;
-				frameCapacity = 0;
-				farmeOffset = 0;
-			}
+				//frame = null;
+				//frameCapacity = 0;
+				//farmeOffset = 0;
+			//}
 		}
 	}
 }

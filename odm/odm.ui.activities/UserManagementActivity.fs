@@ -218,8 +218,8 @@
                 try
                     use! progress = Progress.Show(ctx, LocalDevice.instance.downloading)
                     let! data = dev.GetAccessPolicy()
+                    use fstream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read)
                     if NotNull(data) && NotNull(data.data) then
-                        use fstream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read)
                         do! fstream.AsyncWrite(data.data)
                     return this.ShowForm(model)
 //                    let! res = SaveFileActivity.Run("Policy files|*.pan")

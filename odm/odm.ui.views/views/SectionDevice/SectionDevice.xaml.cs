@@ -338,7 +338,7 @@ namespace odm.ui.views {
 				if (_onvifEvent == null || _onvifEvent.message == null)
 					return val;
 
-				return _onvifEvent.message.PropertyOperation.ToString();
+				return _onvifEvent.message.propertyOperation.ToString();
 			}
 		}
 		public string ArrivalTime {
@@ -347,7 +347,7 @@ namespace odm.ui.views {
 				if (_onvifEvent == null || _onvifEvent.message == null)
 					return val;
 				try {
-					val = _onvifEvent.message.UtcTime.ToLongTimeString();
+					val = _onvifEvent.message.utcTime.ToLongTimeString();
 				} catch { }
 
 				return val;
@@ -355,12 +355,12 @@ namespace odm.ui.views {
 		}
 		public string Key {
 			get {
-				if (_onvifEvent == null || _onvifEvent.message == null || _onvifEvent.message.Key == null)
+				if (_onvifEvent == null || _onvifEvent.message == null || _onvifEvent.message.key == null)
 					return string.Empty;
 
 				StringBuilder sb = new StringBuilder();
 
-				var key = _onvifEvent.message.Key;
+				var key = _onvifEvent.message.key;
 				if (key.simpleItem != null) {
 					foreach (var item in key.simpleItem)
 						sb.AppendLine(string.Format(KeyValueFormat, item.name, item.value));
@@ -405,8 +405,8 @@ namespace odm.ui.views {
 				try {
 					StringBuilder sb = new StringBuilder();
 					int c = 0;
-					if (_onvifEvent.message.Extension != null) {
-						_onvifEvent.message.Extension.Any.ForEach(x => {
+					if (_onvifEvent.message.extension != null) {
+						_onvifEvent.message.extension.any.ForEach(x => {
 							if (c != 0)
 								sb.AppendLine();
 							sb.Append(string.Format(KeyValueFormat, x.Name, x.Value));
@@ -424,12 +424,12 @@ namespace odm.ui.views {
 		}
 		public string Source {
 			get {
-				if (_onvifEvent == null || _onvifEvent.message == null || _onvifEvent.message.Source == null)
+				if (_onvifEvent == null || _onvifEvent.message == null || _onvifEvent.message.source == null)
 					return string.Empty;
 
 				StringBuilder sb = new StringBuilder();
 
-				var source = _onvifEvent.message.Source;
+				var source = _onvifEvent.message.source;
 				if (source.simpleItem != null) {
 					foreach (var item in source.simpleItem)
 						sb.AppendLine(string.Format(KeyValueFormat, item.name, item.value));
@@ -440,12 +440,12 @@ namespace odm.ui.views {
 		}
 		public string Data {
 			get {
-				if (_onvifEvent == null || _onvifEvent.message == null || _onvifEvent.message.Data == null)
+				if (_onvifEvent == null || _onvifEvent.message == null || _onvifEvent.message.data == null)
 					return string.Empty;
 
 				StringBuilder sb = new StringBuilder();
 
-				var data = _onvifEvent.message.Data;
+				var data = _onvifEvent.message.data;
 				if (data.simpleItem != null) {
 					foreach (var item in data.simpleItem)
 						sb.AppendLine(string.Format(KeyValueFormat, item.name, item.value));

@@ -40,9 +40,86 @@
             do! ErrorView.Show(ctx, err) |> Async.Ignore
         }
 
+        //FIX: D-Link DSC-2230 doesn't support GetNode request
+        let CreateStandartPtzNode(nodeToken) = new PTZNode( 
+            token = nodeToken,
+            name = nodeToken,
+            supportedPTZSpaces = new PTZSpaces(
+                absolutePanTiltPositionSpace = [|new Space2DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace",
+                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
+                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
+                )|],
+                absoluteZoomPositionSpace = [|new Space1DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace",
+                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
+                )|],
+                relativePanTiltTranslationSpace = [|new Space2DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace",
+                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
+                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
+                )|],
+                relativeZoomTranslationSpace = [|new Space1DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace",
+                    xRange = new FloatRange(min = -1.0f, max = 1.0f)
+                )|],
+                continuousPanTiltVelocitySpace = [|new Space2DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace",
+                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
+                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
+                )|],
+                continuousZoomVelocitySpace = [|new Space1DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace",
+                    xRange = new FloatRange(min = -1.0f, max = 1.0f)
+                )|],
+                panTiltSpeedSpace = [|new Space1DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace",
+                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
+                )|],
+                zoomSpeedSpace = [|new Space1DDescription(
+                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace",
+                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
+                )|]
+            ),
+            homeSupported = false,
+            maximumNumberOfPresets = 0,
+            auxiliaryCommands = null,
+            extension = null,
+            fixedHomePosition = false,
+            fixedHomePositionSpecified = false
+        )
+            
+        let LoadPtzNode(cfg: PTZConfiguration) = async{
+            try
+                //FIX: D-Link DSC-2230 doesn't support GetNode request
+                return! ptz.GetNode(cfg.nodeToken)
+            with err->
+                dbg.Error(err)
+                return CreateStandartPtzNode(cfg.nodeToken)
+        }
+
+        let LoadPtzStatus(token:string) =  async{
+            try
+                return! ptz.GetStatus(token)
+            with err->
+                dbg.Error(err)
+                return null;
+        }
+
         let load() = async{
-            let! profile, presets = Async.Parallel(
-                session.GetProfile(profToken),
+            let! (profile, node, status), presets = Async.Parallel(
+                async{
+                    let! profile = session.GetProfile(profToken)
+                    let cfg = profile.ptzConfiguration
+                    if cfg |> IsNull then
+                        return (profile, null, null)
+                    else
+                        let! node, status = Async.Parallel(
+                            LoadPtzNode(cfg),
+                            LoadPtzStatus(profile.token)
+                        )
+                        return (profile, node, status)
+                },
                 //ptz.GetNodes(),
                 async{
                     try
@@ -53,70 +130,10 @@
                 }
             )
             
-            let cfg = profile.ptzConfiguration
-            let! node = async{
-                if cfg |> NotNull then
-                    try
-                        //FIX: D-Link DSC-2230 doesn't support GetNode request
-                        return! ptz.GetNode(cfg.nodeToken)
-                    with err->
-                        dbg.Error(err)
-                        return new PTZNode( 
-                            token = cfg.nodeToken,
-                            name = cfg.nodeToken,
-                            supportedPTZSpaces = new PTZSpaces(
-                                absolutePanTiltPositionSpace = [|new Space2DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/PositionGenericSpace",
-                                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
-                                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
-                                )|],
-                                absoluteZoomPositionSpace = [|new Space1DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/PositionGenericSpace",
-                                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
-                                )|],
-                                relativePanTiltTranslationSpace = [|new Space2DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/TranslationGenericSpace",
-                                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
-                                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
-                                )|],
-                                relativeZoomTranslationSpace = [|new Space1DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/TranslationGenericSpace",
-                                    xRange = new FloatRange(min = -1.0f, max = 1.0f)
-                                )|],
-                                continuousPanTiltVelocitySpace = [|new Space2DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace",
-                                    xRange = new FloatRange(min = -1.0f, max = 1.0f),
-                                    yRange = new FloatRange(min = -1.0f, max = 1.0f)
-                                )|],
-                                continuousZoomVelocitySpace = [|new Space1DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace",
-                                    xRange = new FloatRange(min = -1.0f, max = 1.0f)
-                                )|],
-                                panTiltSpeedSpace = [|new Space1DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/PanTiltSpaces/GenericSpeedSpace",
-                                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
-                                )|],
-                                zoomSpeedSpace = [|new Space1DDescription(
-                                    uri = "http://www.onvif.org/ver10/tptz/ZoomSpaces/ZoomGenericSpeedSpace",
-                                    xRange = new FloatRange(min = 0.0f, max = 1.0f)
-                                )|]
-                            ),
-                            homeSupported = false,
-                            maximumNumberOfPresets = 0,
-                            auxiliaryCommands = null,
-                            extension = null,
-                            fixedHomePosition = false,
-                            fixedHomePositionSpecified = false
-                        )
-
-                else
-                    return null
-            }
-            
             let model = new PtzView.Model(
-                profToken = profile.token,
-                currentNode = node,
-                currentPtzConfig = cfg,
+                profile = profile,
+                node = node,
+                status = status,
                 //nodes = nodes,
                 presets = presets
             )

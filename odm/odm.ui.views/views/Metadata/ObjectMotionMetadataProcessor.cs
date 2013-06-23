@@ -33,9 +33,9 @@ namespace odm.ui.views
 
         protected override VAObjectSnapshot Parse(TopicExpressionType topic, Message message)
         {
-            if (message.Key == null || message.Key.simpleItem == null || message.Key.simpleItem.Length != 1)
+            if (message.key == null || message.key.simpleItem == null || message.key.simpleItem.Length != 1)
                 throw new InvalidOperationException();
-            var key = message.Key.simpleItem[0];
+            var key = message.key.simpleItem[0];
 
             if (key == null || key.name != "ObjectId")
                 throw new InvalidOperationException();
@@ -45,7 +45,7 @@ namespace odm.ui.views
             System.Windows.Point currPos = new System.Windows.Point();
             System.Windows.Point startPos = new System.Windows.Point();
 
-            var data = message.Data;
+            var data = message.data;
             if (data.simpleItem != null)
             {
                 foreach (var si in data.simpleItem)

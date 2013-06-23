@@ -40,35 +40,36 @@ namespace odm.ui.views {
 			parent.Title = devHolder.Name;
 			
 			//Display progress bar
-			ProgressView progress = new ProgressView("Loading ..");
-			devicePanel.Content = progress;
+			devicePanel.Content = new ProgressView("Loading ...");
 
 			//Begin load device section
 			disposables.Add(SectionDevice.Load(devHolder, sessionFactory)
 				.ObserveOnCurrentDispatcher()
-				.Subscribe(args => {
-					invtSession = args.nvtSession;
+				.Subscribe(
+					args => {
+						invtSession = args.nvtSession;
 
-					SectionDevice devView = container.Resolve<SectionDevice>();
-					disposables.Add(devView);
-					devView.Init(args);
-					devicePanel.Content = devView;
+						SectionDevice devView = container.Resolve<SectionDevice>();
+						disposables.Add(devView);
+						devView.Init(args);
+						devicePanel.Content = devView;
 
-					//Load sections
-					LoadSections(args);
-				}, err => {
-					ErrorView errorView = new ErrorView(err);
-					disposables.Add(errorView);
+						//Load sections
+						LoadSections(args);
+					}, 
+					err => {
+						ErrorView errorView = new ErrorView(err);
+						disposables.Add(errorView);
 
-					devicePanel.Content = errorView;
-				}
+						devicePanel.Content = errorView;
+					}
 			));
 
 		}
 
 		List<Action<DeviceViewArgs, bool>> priority = new List<Action<DeviceViewArgs, bool>>();
 		List<SectionPanel> sections = new List<SectionPanel>();
-		
+
 		void LoadSections(DeviceViewArgs args) {
 			//investigate capability to find what sections is available
 			if (args.capabilities.media != null) { 

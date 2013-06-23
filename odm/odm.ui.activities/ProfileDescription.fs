@@ -268,27 +268,27 @@
         if profile.videoEncoderConfiguration |> NotNull then
             let vec = profile.videoEncoderConfiguration
             let childs = GetVecDetails(vec)
-            yield CreateProp("Video Encoder Configuration", vec.ToString(), childs |> List.toArray)
+            yield CreateProp("Video Encoder Configuration", vec.GetName(), childs |> List.toArray)
 
         if profile.audioEncoderConfiguration |> NotNull then
             let aec = profile.audioEncoderConfiguration
             let childs = GetAecDetails(aec)
-            yield CreateProp("Audio Encoder Configuration", aec.ToString(), childs |> List.toArray)
+            yield CreateProp("Audio Encoder Configuration", aec.GetName(), childs |> List.toArray)
 
         if profile.ptzConfiguration |> NotNull then
             let ptz = profile.ptzConfiguration
             let childs = GetPtzDetails(ptz, ptzNodes)
-            yield  CreateProp("PTZ Configuration", ptz.ToString(), childs |> List.toArray)
+            yield  CreateProp("PTZ Configuration", ptz.GetName(), childs |> List.toArray)
 
         if profile.videoAnalyticsConfiguration |> NotNull then
             let vac = profile.videoAnalyticsConfiguration
             let childs = GetVacDetails(vac)
-            yield  CreateProp("Video Analytics Configuration", vac.ToString(), childs |> List.toArray)
+            yield  CreateProp("Video Analytics Configuration", vac.GetName(), childs |> List.toArray)
 
         if profile.metadataConfiguration |> NotNull then
             let meta = profile.metadataConfiguration
             let childs = GetMetaDetails(meta)
-            yield  CreateProp("Metadata Configuration", meta.ToString(), childs |> List.toArray)
+            yield  CreateProp("Metadata Configuration", meta.GetName(), childs |> List.toArray)
     })
 
     ///<summary></summary>

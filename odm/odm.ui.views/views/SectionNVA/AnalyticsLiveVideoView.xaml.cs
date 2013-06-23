@@ -147,18 +147,18 @@ namespace odm.ui.activities {
 
 			player.Child = playview;
 
-			playview.Init(
-				new VideoPlayerView.Model(
-					profileToken: "",
-					streamSetup: streamSetup,
-					mediaUri: new MediaUri() { uri = model.uri },
-					encoderResolution: new VideoResolution() {
-						height = resolution.height,
-						width = resolution.width
-					},
-						  isUriEnabled: false, //TODO if true then annotation is not positioned correctly
-						  metadataReceiver: metadataReceiver)
-			);
+			playview.Init(new VideoPlayerView.Model(
+				streamSetup: streamSetup,
+				mediaUri: new MediaUri() { 
+					uri = model.uri 
+				},
+				encoderResolution: new VideoResolution() {
+					height = resolution.height,
+					width = resolution.width
+				},
+				isUriEnabled: false, //TODO if true then annotation is not positioned correctly
+				metadataReceiver: metadataReceiver
+			));
 
 			uriString.Visibility = System.Windows.Visibility.Visible;
 			uriString.Text = model.uri;

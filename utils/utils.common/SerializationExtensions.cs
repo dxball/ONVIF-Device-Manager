@@ -57,6 +57,10 @@ namespace utils
                       val = (double)obj;
                       return true;
                   }
+                  else if (obj is int) {
+                      val = (int)obj;
+                      return true;
+                  }
                   else if (obj is string) {
                       val = XmlConvert.ToDouble((string)obj);
                       return true;

@@ -33,19 +33,24 @@ namespace odm.ui.activities
         member private this.Main() = async{
             let! cont = async{
                 try
-                    let! profile = session.GetProfile(model.profileToken)
-                    let vec = 
-                        if profile.videoEncoderConfiguration |> NotNull then
-                            profile.videoEncoderConfiguration
+                    let! profile = async{
+                        if model.profile |> NotNull then
+                            return model.profile
                         else
-                            failwith "the profile has no video encoder configuration"
+                            return! session.GetProfile(model.profileToken)
+                    }
+                    let encoderResolution = 
+                        let vec = profile.videoEncoderConfiguration
+                        if vec |> NotNull then
+                            vec.resolution
+                        else
+                            null
 
                     let! mediaUri = session.GetStreamUri(model.streamSetup, model.profileToken)
                     let viewModel = new VideoPlayerView.Model(
-                        profileToken = model.profileToken,
                         streamSetup = model.streamSetup,
                         mediaUri = mediaUri,
-                        encoderResolution = vec.resolution,
+                        encoderResolution = encoderResolution,
                         isUriEnabled = model.showStreamUrl,
                         metadataReceiver = model.metadataReceiver
                     )

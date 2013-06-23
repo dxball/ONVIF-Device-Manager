@@ -79,6 +79,7 @@
         inherit IReceiverAsync
         inherit IAnalyticsDeviceAsync
         inherit IActionEngineAsync
+        inherit IReplayAsync
         abstract CreatePullPointSubscription: filter:FilterType * initialTerminationTime:string * subscriptionPolicy:CreatePullPointSubscriptionSubscriptionPolicy->Async<ISubscriptionManagerAsync>
         abstract CreateBaseSubscription: consumerReference:EndpointReferenceType1* filter:FilterType* initialTerminationTime:string* subscriptionPolicy:SubscribeSubscriptionPolicy->Async<ISubscriptionManagerAsync>
         abstract credentials:NetworkCredential
@@ -396,6 +397,13 @@
             let comp = factory_wrapper (fun(useTls)-> Async.Memoize(async{
                 do! Async.SwitchToThreadPool()
                 return NvtSessionFactory.CreateChannelFactory<ActionEnginePort>(false, false, credentials |> NotNull, useTls)
+            }))
+            fun(useTls)->comp(useTls)
+
+        let getReplayFactory = 
+            let comp = factory_wrapper (fun(useTls)-> Async.Memoize(async{
+                do! Async.SwitchToThreadPool()
+                return NvtSessionFactory.CreateChannelFactory<ReplayPort>(false, false, credentials |> NotNull, useTls)
             }))
             fun(useTls)->comp(useTls)
 
@@ -928,20 +936,43 @@
 
             let GetActionEngineClient : unit -> Async<IActionEngineAsync> =
                 let comp = Async.Memoize(async {
-                    dbg.Info(sprintf "%08X::%s" (sessionId.GetHashCode()) "GetActionEngineClient") 
-                    let! services = GetServices()
-                    let service = services.FirstOrDefault (fun s -> s.Namespace = "http://www.onvif.org/ver10/actionengine/wsdl") 
-                    if IsNull service then
+                    dbg.Info(sprintf "%08X::%s" (sessionId.GetHashCode()) "GetActionEngineClient")
+                    let! caps = GetCapabilities()
+                    if caps.device.system.supportedVersions |> Seq.exists (fun v -> v >= OnvifVersion.v2_1) then
+                        let! services = GetServices()
+                        let service = services.FirstOrDefault (fun (s:Service) -> s.Namespace = "http://www.onvif.org/ver10/actionengine/wsdl") 
+                        if service |> IsNull  then
+                            return null
+                        else 
+                            do! Async.SwitchToThreadPool()
+                            let! url = FixUrl(new Uri(service.XAddr, UriKind.RelativeOrAbsolute))
+                            let useTls = url.Scheme = Uri.UriSchemeHttps
+                            let! factory = getActionEngineFactory(useTls)
+                            let endpointAddr = new EndpointAddress(url)
+                            let proxy = factory.CreateChannel(endpointAddr)
+                            do! SetupUserNameToken(proxy :?> IClientChannel)
+                            return (new ActionEngineAsync(proxy) :> IActionEngineAsync)
+                    else
                         return null
-                    else 
+                })
+                fun()->comp
+
+            let GetReplayClient : unit -> Async<IReplayAsync> =
+                let comp = Async.Memoize(async{
+                    dbg.Info(sprintf "%08X::%s" (sessionId.GetHashCode()) "GetReplayClient") 
+                    let! caps = GetCapabilities()
+                    let xaddr = caps |> IfNotNull(fun x->x.extension |> IfNotNull(fun x->x.replay|> IfNotNull(fun x->x.xAddr)))
+                    if IsNull(xaddr) then
+                        return null
+                    else
                         do! Async.SwitchToThreadPool()
-                        let! url = FixUrl(new Uri(service.XAddr, UriKind.RelativeOrAbsolute))
+                        let! url = FixUrl(new Uri(xaddr, UriKind.RelativeOrAbsolute))
                         let useTls = url.Scheme = Uri.UriSchemeHttps
-                        let! factory = getActionEngineFactory(useTls)
+                        let! factory = getReplayFactory(useTls)
                         let endpointAddr = new EndpointAddress(url)
                         let proxy = factory.CreateChannel(endpointAddr)
                         do! SetupUserNameToken(proxy :?> IClientChannel)
-                        return (new ActionEngineAsync(proxy) :> IActionEngineAsync)
+                        return (new ReplayAsync(proxy) :> IReplayAsync)
                 })
                 fun()->comp
 
@@ -1382,6 +1413,10 @@
                     member this.SetRelayOutputState(token:string, state:RelayLogicalState):Async<unit> = async{
                         let! dev = GetDeviceClient()
                         return! dev.SetRelayOutputState(token, state)
+                    }
+                    member this.SetHostnameFromDHCP(fromDhcp:bool):Async<bool> = async{
+                        let! dev = GetDeviceClient()
+                        return! dev.SetHostnameFromDHCP(fromDhcp)
                     }
                     //----------------------------------------------------------------------------------
                     //onvif 2.1
@@ -2200,6 +2235,24 @@
                     member this.ModifyActionTriggers(actionTriggers:ActionTrigger[]):Async<unit> = async{
                         let! client = GetActionEngineClient()
                         return! client.ModifyActionTriggers(actionTriggers)
+                    }
+                end
+                interface IReplayAsync with
+                    member this.GetServiceCapabilities():Async<Capabilities10> = async{
+                        let! rep = GetReplayClient()
+                        return! rep.GetServiceCapabilities()
+                    }
+                    member this.GetReplayUri(recordingToken:string, streamSetup:StreamSetup):Async<string> = async{
+                        let! rep = GetReplayClient()
+                        return! rep.GetReplayUri(recordingToken, streamSetup)
+                    }
+                    member this.GetReplayConfiguration():Async<ReplayConfiguration> = async{
+                        let! rep = GetReplayClient()
+                        return! rep.GetReplayConfiguration()
+                    }
+                    member this.SetReplayConfiguration(replayConfiguration:ReplayConfiguration):Async<unit> = async{
+                        let! rep = GetReplayClient()
+                        return! rep.SetReplayConfiguration(replayConfiguration)
                     }
                 end
             }

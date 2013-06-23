@@ -280,7 +280,6 @@
     <Compile Include="viewmodels\DeviceListViewModel.cs" />
     <Compile Include="viewmodels\DigitalIOViewModel.cs" />
     <Compile Include="viewmodels\ProfilesViewModel.cs" />
-    <Compile Include="viewmodels\PTZViewModel.cs" />
     <Compile Include="viewmodels\SystemLogViewModel.cs" />
     <Compile Include="viewmodels\ViewModelBase.cs" />
     <Compile Include="views\AuthView.xaml.cs">
@@ -378,6 +377,21 @@
     </Compile>
     <Compile Include="views\SectionNVA\AnalyticsMetadataSettingsView.xaml.cs">
       <DependentUpon>AnalyticsMetadataSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\PtzView.AbsRelSpeed.cs">
+      <DependentUpon>PtzView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\PtzView.AbsMov.cs">
+      <DependentUpon>PtzView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\PtzView.ContMov.cs">
+      <DependentUpon>PtzView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\PtzView.Common.cs">
+      <DependentUpon>PtzView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="views\SectionNVT\PtzView.RelMov.cs">
+      <DependentUpon>PtzView.xaml</DependentUpon>
     </Compile>
     <Compile Include="views\SectionNVT\PtzView.xaml.cs">
       <DependentUpon>PtzView.xaml</DependentUpon>

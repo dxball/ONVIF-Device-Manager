@@ -41,7 +41,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-
     <Reference Include="System.Reactive.Core">
       <HintPath>..\..\packages\Rx-Core.2.0.20823\lib\$(Platform)\System.Reactive.Core.dll</HintPath>
     </Reference>
@@ -52,7 +51,6 @@
       <HintPath>..\..\packages\Rx-Linq.2.0.20823\lib\$(Platform)\System.Reactive.Linq.dll</HintPath>
     </Reference>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Include="..\~cfg\AssemblyInfo.global.cs">
       <Link>Properties\AssemblyInfo.global.cs</Link>
@@ -61,7 +59,6 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="HashSetExt.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

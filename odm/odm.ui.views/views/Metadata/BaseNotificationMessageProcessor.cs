@@ -48,11 +48,11 @@ namespace odm.ui.views
         {
             var message = msg.Deserialize<Message>();
 
-            var propertyOperation = message.PropertyOperation;
+            var propertyOperation = message.propertyOperation;
 
-            if (message.Source != null && message.Source.simpleItem != null)
+            if (message.source != null && message.source.simpleItem != null)
             {
-                foreach (var simpleItem in message.Source.simpleItem)
+                foreach (var simpleItem in message.source.simpleItem)
                 {
                     if (simpleItem.name == "VideoSourceToken" && videoSourceToken != null && simpleItem.value != videoSourceToken)
                         return;
@@ -63,18 +63,18 @@ namespace odm.ui.views
                 }
             }
 
-            if (message.Data == null)
+            if (message.data == null)
                 return;
 
             var snapshot = Parse(topic, message);
-            snapshot.Time = message.UtcTime;
+            snapshot.Time = message.utcTime;
 
 
-            if (this.initialized != null && propertyOperation == PropertyOperation.Initialized)
+            if (this.initialized != null && propertyOperation == PropertyOperation.initialized)
                 this.initialized(snapshot);
-            if (this.changed != null && propertyOperation == PropertyOperation.Changed)
+            if (this.changed != null && propertyOperation == PropertyOperation.changed)
                 this.changed(snapshot);
-            if (this.deleted != null && propertyOperation == PropertyOperation.Deleted)
+            if (this.deleted != null && propertyOperation == PropertyOperation.deleted)
                 this.deleted(snapshot);
             
         } 

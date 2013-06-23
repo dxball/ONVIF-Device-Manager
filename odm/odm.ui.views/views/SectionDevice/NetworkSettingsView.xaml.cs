@@ -13,10 +13,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Data;
 using System.Windows;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace odm.ui.activities {
 
-	
+
 
 	public partial class NetworkSettingsView : UserControl, IDisposable {
 
@@ -41,19 +43,24 @@ namespace odm.ui.activities {
 			this.DataContext = model;
 			this.model = model;
 
-			OnCompleted+=new Action(()=>{
+			OnCompleted += new Action(() => {
 				//free resources
 			});
 
 			var applyCmd = new DelegateCommand(
 				() => {
-					if (!model.dhcp) {
-						model.useNtpFromDhcp = false;
-						model.useDnsFromDhcp = false;
-						model.useHostFromDhcp = false;
+					try {
+						if (!model.dhcp) {
+							model.useNtpFromDhcp = false;
+							model.useDnsFromDhcp = false;
+							model.useHostFromDhcp = false;
+						}
+						GetProtocolData();
+						Success(new Result.Apply(model));
+					} catch (Exception err) {
+						Success(new Result.ValidationFailed(model, new Exception("some fields contains invalid values", err)));
 					}
-					GetProtocolData();
-					Success(new Result.Apply(model));
+
 				},
 				() => true
 			);
@@ -89,18 +96,17 @@ namespace odm.ui.activities {
 			captionPortsHttp.CreateBinding(TextBlock.TextProperty, Strings, s => s.portsHttp);
 			captionPortsHttps.CreateBinding(TextBlock.TextProperty, Strings, s => s.portsHttps);
 			captionPortsRtsp.CreateBinding(TextBlock.TextProperty, Strings, s => s.portsRtsp);
-            hostCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.hostName);
-            discoveryModeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.discoveryMode);
+			hostCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.hostName);
+			discoveryModeCaption.CreateBinding(TextBlock.TextProperty, Strings, s => s.discoveryMode);
 		}
 
 		private static Tuple<bool, string> GetProtocolPorts(NetworkProtocol[] protocols, NetworkProtocolType protocolType) {
-			var protocolName = protocolType.ToString();
 			if (protocols == null) {
 				return Tuple.Create(false, "");
 			}
 			var enabled = false;
 			var ports = new List<int>();
-			foreach (var protocol in protocols.Where(p => p != null && String.Compare(p.name, protocolName, true) == 0)) {
+			foreach (var protocol in protocols.Where(p => p != null && p.name == protocolType)) {
 				if (protocol.enabled && !enabled) {
 					enabled = true;
 					ports.Clear();
@@ -135,7 +141,7 @@ namespace odm.ui.activities {
 					valuePortsHttps.IsReadOnly = sel != true;
 				}
 			};
-			
+
 			var rtspPorts = GetProtocolPorts(model.netProtocols, NetworkProtocolType.rtsp);
 			valueEnableRtsp.SelectedValue = rtspPorts.Item1;
 			valuePortsRtsp.Text = rtspPorts.Item2;
@@ -147,15 +153,15 @@ namespace odm.ui.activities {
 				}
 			};
 		}
-		
-		private static NetworkProtocol CreateNetworkProtocol(NetworkProtocolType protocolType, string ports, bool enabled){
-			return new NetworkProtocol(){
-				name = protocolType.ToString(),
-				port = ports == null ? null : ports.Split(new []{';', ' ', ','}, StringSplitOptions.RemoveEmptyEntries).Select(p=>Int32.Parse(p)).ToArray(),
+
+		private static NetworkProtocol CreateNetworkProtocol(NetworkProtocolType protocolType, string ports, bool enabled) {
+			return new NetworkProtocol() {
+				name = protocolType,
+				port = ports == null ? null : ports.Split(new[] { ';', ' ', ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => Int32.Parse(p)).ToArray(),
 				enabled = enabled
 			};
 		}
-		
+
 		void GetProtocolData() {
 			model.netProtocols = new NetworkProtocol[] { 
 				CreateNetworkProtocol(NetworkProtocolType.http, valuePortsHttp.Text, (bool)valueEnableHttp.SelectedValue),
@@ -179,7 +185,7 @@ namespace odm.ui.activities {
 				} else {
 					zeroIp.Text = "None";
 				}
-				
+
 			}
 
 			FillProtocolsData(model);
@@ -188,13 +194,13 @@ namespace odm.ui.activities {
 
 			ipAddressValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
 			ipAddressValue.CreateBinding(TextBox.TextProperty, model,
-				m => m.dhcp ? m.origin.ip : m.ip, 
+				m => m.dhcp ? m.origin.ip : m.ip,
 				(m, v) => m.ip = v
 			);
 
 			ipMaskValue.CreateBinding(TextBox.IsReadOnlyProperty, model, x => x.dhcp);
-			ipMaskValue.CreateBinding(TextBox.TextProperty, model, 
-				m => m.dhcp ? m.origin.subnet : m.subnet, 
+			ipMaskValue.CreateBinding(TextBox.TextProperty, model,
+				m => m.dhcp ? m.origin.subnet : m.subnet,
 				(m, v) => m.subnet = v
 			);
 
@@ -203,7 +209,7 @@ namespace odm.ui.activities {
 
 			hostValue.CreateBinding(TextBox.IsReadOnlyProperty, model, m => m.useHostFromDhcp && model.dhcp);
 			hostValue.CreateBinding(TextBox.TextProperty, model, m => m.host, (m, v) => m.host = v);
-			
+
 			hostFromDhcpValue.CreateBinding(ComboBox.IsEnabledProperty, model, x => x.dhcp);
 			hostFromDhcpValue.CreateBinding(ComboBox.SelectedValueProperty, model, m => m.useHostFromDhcp && model.dhcp, (m, v) => m.useHostFromDhcp = v);
 

@@ -90,17 +90,17 @@ namespace odm.ui.views
 
         protected override TripwireAlarmSnapshot Parse(TopicExpressionType topic, Message message)
         {
-            if (message.Source == null || message.Source.simpleItem == null)
+            if (message.source == null || message.source.simpleItem == null)
                 throw new InvalidOperationException();
             string rule = null;
-            foreach (var s in message.Source.simpleItem)
+            foreach (var s in message.source.simpleItem)
                 if (s.name == "Rule") rule = s.value;
             if (string.IsNullOrEmpty(rule))
                 throw new InvalidOperationException();
 
-            if (message.Key == null || message.Key.simpleItem == null || message.Key.simpleItem.Length != 1)
+            if (message.key == null || message.key.simpleItem == null || message.key.simpleItem.Length != 1)
                 throw new InvalidOperationException();
-            var key = message.Key.simpleItem[0];
+            var key = message.key.simpleItem[0];
 
             
             if (key == null || key.name != "ObjectId")
@@ -109,7 +109,7 @@ namespace odm.ui.views
 
             bool hasCrossed = false;
             
-            var data = message.Data;
+            var data = message.data;
             if (data.simpleItem != null)
             {
                 foreach (var si in data.simpleItem)
