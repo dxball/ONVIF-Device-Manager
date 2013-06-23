@@ -71,8 +71,8 @@
       <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreaded</RuntimeLibrary>-->
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreadedDLL</RuntimeLibrary>
-      <WarningLevel Condition="'$(Configuration)'=='Debug'">Level4</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)'=='Release'">Level3</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)'=='Debug'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)'=='Release'">TurnOffAllWarnings</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DebugInformationFormat Condition="'$(Configuration)'=='Debug'">ProgramDatabase</DebugInformationFormat>
       <DebugInformationFormat Condition="'$(Configuration)'=='Release'" />
