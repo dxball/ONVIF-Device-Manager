@@ -57,6 +57,7 @@
     <Compile Include="..\~cfg\AssemblyInfo.global.cs">
       <Link>Properties\AssemblyInfo.global.cs</Link>
     </Compile>
+    <Compile Include="NullExtensions.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="NamedWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
