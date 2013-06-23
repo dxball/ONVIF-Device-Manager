@@ -172,15 +172,25 @@ namespace onvifmp{
 			NetAddress address;
 			portNumBits port;
 			if(!RTSPClient::parseRTSPURL(*usageEnvironment, mediaStreamInfo->url, username, password, address, port)){
+				//TODO: log error
+				fprintf(stderr, "failed to parse url with error message: %s\n", usageEnvironment->getResultMsg());
+				if(username != nullptr){
+					delete[] username;
+				}
+				if(password != nullptr){
+					delete[] password;
+				}
 				Cleanup();
 				return false;
 			}
 			httpProt = port;
+			delete[] username;
+			delete[] password;
 		}
 		rtspClient = RTSPClient::createNew(*usageEnvironment, nullptr, 1/*verbosityLevel*/, nullptr/*applicationName*/, httpProt);
 		if(rtspClient == NULL){
 			//TODO: log error
-			fprintf(stderr, "error %d: %s", usageEnvironment->getErrno(), usageEnvironment->getResultMsg());
+			fprintf(stderr, "error %d: %s\n", usageEnvironment->getErrno(), usageEnvironment->getResultMsg());
 			Cleanup();
 			return false;
 		}
@@ -204,9 +214,12 @@ namespace onvifmp{
 		if(mediaSession == NULL){
 			//TODO: log error
 			fprintf(stderr, "error %d: %s", usageEnvironment->getErrno(), usageEnvironment->getResultMsg());
+			delete[] sdp;
 			Cleanup();
 			return false;
 		}
+		delete[] sdp;
+		sdp = nullptr;
 
 		MediaSubsessionIterator itor(*mediaSession);
 		auto subsession = itor.next();
@@ -225,7 +238,10 @@ namespace onvifmp{
 			MediaSubsessionIterator itor(*mediaSession);
 			auto subsession = itor.next();
 			while(NULL != subsession) {
-				//subsession->rtpSource()->stopGettingFrames();
+				//auto rtpSource = subsession->rtpSource();
+				//if(rtpSource != nullptr){
+				//	rtpSource->stopGettingFrames();
+				//}
 				if(subsession->sink != NULL){
 					subsession->sink->stopPlaying();
 					MediaSink::close(subsession->sink);

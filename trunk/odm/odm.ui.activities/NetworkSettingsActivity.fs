@@ -202,9 +202,8 @@
                 let PortsChanged(protocolType: NetworkProtocolType) = 
                     let GetProtocolPorts(protocols:NetworkProtocol[]) = seq{
                         if protocols |> NotNull then
-                            let protocolName = protocolType.ToString()
                             for p in protocols do 
-                                if NotNull(p.port) && p.enabled && String.Compare(p.name, protocolName, true) = 0 then
+                                if NotNull(p.port) && p.enabled && p.name = protocolType then
                                     yield! p.port
                     }
                     let origin = GetProtocolPorts(model.origin.netProtocols) |> Seq.toArray
@@ -366,6 +365,7 @@
                     let! res = NetworkSettingsView.Show(ctx, model)
                     return res.Handle(
                         apply = (fun model->this.ApplyChanges(model)),
+                        validationFailed = (fun model err -> this.ValidationFailed(model, err)),
                         close = (fun ()->this.Complete())
                     )
                 with err -> 
@@ -374,6 +374,11 @@
                     return this.Main()
             }
             return! cont
+        }
+
+        member private this.ValidationFailed(model, err) = async{
+            do! show_error(err)
+            return! this.ShowForm(model)
         }
 
         member private this.ApplyChanges(model) = async{

@@ -185,12 +185,10 @@ namespace odm.ui.viewModels {
 				return;
 			
 			DeviceDescriptionHolder devHolder = new DeviceDescriptionHolder();
+			
 			//scopes
-
 			//var scopes = node.identity.scopes.Select(x => x.OriginalString);
 			
-
-
 			devHolder.Uris = new Uri[] { uri };
 			devHolder.Uris.ForEach(x => { devHolder.Address += x.DnsSafeHost + "; "; });
 			devHolder.Address = devHolder.Address.TrimEnd(new Char[] { ';', ' ' });
@@ -396,6 +394,8 @@ namespace odm.ui.viewModels {
 				}
 			}
 		}
+
+		
 		NvtSessionFactory _sessionFactory;
 		NvtSessionFactory sessionFactory {
 			get {

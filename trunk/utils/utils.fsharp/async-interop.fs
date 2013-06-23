@@ -208,6 +208,16 @@
 //            source.Invoke(Apm.CreateAnonymousObserver(callback))
 
         [<Extension>]
+        static member StartImmediate<'T>(source:Async<'T>, onSuccess:Action<'T>, onError:Action<Exception>, ct:CancellationToken) = 
+            Async.StartWithContinuations(source,
+                (fun v->onSuccess.Invoke(v)),
+                (fun e->onError.Invoke(e)),
+                (fun e->onError.Invoke(e)),
+                ct
+            )
+
+
+        [<Extension>]
         static member Subscribe<'T>(source:Async<'T>, onSuccess:Action<'T>, onError:Action<Exception>): IDisposable = 
             let gate = new obj()
             let wrapped_observer = ref <| Some {
@@ -274,7 +284,7 @@
                 let! v = comp
                 return selector.Invoke(v)
             }
-        
+
         [<Extension>]
         static member SelectMany<'T, 'U>(comp: Async<'T> , cont:Func< Async<'T> , Async<'U> >): Async<'U> = 
            async{

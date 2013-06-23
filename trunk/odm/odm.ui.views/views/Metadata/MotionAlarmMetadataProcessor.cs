@@ -75,7 +75,7 @@ namespace odm.ui.views
         {
             bool state = false;
             
-            var data = message.Data;
+            var data = message.data;
             if (data.simpleItem != null)
             {
                 foreach (var si in data.simpleItem)

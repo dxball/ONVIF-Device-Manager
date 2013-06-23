@@ -130,13 +130,14 @@ namespace odm.ui.activities {
 
 			var settings = model.settings;
 			if (settings == null) {
-				throw new InvalidOperationException("model.settings == null");
+				return;
+				//throw new InvalidOperationException("model.settings == null");
 			}
 
 			var options = model.options;
-			if (options == null) {
-				throw new InvalidOperationException("model.options == null");
-			}
+			//if (options == null) {
+			//	throw new InvalidOperationException("model.options == null");
+			//}
 
 			var focusSettings = settings.focus;
 			if (focusSettings != null) {
@@ -403,6 +404,10 @@ namespace odm.ui.activities {
 			}
 
 			if (settings.irCutFilterSpecified) {
+				var modes = options != null ? options.irCutFilterModes : null;
+				if (modes == null) {
+					modes = new IrCutFilterMode[0];
+				}
 				AddDropDownList(
 					"Infrared cutoff filter settings",
 					settings.irCutFilter /*value*/, options.irCutFilterModes /*options*/,
@@ -663,7 +668,7 @@ namespace odm.ui.activities {
 			//	//throw new InvalidOperationException("model.moveOptions is null");
 			//}
 
-			if (model.settings.focus == null || model.settings.focus.autoFocusMode != AutoFocusMode.manual){
+			if (model.settings == null || model.settings.focus == null || model.settings.focus.autoFocusMode != AutoFocusMode.manual) {
 				return;
 			}
 

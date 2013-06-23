@@ -16,10 +16,10 @@
     [<AllowNullLiteral>]
     type IReplayAsync = interface
         //onvif 2.1
-        abstract GetServiceCapabilities: request:GetServiceCapabilitiesRequest -> Async<GetServiceCapabilitiesResponse>
-        abstract GetReplayUri: request:GetReplayUriRequest -> Async<GetReplayUriResponse>
-        abstract GetReplayConfiguration: request:GetReplayConfigurationRequest -> Async<GetReplayConfigurationResponse>
-        abstract SetReplayConfiguration: request:SetReplayConfigurationRequest -> Async<SetReplayConfigurationResponse>
+        abstract GetServiceCapabilities: unit -> Async<Capabilities10>
+        abstract GetReplayUri: recordingToken:string * streamSetup:StreamSetup -> Async<string>
+        abstract GetReplayConfiguration: unit -> Async<ReplayConfiguration>
+        abstract SetReplayConfiguration: replayConfiguration:ReplayConfiguration -> Async<unit>
     end
 
     type ReplayAsync(proxy:ReplayPort) = class
@@ -32,21 +32,35 @@
             proxy
         
         interface IReplayAsync with
-            member this.GetServiceCapabilities(request:GetServiceCapabilitiesRequest):Async<GetServiceCapabilitiesResponse> = async{
+            member this.GetServiceCapabilities():Async<Capabilities10> = async{
+                let request = new GetServiceCapabilitiesRequest()
                 let! response = Async.FromBeginEnd(request, proxy.BeginGetServiceCapabilities, proxy.EndGetServiceCapabilities)
-                return response
+                return response.Capabilities
             }
-            member this.GetReplayUri(request:GetReplayUriRequest):Async<GetReplayUriResponse> = async{
+            member this.GetReplayUri(recordingToken:string, streamSetup:StreamSetup):Async<string> = async{
+                let request = new GetReplayUriRequest()
+                request.RecordingToken <- recordingToken
+                if streamSetup |> NotNull then
+                    request.StreamSetup <- streamSetup
+                else
+                    request.StreamSetup <- new StreamSetup(
+                        transport = new Transport(protocol = TransportProtocol.udp),
+                        stream = StreamType.rtpUnicast
+                    )
+
                 let! response = Async.FromBeginEnd(request, proxy.BeginGetReplayUri, proxy.EndGetReplayUri)
-                return response
+                return response.Uri
             }
-            member this.GetReplayConfiguration(request:GetReplayConfigurationRequest):Async<GetReplayConfigurationResponse> = async{
+            member this.GetReplayConfiguration():Async<ReplayConfiguration> = async{
+                let request = new GetReplayConfigurationRequest()
                 let! response = Async.FromBeginEnd(request, proxy.BeginGetReplayConfiguration, proxy.EndGetReplayConfiguration)
-                return response
+                return response.Configuration
             }
-            member this.SetReplayConfiguration(request:SetReplayConfigurationRequest):Async<SetReplayConfigurationResponse> = async{
+            member this.SetReplayConfiguration(replayConfiguration:ReplayConfiguration):Async<unit> = async{
+                let request = new SetReplayConfigurationRequest()
+                request.Configuration <- replayConfiguration
                 let! response = Async.FromBeginEnd(request, proxy.BeginSetReplayConfiguration, proxy.EndSetReplayConfiguration)
-                return response
+                return ()
             }
         end
     end

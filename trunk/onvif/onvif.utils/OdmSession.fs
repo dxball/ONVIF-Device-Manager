@@ -109,6 +109,9 @@
     type OdmSession(session:INvtSession) = class
         do if session |> IsNull then raise <| new ArgumentException("session")
 
+        let caсhedSchemasLock = new obj()
+        let caсhedSchemasByLocation = new Dictionary<string, Async<XmlSchema>>(StringComparer.OrdinalIgnoreCase)
+
         //TODO: extend Async
         let OnErrorContinueWith cont comp = async{
             let! res = comp |> Async.Catch
@@ -702,14 +705,28 @@
 
         member this.DownloadSchemes(uris:seq<Uri>) = async{
             let! schemes =
-                    uris
+                uris
                     |> Seq.filter(fun uri-> uri.OriginalString <> "http://www.w3.org/2001/XMLSchema")
                     |> Seq.distinct
-                    |> Seq.map (fun uri->async{
-                        let! stream = this.DownloadStream(uri, "application/xml")
+                    |> Seq.map (fun uri->(*async{*)
+                        let schemaAsync = lock (caсhedSchemasLock) (fun () -> 
+                            let caсheHit, cachedSchemaAsync = caсhedSchemasByLocation.TryGetValue(uri.OriginalString)
+                            if caсheHit then
+                                cachedSchemaAsync
+                            else
+                                let op = Async.Memoize(async{
+                                    let! stream = this.DownloadStream(uri, "application/xml")
+                                    do! Async.SwitchToThreadPool()
+                                    return XmlSchema.Read(stream, null)
+                                })
+                                caсhedSchemasByLocation.[uri.OriginalString] <- op
+                                op
+                        )
+                        schemaAsync
+                        (*let! stream = this.DownloadStream(uri, "application/xml")
                         do! Async.SwitchToThreadPool()
-                        return XmlSchema.Read(stream, null)
-                    })
+                        return XmlSchema.Read(stream, null)*)
+                    (*}*))
                     |> Async.Parallel
             do! Async.SwitchToThreadPool()
             let schemaSet = new XmlSchemaSet()

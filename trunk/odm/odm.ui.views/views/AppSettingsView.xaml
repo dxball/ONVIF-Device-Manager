@@ -177,6 +177,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -210,16 +211,23 @@
                     </ContentControl>
 
 					<ContentControl Grid.Row="3" Style="{StaticResource captionContainer}">
-						<TextBlock Name="enableOnlyDefMode" Text="Use only extended filter editor"/>
+						<TextBlock Name="enableKipodAnalyticsCaption" Text="Kipod NVA"/>
 					</ContentControl>
 					<ContentControl Grid.Row="3" Style="{StaticResource valueContainer}">
-						<CheckBox Name="enableOnlyDefValue"/>
+						<CheckBox Name="enableKipodAnalyticsValuse"/>
 					</ContentControl>
 
 					<ContentControl Grid.Row="4" Style="{StaticResource captionContainer}">
-						<TextBlock Name="transportCaption" Text="Select video streaming transport"/>
+						<TextBlock Name="enableOnlyDefMode" Text="Use only extended filter editor"/>
 					</ContentControl>
 					<ContentControl Grid.Row="4" Style="{StaticResource valueContainer}">
+						<CheckBox Name="enableOnlyDefValue"/>
+					</ContentControl>
+
+					<ContentControl Grid.Row="5" Style="{StaticResource captionContainer}">
+						<TextBlock Name="transportCaption" Text="Select video streaming transport"/>
+					</ContentControl>
+					<ContentControl Grid.Row="5" Style="{StaticResource valueContainer}">
 						<ComboBox MinWidth="60" Name="transportTypes">
 							<ComboBox.ItemTemplate>
 								<DataTemplate>

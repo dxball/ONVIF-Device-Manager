@@ -269,18 +269,18 @@ namespace odm.ui.views.CustomAnalytics {
 			
 			player.Child = playview;
 
-			playview.Init(
-				new VideoPlayerView.Model(
-					"",
-					args.streamSetup,
-					new MediaUri() { uri = args.streamUri },
-					new VideoResolution() {
-						height = (int)args.sourceResolution.Height,
-						width = (int)args.sourceResolution.Width
-					},
-					false,
-                    null)
-			);
+			playview.Init(new VideoPlayerView.Model(
+				streamSetup: args.streamSetup,
+				mediaUri: new MediaUri() {
+					uri = args.streamUri
+				},
+				encoderResolution: new VideoResolution() {
+					height = (int)args.sourceResolution.Height,
+					width = (int)args.sourceResolution.Width
+				},
+				isUriEnabled: false,
+				metadataReceiver: null
+			));
 		}
 
 		public void Dispose() {

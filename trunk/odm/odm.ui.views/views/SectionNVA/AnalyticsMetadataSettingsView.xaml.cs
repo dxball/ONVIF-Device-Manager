@@ -163,7 +163,7 @@ namespace odm.ui.activities {
 				DependencyProperty.Register("MetaData", typeof(ObservableCollection<MetadataUnit>), typeof(AnalyticsMetadataSettingsView));
 
 
-		async Task Reload(INvtSession session) {
+		void Reload(INvtSession session) {
 			var vs = AppDefaults.visualSettings;
 
 			//vidBuff = new VideoBuffer(resolution.Width, resolution.Height);

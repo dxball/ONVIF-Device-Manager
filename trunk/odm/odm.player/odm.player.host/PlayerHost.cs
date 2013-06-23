@@ -45,6 +45,7 @@ namespace odm.player {
 						return false;
 					}
 					playbackController = this.playbackController;
+
 					dbg.Assert(this.playbackSession == null);
 				}
 				var result = playbackController.Initialized(playbackSession);

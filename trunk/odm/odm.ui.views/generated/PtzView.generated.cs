@@ -25,37 +25,37 @@ namespace odm.ui.activities {
 		public class Model{
 			
 			public Model(
-				string profToken, PTZPreset[] presets, PTZNode currentNode, PTZConfiguration currentPtzConfig
+				Profile profile, PTZPreset[] presets, PTZStatus status, PTZNode node
 			){
 				
-				this.profToken = profToken;
+				this.profile = profile;
 				this.presets = presets;
-				this.currentNode = currentNode;
-				this.currentPtzConfig = currentPtzConfig;
+				this.status = status;
+				this.node = node;
 			}
 			private Model(){
 			}
 			
 
 			public static Model Create(
-				string profToken,
+				Profile profile,
 				PTZPreset[] presets,
-				PTZNode currentNode,
-				PTZConfiguration currentPtzConfig
+				PTZStatus status,
+				PTZNode node
 			){
 				var _this = new Model();
 				
-				_this.profToken = profToken;
+				_this.profile = profile;
 				_this.presets = presets;
-				_this.currentNode = currentNode;
-				_this.currentPtzConfig = currentPtzConfig;
+				_this.status = status;
+				_this.node = node;
 				return _this;
 			}
 		
-			public string profToken{get;private set;}
+			public Profile profile{get;private set;}
 			public PTZPreset[] presets{get;private set;}
-			public PTZNode currentNode{get;private set;}
-			public PTZConfiguration currentPtzConfig{get;private set;}
+			public PTZStatus status{get;private set;}
+			public PTZNode node{get;private set;}
 		}
 			
 		#endregion

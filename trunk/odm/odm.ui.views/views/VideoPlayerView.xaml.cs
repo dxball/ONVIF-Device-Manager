@@ -27,7 +27,7 @@ namespace odm.ui.activities {
 		#region Activity definition
 		public static FSharpAsync<Result> Show(IUnityContainer container, Model model) {
 			return container.StartViewActivity<Result>(context => {
-                var view = new VideoPlayerView(model, context);
+				var view = new VideoPlayerView(model, context);
 
 				var presenter = container.Resolve<IViewPresenter>();
 				presenter.ShowView(view);
@@ -35,7 +35,7 @@ namespace odm.ui.activities {
 		}
 		#endregion
 
-        public VideoPlayerView() {
+		public VideoPlayerView() {
 
 		}
 
@@ -77,7 +77,7 @@ namespace odm.ui.activities {
 			btnResume.CreateBinding(Button.VisibilityProperty, this, x => { return !x.isPaused ? Visibility.Collapsed : Visibility.Visible; });
 
 			playbackStatistics.Visibility = AppDefaults.visualSettings.ShowVideoPlaybackStatistics ? Visibility.Visible : Visibility.Collapsed;
-			
+
 			if (model.isUriEnabled) {
 				uriString.Visibility = System.Windows.Visibility.Visible;
 				uriString.Text = model.mediaUri.uri;
@@ -88,28 +88,31 @@ namespace odm.ui.activities {
 		}
 
 		void btnPause_Click(object sender, RoutedEventArgs e) {
-			if (isPaused)
+			if (isPaused) {
 				Resume();
-			else
+			} else {
 				Pause();
+			}
 		}
 
 		IPlayer player;
 		VideoBuffer videoBuff;
-        
+
 		void VideoStartup(Model model) {
 			player = new HostedPlayer();
-			videoBuff = new VideoBuffer(model.encoderResolution.width, model.encoderResolution.height);
+			var res = model.encoderResolution;
+			videoBuff = new VideoBuffer(res.width, res.height);
 			player.SetVideoBuffer(videoBuff);
-			
+
 			var account = AccountManager.Instance.CurrentAccount;
 			UserNameToken utoken = null;
-			if(!account.IsAnonymous){
+			if (!account.IsAnonymous) {
 				utoken = new UserNameToken(account.Name, account.Password);
 			}
 
-            if (model.metadataReceiver != null)
-                player.SetMetadataReciever(model.metadataReceiver);
+			if (model.metadataReceiver != null) {
+				player.SetMetadataReciever(model.metadataReceiver);
+			}
 
 			MediaStreamInfo.Transport transp;
 			switch (model.streamSetup.transport.protocol) {
@@ -154,19 +157,19 @@ namespace odm.ui.activities {
 		}
 
 		private class PlaybackStatistics {
-			private PlaybackStatistics(){
+			private PlaybackStatistics() {
 				signal = 0;
 				noSignalProcessor = NoSignalProcessor().GetEnumerator();
 				UpdateNoSignal();
 			}
-			static public PlaybackStatistics Start(){
+			static public PlaybackStatistics Start() {
 				return new PlaybackStatistics();
 			}
 
 			public const long noSignalDelay = 300;
 			public const long noSignalTimeout = 2000;
 			public const long noSignalTimeoutInitial = 5000;
-			
+
 			public bool isNoSignal { get; private set; }
 			public byte signal { get; private set; }
 			public double avgRenderingFps { get; private set; }
@@ -175,8 +178,8 @@ namespace odm.ui.activities {
 			CircularBuffer<long> renderTimes = new CircularBuffer<long>(128);
 			CircularBuffer<long> decodeTimes = new CircularBuffer<long>(128);
 			IEnumerator<bool> noSignalProcessor;
-			
-			private static double SecondsFromTicks(long ticks){
+
+			private static double SecondsFromTicks(long ticks) {
 				return (double)ticks / (double)Stopwatch.Frequency;
 			}
 
@@ -187,7 +190,7 @@ namespace odm.ui.activities {
 				return times.length / SecondsFromTicks(times.last - times.first);
 			}
 
-			private void UpdateNoSignal(){
+			private void UpdateNoSignal() {
 				noSignalProcessor.MoveNext();
 				isNoSignal = noSignalProcessor.Current;
 			}
@@ -198,17 +201,17 @@ namespace odm.ui.activities {
 				var isNoSignal = false;
 				var timer = Stopwatch.StartNew();
 
-				while (signal == 0 ) {
-					if(timer.ElapsedMilliseconds > noSignalTimeoutInitial){
+				while (signal == 0) {
+					if (timer.ElapsedMilliseconds > noSignalTimeoutInitial) {
 						isNoSignal = true;
 						timer.Restart();
 						break;
 					}
 					yield return isNoSignal;
 				}
-				
+
 				while (true) {
-					if(signal != 0){
+					if (signal != 0) {
 						decodeTimes.Enqueue(Stopwatch.GetTimestamp());
 						if (!isNoSignal) {
 							timer.Restart();
@@ -216,7 +219,7 @@ namespace odm.ui.activities {
 							isNoSignal = false;
 							timer.Restart();
 						}
-					}else if (!isNoSignal && timer.ElapsedMilliseconds > noSignalTimeout){
+					} else if (!isNoSignal && timer.ElapsedMilliseconds > noSignalTimeout) {
 						isNoSignal = true;
 						timer.Restart();
 					}
@@ -230,7 +233,7 @@ namespace odm.ui.activities {
 
 				//evaluate averange rendering fps
 				avgRenderingFps = CalculateAvgFpsFromTimes(renderTimes);
-				
+
 				//update no signal indicator
 				using (var md = videoBuffer.Lock()) {
 					signal = md.value.signal;
@@ -251,7 +254,7 @@ namespace odm.ui.activities {
 				throw new ArgumentNullException("videoBufferDescription");
 			}
 			VerifyAccess();
-			
+
 			TimeSpan renderinterval;
 			try {
 				int fps = AppDefaults.visualSettings.ui_video_rendering_fps;
@@ -260,7 +263,7 @@ namespace odm.ui.activities {
 			} catch {
 				renderinterval = TimeSpan.FromMilliseconds(1000 / 30);
 			}
-			
+
 			var cancellationTokenSource = new CancellationTokenSource();
 			renderSubscription.Disposable = Disposable.Create(() => {
 				cancellationTokenSource.Cancel();
@@ -297,7 +300,7 @@ namespace odm.ui.activities {
 					}
 				}
 			}, cancellationToken);
-			
+
 		}
 
 		private WriteableBitmap PrepareForRendering(VideoBuffer videoBuffer) {
@@ -325,17 +328,13 @@ namespace odm.ui.activities {
 			if (isPaused) {
 				return;
 			}
-			bitmap.Lock();
-			try {
-				using (var md = videoBuffer.Lock()) {
-					bitmap.WritePixels(
-						new Int32Rect(0, 0, videoBuffer.width, videoBuffer.height),
-						md.value.scan0Ptr, videoBuffer.size, videoBuffer.stride,
-						0, 0
-					);
-				}
-			} finally {
-				bitmap.Unlock();
+			using (var md = videoBuffer.Lock()) {
+				// internally calls lock\unlock, uses MILUtilities.MILCopyPixelBuffer
+				bitmap.WritePixels(
+					new Int32Rect(0, 0, videoBuffer.width, videoBuffer.height),
+					md.value.scan0Ptr, videoBuffer.size, videoBuffer.stride,
+					0, 0
+				);
 			}
 			renderingFps.Text = String.Format("rendering fps: {0:F1}", statistics.avgRenderingFps);
 			decodingFps.Text = String.Format("decoding fps: {0:F1}", statistics.avgDecodingFps);
@@ -356,24 +355,40 @@ namespace odm.ui.activities {
 	}
 
 	public class VideoPlayerActivityModel {
-		public VideoPlayerActivityModel(StreamSetup streamSetup, string profileToken, bool showStreamUrl, IMetadataReceiver metadataReceiver) { 
+		public VideoPlayerActivityModel(StreamSetup streamSetup, string profileToken, bool showStreamUrl, IMetadataReceiver metadataReceiver) {
+			this.profile = null;
 			this.profileToken = profileToken;
 			this.streamSetup = streamSetup;
 			this.showStreamUrl = showStreamUrl;
-            this.metadataReceiver = metadataReceiver;
+			this.metadataReceiver = metadataReceiver;
+		}
+		public VideoPlayerActivityModel(StreamSetup streamSetup, Profile profile, bool showStreamUrl, IMetadataReceiver metadataReceiver) {
+			this.profile = profile;
+			this.profileToken = profile.token;
+			this.streamSetup = streamSetup;
+			this.showStreamUrl = showStreamUrl;
+			this.metadataReceiver = metadataReceiver;
 		}
 
-        public VideoPlayerActivityModel(StreamSetup streamSetup, string profileToken, bool showStreamUrl)
-        {
-            this.profileToken = profileToken;
-            this.streamSetup = streamSetup;
-            this.showStreamUrl = showStreamUrl;
-        }
-        
-		public string profileToken { get; private set; }
-		public StreamSetup streamSetup { get; private set; }
-		public bool showStreamUrl { get; private set; }
-        public IMetadataReceiver metadataReceiver { get; private set; }
+		public VideoPlayerActivityModel(StreamSetup streamSetup, string profileToken, bool showStreamUrl) {
+			this.profile = null;
+			this.profileToken = profileToken;
+			this.streamSetup = streamSetup;
+			this.showStreamUrl = showStreamUrl;
+			this.metadataReceiver = null;
+		}
+		public VideoPlayerActivityModel(StreamSetup streamSetup, Profile profile, bool showStreamUrl) {
+			this.profile = profile;
+			this.profileToken = profile.token;
+			this.streamSetup = streamSetup;
+			this.showStreamUrl = showStreamUrl;
+			this.metadataReceiver = null;
+		}
+		public readonly Profile profile;
+		public readonly string profileToken;
+		public readonly StreamSetup streamSetup;
+		public readonly bool showStreamUrl;
+		public readonly IMetadataReceiver metadataReceiver;
 	}
 	public interface IVideoPlayerActivity {
 		FSharpAsync<Unit> Run(IUnityContainer ctx, VideoPlayerActivityModel model);

@@ -206,7 +206,7 @@ namespace odm.ui.activities {
 
 		//public ObservableCollection<MetadataUnit> MetaData { get; set; }
 
-		async Task Reload(INvtSession session) {
+		void Reload(INvtSession session) {
 			var vs = AppDefaults.visualSettings;
 
 			StreamSetup strSetup = new StreamSetup() {
@@ -218,17 +218,27 @@ namespace odm.ui.activities {
 			};
 
 			//TODO: provide a way of cancelation
-			var streamInfo = await session.GetStreamUri(strSetup, profile.token);
-			VideoInfo.MediaUri = streamInfo.uri;
-			VideoStartup(VideoInfo);
+			//try {
+			//	var streamInfo = await session.GetStreamUri(strSetup, profile.token);
+			//	VideoInfo.MediaUri = streamInfo.uri;
+			//	VideoStartup(VideoInfo);
+			//} catch (Exception err) {
+			//	dbg.Error(err);
+			//	throw;
+			//}
 
-			//subscription.Add(session.GetStreamUri(strSetup, profile.token)
-			//	.ObserveOnCurrentDispatcher()
-			//	.Subscribe(uri => {
-			//		VideoInfo.MediaUri = uri.Uri;
-			//		VideoStartup(VideoInfo);
-			//	}, err => {
-			//	}));
+			subscription.Add(
+				session.GetStreamUri(strSetup, profile.token)
+				.ObserveOnCurrentDispatcher()
+				.Subscribe(
+					uri => {
+						VideoInfo.MediaUri = uri.uri;
+						VideoStartup(VideoInfo);
+					}, 
+					err => {
+					}
+				)
+			);
 		}
 
 		IPlayer playerEngine;

@@ -86,7 +86,7 @@
 //        abstract GetRemoteUser: request:GetRemoteUserRequest -> Async<GetRemoteUserResponse>
 //        abstract SetRemoteUser: request:SetRemoteUserRequest -> Async<SetRemoteUserResponse>
         abstract GetWsdlUrl: unit -> Async<string>
-//        abstract SetHostnameFromDHCP: request:SetHostnameFromDHCPRequest -> Async<SetHostnameFromDHCPResponse>
+        abstract SetHostnameFromDHCP: fromDhcp:bool -> Async<bool>
 //        abstract SendAuxiliaryCommand: request:SendAuxiliaryCommandRequest -> Async<SendAuxiliaryCommandResponse>
 //        abstract GetCACertificates: request:GetCACertificatesRequest -> Async<GetCACertificatesResponse>
 //        abstract LoadCertificateWithPrivateKey: request:LoadCertificateWithPrivateKeyRequest -> Async<LoadCertificateWithPrivateKeyResponse>
@@ -578,10 +578,12 @@
                 let! response = Async.FromBeginEnd(request, proxy.BeginGetWsdlUrl, proxy.EndGetWsdlUrl)
                 return response.WsdlUrl
             }
-//            member this.SetHostnameFromDHCP(request:SetHostnameFromDHCPRequest): Async<SetHostnameFromDHCPResponse> = async{
-//                let! response = Async.FromBeginEnd(request, proxy.BeginSetHostnameFromDHCP, proxy.EndSetHostnameFromDHCP)
-//                return response
-//            }
+            member this.SetHostnameFromDHCP(fromDhcp:bool): Async<bool> = async{
+                let request = new SetHostnameFromDHCPRequest()
+                request.FromDHCP <- fromDhcp;
+                let! response = Async.FromBeginEnd(request, proxy.BeginSetHostnameFromDHCP, proxy.EndSetHostnameFromDHCP)
+                return response.RebootNeeded
+            }
 //            member this.SendAuxiliaryCommand(request:SendAuxiliaryCommandRequest): Async<SendAuxiliaryCommandResponse> = async{
 //                let! response = Async.FromBeginEnd(request, proxy.BeginSendAuxiliaryCommand, proxy.EndSendAuxiliaryCommand)
 //                return response

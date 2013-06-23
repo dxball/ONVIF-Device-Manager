@@ -240,39 +240,40 @@ namespace onvif.services {
 	public partial class SupportedAnalyticsModules {
 	}
 
-	[Serializable]
-	[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
-	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
-	public class Message {
-		public ItemList Source { get; set; }
-		public ItemList Key { get; set; }
-		public ItemList Data { get; set; }
-		public MessageExtension Extension { get; set; }
-		[XmlAttribute]
-		public System.DateTime UtcTime { get; set; }
-		[XmlAttribute]
-		public PropertyOperation PropertyOperation { get; set; }
-		[XmlIgnore]
-		public bool PropertyOperationSpecified { get; set; }
-		[XmlAnyAttribute]
-		public XmlAttribute[] AnyAttr { get; set; }
-	}
+	//[Serializable]
+	//[XmlType(AnonymousType = true, Namespace = "http://www.onvif.org/ver10/schema")]
+	//[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = false)]
+	//public class Message {
+	//	public ItemList Source { get; set; }
+	//	public ItemList Key { get; set; }
+	//	public ItemList Data { get; set; }
+	//	public MessageExtension Extension { get; set; }
+	//	[XmlAttribute]
+	//	public System.DateTime UtcTime { get; set; }
+	//	[XmlAttribute]
+	//	public PropertyOperation PropertyOperation { get; set; }
+	//	[XmlIgnore]
+	//	public bool PropertyOperationSpecified { get; set; }
+	//	[XmlAnyAttribute]
+	//	public XmlAttribute[] AnyAttr { get; set; }
+	//}
 
-	[Serializable]
-	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
-	public enum PropertyOperation {
-		Initialized,
-		Deleted,
-		Changed,
-	}
+	//[Serializable]
+	//[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	//public enum PropertyOperation {
+	//	Initialized,
+	//	Deleted,
+	//	Changed,
+	//}
 
-	[Serializable]
-	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
-	[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
-	public class MessageExtension {
-		[XmlAnyElement]
-		public XmlElement[] Any { get; set; }
-	}
+	//[Serializable]
+	//[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
+	//[XmlRoot(Namespace = "http://www.onvif.org/ver10/schema", IsNullable = true)]
+	//public class MessageExtension {
+	//	[XmlAnyElement]
+	//	public XmlElement[] Any { get; set; }
+	//}
+
 	public partial class Profile {
 		public override string ToString() {
 			if (String.IsNullOrWhiteSpace(this.name)) {
@@ -500,47 +501,69 @@ namespace onvif.services {
 		}
 	}
 
-	[Serializable]
-	[XmlType(Namespace = "http://www.onvif.org/ver10/schema")]
-	public class OnvifVersion : IComparable, IComparable<OnvifVersion>, IEquatable<OnvifVersion> {
-		[XmlElement(Order = 0)]
-		public int Major {get;set;}
+	public partial class OnvifVersion : IComparable, IComparable<OnvifVersion>, IEquatable<OnvifVersion> {
 
-		/// <remarks/>
-		[XmlElement(Order = 1)]
-		public int Minor { get; set; }
+		public static readonly OnvifVersion v1_2 = new OnvifVersion(1, 2);
+		public static readonly OnvifVersion v2_0 = new OnvifVersion(2, 0);
+		public static readonly OnvifVersion v2_1 = new OnvifVersion(2, 1);
+		public static readonly OnvifVersion v2_2 = new OnvifVersion(2, 2);
+		public static readonly OnvifVersion v2_2_1 = new OnvifVersion(2, 21);
+		public static readonly OnvifVersion v2_3 = new OnvifVersion(2, 3);
 
 		public OnvifVersion() {
 		}
 
 		public OnvifVersion(int Major, int Minor) {
-			this.Major = Major;
-			this.Minor = Minor;
+			this._major = Major;
+			this._minor = Minor;
 		}
 
 		public override bool Equals(object obj) {
-			if (obj == null) {
-				return false;
-			}
+			//if (obj == null) {
+			//	return false;
+			//}
 			return Equals(obj as OnvifVersion);
 		}
 
 		public override int GetHashCode() {
-			return HashCode.Combine(Major, Minor);
+			return HashCode.Combine(_major, _minor);
 		}
 
 		public override string ToString() {
-			if (Minor == 0) {
-				return String.Format("{0}.0", Major);
+			if (_minor == 0) {
+				return String.Format("{0}.0", _major);
 			}
-			return String.Format("{0}.{1:D2}", Major, Minor);
+			return String.Format("{0}.{1:D2}", _major, _minor);
+		}
+
+		private static IEnumerable<int> GetDigitsFromInt(int v) {
+			if(v == 0){
+				return Enumerable.Empty<int>();
+			}
+			int d;
+			v = Math.DivRem(v, 10, out d);
+			return GetDigitsFromInt(v).Append(d);
+		}
+		public IEnumerable<int> GetDigits() {
+			yield return _major;
+			foreach(var d in GetDigitsFromInt(_minor)){
+				yield return d;
+			}
 		}
 
 		public int CompareTo(OnvifVersion other) {
-			if (Major == other.Major) {
-				return Minor - other.Minor;
+			using (var otherDigs = other.GetDigits().GetEnumerator()) {
+				foreach (var d in GetDigits()) {
+					if (!otherDigs.MoveNext()) {
+						return 1;
+					}
+					var dif = d - otherDigs.Current;
+					if (dif != 0) {
+						return dif;
+					}
+				}
+				return otherDigs.MoveNext() ? -1 : 0;
 			}
-			return Major - other.Major;
 		}
 
 		public int CompareTo(object obj) {
@@ -548,9 +571,32 @@ namespace onvif.services {
 		}
 
 		public bool Equals(OnvifVersion other) {
-			return other != null && (Minor == other.Minor) && (Major == other.Major);
+			return !Object.ReferenceEquals(other, null) && (_minor == other._minor) && (_major == other._major);
 		}
+
+		public static bool operator ==(OnvifVersion v1, OnvifVersion v2) {
+			if (Object.ReferenceEquals(v1, null)) {
+				return Object.ReferenceEquals(v2, null);
+			}
+			return v1.Equals(v2);
+		}
+		public static bool operator !=(OnvifVersion v1, OnvifVersion v2) {
+			return !(v1 == v2);
+		}
+		public static bool operator <(OnvifVersion v1, OnvifVersion v2) {
+			return (v1.CompareTo(v2) < 0);
+		}
+		public static bool operator >(OnvifVersion v1, OnvifVersion v2) {
+			return (v1.CompareTo(v2) > 0);
+		}
+		public static bool operator <=(OnvifVersion v1, OnvifVersion v2) {
+			return (v1.CompareTo(v2) <= 0);
+		}
+		public static bool operator >=(OnvifVersion v1, OnvifVersion v2) {
+			return (v1.CompareTo(v2) >= 0);
+		}  
 	}
+
 	public static class DateTimeExtensions{
 		public static System.DateTime? ToSystemDateTime(this DateTime dateTime, DateTimeKind kind = DateTimeKind.Unspecified) {
 			if ((object)dateTime == null || (object)dateTime.date == null || (object)dateTime.time == null) {

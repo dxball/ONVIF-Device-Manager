@@ -34,6 +34,7 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\odm.ui.activities.XML</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <NoWarn>58</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

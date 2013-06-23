@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace utils {
@@ -66,6 +67,25 @@ namespace utils {
 			}
 		}
 		#endregion
+
+
+		public Awaiter() {}
+		void release(object owner) {
+			if (owner != null)
+				if (owner is IDisposable)
+					(owner as IDisposable).Dispose();
+			Cancel();
+		}
+		public Awaiter(CancellationToken ct, object owner) {
+			if (ct.IsCancellationRequested) {
+				release(owner);
+			} else {
+				ct.Register(() => {
+					release(owner);
+				});
+			}
+		}
+
 		State state = new State.Strated();
 
 		public bool IsCompleted {
